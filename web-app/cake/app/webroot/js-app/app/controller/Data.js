@@ -40,9 +40,29 @@ Ext.define('SD.controller.Data', {
             '#locationsTab': {
                 activate: function() { me.loadIfEmpty('Locations'); }
             },
+            '#answersTab button[text=Export]': {
+                click: function() {
+                    location.href = '/answers/dump';
+                }
+            },
             '#locationsTab button[text=Export]': {
                 click: function() {
                     location.href = '/locations/dump';
+                }
+            },
+            '#callsTab button[text=Export]': {
+                click: function() {
+                    location.href = '/calls/dump';
+                }
+            },
+            '#statuschangesTab button[text=Export]': {
+                click: function() {
+                    location.href = '/statuschanges/dump';
+                }
+            },
+            '#surveystakenTab button[text=Export]': {
+                click: function() {
+                    location.href = '/surveystaken/dump';
                 }
             },
             '#answersTab': {

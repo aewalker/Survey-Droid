@@ -46,8 +46,75 @@ class AnswersController extends AppController
             $item['Answer']['subject'] = $item['Subject'];
             $arr[] = $item['Answer'];
         }
-
         e(json_encode($arr));
+    }
+
+    /** csv dump */
+    function dump() {
+        $this->autoRender = false;
+        ini_set('max_execution_time', 600); //increase max_execution_time to 10 min if data set is very large
+
+        $modelClass = $this->modelClass;
+        $filename = $modelClass . "_dump_".date("Y.m.d").".csv";
+        
+        header('Content-type: application/csv');
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+
+
+        $models = $this->$modelClass->find('all', array(
+            'recursive' => 1,
+            'order' => 'Answer.created DESC'
+        ));
+
+        // custom stuff
+        $csv_file = fopen('php://output', 'w');
+        $headers = array('Subject ID', 'Subject', 'Survey ID', 'Question', 'Answer', 'Answer Type', 'Time Answered');
+        fputcsv($csv_file, $headers, ',', '"');
+
+        foreach($models as $item) {
+            $row = array();
+            $row[] = $item['Answer']['subject_id']; // Subject Id
+            $row[] = $item['Subject']['first_name'] ." ". $item['Subject']['last_name']; // Subject
+            $row[] = $item['Question']['survey_id']; // Survey Id
+            $row[] = $item['Question']['q_text']; // Question
+
+            switch ($item['Answer']['ans_type']) { // Answer
+                case 0:
+                    $choices = array();
+                    foreach ($item['Choice'] as $choice) {
+                        $choices[] = $choice['choice_text'];
+                    }
+                    $row[] = implode(', ', $choices);
+                    break;
+                case 1:
+                    $row[] = $item['Answer']['ans_value'];
+                    break;
+                case 2:
+                    $row[] = $item['Answer']['ans_text'];
+                    break;
+                default:
+                    $row[] = 'Undefined Type';
+            }
+
+            switch ($item['Answer']['ans_type']) { // Answer type
+                case 0:
+                    $row[] = 'Single/Multiple Choice';
+                    break;
+                case 1:
+                    $row[] = 'Numerical Value';
+                    break;
+                case 2:
+                    $row[] = 'Text';
+                    break;
+                default:
+                    $row[] = 'Undefined Type';
+            }
+
+            $row[] = $item['Answer']['created']; // Time Answered
+            
+            fputcsv($csv_file,$row,',','"');
+        }
+        fclose($csv_file);
     }
 }
 

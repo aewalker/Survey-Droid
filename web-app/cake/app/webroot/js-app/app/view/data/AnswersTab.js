@@ -60,6 +60,9 @@ Ext.define("SD.view.data.AnswersTab", {
         xtype: 'panel',
         title: 'Answers List',
         flex: 4,
+        tbar: [{
+            text: 'Export'
+        }],
         layout: 'fit',
         items: [
             {

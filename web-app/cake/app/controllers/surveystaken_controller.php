@@ -18,6 +18,22 @@ class SurveysTakenController extends RestController
 	var $components = array('Auth');
 
     
+    function rest_create() {
+        $this->autoRender = false;
+        $this->header('HTTP/1.1 501 Not Implemented');
+    }
+    function rest_read($id) {
+        $this->autoRender = false;
+        $this->header('HTTP/1.1 501 Not Implemented');
+    }
+    function rest_update($id) {
+        $this->autoRender = false;
+        $this->header('HTTP/1.1 501 Not Implemented');
+    }
+    function rest_delete($id) {
+        $this->autoRender = false;
+        $this->header('HTTP/1.1 501 Not Implemented');
+    }
 }
 
 ?>
