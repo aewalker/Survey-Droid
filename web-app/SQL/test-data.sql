@@ -2,7 +2,7 @@
 
 USE socioapp;
 
-INSERT INTO researchers (id, email, pass, first_name, last_name) VALUES
+INSERT INTO users (id, email, pass, first_name, last_name) VALUES
 	(1, 'john.doe@example.com', SHA1('johnpass'), 'John', 'Doe'),
 	(2, 'jane.doe@example.com', SHA1('janepass'), 'Jane', 'Doe');
 
