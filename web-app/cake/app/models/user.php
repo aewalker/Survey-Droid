@@ -5,7 +5,7 @@ class User extends AppModel
     
     function validateLogin($data)
     {
-        $user = $this->find(array('email' => $data['username'], 'pass' => md5($data['password'])), array('id', 'username'));
+        $user = $this->find(array('email' => $data['username'], 'pass' => sha1($data['password'])), array('id', 'username'));
         if(empty($user) == false)
             return $user['User'];
         return false;

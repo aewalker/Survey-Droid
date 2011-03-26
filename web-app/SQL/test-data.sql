@@ -2,9 +2,9 @@
 
 USE socioapp;
 
-INSERT INTO users (id, email, pass, first_name, last_name) VALUES
-	(1, 'john.doe@example.com', SHA1('johnpass'), 'John', 'Doe'),
-	(2, 'jane.doe@example.com', SHA1('janepass'), 'Jane', 'Doe');
+INSERT INTO users (id, username, email, password, first_name, last_name) VALUES
+	(1, 'johnd', 'john.doe@example.com', SHA1('johnpass'), 'John', 'Doe'),
+	(2, 'janed', 'jane.doe@example.com', SHA1('janepass'), 'Jane', 'Doe');
 
 INSERT INTO subjects (id, phone_num, first_name, last_name) VALUES
 	(1, '440521035555', 'Graham', 'Chapman'),

@@ -4,8 +4,9 @@ USE socioapp;
 
 CREATE TABLE users (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	username VARCHAR(31) NOT NULL UNIQUE,
 	email VARCHAR(320) NOT NULL UNIQUE,
-	pass CHAR(41) NOT NULL,
+	password CHAR(41) NOT NULL,
 	first_name VARCHAR(255),
 	last_name VARCHAR(255)
 	/* other things? */);
