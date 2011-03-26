@@ -8,8 +8,8 @@ CREATE TABLE users (
 	email VARCHAR(320) NOT NULL UNIQUE,
 	password CHAR(41) NOT NULL,
 	first_name VARCHAR(255),
-	last_name VARCHAR(255)
-	/* other things? */);
+	last_name VARCHAR(255),
+	admin ENUM('yes') NULL);
 	
 CREATE TABLE subjects (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

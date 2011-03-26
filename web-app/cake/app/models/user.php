@@ -1,15 +1,14 @@
 <?php 
 class User extends AppModel
-{
-    var $name = 'User';
-    
+{   
+	/* Don't need this since Auth is taking care of it 
     function validateLogin($data)
     {
-        $user = $this->find(array('email' => $data['username'], 'pass' => sha1($data['password'])), array('id', 'username'));
+        $user = $this->find(array('username' => $data['username'], 'password' => sha1($data['password'])), array('id', 'username'));
         if(empty($user) == false)
             return $user['User'];
         return false;
     }
-    
+    */
 }
 ?> 

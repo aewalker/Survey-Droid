@@ -1,44 +1,31 @@
 <?php 
 class UsersController extends AppController
 {
-    var $name = "Users";
+	//load the Auth (ie authorization) component
+    public $components = array('Auth');
      
     function beforeFilter()
 	{
 		parent::beforeFilter();
 	}
+	
+	function index()
+	{
+		//we want the default action of the users controller to be login (for now)
+		$this->redirect('login');
+	}
     
     function login()
     {
-        if(empty($this->data) == false)
-        {
-            if(($user = $this->User->validateLogin($this->data['User'])) == true)
-            {
-                $this->Session->write('User.userName', $user['username']);
-				if ($user['admin'])
-				{
-					$this->Session->write('User.isAdmin', $user['admin']);
-				}
-                $this->Session->setFlash('You\'ve successfully logged in.');
-                $this->redirect('index');
-                exit();
-            }
-            else
-            {
-                $this->Session->setFlash('Sorry, incorrect or incomplete information.');
-                exit();
-            }
-        }
+    	//don't need to do anything; Auth takes care of it in the view
+    	//Auth will send the user to the post-login page (defaults to the home page)
     }
     
     function logout()
     {
-        $this->Session->destroy('user');
-        $this->Session->setFlash('You\'ve successfully logged out.');
-        //$this->redirect('login');
+    	//sends user to the post-logout page (defaults to the login page)
+    	$this->redirect($this->Auth->logout());
     }
-        
-   
 }
 
 ?> 
