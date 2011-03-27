@@ -13,7 +13,7 @@
 	if ($user == NULL)
 	{
 		?>
-		<p>Please log in here!:</p>
+		<p>Please log in here:</p>
 		<?php echo $html->link('Login', array('controller' => 'users', 'action' => 'login'));
 	}
 ?>
