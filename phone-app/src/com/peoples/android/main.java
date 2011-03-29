@@ -1,4 +1,4 @@
-package com.dashtv.socapp;
+package com.peoples.android;
 
 import android.app.Activity;
 import android.os.Bundle;
