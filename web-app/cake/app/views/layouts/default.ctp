@@ -13,16 +13,16 @@
 <?php
 	if (($user = $session->read('Auth.User')) != NULL)
 	{
-		echo '<p>Logged in as';
+		echo '<p>Logged in as ';
 		echo $user['first_name'].' '.$user['last_name'].'. ';
 		echo $html->link('Logout', array('controller' => 'users', 'action' => 'logout'));
 		echo '</p><br />';
 	}
 	else
 	{
-		echo '<p>Please log in here:';
+		echo '<p>Please log in here: ';
 		echo $html->link('Login', array('controller' => 'users', 'action' => 'login'));
-		echo '</p>';
+		echo '</p><br />';
 	}
 ?>
 <hr />
