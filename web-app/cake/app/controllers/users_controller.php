@@ -1,12 +1,26 @@
 <?php 
+/*****************************************************************************
+ * controllers/users_controller.php                                          *
+ *                                                                           *
+ * Controlls user-related functions: login, logout, registration, password   *
+ * change, etc.                                                              *
+ *****************************************************************************/
 class UsersController extends AppController
 {
 	//load the Auth (ie authorization) component
-    public $components = array('Auth');
+    var $components = array('Auth');
      
     function beforeFilter()
 	{
 		parent::beforeFilter();
+	}
+	
+	function beforeSave()
+	{
+		//Need to tell Auth to hash the confirm password so the model can check that they match
+		if (!empty($tis->data['User']['confirm_pass']))
+		$this->data['User']['confirm_pass'] = $this->Auth->password($this->data['User']['confirm_pass']);
+		parent::beforeSave();
 	}
 	
 	function index()
@@ -25,6 +39,17 @@ class UsersController extends AppController
     {
     	//sends user to the post-logout page (defaults to the login page)
     	$this->redirect($this->Auth->logout());
+    }
+    
+    function manage()
+    {
+    	//lets user change password, email, etc.
+    }
+    
+    function register()
+    {
+    	//register a new user
+    	
     }
 }
 
