@@ -8,7 +8,7 @@
 		<br /><?php
 	}
 ?>
-<h1>Welcome to [whatever-we-name-this-thing]</h1>
+<h1>Welcome to PEOPLES</h1>
 <?php
 	if ($user == NULL)
 	{
