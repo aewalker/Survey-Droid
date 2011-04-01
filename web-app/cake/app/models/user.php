@@ -89,14 +89,9 @@ class User extends AppModel
 			)
 			
 		),
-		'password_confirm' => array
+	/*	'password_confirm' => array
 		(
-			/*'matchesConfirmPassword' => array
-			(
-				'rule' => array('validateConfirmPassword'),
-				'message' => 'Passwords must match'
-			)*/
-		)
+		)*/
 	);
 	
 	//checks that two fields are equal
@@ -116,12 +111,5 @@ class User extends AppModel
         return TRUE;
     } 
     
-	function validateConfirmPassword() 
-	{
-		if ($this->data['User']['password_copy'] == $this->data['User']['password_confirm']) 
-			return true;
-		else
-			return false;
-	}
 }
 ?> 

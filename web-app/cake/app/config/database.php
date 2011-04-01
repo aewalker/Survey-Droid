@@ -74,11 +74,11 @@
 class DATABASE_CONFIG {
 
 	var $default = array(
-		'driver' => 'mysqli',
+		'driver' => 'mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'cake',
-		'password' => 'caketemppass',
+		'login' => 'root',
+		'password' => '123456',
 		'database' => 'socioapp',
 		'prefix' => '',
 	);
