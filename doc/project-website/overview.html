@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=us-ascii">
+	<title>PEOPLES Project Overview</title>
+</head>
+
+<body>
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+	<tbody>
+		<tr>
+			<td valign="top"><img src="http://www.cs.princeton.edu/pulogo.gif" height="90" width="80">
+				<h5>
+					<a href="http://www.princeton.edu/">Princeton University</a><br />
+					<a href="http://www.cs.princeton.edu/">Computer Science Department</a>
+				</h5>
+			</td>
+			<td align="center" valign="middle">
+				<h2>
+					Computer Science 333<br />
+					Advanced Programming Techniques<br />
+					PEOPLES Project Ovierview Document<br />
+				</h2>
+			</td>
+			<td align="right" valign="middle">
+				<h3>Spring 2011</h3>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- =============================================================== -->
+
+<h2>Project Name: PEOPLES</h2>
+<p>
+	<strong>P</strong>EOPLES
+	<strong>E</strong>nables the
+	<strong>O</strong>bservation of
+	<strong>P</strong>opulations
+	<strong>L</strong>iving in
+	<strong>E</strong>veryday
+	<strong>S</strong>ociety
+</p>
+
+<table cellpadding="10" style="text-align: center">
+	<tr>
+		<th colspan="6">Team Members</th>
+	</tr>
+	<tr>
+		<td>Sema Berkiten</td>
+		<td>Vladimir Costescu</td>
+		<td>Henry Liu</td>
+		<td>Austin Walker</td>
+		<td>Tony Xaio</td>
+		<td>Diego Vargas</td>
+	</tr>
+	<tr>
+		<td><a href="mailto:berkiten@princeton.edu">berkiten@</a></td>
+		<td><a href="mailto:costescu@princeton.edu">costescu@</a></td>
+		<td><a href="mailto:henryliu@princeton.edu">henryliu@</a></td>
+		<td><a href="mailto:aewalker@princeton.edu">aewalker@</a></td>
+		<td><a href="mailto:tonyx@princeton.edu">tonyx@</a></td>
+		<td><a href="mailto:dvargas@princeton.edu">dvargas@</a></td>
+	</tr>
+</table>
+
+<p><strong>Team Leader:</strong> Diego Vargas</p>
+
+<hr />
+
+<!-- =============================================================== -->
+
+<h3>Overview</h3>
+<p>As described in our Elevator Speech, our application will be a tool for social science research. Primarily the application will provide the functionality needed by Naomi F. Sugie's project. Briefly, those features are:</p>
+<ul>
+	<li>
+		location tracking
+		<ol>
+			<li>limited to working hours</li>
+		</ol>
+	</li>
+	<li>
+		phone call information gathering
+		<ol>
+			<li>anonymized to protect from legal issues</li>
+			<li>track tracking of different numbers contacted, and frequency of contact.</li>
+		</ol>
+	</li>
+	<li>
+		survey pushing
+		<ol>
+			<li>daily surveys pushed to phone users</li>
+			<li>adaptive based on previous answers</li>
+		</ol>
+	</li>
+</ul>
+
+<p>Additionally, we will provide a web-based portal to allow researchers to interact with the phone applications. The main features of the site will allow researchers to:</p>
+<ul>
+	<li>Design and modify surveys</li>
+	<li>monitor subject participation</li>
+	<li>download collected data</li>
+	<li>adjust various survey parameters (frequency of survey dispatch...)</li>
+</ul>
+
+<p>We intend to have produce a general framework that will outlive the current study and allow other researchers to use the application in a different context.</p>
+
+<p>There are two previous examples of projects using smart-phone applications in Social Science research:</p>
+<ul>
+	<li>
+		The Human Mobility Project
+		<ul>
+			<li>Princeton University researchers developed an android application to allow location tracking and survey deployment. We have access to the codebase as well	as the coders from whom to get advice. The code will not be reused, we will be building from zero but will emphasize good design to allow reuse.</li>
+		</ul>
+	</li>
+	
+	<li>
+		The Reality Mining project
+		<ul>
+			<li>MIT researchers designed an application to track the social interactions of smart phone users. The application was designed for the Nokia 6600.</li>
+		</ul>
+	</li>
+</ul>
+
+<p>Our project most closely resembles the HMP, and we have already received some input regarding the challenges they faced. We are aiming for an improved application with additional features, including survey modifications, battery life monitoring, web-portal application management, and others discussed in the appropriate section.</p>
+
+<hr />
+
+<!--Reqs  -->
+
+<h3>Requirements</h3>
+
+<p>There are two user groups of our application, the researchers and the study subjects. For each of the user groups there is a primary interface with which they will interact.</p>
+
+<p>Through the web portal, researchers will be able to interact with their research project. In preparation for the study, researchers will be able to set various parameters on the data that will be gathered from the study participants. These parameters will include times of location tracking, phone call information to be collected, and the design and modification of surveys pushed to participants. As the study is being conducted the portal will allow researchers to monitor subject participation, to access participant data, and to have simple visualization and export of the information so that it can be processed further. </p>
+
+<p>The Android phone application will be the primary means through which study participants will be followed throughout the study. The application will enable location tracking at specific hours, will track different outgoing and incoming phone numbers, and will present surveys to be completed by the participant. The application will allow the users to turn on/off features they may not want at any given time. Surveys need to be interactive, and may change based on the responses from previous or the current survey. The UI needs to be clear, intuitive, and out of the way. The application will need to monitor the battery life of the phone and be active or inactive depending on the level.</p>
+
+<p>Lastly, there may be some overlap between the Web Interface and the phone interface. Researchers may collect some data from the subjects that may affect data collection. For example, participants may be asked for names of family members that will later be displayed on the surveys. Part of the web portal should ease the difficulty of gathering information from 100 subject participants and making custom surveys for each.</p>
+
+<p>In short, our application will have two main components, a web based portal for researchers, and the Android application for study participants. The overlap, as well as the specific functions of each component will allow researchers to more easily collect data that was previously difficult to gather.</p>
+
+<hr />
+
+<!--Func  -->
+
+<h3>Functionality</h3>
+
+<h4>Sociologists - Implement Survey</h4>
+
+<p>User arrives at the index page, and enters his/her username and password. After logging on, user should see a "Create New Survey" button on the right side of the page. User can then name the survey, select between question types (numerical answer, multiple choice, short answer, etc), and write question text. If at any point user wants to save the survey for later use, he/she can click the "Save Survey" button. If the user wants to access an old survey, then he/she may click the "Load Survey" button, which will bring him/her to a folder with previously saved surveys.  Once the user is satisfied with the survey, he/she may send the survey to the subjects. Clicking the "Send Survey" button located at the bottom on the screen will prompt a new page with several options, including how often the survey is to be sent, when it should start sending, and to which subject pool the survey should be sent. (if there are multiple study groups) Once all this information is confirmed, user will be brought to a page where active surveys of all selected groups are displayed. Of course, this page is also available directly after logon. User should expect a short delay before his/her survey is actually sent to the subjects.</p>
+
+<h4>Sociologists - Collect Data</h4>
+
+<p>From the list of active surveys for subject pools mentioned above, user may click on a survey to display results from specific application(s) of that survey. Survey results are displayed in a simplistic table format with questions in the columns and subject codes as the rows, but may be exported to an Excel spreadsheet for further analysis. User may choose to examine one particular application of a survey, or many applications of the same survey over a span of months.  Additionally, there will be a location option for user to click. This will bring up a similar exportable table with the locations of the subjects tracked from working hours (default is set to 9:00 AM - 5:00 PM) This option is editable from the right-side frame as well, but is the only default "survey."  Users may also check the status of certain phones (whether certain aspects of the application have been disabled, etc) via the data collection website. After logon, there will be a "View Subject Phone Status" button in the left frame. User is then given a list of subjects, and lists full of their recent activity, as well as a link to view less recent activity.</p>
+
+<h4>Sociologists - Notifications</h4>
+
+<p>If subjects keep certain aspects of the applications disabled for an extended period of time, then users will receive a notification email consisting of the subject's number, which aspect(s) has been disabled, and for long how it(they) has been disabled. The consequences that follow are left for the users to decide.</p>
+
+<h4>Subjects (Ex-prisioners) - Complete Survey</h4>
+
+<p>Users will recieve a small, unobtrusive notification whenever a new survey is recieved. User must then navigate to the phone application. There, user will find a list of unanswered surveys, in addition to other options; the interface may look similar to that of an email inbox. To provide answers to survey questions, user simply selects the survey in question, selects the text field, and then proceeds to answer the question as one would a text message. For multiple choice questions, user may simply tap the box next to his/her preferred answer. Only one question is displayed at a time, as surveys have the additional functionality of a flow chart for questions. Once user reaches the end of a survey, he/she presses the "submit" button, which prompts a confirm box. Once user presses the confirm button, the information is sent to the database, where sociologists can access it from the website.  If at any point, the user terminates the application to do something else (ie. answer a call, send a text message, etc) answers will be saved up to the question where the user left off. If however, the phone is turned off, or the application is disabled, user will lose all unsubmitted survey data. Warning messages will be implemented to prevent this from happening.</p>
+
+<h4>Subjects (Ex-prisioners) - Disable Application</h4>
+
+<p>Users will be given complete instructions on how to disable this application.when they recieve their phones. To disable the application, user goes to the application options menu, located at the bottom on the application pane. From there, user may choose to enable/disable various aspects of the application, including the minor notifications, the use of the GPS module, or even a global disable. If user keeps the application disabled for an extended period of time, they will recieve a notification by phone or text, and if he/she refuses to comply, then the phone and the data plan can be rescinded.</p>
+
+<hr />
+
+<!--Design -->
+
+<h3>Design</h3>
+
+<h4>Database</h4>
+
+<p>We will use MySQL, but will design Phone and Web applications as independent from any particular database as possible. We anticipate the following tables and attributes:</p>
+
+<ul>
+	<li>Researchers
+		<ul>
+			<li>Researcher ID</li>
+			<li>email</li>
+			<li>password</li>
+		</ul>
+	</li>
+	<li>
+		Subjects
+		<ul>
+			<li>Subject ID</li>
+			<li>phone number</li>
+			<li>name</li>
+			<li>(other contact info)</li>
+		</ul>
+	</li>
+	<li>
+		Contacts
+		<ul>
+			<li>Contact ID</li>
+			<li>Subject ID</li>
+		</ul>
+	</li>
+	<li>
+		Surveys
+		<ul>
+			<li>Survey ID</li>
+		</ul>
+	</li>
+	<li>
+		Questions
+		<ul>
+			<li>Survey ID</li>
+			<li>Question ID</li>
+			<li>question text</li>
+			<li>question type</li>
+		</ul>
+	</li>
+	<li>
+		Options
+		<ul>
+			<li>Option ID</li>
+			<li>Question ID</li>
+			<li>option text</li>
+		</ul>
+	</li>
+	<li>
+		Location Activity
+		<ul>
+			<li>Subject ID</li>
+			<li>date</li>
+			<li>time</li>
+			<li>location</li>
+		</ul>
+	</li>
+	<li>
+		Call Activity
+		<ul>
+			<li>Subject ID</li>
+			<li>date</li>
+			<li>time</li>
+			<li>type (call/text)</li>
+			<li>details (duration, others...)</li>
+		</ul>
+	</li>
+	<li>
+		Inactive/Active Time Range
+		<ul>
+			<li>Subject ID</li>
+			<li>date offline</li>
+			<li>time offline</li>
+			<li>date back online</li>
+			<li>time back online</li>
+			<li>feature enabled/disabled</li>
+		</ul>
+	</li>
+</ul>
+
+<h4>Phone Application</h4>
+
+<p>We will develop for Android in Java using Googles Android API version 7 targeted at Android version 2.1 (specifically, for the Samsung Intercept phone that Naomi will be using), though we hope to design our app so that it can be easily used with newer versions of Android.  The major components of the phone app are:</p>
+<ol>
+	<li>Data Collection: this component will be responsible for collecting GPS and calling data and holding it until it can be sent to the server.  This is where we anticipate the most differences between different versions of Android will be, so we must be careful to encapsulate as much version-specific code as possible in this section.</li>
+	<li>Server Communication: this component is responsible for communicating information from other components to the server and communicating responses back.  We will try to encapsulate most of the MySQL specific code here so the app can easily be adapted to other database engines.</li>
+	<li>User Interface: this component is responsible for allowing the user to respond to surveys and power the app or parts of it on and off.</li>
+</ol>
+
+<p>
+	Here are the latest updatese on the Phone application design:
+	<a href="https://docs.google.com/document/pub?id=12AqD6qyfr94OVOdn3HBiAqdpq4WLnYdaQ_aUxXznK1U">Google doc notes</a>
+</p>
+
+<h4>Web Application</h4>
+
+<p>
+	We will use PHP to write the web portal side of our project. We will be using the PHP web framework
+	<a href=http://www.cakephp.org/>CakePHP</a> (version 1.3)
+	in order to keep our code more structured and make development easier. The major components of the web application will be:
+</p>
+<ol>
+	<li>Users Component: deals with logging in users, setting up their preferences, and allows admins to register new users.</li>
+	<li>Survey Control Component: allows the web users to create and configure surveys to send out to the phones.</li>
+	<li>Data View Component: allows viewing of the data collected from study participant's phones. Also allows this data to be exported for use in other applications.</li>
+	<li>Subjects Control Component: handles the set up and management of survey participants.</li>
+</ol>
+
+<hr />
+
+<!-- Milestones  -->
+
+<h3>Milestones</h3>
+
+Meetings with Naomi will take place on the following dates: 3/21, 4/6, 4/18, 5/2, 5/9
+
+<h4>Early Milestones</h4>
+<ul>
+	<li>
+		By 3/20 (end of Spring Break)
+		<ul>
+			<li>All team members running the proper development software (see development section)</li>
+			<li>Testing/development server is running and has Appache, PHP, and MySQL installed</li>
+			<li>All team members have SSH access to the server</li>
+			<li>Decide on whether or not to use a web-application framework and what one</li>
+			<li>Server is tested in a simple way to ensure that all required technologies are working</li>
+			<li>Divide up work between team members</li>
+			<li>Set up GitHub account and give all team members access</li>
+		</ul>
+	</li>
+	<li>3/21 - First Meeting with Naomi - team receives testing phones</li>
+	<li>
+		By 3/27
+		<ul>
+			<li>Database is set up and operational</li>
+			<li>Specific requirements of each component of both the phone app and the web app are specified</li>
+			<li>Team splits off to work on individual assignments</li>
+		</ul>
+	</li>
+</ul>
+
+<h4>Later Milestones</h4>
+These are roughly in the order that they should be achieved; they will need to be scheduled after our first couple of meetings.
+<ul>
+ <li>Phone app collects GPS data</li>
+ <li>Phone app collects call/text data</li>
+ <li>Web app displays data</li>
+ <li>Phone sends data to the server</li>
+
+ <li>Session control complete on web app</li>
+ <li>User interface complete on phone app</li>
+ <li>Participant control options complete on web app</li>
+ <li>Survey control complete on web app</li>
+ <li>Data view complete on web app</li>
+ <li>Data export complete on web app</li>
+
+ <li>CSS/graphics complete on web app</li>
+</ul>
+
+
+<hr />
+
+<!-- Risks and open issues -->
+
+<h3>Risks and Open Issues</h3>
+
+<p>None of us are experienced on open source Android application, so we need to learn Android development environment initially. Also because we don't know so much about Android and we don't work with anyone who is expert or experienced on Android applications, we could face with something very difficult or impossible to implement. For example, there is a possibility of unavailable functions on phone API. Futhermore, compatibility is another issue. Our application might be used on lots of different devices with different hardware, that is why we may need to write different drivers for different devices. And while doing this, we might face with some quirks because we don't know differences between various versions of Android.</p>
+
+<p>Hosting is an open issue, for now we decided to use a temporary server but in the long run we need to find a permanent server. And during server transfer, we might face with some problems that we cannot predict now and it could be very complicated.</p>
+
+<p>In addition to the phone application, we will also design a web-portal for researchers such that they can have some amount of control over the application. <del>However it is still an open issue if we will use PHP, Java or something else as server-side web language. Just two of team members know PHP and if we decide to move on with PHP then other team members would have to learn PHP.</del> We have decided to go with PHP, but we decided that the phone app would be more work; so only 2 people will be working on the website: Austin and Sema (both know PHP).</p>
+
+<p>Finally, evaluation of usability and success of this application could be nontrivial. For now, survey seems to be one option for evaluation but it is better to find a more reliable way to evaluate the application.</p>
+
+<hr />
+
+<p align="right"><small>Page based on COS333 class website template</small></p>
+
+<hr />
+
+</body>
+</html>

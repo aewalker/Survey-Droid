@@ -1,9 +1,13 @@
-package com.dashtv.socapp;
+package com.peoples.android;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-public class main extends Activity {
+public class Peoples extends Activity {
+    // Debugging
+    private static final String TAG = "PEOPLES";
+    private static final boolean D = true;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
