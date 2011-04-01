@@ -49,7 +49,7 @@ class UsersController extends AppController
     function register()
     {
     	//register a new user
-    	if( !empty( $this->data ) )
+    /*	if( !empty( $this->data ) )
     	{
     		// get hash coded password
     		$this->data[‘User’][‘passwrd’] = $this->Auth->password($this->data[‘User’][‘passwrd’]);
@@ -63,7 +63,7 @@ class UsersController extends AppController
 	    	
 	    	//clear the form
 	    	$this->data[‘User’][‘passwrd’] = null;
-    	}
+    	}*/
     }
 }
 
