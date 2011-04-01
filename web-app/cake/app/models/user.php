@@ -90,11 +90,8 @@ class User extends AppModel
 		),
 		'password_confirm' => array
 		(
-			'password_confirm' => array
-			(
-				'rule' => array('validateConfirmPassword'),
-				'message' => 'Passwords must match'
-			)
+			'rule' => array('validateConfirmPassword'),
+			'message' => 'Passwords must match'
 		)
 	);
 	
