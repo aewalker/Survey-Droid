@@ -6,6 +6,7 @@ import android.os.Bundle;
 public class Peoples extends Activity {
     // Debugging
 	// TEST
+	//TEST
     private static final String TAG = "PEOPLES";
     private static final boolean D = true;
     
