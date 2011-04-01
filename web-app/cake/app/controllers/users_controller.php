@@ -65,6 +65,11 @@ class UsersController extends AppController
 	    	$this->data['User']['passwrd'] = null;
     	}
     }
+    
+function profile()
+    {
+    	//main page when user logins
+    }
 }
 
 ?> 
