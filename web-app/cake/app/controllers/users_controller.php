@@ -52,7 +52,7 @@ class UsersController extends AppController
     	if( !empty( $this->data ) )
     	{
     		// get hash coded password
-    		$this->data['User']['passwrd'] = $this->Auth->password($this->data['User']['passwrd']);
+    		$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
     		//sanitize the password
     		//$this->User->data = Sanitize::clean($this->data);
     		$this->User->create();
@@ -63,7 +63,8 @@ class UsersController extends AppController
 	    	}
 	    	
 	    	//clear the form
-	    	$this->data['User']['passwrd'] = null;
+	    	$this->data['User']['password'] = null;
+	    	$this->data['User']['password_confirm'] = null;
     	}
     }
     
