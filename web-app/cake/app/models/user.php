@@ -82,11 +82,16 @@ class User extends AppModel
 				'rule' => array('maxLength', 20),
 				'message' => 'Passwords cannot be longer than 20 characters'
 			),
-			'matchesConfirmPassword' => array
+			/*'matchesConfirmPassword' => array
 			(
 				'rule' => array('identicalFieldValues', 'confirm_pass'),
 				'message' => 'Passwords must match'
-			)
+			)*/
+		),
+		'password_confirm' => array
+		(
+			'rule' => array('identicalFieldValues', 'passwrd'),
+			'message' => 'Passwords must match'
 		)
 	);
 	

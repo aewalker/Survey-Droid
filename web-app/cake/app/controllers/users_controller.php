@@ -55,6 +55,7 @@ class UsersController extends AppController
     		$this->data['User']['passwrd'] = $this->Auth->password($this->data['User']['passwrd']);
     		//sanitize the password
     		//$this->User->data = Sanitize::clean($this->data);
+    		$this->User->create();
 	    	if ($this->User->save($this->data))
 	        {
 	         	//new user saved successfully
