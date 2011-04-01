@@ -69,7 +69,7 @@ class User extends AppModel
 				'rule' => 'email',
 				'message' => 'Email must be a valid email address'
 			)
-		),/*
+		),
 		'password_copy' => array
 		( //Passwords must be between 8 and 20 characters and must match confirm_pass at registration
 			'minLength' => array
@@ -81,14 +81,14 @@ class User extends AppModel
 			(
 				'rule' => array('maxLength', 20),
 				'message' => 'Passwords cannot be longer than 20 characters'
-			),
+			)/*,
 			'matchesConfirmPassword' => array
 			(
 				'rule' => array('identicalFieldValues', 'password_confirm'),
 				'message' => 'Passwords must match'
-			)
+			)*/
 			
-		),*/
+		),
 		'password_confirm' => array
 		(
 			'matchesConfirmPassword' => array
