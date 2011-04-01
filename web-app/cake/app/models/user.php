@@ -70,7 +70,7 @@ class User extends AppModel
 				'message' => 'Email must be a valid email address'
 			)
 		),
-		'passwrd' => array
+		'passowrd' => array
 		( //Passwords must be between 8 and 20 characters and must match confirm_pass at registration
 			'minLength' => array
 			(
