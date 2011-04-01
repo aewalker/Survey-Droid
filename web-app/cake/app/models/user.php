@@ -70,13 +70,8 @@ class User extends AppModel
 				'message' => 'Email must be a valid email address'
 			)
 		),
-		'password' => array
+		'password_copy' => array
 		( //Passwords must be between 8 and 20 characters and must match confirm_pass at registration
-			/*'matchesConfirmPassword' => array
-			(
-				'rule' => array('identicalFieldValues', 'password_confirm'),
-				'message' => 'Passwords must match'
-			),*/
 			'minLength' => array
 			(
 				'rule' => array('minLength', 8),
@@ -86,9 +81,14 @@ class User extends AppModel
 			(
 				'rule' => array('maxLength', 20),
 				'message' => 'Passwords cannot be longer than 20 characters'
+			),
+			'matchesConfirmPassword' => array
+			(
+				'rule' => array('identicalFieldValues', 'password_confirm'),
+				'message' => 'Passwords must match'
 			)
 			
-		),
+		)/*,
 		'password_confirm' => array
 		(
 			'matchesConfirmPassword' => array
@@ -96,7 +96,7 @@ class User extends AppModel
 				'rule' => array('validateConfirmPassword'),
 				'message' => 'Passwords must match'
 			)
-		)
+		)*/
 	);
 	
 	//checks that two fields are equal
@@ -117,7 +117,7 @@ class User extends AppModel
     
 	function validateConfirmPassword() 
 	{
-		if ($this->data['User']['password'] == $this->data['User']['password_confirm']) 
+		if ($this->data['User']['password_copy'] == $this->data['User']['password_confirm']) 
 			return true;
 		else
 			return false;

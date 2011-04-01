@@ -52,6 +52,7 @@ class UsersController extends AppController
     	if( !empty( $this->data ) )
     	{
     		// get hash coded password
+    		$this->data['User']['password_copy'] = data['User']['password'];
     		$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
     		//sanitize the password
     		//$this->User->data = Sanitize::clean($this->data);
