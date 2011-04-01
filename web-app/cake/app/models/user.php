@@ -87,7 +87,7 @@ class User extends AppModel
 				'rule' => array('identicalFieldValues', 'password_confirm'),
 				'message' => 'Passwords must match'
 			)
-		),
+		)/*,
 		'password_confirm' => array
 		(
 			'minLength' => array
@@ -100,7 +100,7 @@ class User extends AppModel
 				'rule' => array('maxLength', 20),
 				'message' => 'Passwords cannot be longer than 20 characters'
 			)
-		)
+		)*/
 	);
 	
 	//checks that two fields are equal
