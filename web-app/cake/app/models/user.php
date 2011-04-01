@@ -117,7 +117,7 @@ class User extends AppModel
     
 	function validateConfirmPassword($data) 
 	{
-		if ($this->data['User']['password'] == AuthComponent::password($this->data['User']['password_confirm'])) 
+		if ($this->data['User']['password'] == $this->data['User']['password_confirm']) 
 			return true;
 		else
 			return false;
