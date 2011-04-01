@@ -49,7 +49,21 @@ class UsersController extends AppController
     function register()
     {
     	//register a new user
-    	
+    	if( !empty( $this->data ) )
+    	{
+    		// get hash coded password
+    		$this->data[‘User’][‘password’] = $this->Auth->password($this->data[‘User’][‘password’]);
+    		//sanitize the password
+    		$this->User->data = Sanitize::clean($this->data);
+	    	if ($this->User->save())
+	        {
+	         	//new user saved successfully
+	        	$this->redirect(‘/users/profile’);
+	    	}
+	    	
+	    	//clear the form
+	    	$this->data[‘User’][‘password’] = null;
+    	}
     }
 }
 
