@@ -72,11 +72,11 @@ class User extends AppModel
 		),
 		'passwrd' => array
 		( //Passwords must be between 8 and 20 characters and must match confirm_pass at registration
-			'matchesConfirmPassword' => array
+			/*'matchesConfirmPassword' => array
 			(
 				'rule' => array('identicalFieldValues', 'password_confirm'),
 				'message' => 'Passwords must match'
-			),
+			),*/
 			'minLength' => array
 			(
 				'rule' => array('minLength', 8),
@@ -88,20 +88,15 @@ class User extends AppModel
 				'message' => 'Passwords cannot be longer than 20 characters'
 			)*/
 			
-		)/*,
+		),
 		'password_confirm' => array
 		(
-			'minLength' => array
+			'matchesConfirmPassword' => array
 			(
-				'rule' => array('minLength', 8),
-				'message' => 'Passwords must be at least 8 characters long'
-			),
-			'maxLength' => array
-			(
-				'rule' => array('maxLength', 20),
-				'message' => 'Passwords cannot be longer than 20 characters'
+				'rule' => array('validateConfirmPassword'),
+				'message' => 'Passwords must match'
 			)
-		)*/
+		)
 	);
 	
 	//checks that two fields are equal
