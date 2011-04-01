@@ -41,7 +41,7 @@ class User extends AppModel
 		)
 	);*/
 	
-	$validate = array
+	var $validate = array
 	(
 		'username' => array
 		( //Usernames must be alpha-numeric and between 5 and 20 characters
@@ -70,23 +70,28 @@ class User extends AppModel
 				'message' => 'Email must be a valid email address'
 			)
 		),
-		'passowrd' => array
+		'passwrd' => array
 		( //Passwords must be between 8 and 20 characters and must match confirm_pass at registration
 			'minLength' => array
 			(
 				'rule' => array('minLength', 8),
 				'message' => 'Passwords must be at least 8 characters long'
-			),
+			)/*,
 			'maxLength' => array
 			(
 				'rule' => array('maxLength', 20),
 				'message' => 'Passwords cannot be longer than 20 characters'
-			),
-			'matchesConfirmPassword' => array
-			(
-				'rule' => array('identicalFieldValues', 'confirm_pass');
-				'message' => 'Passwords must match'
 			)
+			/*'matchesConfirmPassword' => array
+			(
+				'rule' => array('identicalFieldValues', 'confirm_pass'),
+				'message' => 'Passwords must match'
+			)*/
+		),
+		'password_confirm' => array
+		(
+			'rule' => array('validateConfirmPassword'),
+			'message' => 'Passwords must match'
 		)
 	);
 	
@@ -105,5 +110,13 @@ class User extends AppModel
         }
         return TRUE;
     } 
+    
+	function validateConfirmPassword($data) 
+	{
+		if ($this->data['User']['passwrd'] == AuthComponent::password($this->data['User']['password_confirm'])) 
+			return true;
+		else
+			return false;
+	}
 }
 ?> 
