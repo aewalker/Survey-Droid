@@ -52,7 +52,7 @@ class UsersController extends AppController
     	if( !empty( $this->data ) )
     	{
     		if (!empty($this->data['User']['password']))
-				$this->data['User']['password_copy'] = $this->data['User']['password'];
+				$this->data['User']['password'] = $this->data['User']['password_copy'];
     		//sanitize the password
     		//$this->User->data = Sanitize::clean($this->data);
     		$this->User->create();
