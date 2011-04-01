@@ -41,7 +41,7 @@ class User extends AppModel
 		)
 	);*/
 	
-	$validate = array
+	var $validate = array
 	(
 		'username' => array
 		( //Usernames must be alpha-numeric and between 5 and 20 characters
