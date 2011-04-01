@@ -55,7 +55,7 @@ class UsersController extends AppController
     		$this->data['User']['passwrd'] = $this->Auth->password($this->data['User']['passwrd']);
     		//sanitize the password
     		//$this->User->data = Sanitize::clean($this->data);
-	    	if ($this->User->save())
+	    	if ($this->User->save($this->data))
 	        {
 	         	//new user saved successfully
 	        	$this->redirect('/users/profile');
@@ -66,7 +66,7 @@ class UsersController extends AppController
     	}
     }
     
-function profile()
+	function profile()
     {
     	//main page when user logins
     }

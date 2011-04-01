@@ -3,7 +3,7 @@
 echo $form->create('User', array('action' => 'register'));
 
 echo $form->input('username');
-echo $form->input('passwrd', array('type'=>'password'));
+echo $form->input('passwrd', array('type' => 'password', 'label' => 'password'));
 echo $form->input('email');
 echo $form->end('Submit');
 
