@@ -76,7 +76,7 @@ class User extends AppModel
 			(
 				'rule' => array('minLength', 8),
 				'message' => 'Passwords must be at least 8 characters long'
-			),
+			)/*,
 			'maxLength' => array
 			(
 				'rule' => array('maxLength', 20),
@@ -92,7 +92,7 @@ class User extends AppModel
 		(
 			'password_confirm' => array
 			(
-				'rule' => array('identicalFieldValues', 'passwrd'),
+				'rule' => array('validateConfirmPassword'),
 				'message' => 'Passwords must match'
 			)
 		)
@@ -113,5 +113,13 @@ class User extends AppModel
         }
         return TRUE;
     } 
+    
+	function validateConfirmPassword($data) 
+	{
+		if ($this->data['User']['passwrd'] == AuthComponent::password($this->data['User']['password_confirm'])) 
+			return true;
+		else
+			return false;
+	}
 }
 ?> 
