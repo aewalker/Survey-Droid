@@ -18,8 +18,8 @@ class UsersController extends AppController
 	function beforeSave()
 	{
 		//Need to tell Auth to hash the confirm password so the model can check that they match
-		if (!empty($this->data['User']['password']))
-		$this->data['User']['password_copy'] = $this->data['User']['password'];
+		//if (!empty($this->data['User']['password']))
+		
 		parent::beforeSave();
 	}
 	
@@ -51,7 +51,7 @@ class UsersController extends AppController
     	//register a new user
     	if( !empty( $this->data ) )
     	{
-
+$this->data['User']['password_copy'] = $this->data['User']['password'];
     		//sanitize the password
     		//$this->User->data = Sanitize::clean($this->data);
     		$this->User->create();
