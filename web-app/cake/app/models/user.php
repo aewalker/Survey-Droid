@@ -69,7 +69,7 @@ class User extends AppModel
 				'rule' => 'email',
 				'message' => 'Email must be a valid email address'
 			)
-		),
+		),/*
 		'password_copy' => array
 		( //Passwords must be between 8 and 20 characters and must match confirm_pass at registration
 			'minLength' => array
@@ -88,7 +88,7 @@ class User extends AppModel
 				'message' => 'Passwords must match'
 			)
 			
-		)/*,
+		),*/
 		'password_confirm' => array
 		(
 			'matchesConfirmPassword' => array
@@ -96,7 +96,7 @@ class User extends AppModel
 				'rule' => array('validateConfirmPassword'),
 				'message' => 'Passwords must match'
 			)
-		)*/
+		)
 	);
 	
 	//checks that two fields are equal
