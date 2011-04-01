@@ -84,7 +84,7 @@ class User extends AppModel
 			),
 			'matchesConfirmPassword' => array
 			(
-				'rule' => array('identicalFieldValues', 'confirm_pass');
+				'rule' => array('identicalFieldValues', 'confirm_pass'),
 				'message' => 'Passwords must match'
 			)
 		)
