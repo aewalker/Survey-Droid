@@ -18,8 +18,8 @@ class UsersController extends AppController
 	function beforeSave()
 	{
 		//Need to tell Auth to hash the confirm password so the model can check that they match
-		if (!empty($tis->data['User']['confirm_pass']))
-		$this->data['User']['confirm_pass'] = $this->Auth->password($this->data['User']['confirm_pass']);
+		if (!empty($tis->data['User']['password_confirm']))
+		$this->data['User']['password_confirm'] = $this->Auth->password($this->data['User']['password_confirm']);
 		parent::beforeSave();
 	}
 	
