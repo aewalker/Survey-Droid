@@ -3,5 +3,5 @@ phone-app/.project
 phone-app/.settings
 phone-app/bin/*
 *.*~
-web-app/cake/app/tmp/*
+web-app/cake/app/tmp/sessions
 .project
