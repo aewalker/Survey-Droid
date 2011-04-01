@@ -4,3 +4,4 @@ phone-app/.settings
 phone-app/bin/*
 *.*~
 web-app/cake/app/tmp/*
+.project
