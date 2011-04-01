@@ -9,8 +9,6 @@ class UsersController extends AppController
 {
 	//load the Auth (ie authorization) component
     var $components = array('Auth');
-    
-    Auth->allow('register');
      
     function beforeFilter()
 	{
