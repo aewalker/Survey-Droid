@@ -9,6 +9,8 @@ class UsersController extends AppController
 {
 	//load the Auth (ie authorization) component
     var $components = array('Auth');
+    
+    Auth->allow(‘register’);
      
     function beforeFilter()
 	{
@@ -54,7 +56,7 @@ class UsersController extends AppController
     		// get hash coded password
     		$this->data['User']['passwrd'] = $this->Auth->password($this->data['User']['passwrd']);
     		//sanitize the password
-    		$this->User->data = Sanitize::clean($this->data);
+    		//$this->User->data = Sanitize::clean($this->data);
 	    	if ($this->User->save())
 	        {
 	         	//new user saved successfully
