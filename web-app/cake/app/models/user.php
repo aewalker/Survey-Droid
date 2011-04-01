@@ -76,7 +76,7 @@ class User extends AppModel
 			(
 				'rule' => array('minLength', 8),
 				'message' => 'Passwords must be at least 8 characters long'
-			)/*,
+			),
 			'maxLength' => array
 			(
 				'rule' => array('maxLength', 20),
@@ -90,8 +90,11 @@ class User extends AppModel
 		),
 		'password_confirm' => array
 		(
-			'rule' => array('identicalFieldValues', 'passwrd'),
-			'message' => 'Passwords must match'
+			'password_confirm' => array
+			(
+				'rule' => array('identicalFieldValues', 'passwrd'),
+				'message' => 'Passwords must match'
+			)
 		)
 	);
 	
