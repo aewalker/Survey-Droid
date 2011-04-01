@@ -115,7 +115,7 @@ class User extends AppModel
         return TRUE;
     } 
     
-	function validateConfirmPassword($data) 
+	function validateConfirmPassword() 
 	{
 		if ($this->data['User']['password'] == $this->data['User']['password_confirm']) 
 			return true;
