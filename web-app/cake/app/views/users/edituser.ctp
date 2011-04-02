@@ -26,7 +26,7 @@ if (($user = $session->read('Auth.User')) != NULL)
 ?>
 <div id="content">
 	<?php 
-	if (!isset($result))
+	if (!isset($result)||$result==false)
 	{ 
 		$user = $user['User'];
 		echo $form->create('User', array('url' => '/users/edit/'.$user['id']));
