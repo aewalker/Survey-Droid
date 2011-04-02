@@ -1,7 +1,7 @@
 <div id="content">
 	<?php 
-	if (!isset($saved) || $saved == false)
-	{ 
+	//if (!isset($saved) || $saved == false)
+	 
 		echo $form->create('User', array('url' => '/users/edituser/'.$user['id']));
 		echo $form->input('username', array('default' => $user['username']) );
 		echo $form->input('User.password_copy', array('type' => 'password', 'label' => 'Password'));
@@ -19,16 +19,12 @@
 		
 		echo $form->end('Submit');
 			
-	}
-	else
-	{ 
+	
 		if ($saved === true)
 		{ 
 			echo '<h3>User is changed.</h3>';
 			echo '<h3>'.$html->link('Back', '/users/').'</h3>';
 		}
-		else
-			echo "Error!";
-	}
+	
 	 ?>
 </div>
