@@ -87,7 +87,7 @@ class UsersController extends AppController
     	//if (!$this->Session->check('User.admin'))
 		//{		
 			
-			$result = $this->User->find('all', 'conditions' => array('id=?' => $id));
+			$result = $this->User->find('all', array('conditions' => array('id' => $id)));
 			$this->set('user', $result);
 			if (!empty($this->data['User']['password_copy']))
     		{
