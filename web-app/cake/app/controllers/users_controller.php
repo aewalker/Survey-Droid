@@ -99,7 +99,7 @@ class UsersController extends AppController
 			{
 				if (empty($this->data['User']['password_copy']) && empty($this->data['User']['password_confirm']))
 	    		{
-	    			$this->data['User']['password_confirm'] = "XXXXXX";
+	    			$this->data['User']['password_confirm'] = "XXXXXXXX";
 	    			$this->data['User']['password_copy'] = $this->data['User']['password_confirm'];
 	    			$this->data['User']['password'] = $result['password'];
 	    		}
