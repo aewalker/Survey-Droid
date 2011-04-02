@@ -17,7 +17,7 @@ if (($user = $session->read('Auth.User')) != NULL)
 		echo $form->checkbox('admin', array('checked' => false));
 		
 	echo $form->input('id', array('hidden' => $user['id']));
-	echo $form->input('password', array('hidden' => $user['password']));
+	//echo $form->input('password', array('hidden' => $user['password']));
 	 
 	echo $form->end('Submit');
 }
