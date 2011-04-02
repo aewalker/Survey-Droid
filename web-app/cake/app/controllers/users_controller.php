@@ -87,7 +87,7 @@ class UsersController extends AppController
 			//echo $this->User->read('username');
 			//$this->id = $this->data['User']['id'];
 			//$this->User->read($this->data['User']['id']);
-			$user = $this->Gallery->read(array('id', 'password', 'email', 'username', 'first_name', 'last_name', 'admin'), $this->data['User']['id']);
+			$user = $this->User->read(array('id', 'password', 'email', 'username', 'first_name', 'last_name', 'admin'), $this->data['User']['id']);
 			$this->data['password'] = $user['password'];
     		if (!empty($this->data['User']['password_copy']) && 
     				($this->data['User']['password_copy']==$this->data['User']['password_confirm']) )
@@ -109,37 +109,6 @@ class UsersController extends AppController
 	    	$this->data['User']['password_confirm'] = null;
     	}
     }
-    
-function edit($id = null)
-		{
-			if ($this->Session->check('User.isAdmin'))
-			{
-				if ($id == null)
-				{
-					$this->set('result', array('Edit' => 'No story selected to edit'));
-				}
-				else
-				{
-					if (empty($this->data['Story']))
-					{
-						$this->set('story',$this->Story->read(array('id', 'title', 'content'), $id));
-					}
-					else
-					{
-						$result = $this->Story->save($this->data);
-						if ($result)
-						{
-							$this->set('result', true);
-						}
-						else
-						{
-							$this->set('result', $this->Story->validationErrors);
-							$this->set('id', $id);
-						}
-					}
-				}
-			}
-		}
 }
 
 ?> 
