@@ -1,6 +1,6 @@
 <div id="content">
 	<?php 
-	if (!isset($saved) || $saved = false)
+	if (!isset($saved) || $saved == false)
 	{ 
 		echo $form->create('User', array('url' => '/users/edituser/'.$user['id']));
 		echo $form->input('username', array('default' => $user['username']) );
