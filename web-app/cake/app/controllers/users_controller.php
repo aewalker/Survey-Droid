@@ -76,6 +76,12 @@ class UsersController extends AppController
     {
     	//main page when user logins
     }
+    
+	function edituser()
+    {
+    	//edit user's information
+    	
+    }
 }
 
 ?> 

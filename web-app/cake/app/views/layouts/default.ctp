@@ -16,7 +16,7 @@
 		echo '<p>Logged in as ';
 		echo $user['first_name'].' '.$user['last_name'].'. ';
 		if($user['admin']==1)
-			echo " (Administrator)";
+			echo ' (Administrator)';
 		echo $html->link('Logout', array('controller' => 'users', 'action' => 'logout'));
 		echo '</p>';
 	}
