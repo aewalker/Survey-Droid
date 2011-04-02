@@ -98,8 +98,6 @@ class UsersController extends AppController
     			$this->data['User']['password'] = $this->data['User']['password_copy'];
     			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
     		}
-    		echo $this->data['User']['username'];
-    		echo $this->data['User']['email'];
 		
 			$result = $this->User->save($this->data);
 			
