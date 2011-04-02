@@ -8,7 +8,8 @@ echo $form->input('password_confirm', array('type' => 'password', 'label' => 'Co
 echo $form->input('email');
 echo $form->input('first_name');
 echo $form->input('last_name', array('label' => 'Last Name'));
-echo $form->checkbox('admin', array('hiddenField' => false, 'label' => 'Make admin')); 
+echo "Make Admin";
+echo $form->checkbox('admin', array('checked' => false));
 echo $form->end('Submit');
 
 ?>
