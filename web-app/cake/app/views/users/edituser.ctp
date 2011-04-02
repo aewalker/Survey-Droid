@@ -14,7 +14,7 @@ if (($user = $session->read('Auth.User')) != NULL)
 	if($user['admin']==1)
 		echo $form->checkbox('admin', array('checked' => true));
 	else
-		echo $form->checkbox('admin', array('checked' => true));
+		echo $form->checkbox('admin', array('checked' => false));
 	 
 	echo $form->end('Submit');
 }

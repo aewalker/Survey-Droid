@@ -67,7 +67,7 @@ class UsersController extends AppController
 	    	}
 	    	
 	    	//clear the form
-	    	$this->data['User']['password'] = null;
+	    	$this->data['User']['password_copy'] = null;
 	    	$this->data['User']['password_confirm'] = null;
     	}
     }
@@ -80,7 +80,39 @@ class UsersController extends AppController
 	function edituser()
     {
     	//edit user's information
-    	
+    	if (($user = $session->read('Auth.User')) != NULL && !empty( $this->data ))
+		{
+			$user['password_confirm'] = $user['password'];   
+    		if (!empty($this->data['User']['password_copy']))
+    		{
+    			$this->data['User']['password'] = $this->data['User']['password_copy'];
+    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
+    			$user['password'] = $this->data['User']['password'];
+    			$user['password_copy'] = $this->data['User']['password_copy'];
+    			$user['password_confirm'] = $this->data['User']['password_confirm'];    			
+    		}
+			if (!empty($this->data['User']['username']))
+    			$user['username'] = $this->data['User']['username']; 
+    		if (!empty($this->data['User']['email']))
+    			$user['email'] = $this->data['User']['email'];   
+    		if (!empty($this->data['User']['first_name']))
+    			$user['first_name'] = $this->data['User']['first_name'];   
+    		if (!empty($this->data['User']['last_name']))
+    			$user['last_name'] = $this->data['User']['last_name'];  
+    		if (!empty($this->data['User']['admin']))
+    			$user['admin'] = $this->data['User']['admin'];   
+   		
+
+	    	if ($this->User->save($user))
+	        {
+	         	//new user saved successfully
+	        	$this->redirect('/users/profile');
+	    	}
+	    	
+	    	//clear the form
+	    	$this->data['User']['password_copy'] = null;
+	    	$this->data['User']['password_confirm'] = null;
+    	}
     }
 }
 
