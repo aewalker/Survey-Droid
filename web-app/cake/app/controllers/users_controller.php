@@ -108,10 +108,10 @@ class UsersController extends AppController
 	    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password_copy']);
 	    		}
 	    		echo $this->data['User']['admin'];
-	    		if($this->data['User']['admin'] == 'checked')
-	    			$this->data['User']['admin'] = 1;
+	    		if($this->data['User']['admin'] == 1)
+	    			$this->data['User']['admin'] = true;
 	    		else
-	    			$this->data['User']['admin'] = 0;
+	    			$this->data['User']['admin'] = false;
 			
 				$saved = $this->User->save($this->data);
 				
