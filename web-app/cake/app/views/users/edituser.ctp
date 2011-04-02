@@ -28,9 +28,7 @@ if (($user = $session->read('Auth.User')) != NULL)
 	<?php 
 	if (!isset($result)||$result==false)
 	{ 
-	echo $user['username'];
 		$user = $user['User'];
-		echo $user['username'];
 		echo $form->create('User', array('url' => '/users/edituser/'.$user['id']));
 		echo $form->input('User.username', array('default' => $user['username']) );
 		echo $form->input('User.password_copy', array('type' => 'password', 'label' => 'Password'));
