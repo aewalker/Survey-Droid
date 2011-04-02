@@ -84,8 +84,8 @@ class UsersController extends AppController
 	function edituser($id)
     {
     	//edit user's information
-    	if (!$this->Session->check('User.admin'))
-		{		
+    	//if (!$this->Session->check('User.admin'))
+		//{		
 			if (!empty($this->data['User']['password_copy']))
     		{
     			$this->data['User']['password'] = $this->data['User']['password_copy'];
@@ -127,7 +127,7 @@ class UsersController extends AppController
 	    	$this->data['User']['password_copy'] = null;
 	    	$this->data['User']['password_confirm'] = null;
 	    	*/
-    	}
+    	//}
     }
 }
 

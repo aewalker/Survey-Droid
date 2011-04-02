@@ -24,11 +24,7 @@ if (($user = $session->read('Auth.User')) != NULL)
 
 */
 ?>
-<?php
-
-$this->set("title_for_layout", array('title' => 'Edit User'));
-
-?><div id="content">
+<div id="content">
 	<?php 
 	if (!isset($result))
 	{ 
@@ -58,6 +54,8 @@ $this->set("title_for_layout", array('title' => 'Edit User'));
 			echo '<h3>Success!  Story changed.</h3>';
 			echo '<h3>'.$html->link('Back', '/users/').'</h3>';
 		}
+		else
+			echo "Error!";
 	}
 	 ?>
 </div>

@@ -1,7 +1,4 @@
-<?php
-
-$this->set("title_for_layout", array('title' => 'Users'));
-?><div id="content">
+<div id="content">
 	<h1>All Users</h1>
 	<?php
 	foreach ($users as $user)
