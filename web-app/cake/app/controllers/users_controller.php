@@ -97,17 +97,7 @@ class UsersController extends AppController
     		if ($this->data['User']['admin']==1)
     			$this->User->set('admin', 1);   
     		else
-    			$this->User->set('admin', 0);   
-
-	    	if ($this->User->save($user))
-	        {
-	         	//new user saved successfully
-	        	//$this->redirect('/users/profile');
-	        	echo "Successfully saved!";
-	    	}
-	    	else
-	    		echo "Error!";
-	    	
+    			$this->User->set('admin', 0);   	
 	    	
 	    	//clear the form
 	    	$this->data['User']['password_copy'] = null;
