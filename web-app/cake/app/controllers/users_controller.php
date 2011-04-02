@@ -92,6 +92,7 @@ class UsersController extends AppController
 				$result = $result['User'];
 				$this->set('user', $result);
 			}
+			$this->set('saved', false);
 			
 			if (!empty($this->data['User']['password_copy']))
     		{
