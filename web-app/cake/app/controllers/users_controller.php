@@ -88,7 +88,7 @@ class UsersController extends AppController
 		//{		
 			echo $id;
 			$result = $this->User->find('all', array('conditions' => array('id' => $id)));
-			echo $result['username'].$result['id'];
+			echo $result['User']['username'].$result['User']['id'];
 			$this->set('user', $result);
 			if (!empty($this->data['User']['password_copy']))
     		{
