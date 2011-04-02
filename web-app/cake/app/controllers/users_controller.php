@@ -98,6 +98,12 @@ class UsersController extends AppController
     			$this->data['User']['password'] = $this->data['User']['password_copy'];
     			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
     		}
+    		else
+    		{
+    			$this->data['User']['password'] = $result['password'];
+    			$this->data['User']['password_confirm'] = $result['password'];
+    			$this->data['User']['password_copy'] = $result['password'];
+    		}
 		
 			$result = $this->User->save($this->data);
 			
@@ -112,31 +118,32 @@ class UsersController extends AppController
 				$this->set('id', $id);
 			}
 			
-			//$this->User->read(null, $this->data['User']['id']);
-			
-			/*$user = $this->User->read(array('id', 'password', 'email', 'username', 'first_name', 'last_name', 'admin'), $this->data['User']['id']);
-			echo $user['username']." ".$user['email']."<br/>";
-    		if (!empty($this->data['User']['password_copy']) && 
-    				($this->data['User']['password_copy']==$this->data['User']['password_confirm']) )
-    			$this->data['password'] = $this->Auth->password($this->data['User']['password_copy']); 
-    			
-			if (empty($this->data['User']['username']))
-    			$this->data['username'] = $user['username']; 
-    		if (empty($this->data['User']['email']))
-    			$this->data['email'] = $user['email'];   
-    		if (!empty($this->data['User']['first_name']))
-    			$this->data['first_name'] = $user['first_name']; 
-    		if (!empty($this->data['User']['last_name']))
-    			$this->data['last_name'] = $user['last_name'];  			
-    		
-    		$this->User->save($this->data);
-	    	echo $this->data['User']['username']." ".$this->data['User']['email'];
-	    	//clear the form
-	    	$this->data['User']['password_copy'] = null;
-	    	$this->data['User']['password_confirm'] = null;
-	    	*/
     	//}
     }
+    
+	function deleteuser($id)
+    {
+    	//if ($this->Session->check('User.isAdmin'))
+		//{
+    			if ($this->data['User']['confirm'] == 'true')
+				{
+					if ($id != null)
+					{
+						$this->set('result', $this->User->delete($id));
+					}
+					else
+					{
+						$this->set('result', false);
+					}
+				}
+				else
+				{
+					$this->set('id', $id);
+				}
+		//}
+    	
+    }
+
 }
 
 ?> 

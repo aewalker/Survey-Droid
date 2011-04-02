@@ -79,7 +79,7 @@ class User extends AppModel
 			),
 			'maxLength' => array
 			(
-				'rule' => array('maxLength', 20),
+				'rule' => array('maxLength', 32),
 				'message' => 'Passwords cannot be longer than 20 characters'
 			),
 			'matchesConfirmPassword' => array
@@ -100,8 +100,7 @@ class User extends AppModel
     {
         foreach( $field as $key => $value ){
             $v1 = $value;
-            $v2 = $this->data[$this->name][ $compare_field ];          
-            echo $v1." ".$v2;       
+            $v2 = $this->data[$this->name][ $compare_field ];                 
             if($v1 !== $v2) {
                 return FALSE;
             } else {
