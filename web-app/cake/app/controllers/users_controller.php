@@ -23,12 +23,16 @@ class UsersController extends AppController
 		parent::beforeSave();
 	}
 	
-	function index()
+	function index($showList = false)
 	{
 		//we want the default action of the users controller to be login (for now)
 		//$this->redirect('login');
+		$results = $this->User->find('all', array('order' => 'User.created DESC', 'limit' => 20));
+		foreach($results as &$result)
+			$result = $result['User'];
+		$this->set('users', $results);
 	}
-    
+
     function login()
     {
     	//don't need to do anything; Auth takes care of it in the view
