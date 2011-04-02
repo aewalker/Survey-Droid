@@ -82,7 +82,7 @@ class UsersController extends AppController
     	//edit user's information
     	if (!empty( $this->data ))
 		{		
-			$user = $this->Auth->read('User');
+			$user = $this->Auth->user();
 			$this->id = $user['id'];
 			$this->User->read();
     		if (!empty($this->data['User']['password_copy']) && 
