@@ -105,16 +105,15 @@ class UsersController extends AppController
     			$this->data['User']['password_copy'] = $result['password'];
     		}
 		
-			$result = $this->User->save($this->data);
+			$saved = $this->User->save($this->data);
 			
-			if ($result)
+			if ($saved)
 			{
-				$this->set('result', true);
+				$this->set('saved', true);
 			}
 			else
 			{
-				echo 'not saved';
-				$this->set('result', $this->User->validationErrors);
+				$this->set('saved', $this->User->validationErrors);
 				$this->set('id', $id);
 			}
 			

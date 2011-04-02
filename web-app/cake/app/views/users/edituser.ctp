@@ -1,6 +1,6 @@
 <div id="content">
 	<?php 
-	if (!isset($result)||$result==false)
+	if (!isset($saved))
 	{ 
 		echo $form->create('User', array('url' => '/users/edituser/'.$user['id']));
 		echo $form->input('username', array('default' => $user['username']) );
@@ -21,10 +21,10 @@
 			
 	}
 	else
-	{ //Form was submited
-		if ($result === true)
-		{ //Everything worked
-			echo '<h3>Success!  Story changed.</h3>';
+	{ 
+		if ($saved === true)
+		{ 
+			echo '<h3>User is changed.</h3>';
 			echo '<h3>'.$html->link('Back', '/users/').'</h3>';
 		}
 		else
