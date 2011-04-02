@@ -108,7 +108,8 @@ class UsersController extends AppController
 	    	if ($this->User->save($user))
 	        {
 	         	//new user saved successfully
-	        	$this->redirect('/users/profile');
+	        	//$this->redirect('/users/profile');
+	        	echo "Successfully saved!";
 	    	}
 	    	
 	    	//clear the form
