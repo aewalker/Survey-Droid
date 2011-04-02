@@ -9,15 +9,16 @@ $this->set("title_for_layout", array('title' => 'Users'));
 		echo '<p>'.$html->link($user['username'], '/users/view/'.$user['id']).' <strong>';
 		//if ($this->Session->check('User.isAdmin'))
 		//{
-			echo ' '.$html->link('Edit', '/users/edit/'.$user['id']).' '.
-			$html->link('Delete', '/users/delete/'.$user['id']);
+			echo ' '.$html->link('Edit', '/users/edituser/'.$user['id']).' '.
+			$html->link('Delete', '/users/deleteuser/'.$user['id']);
 		//}
 		echo '</strong></p>';
 	} ?>
 </div>
 <div id="sidebar">
-	<?php if ($this->Session->check('User.isAdmin'))
-		{
+	<?php //if ($this->Session->check('User.isAdmin'))
+		//{
 			echo '<h3>'.$html->link('Create New User', '/users/register/');
-		} ?>
+		//} 
+		?>
 </div>

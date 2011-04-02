@@ -1,4 +1,4 @@
-<?php
+/*<?php
 
 echo $form->create('User', array('action' => 'edituser'));
 
@@ -23,7 +23,7 @@ if (($user = $session->read('Auth.User')) != NULL)
 }
 
 
-?>
+?>*/
 <?php
 
 $this->set("title_for_layout", array('title' => 'Edit User'));
@@ -46,7 +46,7 @@ $this->set("title_for_layout", array('title' => 'Edit User'));
 		else
 			echo $form->checkbox('User.admin', array('checked' => false));
 			
-		echo $form->hidden('User.id', array('value' => $user['id']));
+		//echo $form->hidden('User.id', array('value' => $user['id']));
 		
 		echo $form->end('Submit');
 			
@@ -57,26 +57,6 @@ $this->set("title_for_layout", array('title' => 'Edit User'));
 		{ //Everything worked
 			echo '<h3>Success!  Story changed.</h3>';
 			echo '<h3>'.$html->link('Back', '/users/').'</h3>';
-		}
-		else
-		{ //There were problems
-			$count = count($result);
-			if ($count == 1)
-			{
-				echo '<h3>Failure!  There was an error:</h3>';
-			}
-			else
-			{
-				echo '<h3>Failure!  There were errors:</h3>';
-			}
-			echo '<div id="error">';
-			foreach ($result as $field => $message)
-			{
-				echo '<p>'.ucwords($field).': '.$message.'</p>';
-			}
-			echo '</div>';
-			echo $html->link('Try Again', '/stories/edit/'.$id);
-			echo '<h3>'.$html->link('Back', '/stories/').'</h3>';
 		}
 	}
 	 ?>

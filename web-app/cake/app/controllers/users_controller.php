@@ -81,19 +81,32 @@ class UsersController extends AppController
     	//main page when user logins
     }
     
-	function edituser()
+	function edituser($id)
     {
     	//edit user's information
     	if (!$this->Session->check('User.admin'))
 		{		
+			if (!empty($this->data['User']['password_copy']))
+    		{
+    			$this->data['User']['password'] = $this->data['User']['password_copy'];
+    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
+    		}
 							
-			//this->data['User']['id'] = $this->User->id;
-			//echo $this->User->read('username');
-			//$this->id = $this->data['User']['id'];
-			//$this->User->read($this->data['User']['id']);
-			$this->User->read(null, $this->data['User']['id']);
+			$result = $this->User->save($this->data);
 			
-			$user = $this->User->read(array('id', 'password', 'email', 'username', 'first_name', 'last_name', 'admin'), $this->data['User']['id']);
+			if ($result)
+			{
+				$this->set('result', true);
+			}
+			else
+			{
+				$this->set('result', $this->User->validationErrors);
+				$this->set('id', $id);
+			}
+			
+			//$this->User->read(null, $this->data['User']['id']);
+			
+			/*$user = $this->User->read(array('id', 'password', 'email', 'username', 'first_name', 'last_name', 'admin'), $this->data['User']['id']);
 			echo $user['username']." ".$user['email']."<br/>";
     		if (!empty($this->data['User']['password_copy']) && 
     				($this->data['User']['password_copy']==$this->data['User']['password_confirm']) )
@@ -113,6 +126,7 @@ class UsersController extends AppController
 	    	//clear the form
 	    	$this->data['User']['password_copy'] = null;
 	    	$this->data['User']['password_confirm'] = null;
+	    	*/
     	}
     }
 }
