@@ -92,7 +92,7 @@ class UsersController extends AppController
     			$user['password_confirm'] = $this->data['User']['password_confirm'];    			
     		}
 			if (!empty($this->data['User']['username']))
-    			$user['username'] = $this->data['User']['username']; 
+    			$user->set('username', $this->data['User']['username']); 
     		if (!empty($this->data['User']['email']))
     			$user['email'] = $this->data['User']['email'];   
     		if (!empty($this->data['User']['first_name']))
