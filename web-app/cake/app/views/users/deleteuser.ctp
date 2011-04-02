@@ -26,6 +26,6 @@
 			}
 			echo '<h3>'.$html->link('Back', '/users/').'<h3>';
 		}
-	}
+	//}
 	 ?>
 </div>
