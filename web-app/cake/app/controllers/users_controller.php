@@ -80,30 +80,24 @@ class UsersController extends AppController
 	function edituser()
     {
     	//edit user's information
-    	if (($user = $this->Auth->user()) != NULL && !empty( $this->data ))
-		{
-			$user['password_confirm'] = $user['password'];   
-    		if (!empty($this->data['User']['password_copy']))
-    		{
-    			$this->data['User']['password'] = $this->data['User']['password_copy'];
-    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
-    			$user['password'] = $this->data['User']['password'];
-    			$user['password_copy'] = $this->data['User']['password_copy'];
-    			$user['password_confirm'] = $this->data['User']['password_confirm'];    			
-    		}
+    	if (!empty( $this->data ))
+		{			
+    		if (!empty($this->data['User']['password_copy']) && 
+    				($this->data['User']['password_copy']==$this->data['User']['password_confirm']) )
+    			$this->User->set('password', $$this->Auth->password($this->data['User']['password'])); 
+    			   			
 			if (!empty($this->data['User']['username']))
     			$this->User->set('username', $this->data['User']['username']); 
     		if (!empty($this->data['User']['email']))
-    			$user['email'] = $this->data['User']['email'];   
+    			$this->User->set('email'], $this->data['User']['email']);   
     		if (!empty($this->data['User']['first_name']))
-    			$user['first_name'] = $this->data['User']['first_name'];   
+    			$this->User->set('first_name'], $this->data['User']['first_name']);   
     		if (!empty($this->data['User']['last_name']))
-    			$user['last_name'] = $this->data['User']['last_name'];  
+    			$this->User->set('last_name'], $this->data['User']['last_name']);  
     		if ($this->data['User']['admin']==1)
-    			$user['admin'] = 1;   
+    			$this->User->set('admin'], 1);   
     		else
-    			$user['admin'] = 0;   
-   		echo $user['username']." ".$user['admin'];
+    			$this->User->set('admin'], 0);   
 
 	    	if ($this->User->save($user))
 	        {
@@ -111,6 +105,9 @@ class UsersController extends AppController
 	        	//$this->redirect('/users/profile');
 	        	echo "Successfully saved!";
 	    	}
+	    	else
+	    		echo "Error!";
+	    	
 	    	
 	    	//clear the form
 	    	$this->data['User']['password_copy'] = null;
