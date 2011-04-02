@@ -30,7 +30,7 @@ class User extends AppModel
 		'first_name' => array
 		(
 			'type' => 'string'
-		)
+		),
 		'last_name' => array
 		(
 			'type' => 'string'
