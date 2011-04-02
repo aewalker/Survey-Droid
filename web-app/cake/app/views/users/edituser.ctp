@@ -1,6 +1,5 @@
 <div id="content">
 	<?php 
-	//if (!isset($saved) || $saved == false)
 	 
 		echo $form->create('User', array('url' => '/users/edituser/'.$user['id']));
 		echo $form->input('username', array('default' => $user['username']) );
@@ -25,6 +24,7 @@
 			echo '<h3>User is changed.</h3>';
 			echo '<h3>'.$html->link('Back', '/users/').'</h3>';
 		}
+		
 	
 	 ?>
 </div>

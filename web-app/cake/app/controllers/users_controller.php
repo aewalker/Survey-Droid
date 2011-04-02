@@ -92,30 +92,32 @@ class UsersController extends AppController
 				$result = $result['User'];
 				$this->set('user', $result);
 			}
-			$this->set('saved', false);
-			
-			if (!empty($this->data['User']['password_copy']))
-    		{
-    			$this->data['User']['password'] = $this->data['User']['password_copy'];
-    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
-    		}
-    		else
-    		{
-    			$this->data['User']['password'] = $result['password'];
-    			$this->data['User']['password_confirm'] = $result['password'];
-    			$this->data['User']['password_copy'] = $result['password'];
-    		}
-		
-			$saved = $this->User->save($this->data);
-			
-			if ($saved)
+
+			if(isset($this->data['User']['id']))
 			{
-				$this->set('saved', true);
-			}
-			else
-			{
-				$this->set('saved', $this->User->validationErrors);
-				$this->set('id', $id);
+				if (!empty($this->data['User']['password_copy']))
+	    		{
+	    			$this->data['User']['password'] = $this->data['User']['password_copy'];
+	    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
+	    		}
+	    		else
+	    		{
+	    			$this->data['User']['password'] = $result['password'];
+	    			$this->data['User']['password_confirm'] = $result['password'];
+	    			$this->data['User']['password_copy'] = $result['password'];
+	    		}
+			
+				$saved = $this->User->save($this->data);
+				
+				if ($saved)
+				{
+					$this->set('saved', true);
+				}
+				else
+				{
+					$this->set('saved', $this->User->validationErrors);
+					$this->set('id', $id);
+				}
 			}
 			
     	//}
