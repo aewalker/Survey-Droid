@@ -80,7 +80,7 @@ class UsersController extends AppController
 	function edituser()
     {
     	//edit user's information
-    	if ($this->Session->check('User.admin'))
+    	if (!$this->Session->check('User.admin'))
 		{		
 							
 			//this->data['User']['id'] = $this->User->id;
@@ -88,23 +88,19 @@ class UsersController extends AppController
 			//$this->id = $this->data['User']['id'];
 			//$this->User->read($this->data['User']['id']);
 			$user = $this->Gallery->read(array('id', 'password', 'email', 'username', 'first_name', 'last_name', 'admin'), $this->data['User']['id']);
+			$this->data['password'] = $user['password'];
     		if (!empty($this->data['User']['password_copy']) && 
     				($this->data['User']['password_copy']==$this->data['User']['password_confirm']) )
-    			$this->User->set('password', $this->Auth->password($this->data['User']['password'])); 
-    			$this->set('password', $this->User->read('id', $id));
+    			$this->data['password'] = $this->Auth->password($this->data['User']['password_copy']); 
+    			
 			if (empty($this->data['User']['username']))
     			$this->data['username'] = $user['username']; 
-    		if (!empty($this->data['User']['email']))
-    			$this->User->set('email', $this->data['User']['email']);   
+    		if (empty($this->data['User']['email']))
+    			$this->data['email'] = $user['email'];   
     		if (!empty($this->data['User']['first_name']))
-    			$this->User->set('first_name', $this->data['User']['first_name']);   
+    			$this->data['first_name'] = $user['first_name']; 
     		if (!empty($this->data['User']['last_name']))
-    			$this->User->set('last_name', $this->data['User']['last_name']);  
-    		if ($this->data['User']['admin']==1)
-    			$this->User->set('admin', 1);   
-    		else
-    			$this->User->set('admin', 0);   	
-    			
+    			$this->data['last_name'] = $user['last_name'];  			
     		
     		$this->Gallery->save($this->data);
 	    	
