@@ -3,7 +3,7 @@
 	if (!isset($result)||$result==false)
 	{ 
 		echo $form->create('User', array('url' => '/users/edituser/'.$user['id']));
-		echo $form->input('User.username', array('default' => $user['username']) );
+		echo $form->input('username', array('default' => $user['username']) );
 		echo $form->input('User.password_copy', array('type' => 'password', 'label' => 'Password'));
 		echo $form->input('User.password_confirm', array('type' => 'password', 'label' => 'Confirm the password'));
 		echo $form->input('User.email', array('default' => $user['email']));
