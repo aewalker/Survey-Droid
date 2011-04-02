@@ -82,6 +82,7 @@ class UsersController extends AppController
     	//edit user's information
     	if (!empty( $this->data ))
 		{		
+			echo $this->User->read('username');
 			//$this->id = $this->data['User']['id'];
 			$this->User->read($this->data['User']['id']);
     		if (!empty($this->data['User']['password_copy']) && 
@@ -100,6 +101,8 @@ class UsersController extends AppController
     			$this->User->set('admin', 1);   
     		else
     			$this->User->set('admin', 0);   	
+    			
+    		echo $this->User->read('username');
 	    	
 	    	//clear the form
 	    	$this->data['User']['password_copy'] = null;
