@@ -26,7 +26,7 @@ class UsersController extends AppController
 	function index()
 	{
 		//we want the default action of the users controller to be login (for now)
-		$this->redirect('login');
+		//$this->redirect('login');
 	}
     
     function login()
