@@ -77,20 +77,23 @@ class UsersController extends AppController
     	//main page when user logins
     }
     
-	function edituser()
+	function edituser($id)
     {
     	//edit user's information
-    	if (!empty( $this->data ))
+    	if ($this->Session->check('User.admin'))
 		{		
-			echo $this->User->read('username');
+							
+			//this->data['User']['id'] = $this->User->id;
+			//echo $this->User->read('username');
 			//$this->id = $this->data['User']['id'];
-			$this->User->read($this->data['User']['id']);
+			//$this->User->read($this->data['User']['id']);
+			$user = $this->Gallery->read('', $this->data['User']['id']);
     		if (!empty($this->data['User']['password_copy']) && 
     				($this->data['User']['password_copy']==$this->data['User']['password_confirm']) )
     			$this->User->set('password', $this->Auth->password($this->data['User']['password'])); 
-    			   			
-			if (!empty($this->data['User']['username']))
-    			$this->User->set('username', $this->data['User']['username']); 
+    			$this->set('password', $this->User->read('id', $id));
+			if (empty($this->data['User']['username']))
+    			$this->data['username'] = $user['username']; 
     		if (!empty($this->data['User']['email']))
     			$this->User->set('email', $this->data['User']['email']);   
     		if (!empty($this->data['User']['first_name']))
@@ -102,13 +105,45 @@ class UsersController extends AppController
     		else
     			$this->User->set('admin', 0);   	
     			
-    		echo $this->User->read('username');
+    		
+    		$this->Gallery->save($this->data);
 	    	
 	    	//clear the form
 	    	$this->data['User']['password_copy'] = null;
 	    	$this->data['User']['password_confirm'] = null;
     	}
     }
+    
+function edit($id = null)
+		{
+			if ($this->Session->check('User.isAdmin'))
+			{
+				if ($id == null)
+				{
+					$this->set('result', array('Edit' => 'No story selected to edit'));
+				}
+				else
+				{
+					if (empty($this->data['Story']))
+					{
+						$this->set('story',$this->Story->read(array('id', 'title', 'content'), $id));
+					}
+					else
+					{
+						$result = $this->Story->save($this->data);
+						if ($result)
+						{
+							$this->set('result', true);
+						}
+						else
+						{
+							$this->set('result', $this->Story->validationErrors);
+							$this->set('id', $id);
+						}
+					}
+				}
+			}
+		}
 }
 
 ?> 
