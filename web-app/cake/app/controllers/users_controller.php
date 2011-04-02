@@ -87,6 +87,8 @@ class UsersController extends AppController
 			//echo $this->User->read('username');
 			//$this->id = $this->data['User']['id'];
 			//$this->User->read($this->data['User']['id']);
+			$this->User->read(null, $this->data['User']['id']);
+			
 			$user = $this->User->read(array('id', 'password', 'email', 'username', 'first_name', 'last_name', 'admin'), $this->data['User']['id']);
 			echo $user['username']." ".$user['email']."<br/>";
     		if (!empty($this->data['User']['password_copy']) && 
@@ -101,7 +103,7 @@ class UsersController extends AppController
     			$this->data['first_name'] = $user['first_name']; 
     		if (!empty($this->data['User']['last_name']))
     			$this->data['last_name'] = $user['last_name'];  			
-    		$this->User->read(null, $this->data['User']['id']);
+    		
     		$this->User->save($this->data);
 	    	echo $this->data['User']['username']." ".$this->data['User']['email'];
 	    	//clear the form

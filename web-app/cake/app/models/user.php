@@ -6,7 +6,7 @@
  *****************************************************************************/
 class User extends AppModel
 {
-	/*$_schema = array
+	$_schema = array
 	(
 		'id' => array
 		(
@@ -39,7 +39,7 @@ class User extends AppModel
 		(
 			'type' => 'boolean'
 		)
-	);*/
+	);
 	
 	var $validate = array
 	(
