@@ -88,7 +88,7 @@ class UsersController extends AppController
 			//$this->id = $this->data['User']['id'];
 			//$this->User->read($this->data['User']['id']);
 			$user = $this->User->read(array('id', 'password', 'email', 'username', 'first_name', 'last_name', 'admin'), $this->data['User']['id']);
-			$this->data['password'] = $user['password'];
+			echo $user['username']." ".$user['email']."<br/>";
     		if (!empty($this->data['User']['password_copy']) && 
     				($this->data['User']['password_copy']==$this->data['User']['password_confirm']) )
     			$this->data['password'] = $this->Auth->password($this->data['User']['password_copy']); 
@@ -103,7 +103,7 @@ class UsersController extends AppController
     			$this->data['last_name'] = $user['last_name'];  			
     		
     		$this->User->save($this->data);
-	    	
+	    	echo $this->data['User']['username']." ".$this->data['User']['email'];
 	    	//clear the form
 	    	$this->data['User']['password_copy'] = null;
 	    	$this->data['User']['password_confirm'] = null;
