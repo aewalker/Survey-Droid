@@ -28,8 +28,8 @@ if (($user = $session->read('Auth.User')) != NULL)
 	<?php 
 	if (!isset($result)||$result==false)
 	{ 
-		$user = $user['User'];
-		echo $form->create('User', array('url' => '/users/edit/'.$user['id']));
+		$user = $this->User->read(null, $id);
+		echo $form->create('User', array('url' => '/users/edituser/'.$user['id']));
 		echo $form->input('User.username', array('default' => $user['username']) );
 		echo $form->input('User.password_copy', array('type' => 'password', 'label' => 'Password'));
 		echo $form->input('User.password_confirm', array('type' => 'password', 'label' => 'Confirm the password'));
