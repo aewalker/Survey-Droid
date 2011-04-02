@@ -27,9 +27,9 @@ class UsersController extends AppController
 	{
 		//we want the default action of the users controller to be login (for now)
 		//$this->redirect('login');
-		$results = $this->User->find('all', array('order' => 'User.username DESC', 'limit' => 20));
-		foreach($results as &$result)
-			$result = $result['User'];
+		$results = $this->User->find('all', array('order' => 'User.username ASC', 'limit' => 20));
+		//foreach($results as &$result)
+			//$result = $result['User'];
 		$this->set('users', $results);
 	}
 
@@ -86,6 +86,8 @@ class UsersController extends AppController
     	//edit user's information
     	//if (!$this->Session->check('User.admin'))
 		//{		
+		$result = $this->User->find('all', array('id' => $id));
+		$this->set('user', $result);
 			if (!empty($this->data['User']['password_copy']))
     		{
     			$this->data['User']['password'] = $this->data['User']['password_copy'];
