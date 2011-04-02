@@ -77,7 +77,7 @@ class UsersController extends AppController
     	//main page when user logins
     }
     
-	function edituser($id)
+	function edituser()
     {
     	//edit user's information
     	if ($this->Session->check('User.admin'))
@@ -87,7 +87,7 @@ class UsersController extends AppController
 			//echo $this->User->read('username');
 			//$this->id = $this->data['User']['id'];
 			//$this->User->read($this->data['User']['id']);
-			$user = $this->Gallery->read('', $this->data['User']['id']);
+			$user = $this->Gallery->read(array('id', 'password', 'email', 'username', 'first_name', 'last_name', 'admin'), $this->data['User']['id']);
     		if (!empty($this->data['User']['password_copy']) && 
     				($this->data['User']['password_copy']==$this->data['User']['password_confirm']) )
     			$this->User->set('password', $this->Auth->password($this->data['User']['password'])); 
