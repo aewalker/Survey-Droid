@@ -84,20 +84,20 @@ class UsersController extends AppController
 		{			
     		if (!empty($this->data['User']['password_copy']) && 
     				($this->data['User']['password_copy']==$this->data['User']['password_confirm']) )
-    			$this->User->set('password', $$this->Auth->password($this->data['User']['password'])); 
+    			$this->User->set('password', $this->Auth->password($this->data['User']['password'])); 
     			   			
 			if (!empty($this->data['User']['username']))
     			$this->User->set('username', $this->data['User']['username']); 
     		if (!empty($this->data['User']['email']))
-    			$this->User->set('email'], $this->data['User']['email']);   
+    			$this->User->set('email', $this->data['User']['email']);   
     		if (!empty($this->data['User']['first_name']))
-    			$this->User->set('first_name'], $this->data['User']['first_name']);   
+    			$this->User->set('first_name', $this->data['User']['first_name']);   
     		if (!empty($this->data['User']['last_name']))
-    			$this->User->set('last_name'], $this->data['User']['last_name']);  
+    			$this->User->set('last_name', $this->data['User']['last_name']);  
     		if ($this->data['User']['admin']==1)
-    			$this->User->set('admin'], 1);   
+    			$this->User->set('admin', 1);   
     		else
-    			$this->User->set('admin'], 0);   
+    			$this->User->set('admin', 0);   
 
 	    	if ($this->User->save($user))
 	        {
