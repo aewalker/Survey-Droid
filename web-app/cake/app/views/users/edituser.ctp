@@ -1,5 +1,5 @@
-/*<?php
-
+<?php
+/*
 echo $form->create('User', array('action' => 'edituser'));
 
 if (($user = $session->read('Auth.User')) != NULL)
@@ -22,8 +22,8 @@ if (($user = $session->read('Auth.User')) != NULL)
 	echo $form->end('Submit');
 }
 
-
-?>*/
+*/
+?>
 <?php
 
 $this->set("title_for_layout", array('title' => 'Edit User'));
@@ -46,7 +46,7 @@ $this->set("title_for_layout", array('title' => 'Edit User'));
 		else
 			echo $form->checkbox('User.admin', array('checked' => false));
 			
-		//echo $form->hidden('User.id', array('value' => $user['id']));
+		echo $form->hidden('User.id', array('value' => $user['id']));
 		
 		echo $form->end('Submit');
 			
