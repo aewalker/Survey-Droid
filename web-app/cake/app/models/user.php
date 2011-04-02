@@ -6,7 +6,7 @@
  *****************************************************************************/
 class User extends AppModel
 {
-	$_schema = array
+	public $_schema = array
 	(
 		'id' => array
 		(
