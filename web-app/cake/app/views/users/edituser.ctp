@@ -29,7 +29,7 @@ if (($user = $session->read('Auth.User')) != NULL)
 	if (!isset($result)||$result==false)
 	{ 
 	echo $user['username'];
-		$user = $user['User'];
+		//$user = $user['User'];
 		echo $user['username'];
 		echo $form->create('User', array('url' => '/users/edituser/'.$user['id']));
 		echo $form->input('User.username', array('default' => $user['username']) );

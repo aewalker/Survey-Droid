@@ -86,12 +86,13 @@ class UsersController extends AppController
     	//edit user's information
     	//if (!$this->Session->check('User.admin'))
 		//{		
-			echo $id;
-
-			$result = $this->User->find('all', array('conditions' => array('User.id' => $id)));
-			echo $result['username'].$result['id'];
-   			echo $result['User']['username'].$result['User']['id'];
-			$this->set('user', $result);
+			$results = $this->User->find('all', array('conditions' => array('User.id' => $id)));
+			foreach($results as &$result)
+			{
+				$result = $result['User'];
+				$this->set('user', $result);
+			}
+			
 			if (!empty($this->data['User']['password_copy']))
     		{
     			$this->data['User']['password'] = $this->data['User']['password_copy'];
