@@ -109,10 +109,11 @@ class UsersController extends AppController
 	    		}
 	    		echo $this->data['User']['admin'];
 	    		if($this->data['User']['admin'] == 1)
+	    		echo "admin";
 	    			$this->data['User']['admin'] = true;
 	    		else
 	    			$this->data['User']['admin'] = false;
-			
+			echo $this->data['User']['admin'];
 				$saved = $this->User->save($this->data);
 				
 				if ($saved)
