@@ -107,6 +107,7 @@ class UsersController extends AppController
 			}
 			else
 			{
+				echo 'not saved';
 				$this->set('result', $this->User->validationErrors);
 				$this->set('id', $id);
 			}
