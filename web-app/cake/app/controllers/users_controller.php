@@ -92,6 +92,8 @@ class UsersController extends AppController
 				$result = $result['User'];
 				$this->set('user', $result);
 			}
+			
+			$this->set('saved', false);
 
 			if(isset($this->data['User']['id']))
 			{
