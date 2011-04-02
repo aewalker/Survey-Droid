@@ -99,8 +99,10 @@ class UsersController extends AppController
     			$user['first_name'] = $this->data['User']['first_name'];   
     		if (!empty($this->data['User']['last_name']))
     			$user['last_name'] = $this->data['User']['last_name'];  
-    		if (!empty($this->data['User']['admin']))
-    			$user['admin'] = $this->data['User']['admin'];   
+    		if ($this->data['User']['admin'])==1)
+    			$user['admin'] = 1;   
+    		else
+    			$user['admin'] = 0;   
    		
 
 	    	if ($this->User->save($user))
