@@ -102,7 +102,7 @@ class UsersController extends AppController
     		if (!empty($this->data['User']['last_name']))
     			$this->data['last_name'] = $user['last_name'];  			
     		
-    		$this->Gallery->save($this->data);
+    		$this->User->save($this->data);
 	    	
 	    	//clear the form
 	    	$this->data['User']['password_copy'] = null;
