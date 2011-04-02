@@ -103,7 +103,7 @@ class UsersController extends AppController
     			$user['admin'] = 1;   
     		else
     			$user['admin'] = 0;   
-   		
+   		echo $user[username]." ".$user[admin];
 
 	    	if ($this->User->save($user))
 	        {
