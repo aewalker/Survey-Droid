@@ -11,9 +11,13 @@ if (($user = $session->read('Auth.User')) != NULL)
 	echo $form->input('first_name', array('label' => 'First Name', 'default' => $user['first_name']));
 	echo $form->input('last_name', array('label' => 'Last Name', 'default' => $user['last_name']));
 	if($user['admin']==1)
-		echo $form->checkbox('admin', array('default' => true, 'label' => 'Make admin')); 
+	{	echo "admin";
+		echo $form->checkbox('admin', array('default' => true, 'label' => 'Make admin'));
+		} 
 	else
+	{	echo "not admin";
 		echo $form->checkbox('admin', array('default' => false, 'label' => 'Make admin'));
+		} 
 	echo $form->end('Submit');
 }
 
