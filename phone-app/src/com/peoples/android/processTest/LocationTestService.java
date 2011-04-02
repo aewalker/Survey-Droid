@@ -30,6 +30,11 @@ public class LocationTestService extends Service {
 		return START_STICKY;
 	}
 	
+	public void onBind(){
+		
+		
+	}
+	
 	@Override
 	/**
 	 * Called when service is FIRST created, before onStartCommand
@@ -38,6 +43,8 @@ public class LocationTestService extends Service {
 		
 		return;
 	}
+	
+	
 	
 	public void onDestroyed() {
 		return;
