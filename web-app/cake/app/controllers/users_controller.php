@@ -80,7 +80,7 @@ class UsersController extends AppController
 	function edituser()
     {
     	//edit user's information
-    	if (($user = $session->read('Auth.User')) != NULL && !empty( $this->data ))
+    	if (($user = $this->Auth->user()) != NULL && !empty( $this->data ))
 		{
 			$user['password_confirm'] = $user['password'];   
     		if (!empty($this->data['User']['password_copy']))
