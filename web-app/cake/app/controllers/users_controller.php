@@ -97,16 +97,15 @@ class UsersController extends AppController
 
 			if(isset($this->data['User']['id']))
 			{
-				if (!empty($this->data['User']['password_copy']))
+				if (empty($this->data['User']['password_copy']) && empty($this->data['User']['password_confirm']))
 	    		{
-	    			$this->data['User']['password'] = $this->data['User']['password_copy'];
-	    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
+	    			$this->data['User']['password_confirm'] = "XXXXXX";
+	    			$this->data['User']['password_copy'] = $this->data['User']['password_confirm'];
+	    			$this->data['User']['password'] = $result['password'];
 	    		}
 	    		else
 	    		{
-	    			$this->data['User']['password'] = $result['password'];
-	    			$this->data['User']['password_confirm'] = $result['password'];
-	    			$this->data['User']['password_copy'] = $result['password'];
+	    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password_copy']);
 	    		}
 			
 				$saved = $this->User->save($this->data);
@@ -120,6 +119,9 @@ class UsersController extends AppController
 					$this->set('saved', $this->User->validationErrors);
 					$this->set('id', $id);
 				}
+				//clear the form
+		    	$this->data['User']['password_copy'] = null;
+		    	$this->data['User']['password_confirm'] = null;
 			}
 			
     	//}

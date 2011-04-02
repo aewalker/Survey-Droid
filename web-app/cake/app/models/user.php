@@ -79,7 +79,7 @@ class User extends AppModel
 			),
 			'maxLength' => array
 			(
-				'rule' => array('maxLength', 32),
+				'rule' => array('maxLength', 20),
 				'message' => 'Passwords cannot be longer than 20 characters'
 			),
 			'matchesConfirmPassword' => array
