@@ -9,7 +9,6 @@ public class Peoples extends Activity {
     private static final String TAG = "PEOPLES";
     private static final boolean D = true;
     
-    private static final String app_name
     
     /** Called when the activity is first created. */
     @Override
