@@ -6,7 +6,7 @@
  *****************************************************************************/
 class User extends AppModel
 {
-	/*$_schema = array
+	public $_schema = array
 	(
 		'id' => array
 		(
@@ -30,16 +30,17 @@ class User extends AppModel
 		'first_name' => array
 		(
 			'type' => 'string'
-		)
+		),
 		'last_name' => array
 		(
 			'type' => 'string'
 		),
 		'admin' => array
 		(
-			'type' => 'boolean'
+			'type' => 'int',
+			'length' => 1
 		)
-	);*/
+	);
 	
 	var $validate = array
 	(
@@ -70,29 +71,28 @@ class User extends AppModel
 				'message' => 'Email must be a valid email address'
 			)
 		),
-		'passwrd' => array
+		'password_copy' => array
 		( //Passwords must be between 8 and 20 characters and must match confirm_pass at registration
 			'minLength' => array
 			(
 				'rule' => array('minLength', 8),
 				'message' => 'Passwords must be at least 8 characters long'
-			)/*,
+			),
 			'maxLength' => array
 			(
 				'rule' => array('maxLength', 20),
 				'message' => 'Passwords cannot be longer than 20 characters'
-			)
-			/*'matchesConfirmPassword' => array
+			),
+			'matchesConfirmPassword' => array
 			(
-				'rule' => array('identicalFieldValues', 'confirm_pass'),
+				'rule' => array('identicalFieldValues', 'password_confirm'),
 				'message' => 'Passwords must match'
-			)*/
+			)
+			
 		),
-		'password_confirm' => array
+	/*	'password_confirm' => array
 		(
-			'rule' => array('validateConfirmPassword'),
-			'message' => 'Passwords must match'
-		)
+		)*/
 	);
 	
 	//checks that two fields are equal
@@ -111,12 +111,5 @@ class User extends AppModel
         return TRUE;
     } 
     
-	function validateConfirmPassword($data) 
-	{
-		if ($this->data['User']['passwrd'] == AuthComponent::password($this->data['User']['password_confirm'])) 
-			return true;
-		else
-			return false;
-	}
 }
 ?> 

@@ -18,17 +18,21 @@ class UsersController extends AppController
 	function beforeSave()
 	{
 		//Need to tell Auth to hash the confirm password so the model can check that they match
-		if (!empty($tis->data['User']['confirm_pass']))
-		$this->data['User']['confirm_pass'] = $this->Auth->password($this->data['User']['confirm_pass']);
+		//if (!empty($this->data['User']['password']))
+		
 		parent::beforeSave();
 	}
 	
-	function index()
+	function index($showList = false)
 	{
 		//we want the default action of the users controller to be login (for now)
-		$this->redirect('login');
+		//$this->redirect('login');
+		$results = $this->User->find('all', array('order' => 'User.username ASC', 'limit' => 20));
+		foreach($results as &$result)
+			$result = $result['User'];
+		$this->set('users', $results);
 	}
-    
+
     function login()
     {
     	//don't need to do anything; Auth takes care of it in the view
@@ -51,8 +55,12 @@ class UsersController extends AppController
     	//register a new user
     	if( !empty( $this->data ) )
     	{
-    		// get hash coded password
-    		$this->data['User']['passwrd'] = $this->Auth->password($this->data['User']['passwrd']);
+    		if (!empty($this->data['User']['password_copy']))
+    		{
+    			$this->data['User']['password'] = $this->data['User']['password_copy'];
+    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
+    		}
+			
     		//sanitize the password
     		//$this->User->data = Sanitize::clean($this->data);
     		$this->User->create();
@@ -63,7 +71,8 @@ class UsersController extends AppController
 	    	}
 	    	
 	    	//clear the form
-	    	$this->data['User']['passwrd'] = null;
+	    	$this->data['User']['password_copy'] = null;
+	    	$this->data['User']['password_confirm'] = null;
     	}
     }
     
@@ -71,6 +80,76 @@ class UsersController extends AppController
     {
     	//main page when user logins
     }
+    
+	function edituser($id)
+    {
+    	//edit user's information
+    	//if (!$this->Session->check('User.admin'))
+		//{		
+			$results = $this->User->find('all', array('conditions' => array('User.id' => $id)));
+			foreach($results as &$result)
+			{
+				$result = $result['User'];
+				$this->set('user', $result);
+			}
+			
+			$this->set('saved', false);
+
+			if(isset($this->data['User']['id']))
+			{
+				if (empty($this->data['User']['password_copy']) && empty($this->data['User']['password_confirm']))
+	    		{
+	    			$this->data['User']['password_confirm'] = "XXXXXXXX";
+	    			$this->data['User']['password_copy'] = $this->data['User']['password_confirm'];
+	    			$this->data['User']['password'] = $result['password'];
+	    		}
+	    		else
+	    		{
+	    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password_copy']);
+	    		}
+
+				$saved = $this->User->save($this->data);
+				
+				if ($saved)
+				{
+					$this->set('saved', true);
+				}
+				else
+				{
+					$this->set('saved', $this->User->validationErrors);
+					$this->set('id', $id);
+				}
+				//clear the form
+		    	$this->data['User']['password_copy'] = null;
+		    	$this->data['User']['password_confirm'] = null;
+			}
+			
+    	//}
+    }
+    
+	function deleteuser($id)
+    {
+    	//if ($this->Session->check('User.isAdmin'))
+		//{
+    			if ($this->data['User']['confirm'] == 'true')
+				{
+					if ($id != null)
+					{
+						$this->set('result', $this->User->delete($id));
+					}
+					else
+					{
+						$this->set('result', false);
+					}
+				}
+				else
+				{
+					$this->set('id', $id);
+				}
+		//}
+    	
+    }
+
 }
 
 ?> 
