@@ -3,7 +3,7 @@ package com.peoples.android;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class Peoples extends Activity {
+public class Peoples extends Activity {	
     // Debugging
     private static final String TAG = "PEOPLES";
     private static final boolean D = true;

@@ -3,52 +3,36 @@
  */
 package com.peoples.android.processTest;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
 import android.os.IBinder;
 
 /**
  * @author diego
- *
+ * http://developer.android.com/guide/topics/fundamentals/services.html
+ * above link explains why IntentService is easier to use. Works fine for demo
+ * app
+ * 
+ * 
  */
-public class LocationTestService extends Service {
+public class LocationTestService extends IntentService {
 
-	/* (non-Javadoc)
-	 * @see android.app.Service#onBind(android.content.Intent)
-	 */
+	public LocationTestService(String name) {
+		super("LocationTestService");
+	}
+
 	@Override
-	public IBinder onBind(Intent arg0) {
+	protected void onHandleIntent(Intent intent) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	/**
-	 * Called when process is started. Returns START_STICKY to keep it going
-	 */
-	public int onStartCommand(Intent intent, int flags, int startId) {	
-		return START_STICKY;
-	}
-	
-	public void onBind(){
 		
+		//ok find out how to get location here 
+		
+		//find out how to send location here
+		
+		//then close anything that needs to be closed.
 		
 	}
-	
-	@Override
-	/**
-	 * Called when service is FIRST created, before onStartCommand
-	 */
-	public void onCreate() {
-		
-		return;
-	}
-	
-	
-	
-	public void onDestroyed() {
-		return;
-	}
+
 	
 	
 	
