@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, main!</string>
-    <string name="app_name">SOC-App</string>
+    <string name="app_name">PEOPLES</string>
+    <string name="service_name">LocationTestService</string>
+    <string name="main_name">Peoples.java</string>
+    <string name="activity_name">LocationTestActivity</string>
 </resources>
