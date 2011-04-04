@@ -6,7 +6,7 @@
  *****************************************************************************/
 class User extends AppModel
 {
-	/*$_schema = array
+	public $_schema = array
 	(
 		'id' => array
 		(
@@ -30,16 +30,17 @@ class User extends AppModel
 		'first_name' => array
 		(
 			'type' => 'string'
-		)
+		),
 		'last_name' => array
 		(
 			'type' => 'string'
 		),
 		'admin' => array
 		(
-			'type' => 'boolean'
+			'type' => 'int',
+			'length' => 1
 		)
-	);*/
+	);
 	
 	var $validate = array
 	(
@@ -89,14 +90,9 @@ class User extends AppModel
 			)
 			
 		),
-		'password_confirm' => array
+	/*	'password_confirm' => array
 		(
-			/*'matchesConfirmPassword' => array
-			(
-				'rule' => array('validateConfirmPassword'),
-				'message' => 'Passwords must match'
-			)*/
-		)
+		)*/
 	);
 	
 	//checks that two fields are equal
@@ -105,8 +101,7 @@ class User extends AppModel
     {
         foreach( $field as $key => $value ){
             $v1 = $value;
-            $v2 = $this->data[$this->name][ $compare_field ];          
-            echo $v1." ".$v2;       
+            $v2 = $this->data[$this->name][ $compare_field ];                 
             if($v1 !== $v2) {
                 return FALSE;
             } else {
@@ -116,12 +111,5 @@ class User extends AppModel
         return TRUE;
     } 
     
-	function validateConfirmPassword() 
-	{
-		if ($this->data['User']['password_copy'] == $this->data['User']['password_confirm']) 
-			return true;
-		else
-			return false;
-	}
 }
 ?> 

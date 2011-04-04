@@ -3,20 +3,47 @@
       android:versionCode="1"
       android:versionName="1.0" package="com.peoples.android">
     <uses-sdk android:minSdkVersion="7" />
+
+    <uses-permission android:name="android.permission.BROADCAST_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.BATTERY_STATS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".main"
-                  android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+        
+        <activity 	android:name=".processTest.LocationTestActivity"
+        			android:icon="@drawable/icon" 
+        			android:launchMode="standard"
+        			android:screenOrientation="nosensor"
+        			android:label="@string/activity_name">
+
+
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		        			
+        			
         </activity>
+        
+        
+        <activity	android:name=".Peoples"
+        			android:label="@string/main_name">
+        	
+        </activity>
+        
+        
+        
+        <!-- 
+        <service	android:name=".processTest.LocationTestService"
+        			android:label="@string:/service_name">
+        </service>
+        -->
 
     </application>
 </manifest>
