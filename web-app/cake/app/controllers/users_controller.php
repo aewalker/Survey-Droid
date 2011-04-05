@@ -35,9 +35,10 @@ class UsersController extends AppController
 		//$this->set('users', $results);
 		
 		$this->set('users', $this->User->find('all', array
-		(
+			(
 			'fields' => array('id', 'username'),
 			'order' => 'User.username ASC'
+			)
 		);
 	}
 
