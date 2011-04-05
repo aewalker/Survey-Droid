@@ -4,6 +4,12 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=us-ascii">
 	<title>PEOPLES Project Overview</title>
+	
+	<style type="text/css">
+		.done {color: green;}
+		.partial {color: blue;}
+		.failed {color: red;}
+	</style>
 </head>
 
 <body>
@@ -43,10 +49,8 @@
 	<strong>S</strong>ociety
 </p>
 
+<p><strong>Team Members:</strong></p>
 <table cellpadding="10" style="text-align: center">
-	<tr>
-		<th colspan="6">Team Members</th>
-	</tr>
 	<tr>
 		<td>Sema Berkiten</td>
 		<td>Vladimir Costescu</td>
@@ -181,17 +185,19 @@
 	<li>Researchers
 		<ul>
 			<li>Researcher ID</li>
-			<li>email</li>
-			<li>password</li>
+			<li>First name</li>
+			<li>Last name</li>
+			<li>Email</li>
+			<li>Password</li>
 		</ul>
 	</li>
 	<li>
 		Subjects
 		<ul>
 			<li>Subject ID</li>
-			<li>phone number</li>
-			<li>name</li>
-			<li>(other contact info)</li>
+			<li>Phone number</li>
+			<li>First name</li>
+			<li>Last name</li>
 		</ul>
 	</li>
 	<li>
@@ -212,8 +218,8 @@
 		<ul>
 			<li>Survey ID</li>
 			<li>Question ID</li>
-			<li>question text</li>
-			<li>question type</li>
+			<li>Question text</li>
+			<li>Question type</li>
 		</ul>
 	</li>
 	<li>
@@ -221,37 +227,35 @@
 		<ul>
 			<li>Option ID</li>
 			<li>Question ID</li>
-			<li>option text</li>
+			<li>Option text</li>
+			<li>Next question</li>
 		</ul>
 	</li>
 	<li>
 		Location Activity
 		<ul>
 			<li>Subject ID</li>
-			<li>date</li>
-			<li>time</li>
-			<li>location</li>
+			<li>Date and time</li>
+			<li>Lat</li>
+			<li>Long</li>
 		</ul>
 	</li>
 	<li>
 		Call Activity
 		<ul>
 			<li>Subject ID</li>
-			<li>date</li>
-			<li>time</li>
-			<li>type (call/text)</li>
-			<li>details (duration, others...)</li>
+			<li>Date and time</li>
+			<li>Type (call/text)</li>
+			<li>Duration</li>
+			<li>(Other details)</li>
 		</ul>
 	</li>
 	<li>
 		Inactive/Active Time Range
 		<ul>
 			<li>Subject ID</li>
-			<li>date offline</li>
-			<li>time offline</li>
-			<li>date back online</li>
-			<li>time back online</li>
-			<li>feature enabled/disabled</li>
+			<li>Date and time</li>
+			<li>Feature enabled/disabled (GPS, call log, whole app, etc.)</li>
 		</ul>
 	</li>
 </ul>
@@ -292,47 +296,76 @@
 
 Meetings with Naomi will take place on the following dates: 3/21, 4/6, 4/18, 5/2, 5/9
 
-<h4>Early Milestones</h4>
+<h4>Milestones</h4>
+<div class="done" style="display:inline">Completed </div><div class="partial" style="display:inline">Partial/Delayed </div><div class="failed" style="display:inline">Failed</div>
 <ul>
 	<li>
 		By 3/20 (end of Spring Break)
 		<ul>
-			<li>All team members running the proper development software (see development section)</li>
-			<li>Testing/development server is running and has Appache, PHP, and MySQL installed</li>
-			<li>All team members have SSH access to the server</li>
-			<li>Decide on whether or not to use a web-application framework and what one</li>
-			<li>Server is tested in a simple way to ensure that all required technologies are working</li>
-			<li>Divide up work between team members</li>
-			<li>Set up GitHub account and give all team members access</li>
+			<li class="partial">All team members running the proper development software (see development section)</li>
+			<li class="done">Testing/development server is running and has Appache, PHP, and MySQL installed</li>
+			<li class="partial">All team members have SSH access to the server</li>
+			<li class="done">Decide on whether or not to use a web-application framework and what one</li>
+			<li class="done">Server is tested in a simple way to ensure that all required technologies are working</li>
+			<li class="partial">Divide up work between team members</li>
+			<li class="partial">Set up GitHub account and give all team members access</li>
 		</ul>
 	</li>
 	<li>3/21 - First Meeting with Naomi - team receives testing phones</li>
 	<li>
 		By 3/27
 		<ul>
-			<li>Database is set up and operational</li>
-			<li>Specific requirements of each component of both the phone app and the web app are specified</li>
-			<li>Team splits off to work on individual assignments</li>
+			<li class="done">Database is set up and operational</li>
+			<li class="partial">Specific requirements of each component of both the phone app and the web app are specified</li>
+			<li class="done">Team splits off to work on individual assignments</li>
+		</ul>
+	</li>
+	<li>
+		By 4/5 (Prototype)
+		<ul>
+			<li class="done">Finish users and subjects in the web app</li>
+			<li class="done">Phone app collects GPS data</li>
+		</ul>
+	</li>
+	<li>
+		By 4/12
+		<ul>
+			<li>Finish surveys in the web app</li>
+		</ul>
+	</li>
+	<li>
+		By 4/19 (Alpha version)
+		<ul>
+			<li>Finish data view/export in web app</li>
+		</ul>
+	</li>
+	<li>
+		By 4/26 (Beta version)
+		<ul>
+			<li>CSS/graphics complete on web app</li>
+			<li>Extensive test usage finished</li>
+		</ul>
+	</li>
+	<li>
+		By 5/3 (Presentation and final version)
+		<ul>
+			<li></li>
+		</ul>
+	</li>
+	<li>
+		By 5/10 (Dean's Date)
+		<ul>
+			<li>User's guide, design document, source code, presentation sliede, and final report finished</li>
 		</ul>
 	</li>
 </ul>
 
-<h4>Later Milestones</h4>
-These are roughly in the order that they should be achieved; they will need to be scheduled after our first couple of meetings.
+<h4>Unscheduled Milestones</h4>
+These are roughly in the order that they should be achieved; they will need to be scheduled above.
 <ul>
- <li>Phone app collects GPS data</li>
  <li>Phone app collects call/text data</li>
- <li>Web app displays data</li>
  <li>Phone sends data to the server</li>
-
- <li>Session control complete on web app</li>
  <li>User interface complete on phone app</li>
- <li>Participant control options complete on web app</li>
- <li>Survey control complete on web app</li>
- <li>Data view complete on web app</li>
- <li>Data export complete on web app</li>
-
- <li>CSS/graphics complete on web app</li>
 </ul>
 
 
@@ -346,7 +379,7 @@ These are roughly in the order that they should be achieved; they will need to b
 
 <p>Hosting is an open issue, for now we decided to use a temporary server but in the long run we need to find a permanent server. And during server transfer, we might face with some problems that we cannot predict now and it could be very complicated.</p>
 
-<p>In addition to the phone application, we will also design a web-portal for researchers such that they can have some amount of control over the application. <del>However it is still an open issue if we will use PHP, Java or something else as server-side web language. Just two of team members know PHP and if we decide to move on with PHP then other team members would have to learn PHP.</del> We have decided to go with PHP, but we decided that the phone app would be more work; so only 2 people will be working on the website: Austin and Sema (both know PHP).</p>
+<p>In addition to the phone application, we will also design a web-portal for researchers such that they can have some amount of control over the application. <del>However it is still an open issue if we will use PHP, Java or something else as server-side web language. Just two of team members know PHP and if we decide to move on with PHP then other team members would have to learn PHP.</del> We have decided to go with PHP, but we decided that the phone app would be more work so only 2 people will be working on the website: Austin and Sema (both know PHP).</p>
 
 <p>Finally, evaluation of usability and success of this application could be nontrivial. For now, survey seems to be one option for evaluation but it is better to find a more reliable way to evaluate the application.</p>
 
