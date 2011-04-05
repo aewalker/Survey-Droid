@@ -9,6 +9,8 @@ class UsersController extends AppController
 {
 	//load the Auth (ie authorization) component
     var $components = array('Auth');
+    
+    var $helpers = array('Table');
      
     function beforeFilter()
 	{
