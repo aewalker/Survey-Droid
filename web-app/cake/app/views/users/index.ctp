@@ -3,7 +3,7 @@
 	<?php
 	foreach ($users as $user)
 	{
-		echo '<p>'.$user['username'].'&nbps;';
+		echo '<p>'.$user['username'].'&nbsp;';
 		//if ($this->Session->check('User.isAdmin'))
 		//{
 			echo ' '.$html->link('Edit', '/users/edituser/'.$user['id']).' '.
