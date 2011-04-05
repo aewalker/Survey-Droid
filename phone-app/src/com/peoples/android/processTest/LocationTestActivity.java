@@ -57,7 +57,6 @@ public class LocationTestActivity extends Activity {
 		LocationListener locListener = new LocationListener() {
 			
 			public void onStatusChanged(String provider, int status, Bundle extras) {
-				
 				// TODO Auto-generated method stub
 				LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 				
@@ -66,8 +65,6 @@ public class LocationTestActivity extends Activity {
 				String locString = String.format("gps location: %s  ", gpsLocation.toString() );
 				tv.setText(locString);
 				setContentView(tv);
-				
-				
 			}
 			
 			public void onProviderEnabled(String provider) {
