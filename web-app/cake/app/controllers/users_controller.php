@@ -7,6 +7,7 @@
  *****************************************************************************/
 class UsersController extends AppController
 {
+	var $name = 'Users';
 	//load the Auth (ie authorization) component
     var $components = array('Auth');
     
