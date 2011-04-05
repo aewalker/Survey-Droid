@@ -7,8 +7,11 @@
  *****************************************************************************/
 class UsersController extends AppController
 {
+	var $name = 'Users';
 	//load the Auth (ie authorization) component
     var $components = array('Auth');
+    
+    var $helpers = array('Table');
      
     function beforeFilter()
 	{
@@ -31,6 +34,12 @@ class UsersController extends AppController
 		foreach($results as &$result)
 			$result = $result['User'];
 		$this->set('users', $results);
+		
+		//$this->set('users', $this->User->find('all', array(
+			//'fields' => array('id', 'username'),
+			//'order' => 'User.username ASC'
+			//))
+		//);
 	}
 
     function login()
