@@ -37,8 +37,7 @@ class User extends AppModel
 		),
 		'admin' => array
 		(
-			'type' => 'int',
-			'length' => 1
+			'type' => 'boolean'
 		)
 	);
 	
