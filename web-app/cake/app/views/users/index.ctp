@@ -4,15 +4,17 @@
  *                                                                           *
  * Lists all users                                                           *
  *****************************************************************************/
+ /*
 echo $this->Session->flash();
 
 echo $table->startTable('All Users');
 echo $table->tableBody($users);
 echo $table->endTable(array('Create new user' => array('command' => 'register')));
+*/
 ?>
 
 
-/!--<div id="content">
+<div id="content">
 	<h3>All Users</h3>
 	<?php
 	foreach ($users as $user)
@@ -32,4 +34,4 @@ echo $table->endTable(array('Create new user' => array('command' => 'register'))
 			echo '<h4>'.$html->link('Create New User', '/users/register/').'</h4>';
 		//} 
 		?>
-</div>--/
+</div>
