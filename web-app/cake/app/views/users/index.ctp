@@ -1,9 +1,9 @@
 <div id="content">
-	<h1>All Users</h1>
+	<h3>All Users</h3>
 	<?php
 	foreach ($users as $user)
 	{
-		echo '<p>'.$html->link($user['username'], '/users/view/'.$user['id']).' <strong>';
+		echo '<p>'.$user['username'].'&nbps;';
 		//if ($this->Session->check('User.isAdmin'))
 		//{
 			echo ' '.$html->link('Edit', '/users/edituser/'.$user['id']).' '.
@@ -15,7 +15,7 @@
 <div id="sidebar">
 	<?php //if ($this->Session->check('User.isAdmin'))
 		//{
-			echo '<h3>'.$html->link('Create New User', '/users/register/');
+			echo '<h4>'.$html->link('Create New User', '/users/register/').'</h4>';
 		//} 
 		?>
 </div>
