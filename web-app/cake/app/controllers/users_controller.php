@@ -30,16 +30,16 @@ class UsersController extends AppController
 	{
 		//we want the default action of the users controller to be login (for now)
 		//$this->redirect('login');
-		$results = $this->User->find('all', array('order' => 'User.username ASC', 'limit' => 20));
-		foreach($results as &$result)
-			$result = $result['User'];
-		$this->set('users', $results);
+		//$results = $this->User->find('all', array('order> 'User.username ASC', 'limit' => 20));
+		//foreach($results as &$result)
+			//$result = $result['User'];
+		//$this->set('users', $results);
 		
-		//$this->set('users', $this->User->find('all', array(
-			//'fields' => array('id', 'username'),
-			//'order' => 'User.username ASC'
-			//))
-		//);
+		$this->set('users', $this->User->find('all', array(
+			'fields' => array('id', 'username'),
+			'order' => 'User.username ASC'
+			))
+		);
 	}
 
     function login()
@@ -90,7 +90,7 @@ class UsersController extends AppController
     	//main page when user logins
     }
     
-	function edituser($id)
+	function edit($id)
     {
     	//edit user's information
     	//if (!$this->Session->check('User.admin'))
@@ -136,7 +136,7 @@ class UsersController extends AppController
     	//}
     }
     
-	function deleteuser($id)
+	function delete($id)
     {
     	//if ($this->Session->check('User.isAdmin'))
 		//{

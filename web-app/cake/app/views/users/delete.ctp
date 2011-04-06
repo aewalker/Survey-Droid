@@ -6,7 +6,7 @@
 		if (!isset($result))
 		{
 			echo '<p><strong>Are you sure you want to delete this user?</strong></p>';
-			echo $form->create('User', array('url' => '/users/deleteuser/'.$id));
+			echo $form->create('User', array('url' => '/users/delete/'.$id));
 			echo $form->hidden('confirm', array('value' => 'true'));
 			echo $form->submit('Yes');
 			echo $form->end();

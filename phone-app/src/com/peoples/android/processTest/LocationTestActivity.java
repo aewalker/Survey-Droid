@@ -1,5 +1,7 @@
 package com.peoples.android.processTest;
 
+import com.peoples.android.R;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +13,8 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import java.util.Date;
 public class LocationTestActivity extends Activity {
 	
 	private static final String TAG = "LocTestActi";
@@ -22,7 +25,9 @@ public class LocationTestActivity extends Activity {
 	   @Override
 	   public void onCreate(Bundle savedInstanceState) {
 	       super.onCreate(savedInstanceState);
-	       final TextView tv = new TextView(this);
+	       setContentView(R.layout.main);
+	       doTheRest();
+	       /*final TextView tv = new TextView(this);
 	       tv.setText("hi");
 	       setContentView(tv);
 	       
@@ -35,12 +40,13 @@ public class LocationTestActivity extends Activity {
 	    	   setContentView(tv);
 	       }
 	       
-	       tv.setText(tv.getText() + "\n" + "bye");
+	       tv.setText(tv.getText() + "\n" + "bye");*/
 	       
 	   }
 
 
-	private void doTheRest(final TextView tv) {
+	private void doTheRest() {
+		/*private void doTheRest(final TextView tv) {*/
 		// TODO Auto-generated method stub
 		
 //		TODO: Will make this an activity, and will move GPS gathering to a Service
@@ -54,7 +60,9 @@ public class LocationTestActivity extends Activity {
 
 		// create a Listener interface that will handle the GPS location update
 		
-		LocationListener locListener = new LocationListener() {
+		LocationListener locListener = new MyLocationListener(); 
+		
+		/*{
 			
 			public void onStatusChanged(String provider, int status, Bundle extras) {
 				// TODO Auto-generated method stub
@@ -81,9 +89,9 @@ public class LocationTestActivity extends Activity {
 				// TODO Auto-generated method stub
 				
 			}
-		};
+		};*/
 		
-		GpsStatus.Listener gpsLocListener = new Listener() {
+		/*GpsStatus.Listener gpsLocListener = new Listener() {
 			
 			public void onGpsStatusChanged(int event) {
 				// TODO Auto-generated method stub
@@ -96,15 +104,62 @@ public class LocationTestActivity extends Activity {
 				tv.setText(locString);
 				setContentView(tv);
 			}
-		};
+		};*/
 		
-		//subsccribe our Listener to the locManager
-		locManager.addGpsStatusListener(gpsLocListener);
+		//subscribe our Listener to the locManager
+		/*locManager.addGpsStatusListener(gpsLocListener);*/
 		locManager.requestLocationUpdates("gps", 0, 0, locListener);
 		
-		
-		
-		
-		
 	}
+	
+	public class MyLocationListener implements LocationListener
+	{
+		private int i = 0;
+
+		@Override
+		public void onLocationChanged(Location loc)
+		{
+			i++;
+			if (i == 15)
+			{
+				Date date = new Date();
+				loc.getLatitude();
+				loc.getLongitude();
+				String Text = "My current location is: \n" +
+				"Latitude = " + loc.getLatitude() +
+				"\nLongitude = " + loc.getLongitude() + 
+				"\n" + date.toString();
+				Toast.makeText( getApplicationContext(),
+				Text,
+				Toast.LENGTH_SHORT).show();
+				i = 0;
+			}
+		}
+	
+	
+		@Override
+		public void onProviderDisabled(String provider)
+		{
+			Toast.makeText( getApplicationContext(),
+			"Gps Disabled",
+			Toast.LENGTH_SHORT ).show();
+		}
+	
+	
+		@Override
+		public void onProviderEnabled(String provider)
+		{
+			Toast.makeText( getApplicationContext(),
+			"Gps Enabled",
+			Toast.LENGTH_SHORT).show();
+		}
+	
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras)
+		{
+		}
+
+	}/* End of Class MyLocationListener */
+	
+	
 }
