@@ -15,8 +15,7 @@ CREATE TABLE subjects (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	phone_num VARCHAR(13) NOT NULL,
 	first_name VARCHAR(255) NOT NULL,
-	last_name VARCHAR(255) NOT NULL,
-	data_cache TEXT;
+	last_name VARCHAR(255) NOT NULL;
 	
 CREATE TABLE contacts (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -26,7 +25,7 @@ CREATE TABLE surveys (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(255)),
 	created DATETIME,
-	first_q INT UNSIGNED NOT NULL,
+	question_id INT UNSIGNED NOT NULL, /* the first question in the survey */
 	/* field for each day; holds times in 24 hour format separtated by commas */
 	mo VARCHAR(255),
 	tu VARCHAR(255),
@@ -38,22 +37,27 @@ CREATE TABLE surveys (
 	
 CREATE TABLE questions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	text TEXT);
+	q_text TEXT);
 	
 CREATE TABLE branches (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	prev_q INT UNSIGNED NOT NULL, /*foreign keys*/
+	/* parent question */
+	question_id INT UNSIGNED NOT NULL, /*foreign keys*/
+	/* child question */
 	next_q INT UNSIGNED NOT NULL);
 	
 CREATE TABLE conditions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	/* branch this condition belongs to */
 	branch_id INT UNSIGNED NOT NULL,
-	prereq_q INT UNSIGNED NOT NULL,
-	req_choice INT UNSIGNED NOT NULL);
+	/* question this condition references */
+	question_id INT UNSIGNED NOT NULL,
+	/* choice that is required as the answer for the above question for this condition to be true */
+	choice_id INT UNSIGNED NOT NULL);
 	
 CREATE TABLE choices (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	text VARCHAR(255),
+	choicd_text VARCHAR(255),
 	question_id INT UNSIGNED);
 	
 CREATE TABLE answers (
