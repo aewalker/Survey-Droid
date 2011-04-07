@@ -15,8 +15,8 @@ CREATE TABLE subjects (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	phone_num VARCHAR(13) NOT NULL,
 	first_name VARCHAR(255) NOT NULL,
-	last_name VARCHAR(255) NOT NULL
-	/* other things? */);
+	last_name VARCHAR(255) NOT NULL,
+	data_cache TEXT;
 	
 CREATE TABLE contacts (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -24,20 +24,46 @@ CREATE TABLE contacts (
 	
 CREATE TABLE surveys (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(255));
+	name VARCHAR(255)),
+	created DATETIME,
+	first_q INT UNSIGNED NOT NULL,
+	/* field for each day; holds times in 24 hour format separtated by commas */
+	mo VARCHAR(255),
+	tu VARCHAR(255),
+	we VARCHAR(255),
+	th VARCHAR(255),
+	fr VARCHAR(255),
+	sa VARCHAR(255),
+	su VARCHAR(255));
 	
 CREATE TABLE questions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	survey_id INT UNSIGNED NOT NULL,
-	ques_type ENUM('choice', 'free_resp', 'auto'/* insert other question types here */) NOT NULL,
-	text TINYTEXT,
-	question_id INT UNSIGNED);
+	text TEXT);
 	
-CREATE TABLE options (
+CREATE TABLE branches (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	prev_q INT UNSIGNED NOT NULL, /*foreign keys*/
+	next_q INT UNSIGNED NOT NULL);
+	
+CREATE TABLE conditions (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	branch_id INT UNSIGNED NOT NULL,
+	prereq_q INT UNSIGNED NOT NULL,
+	req_choice INT UNSIGNED NOT NULL);
+	
+CREATE TABLE choices (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	text VARCHAR(255),
+	question_id INT UNSIGNED);
+	
+CREATE TABLE answers (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	question_id INT UNSIGNED NOT NULL,
-	next_ques INT UNSIGNED);
+	subject_id INT UNSIGNED NOT NULL,
+	choice_id INT UNSIGNED,
+	ans_text TEXT,
+	created DATETIME);
+	
 	
 CREATE TABLE location_actions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

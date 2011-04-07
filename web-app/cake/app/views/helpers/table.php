@@ -16,14 +16,11 @@ class TableHelper extends Helper
 	{
 		if (empty($model)) throw new Exception('Must provide a model name');
 		$this->model = $model;
-		$s = '<table'.$this->_getHTMLVal($style, 'id', 'table');
-		$s = $s.$this->_getHTMLVal($style, 'class', 'table').'>';
+		$s = '<table'.$this->_getHTMLVal($style, 'table').'>';
 		
-		$s = $s.'<tr'.$this->_getHTMLVal($style, 'id', 'tr');
-		$s = $s.$this->_getHTMLVal($style, 'class', 'tr').'>';
+		$s = $s.'<tr'.$this->_getHTMLVal($style, 'tr').'>';
 		
-		$s = $s.'<th'.$this->_getHTMLVal($style, 'id', 'th');
-		$s = $s.$this->_getHTMLVal($style, 'class', 'th').'>';
+		$s = $s.'<th'.$this->_getHTMLVal($style, 'th').'>';
 		$s = $s.Inflector::pluralize($model).'</th></tr>';
 		return $s;
 	}
@@ -49,18 +46,18 @@ class TableHelper extends Helper
 		{
 			if ($model == $this->model)
 			{
-				$s = $s.'<tr'.$this->_getHTMLVal($style, 'class', 'tr').'>';
+				$s = $s.'<tr'.$this->_getHTMLVal($style, 'tr').'>';
 				foreach ($info as $key => $val)
 				{
 					if (in_array($key, $fields) || empty($fields))
 					{
-						$s = $s.'<td'.$this->_getHTMLVal($style, 'class', 'td').'>';
+						$s = $s.'<td'.$this->_getHTMLVal($style, 'td').'>';
 						$s = $s.htmlspecialchars($val).'</td>';
 					}
 				}
 				foreach ($commands as $command => $val)
 				{
-					$s = $s.'<td'.$this->_getHTMLVal($style, 'class', 'td').'>';
+					$s = $s.'<td'.$this->_getHTMLVal($style, 'td').'>';
 					$s = $s.$this->Html->link($command, array
 					(
 						'controller' => $this->_getURLName($this->model),
@@ -83,7 +80,7 @@ class TableHelper extends Helper
 		$s = '</table>';
 		foreach ($commands as $command => $val)
 		{
-			$s = $s.'<div'.$this->_getHTMLVal($style, 'class', 'td').$this->_getHTMLVal($style, 'id', 'td').'>';
+			$s = $s.'<div'.$this->_getHTMLVal($style, 'td').'>';
 			$s = $s.$this->Html->link($command,
 				array('controller' => $this->_getURLName($this->model), 'action' => $val['command']));
 			$s = $s.'</div>';
@@ -91,12 +88,16 @@ class TableHelper extends Helper
 		return $s;
 	}
 	
-	//returns an HTML attrubte string as specified in $var (formated as $style above) 
-	function _getHTMLVal($var, $type, $key)
+	//returns an HTML attrubte string as specified in $var (formated as $style above) for $key
+	function _getHTMLVal($var, $key)
 	{
-		if (!isset($var[$type][$key])) return '';
-		if (empty($var[$type][$key])) return '';
-		return " $type=\"".htmlspecialchars($var[$typ][$key])."\"";
+		$s = '';
+		foreach ($var as $type)
+		{
+			if (isset($type[$key]))
+				$s = $s." $type=\"".htmlspecialchars($type[$key]);
+		}
+		return $s;
 	}
 	
 	//wrapper for Inflector functions to change a singular, CamelCase word into a plural, underscored word
