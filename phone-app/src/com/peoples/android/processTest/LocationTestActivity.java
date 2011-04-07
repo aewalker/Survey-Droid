@@ -26,7 +26,7 @@ public class LocationTestActivity extends Activity {
 	   @Override
 	   public void onCreate(Bundle savedInstanceState) {
 	       super.onCreate(savedInstanceState);
-	       setContentView(R.layout.main);
+	       //setContentView(R.layout.main);
 	       doTheRest();
 	       
 	       /*final TextView tv = new TextView(this);
@@ -84,8 +84,8 @@ public class LocationTestActivity extends Activity {
 				"\nLongitude = " + loc.getLongitude() + 
 				"\n" + date.toString();
 				Toast.makeText( getApplicationContext(),
-				Text,
-				Toast.LENGTH_SHORT).show();
+								Text,
+								Toast.LENGTH_SHORT).show();
 				i = 0;
 			}
 		}
