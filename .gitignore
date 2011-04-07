@@ -3,10 +3,10 @@ phone-app/.project
 phone-app/.settings
 phone-app/bin/*
 
-shared/.classpath
-shared/.project
-shared/.settings
-shared/bin/*
+model/.classpath
+model/.project
+model/.settings
+model/bin/*
 
 
 
