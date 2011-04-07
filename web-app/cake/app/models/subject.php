@@ -9,13 +9,16 @@ class Subject extends AppModel
 	//for php4
 	var $name = 'Subject';
 	
+	//enables look up all the answers a subject has given from within the subjects controller
+	var $hasMany = 'Answer';
+	
 	var $validate = array
 	(
 		'phone_num' => array
 		(
 			//change from 'us' if you want to use international phone numbers
 			'rule' => array('phone', null, 'us'),
-			'message' => 'Please provide a phone number'
+			'message' => 'Please provide a valid US phone number'
 		),
 		'first_name' => array
 		(
