@@ -1,0 +1,32 @@
+Send Cole an email: 1-week todo
+
+4/6/2011 Meeting with Naomi
+
++show demo
+	- database
+	- GPS
+
++ w/in one week:
+	- implement survey (GUI)
+	- have final GPS
+
+Questions for Naomi?
+
++ survey design - we may drop some generality 
+
+
+Comments from Naomi:
+
++ we will not store actual phone numbers. 
++ Provide accuracy information.
++ Make sure that different surveys can be sent 
+
+
++ Naomi wants to collect text information
+
+
+
+TODO:
+
++data collected when app is disabled?
++

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.Date;
+
 public class LocationTestActivity extends Activity {
 	
 	private static final String TAG = "LocTestActi";
@@ -27,6 +28,7 @@ public class LocationTestActivity extends Activity {
 	       super.onCreate(savedInstanceState);
 	       setContentView(R.layout.main);
 	       doTheRest();
+	       
 	       /*final TextView tv = new TextView(this);
 	       tv.setText("hi");
 	       setContentView(tv);
@@ -47,64 +49,16 @@ public class LocationTestActivity extends Activity {
 
 	private void doTheRest() {
 		/*private void doTheRest(final TextView tv) {*/
-		// TODO Auto-generated method stub
 		
 //		TODO: Will make this an activity, and will move GPS gathering to a Service
 //		Intent locationIntent = new Intent(this, LocationTestService.class);
 //		startService(locationIntent);
-		
-		
 
 		//get a location manager from the system
 		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		// create a Listener interface that will handle the GPS location update
-		
 		LocationListener locListener = new MyLocationListener(); 
-		
-		/*{
-			
-			public void onStatusChanged(String provider, int status, Bundle extras) {
-				// TODO Auto-generated method stub
-				LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-				
-				Location gpsLocation = locManager.getLastKnownLocation("gps");
-				
-				String locString = String.format("gps location: %s  ", gpsLocation.toString() );
-				tv.setText(locString);
-				setContentView(tv);
-			}
-			
-			public void onProviderEnabled(String provider) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			public void onProviderDisabled(String provider) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			public void onLocationChanged(Location location) {
-				// TODO Auto-generated method stub
-				
-			}
-		};*/
-		
-		/*GpsStatus.Listener gpsLocListener = new Listener() {
-			
-			public void onGpsStatusChanged(int event) {
-				// TODO Auto-generated method stub
-				
-				LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-				
-				Location gpsLocation = locManager.getLastKnownLocation("gps");
-				
-				String locString = String.format("gps location: %s  ", gpsLocation.toString() );
-				tv.setText(locString);
-				setContentView(tv);
-			}
-		};*/
 		
 		//subscribe our Listener to the locManager
 		/*locManager.addGpsStatusListener(gpsLocListener);*/
