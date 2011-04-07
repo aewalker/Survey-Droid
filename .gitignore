@@ -2,6 +2,15 @@ phone-app/.classpath
 phone-app/.project
 phone-app/.settings
 phone-app/bin/*
+
+shared/.classpath
+shared/.project
+shared/.settings
+shared/bin/*
+
+
+
 *.*~
 web-app/cake/app/tmp/sessions
 .project
+.metadata
