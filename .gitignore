@@ -2,4 +2,15 @@ phone-app/.classpath
 phone-app/.project
 phone-app/.settings
 phone-app/bin/*
+
+model/.classpath
+model/.project
+model/.settings
+model/bin/*
+
+
+
 *.*~
+web-app/cake/app/tmp/sessions
+.project
+.metadata

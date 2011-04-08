@@ -15,8 +15,7 @@ CREATE TABLE subjects (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	phone_num VARCHAR(13) NOT NULL,
 	first_name VARCHAR(255) NOT NULL,
-	last_name VARCHAR(255) NOT NULL
-	/* other things? */);
+	last_name VARCHAR(255) NOT NULL;
 	
 CREATE TABLE contacts (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -24,20 +23,51 @@ CREATE TABLE contacts (
 	
 CREATE TABLE surveys (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(255));
+	name VARCHAR(255)),
+	created DATETIME,
+	question_id INT UNSIGNED NOT NULL, /* the first question in the survey */
+	/* field for each day; holds times in 24 hour format separtated by commas */
+	mo VARCHAR(255),
+	tu VARCHAR(255),
+	we VARCHAR(255),
+	th VARCHAR(255),
+	fr VARCHAR(255),
+	sa VARCHAR(255),
+	su VARCHAR(255));
 	
 CREATE TABLE questions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	survey_id INT UNSIGNED NOT NULL,
-	ques_type ENUM('choice', 'free_resp', 'auto'/* insert other question types here */) NOT NULL,
-	text TINYTEXT,
+	q_text TEXT);
+	
+CREATE TABLE branches (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	/* parent question */
+	question_id INT UNSIGNED NOT NULL, /*foreign keys*/
+	/* child question */
+	next_q INT UNSIGNED NOT NULL);
+	
+CREATE TABLE conditions (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	/* branch this condition belongs to */
+	branch_id INT UNSIGNED NOT NULL,
+	/* question this condition references */
+	question_id INT UNSIGNED NOT NULL,
+	/* choice that is required as the answer for the above question for this condition to be true */
+	choice_id INT UNSIGNED NOT NULL);
+	
+CREATE TABLE choices (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	choicd_text VARCHAR(255),
 	question_id INT UNSIGNED);
 	
-CREATE TABLE options (
+CREATE TABLE answers (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	text VARCHAR(255),
 	question_id INT UNSIGNED NOT NULL,
-	next_ques INT UNSIGNED);
+	subject_id INT UNSIGNED NOT NULL,
+	choice_id INT UNSIGNED,
+	ans_text TEXT,
+	created DATETIME);
+	
 	
 CREATE TABLE location_actions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

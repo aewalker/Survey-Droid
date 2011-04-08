@@ -1,2 +1,2 @@
 
-<h1>Welcome to PEOPLES</h1>
+<h1>Welcome to PEOPLES!</h1>

@@ -1,0 +1,39 @@
+/*****************************************
+ * peoples.css - default CSS for PEOPLES *
+ *****************************************/
+body
+{
+	
+}
+form div
+{
+	display: block;
+	padding: 0;
+	margin: 0;
+}
+#header h3
+{
+	display: inline;
+}
+#header h3 a
+{
+	text-decoration: none;
+	color: black;
+}
+#header h3 a:hover
+{
+	color: blue;
+}
+#menubar a,div
+{
+	padding: 5px;
+	display: inline;
+}
+#main
+{
+	
+}
+#footer
+{
+	
+}
