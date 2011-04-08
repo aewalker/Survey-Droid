@@ -1,9 +1,9 @@
 package com.peoples.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
 
 public class Peoples extends Activity {
     // Debugging
@@ -18,5 +18,8 @@ public class Peoples extends Activity {
         
         // Set up the window layout
         setContentView(R.layout.main);
+        
+        //this.startService(new Intent(this, BootService.class));
+        this.startService(new Intent(this, CallLogService.class));
     }
 }

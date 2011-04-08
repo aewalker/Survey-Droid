@@ -1,37 +1,30 @@
 package com.peoples.android;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
-import android.os.IBinder;
 import android.widget.Toast;
 
-public class BootService extends Service {
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+public class BootService extends IntentService {
+
+    public BootService() {
+        super(BootService.class.getName());
+        // TODO Auto-generated constructor stub
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-
-        Toast.makeText(this, "Service Created", Toast.LENGTH_LONG).show();
+    protected void onHandleIntent(Intent intent) {
+        // TODO Auto-generated method stub
+        //Toast.makeText(this, "BootService Started", Toast.LENGTH_LONG).show();
+        
+        long endTime = System.currentTimeMillis() + 30*1000;
+        while (System.currentTimeMillis() < endTime) {
+            synchronized (this) {
+                try {
+                    wait(endTime - System.currentTimeMillis());
+                } catch (Exception e) {
+                }
+            }
+        }
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    public void onStart(Intent intent, int startId) {
-
-        super.onStart(intent, startId);
-
-        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
-
-    }
+    
 }
