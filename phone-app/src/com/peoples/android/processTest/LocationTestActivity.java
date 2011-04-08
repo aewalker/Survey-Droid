@@ -74,7 +74,7 @@ public class LocationTestActivity extends Activity {
 		public void onLocationChanged(Location loc)
 		{
 			i++;
-			if (i == 15)
+			if (i == 1)
 			{
 				Date date = new Date();
 				loc.getLatitude();
