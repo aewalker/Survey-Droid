@@ -63,19 +63,7 @@ public class Peoples extends ListActivity {
         
         
         
-        this.setListAdapter(new SurveyAdapter(this, R.layout.multiplechoiceview, CHOICES));
-
-        ListView lv = this.getListView();
-        lv.setTextFilterEnabled(true);
-
-        lv.setOnItemClickListener(new OnItemClickListener() {
-          public void onItemClick(AdapterView<?> parent, View view,
-              int position, long id) {
-            // When clicked, show a toast with the TextView text
-            Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-                Toast.LENGTH_SHORT).show();
-          }
-        });
+        
         
         
 	//testing ui above        
