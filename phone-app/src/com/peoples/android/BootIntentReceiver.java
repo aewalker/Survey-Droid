@@ -1,5 +1,8 @@
 package com.peoples.android;
 
+import com.peoples.android.services.BootService;
+import com.peoples.android.services.CallLogService;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

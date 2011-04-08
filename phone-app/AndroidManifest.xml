@@ -17,13 +17,13 @@
 			</intent-filter>
 		</receiver>
 
-		<service android:name="BootService">
+		<service android:name="services.BootService">
 			<intent-filter>
 				<action android:name=".BootService" />
 			</intent-filter>
 		</service>
 		
-		<service android:name="CallLogService">
+		<service android:name="services.CallLogService">
             <intent-filter>
                 <action android:name=".CallLogService" />
             </intent-filter>
