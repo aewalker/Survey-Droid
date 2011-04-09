@@ -11,7 +11,9 @@ class ConditionsController extends AppController
 	var $name = 'Conditions';
 	
 	var $components = array('Auth');
-    var $helpers = array('Table');
+    var $helpers = array('Table', 'Js' => 'jquery');
+    
+    var $layout = 'ajax';
     
     //show all conditions related to a particular branch
     function showconditions($branchid)

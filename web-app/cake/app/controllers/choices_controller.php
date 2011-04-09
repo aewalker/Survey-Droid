@@ -11,7 +11,9 @@ class ChoicesController extends AppController
 	var $name = 'Choices';
 	
 	var $components = array('Auth');
-    var $helpers = array('Table');
+    var $helpers = array('Table', 'Js' => 'jquery');
+    
+    var $layout = 'ajax';
     
     //show all choices related to a particular question
     function showchoices($questionid)

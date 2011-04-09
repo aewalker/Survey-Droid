@@ -37,6 +37,7 @@ CREATE TABLE surveys (
 	
 CREATE TABLE questions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	survey_id INT UNSIGNED NOT NULL,
 	q_text TEXT);
 	
 CREATE TABLE branches (

@@ -7,6 +7,8 @@
 	<?php
 		echo $html->css('peoples');
 		echo $html->meta('peoples.ico', '/img/peoples.ico', array('type' => 'icon'))
+		echo $this->Html->script('jquery');
+		echo $scripts_for_layout;
 	?>
 </head>
 <body>
@@ -49,5 +51,6 @@
 	?>
 	<hr />
 </div>
+<?php echo $this->Js->writeBuffer(); ?>
 </body>
 </html>

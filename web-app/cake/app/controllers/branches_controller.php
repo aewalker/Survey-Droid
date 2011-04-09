@@ -11,7 +11,9 @@ class BranchesController extends AppController
 	var $name = 'Branches';
 	
 	var $components = array('Auth');
-    var $helpers = array('Table');
+    var $helpers = array('Table', 'Js' => 'jquery');
+    
+    var $layout = 'ajax';
     
     //show all branches related to a particular question
     function showbranches($questionid)
