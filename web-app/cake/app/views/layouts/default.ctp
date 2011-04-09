@@ -51,6 +51,6 @@
 	?>
 	<hr />
 </div>
-<?php echo $this->Js->writeBuffer(); ?>
+<?php if (isset($this->Js)) echo $this->Js->writeBuffer(); ?>
 </body>
 </html>
