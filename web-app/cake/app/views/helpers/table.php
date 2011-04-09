@@ -71,7 +71,7 @@ class TableHelper extends Helper
 					{
 						$s = $s.$this->Js->link($command, $this->_getURLName($this->model).DS
 							.$val['command'].DS
-							.$info[$val['arg']]);
+							.$info[$val['arg']], array('async' => true, 'update' => $val['update']));
 					}
 					$s = $s.'</td>';
 				}
@@ -98,7 +98,7 @@ class TableHelper extends Helper
 			else if ($val['type'] == 'ajax')
 			{
 				$s = $s.$this->Js->link($command, $this->_getURLName($this->model).DS
-					.$val['command'];
+					.$val['command'], array('async' => true, 'update' => $val['update']));
 			}
 			$s = $s.'</div>';
 		}
