@@ -2,8 +2,7 @@
 /*****************************************************************************
  * controllers/surveys_controller.php                                        *
  *                                                                           *
- * Controlls all web-end survey functions include functions for all of the   *
- * components of a survey (questions, choices, branches, conditions).        *
+ * Controlls all web-end survey functions at the survey level.               *
  *****************************************************************************/
 class SurveysController extends AppController
 {
@@ -13,102 +12,92 @@ class SurveysController extends AppController
 	var $components = array('Auth');
     var $helpers = array('Table');
     
-    /*------------------------------*/
-    /*--- Survey level functions ---*/
-    /*------------------------------*/
-    
     //show all surveys in a table
     function index()
     {
-    	
+    	$this->set('results', $this->Survey->find('all', array
+		(
+			'fields' => array('id', 'name'),
+			'order' => array('name')
+		)));
     }
     
     //show the details of a particular survey
     function viewsurvey($surveyid)
     {
-    	
+    	//this function intentionally left empty
+    	//views should use AJAX calls to questions controller, etc.
     }
     
     //add a new survey
     function addsurvey()
     {
-    	
+		$this->Survey->create();
+		if ($this->Survey->save($this->data))
+        {
+         	$this->Session->setFlash('New survey created!');
+        	$this->redirect('/surveys/');
+    	}
     }
     
     //edit the name of a particular survey
-    //all functions below this point (except deletesurvey()) will be AJAX-based
-    //with this function generating the page that they are on.
     function editsurvey($surveyid)
     {
-    	
+		if ($surveyid == NULL) $this->redirect('/surveys/');
+		if ($this->data['Survey']['confirm'] == true)
+		{
+			$this->Survey->save();
+			$this->Session->setFlash('Survey edited!');
+			$this->redirect('/surveys');
+		}
+		else
+		{
+			$result = $this->Survey->find('first', array
+			(
+				'conditions' => array('id' => $surveyid),
+				'fields' => array('name')
+			));
+			if (isset($result['Survey']))
+			{
+				$this->set('name', $result['Survey']['name']);
+				$this->set('id', $surveyid);
+			}
+			else
+			{
+				$this->Session->setFlash('That survey does not exist!  If you recieved this message after following a link, please email your system administrator.');
+				$this->redirect('/surveys/');
+			}
+		}
     }
     
     //delete a particular survey and it's associated data
     function deletesurvey($surveyid)
     {
-    	
-    }
-    
-    /*--------------------------------*/
-    /*--- Question level functions ---*/
-    /*--------------------------------*/
-    
-    //show all questions associated with a particular survey
-    function showquestions($surveyid) //AJAX
-    {
-    	
-    }
-    
-    //show all the details of a particluar question
-    function viewquestion($questionid) //AJAX
-    {
-    	
-    }
-    
-    //add a new question to the current survey
-    function addquestion($surveyid) //AJAX
-    {
-    	
-    }
-    
-    //edit the text of a particular question
-    function editquestion($questionid) //AJAX
-    {
-    	
-    }
-    
-    //delete a particular question
-    function deletequestion($questionid) //AJAX
-    {
-    	
-    }
-    
-    /*------------------------------*/
-    /*--- Branch level functions ---*/
-    /*------------------------------*/
-    
-    //show all branches related to a particular question
-    function showbranches($questionid) //AJAX
-    {
-    	
-    }
-    
-    //show all conditions related to a particular branch
-    function viewbranch($branchid) //AJAX
-    {
-    	
-    }
-    
-    //add a new branch to the current survey
-    function addbranch($questionid) //AJAX
-    {
-    	
-    }
-    
-    //edit a particularbranch
-    function editbranch($branchid) //AJAX
-    {
-    	
+		if ($surveyid == NULL) $this->redirect('/surveys/');
+		if ($this->data['Survey']['confirm'] == true)
+		{
+			$this->Survey->delete($surveyid);
+			$this->Session->setFlash('Survey deleted!');
+			$this->redirect('/surveys');
+		}
+		else
+		{
+			$result = $this->Survey->find('first', array
+			(
+				'conditions' => array('id' => $surveyid),
+				'fields' => array('name')
+			));
+			if (isset($result['Survey']))
+			{
+				$this->set('name', $result['Survey']['name']);
+				$this->set('id', $surveyid);
+			}
+			else
+			{
+				$this->Session->setFlash('That survey does not exist!  If you recieved this message after following a link, please email your system administrator.');
+				$this->redirect('/surveys/');
+			}
+		}
     }
 }
 ?>

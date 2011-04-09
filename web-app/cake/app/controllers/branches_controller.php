@@ -25,13 +25,13 @@ class BranchesController extends AppController
     	
     }
     
-    //add a new branch to the current survey
+    //add a new branch to the current question
     function addbranch($questionid)
     {
     	
     }
     
-    //edit a particularbranch
+    //edit a particular branch
     function editbranch($branchid)
     {
     	

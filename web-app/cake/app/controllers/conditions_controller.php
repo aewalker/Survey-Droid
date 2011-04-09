@@ -13,26 +13,26 @@ class ConditionsController extends AppController
 	var $components = array('Auth');
     var $helpers = array('Table');
     
-    //show all branches related to a particular question
-    function showbranches($questionid)
+    //show all conditions related to a particular branch
+    function showconditions($branchid)
     {
     	
     }
     
-    //add a new branch to the current survey
-    function addbranch($questionid)
+    //add a new condition to the current branch
+    function addcondition($branchid)
     {
     	
     }
     
-    //edit a particularbranch
-    function editbranch($branchid)
+    //edit a particular condition
+    function editcondition($conditionid)
     {
     	
     }
     
-	//delete a particular branch
-    function deletebranch($branchid)
+	//delete a particular condition
+    function deletecondition($conditionid)
     {
     	
     }
