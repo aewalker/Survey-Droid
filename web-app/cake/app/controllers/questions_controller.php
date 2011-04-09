@@ -11,7 +11,7 @@ class QuestionsController extends AppController
 	var $name = 'Questions';
 	
 	var $components = array('Auth');
-    var $helpers = array('Table');
+    var $helpers = array('Table', 'Ajax');
     
     //show all questions associated with a particular survey
     function showquestions($surveyid)
