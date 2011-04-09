@@ -58,7 +58,7 @@ CREATE TABLE conditions (
 	
 CREATE TABLE choices (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	choicd_text VARCHAR(255),
+	choice_text VARCHAR(255),
 	question_id INT UNSIGNED);
 	
 CREATE TABLE answers (
