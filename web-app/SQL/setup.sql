@@ -15,7 +15,7 @@ CREATE TABLE subjects (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	phone_num VARCHAR(13) NOT NULL,
 	first_name VARCHAR(255) NOT NULL,
-	last_name VARCHAR(255) NOT NULL;
+	last_name VARCHAR(255) NOT NULL);
 	
 CREATE TABLE contacts (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -23,7 +23,7 @@ CREATE TABLE contacts (
 	
 CREATE TABLE surveys (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(255)),
+	name VARCHAR(255),
 	created DATETIME,
 	question_id INT UNSIGNED NOT NULL, /* the first question in the survey */
 	/* field for each day; holds times in 24 hour format separtated by commas */
@@ -57,7 +57,7 @@ CREATE TABLE conditions (
 	choice_id INT UNSIGNED NOT NULL,
 	/* type of condition: 0 for answer given in current survey, 1 for answer given at some time in a previous
 	   survey, and 2 for an answer never given in a previous survey. */
-	type TINY INT UNSIGNED NOT NULL);
+	type TINYINT UNSIGNED NOT NULL);
 	
 CREATE TABLE choices (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

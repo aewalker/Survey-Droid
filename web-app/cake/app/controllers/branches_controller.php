@@ -59,7 +59,7 @@ class BranchesController extends AppController
 		{
 			$result = $this->Branch->find('first', array
 			(
-				'conditions' => array('id' => $branchid),
+				'conditions' => array('Branch.id' => $branchid),
 				'fields' => array('next_q')
 			));
 			if (isset($result['Branch']))
@@ -88,7 +88,7 @@ class BranchesController extends AppController
 		{
 			$result = $this->Branch->find('first', array
 			(
-				'conditions' => array('id' => $branchid),
+				'conditions' => array('Branch.id' => $branchid),
 				'fields' => array('next_q')
 			));
 			if (isset($result['Branch']))

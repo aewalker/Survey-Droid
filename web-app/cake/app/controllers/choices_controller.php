@@ -51,7 +51,7 @@ class ChoicesController extends AppController
 		{
 			$result = $this->Choice->find('first', array
 			(
-				'conditions' => array('id' => $choiceid),
+				'conditions' => array('Choice.id' => $choiceid),
 				'fields' => array('choice_text')
 			));
 			if (isset($result['Choice']))
@@ -80,7 +80,7 @@ class ChoicesController extends AppController
 		{
 			$result = $this->Choice->find('first', array
 			(
-				'conditions' => array('id' => $choiceid),
+				'conditions' => array('Choice.id' => $choiceid),
 				'fields' => array('choice_text')
 			));
 			if (isset($result['Choice']))
