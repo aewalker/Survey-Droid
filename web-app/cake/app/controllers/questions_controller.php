@@ -13,7 +13,7 @@ class QuestionsController extends AppController
 	var $components = array('Auth');
     var $helpers = array('Table', 'Js' => 'jquery');
     
-    var $layout = 'ajax';
+    //var $layout = 'ajax';
     
     //show all questions associated with a particular survey
     function showquestions($surveyid)
@@ -24,6 +24,7 @@ class QuestionsController extends AppController
 			'fields' => array('id', 'q_text'),
 			'order' => array('q_text')
 		)));
+		$this->set('surveyid', $surveyid);
     }
     
     //show all the details of a particluar question
@@ -35,12 +36,17 @@ class QuestionsController extends AppController
     //add a new question to the current survey
     function addquestion($surveyid)
     {
-    	$this->Question->create();
-		if ($this->Question->save($this->data))
-        {
-         	$this->Session->setFlash('New question created!');
-         	$this->set('result', true);
-    	}
+    	$this->set('surveyid', $surveyid);
+    	if ($this->data['Question']['confirm'] == true)
+		{
+	    	$this->Question->create();
+			if ($this->Question->save($this->data))
+	        {
+	         	$this->Session->setFlash('New question created!');
+	         	$this->redirect('showquestions/'.$surveyid);
+	         	$this->set('result', true);
+	    	}
+		}		
     }
     
     //edit the text of a particular question
@@ -58,12 +64,13 @@ class QuestionsController extends AppController
 			$result = $this->Question->find('first', array
 			(
 				'conditions' => array('id' => $questionid),
-				'fields' => array('q_text')
+				'fields' => array('q_text','survey_id')
 			));
 			if (isset($result['Question']))
 			{
 				$this->set('q_text', $result['Question']['q_text']);
-				$this->set('id', $questionid);
+				$this->set('questionid', $questionid);
+				$this->set('surveyid', $result['Question']['survey_id']);
 			}
 			else
 			{

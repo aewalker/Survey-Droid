@@ -32,11 +32,14 @@ class SurveysController extends AppController
     //add a new survey
     function addsurvey()
     {
-		$this->Survey->create();
-		if ($this->Survey->save($this->data))
-        {
-         	$this->Session->setFlash('New survey created!');
-        	$this->redirect('/surveys/');
+    	if($this->data['Survey']['confirm'] == true)
+    	{
+			$this->Survey->create();
+			if ($this->Survey->save($this->data))
+	        {
+	         	$this->Session->setFlash('New survey created!');
+	        	$this->redirect('/surveys/');
+	    	}
     	}
     }
     
@@ -57,6 +60,7 @@ class SurveysController extends AppController
 				'conditions' => array('id' => $surveyid),
 				'fields' => array('name')
 			));
+			
 			if (isset($result['Survey']))
 			{
 				$this->set('name', $result['Survey']['name']);

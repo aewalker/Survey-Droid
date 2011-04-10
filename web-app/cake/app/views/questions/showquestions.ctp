@@ -14,14 +14,14 @@ echo $table->tableBody($results, array(
             'Delete' => array(
                   'command' => 'deletequestion', 'arg' => 'id', 'type' => 'link'),
             'Select' =>array(
-                   'command' => '../branches/showbranches',
+                   'command' => '../../branches/showbranches',
                    'arg' => 'id',
-                   'update'=>'branchdiv',
+                   'update'=>'#branchdiv',
                    'type' => 'ajax')
             ));
 		
-echo $table->endTable(array('Add Question' => array('command' => "addquestion", 'type' => 'link')));
+echo $table->endTable(array('Add Question' => array('command' => "addquestion/$surveyid", 'type' => 'link')));
 
 ?>
-<div class="branchdiv">
+<div id="branchdiv">
 </div>

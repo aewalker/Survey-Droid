@@ -24,6 +24,7 @@ class BranchesController extends AppController
 			'fields' => array('id', 'next_q'),
 			'order' => array('id')
 		)));
+		$this->set('questionid', $questionid);
     }
     
     //show all conditions related to a particular branch
@@ -35,11 +36,12 @@ class BranchesController extends AppController
     //add a new branch to the current question
     function addbranch($questionid)
     {
+    	$this->set('questionid', $questionid);
     	$this->Branch->create();
 		if ($this->Branch->save($this->data))
         {
          	$this->Session->setFlash('New branch created!');
-         	$this->set('result' => true);
+         	$this->set('result', true);
     	}
     }
     
@@ -51,7 +53,7 @@ class BranchesController extends AppController
 		{
 			$this->Branch->save();
 			$this->Session->setFlash('Branch edited!');
-			$this->set('result' => true);
+			$this->set('result', true);
 		}
 		else
 		{
@@ -80,7 +82,7 @@ class BranchesController extends AppController
 		{
 			$this->Branch->delete($branchid);
 			$this->Session->setFlash('Branch deleted!');
-			$this->set('result' => true);
+			$this->set('result', true);
 		}
 		else
 		{

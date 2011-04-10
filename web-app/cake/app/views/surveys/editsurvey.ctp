@@ -4,7 +4,7 @@
  *                                                                           *
  * Page to edit a survey's info.                                             *
  *****************************************************************************/
-echo $form->create('Survey', array('url' => "/surveys/editsurvey/$surveyid"));
+echo $form->create('Survey', array('url' => "editsurvey/$surveyid"));
 echo $form->input('name', array('value' => $name));
 echo $form->input('question_id', array('value' => $question_id));
 echo $form->input('mo', array('value' => $mo, 'label' => 'Monday'));
