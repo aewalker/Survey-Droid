@@ -51,7 +51,7 @@ class ConditionsController extends AppController
 		{
 			$result = $this->Condition->find('first', array
 			(
-				'conditions' => array('id' => $conditionid),
+				'conditions' => array('Condition.id' => $conditionid),
 				'fields' => array('question_id', 'choice_id')
 			));
 			if (isset($result['Condition']))
@@ -81,7 +81,7 @@ class ConditionsController extends AppController
 		{
 			$result = $this->Condition->find('first', array
 			(
-				'conditions' => array('id' => $conditionid),
+				'conditions' => array('Condition.id' => $conditionid),
 				'fields' => array('question_id', 'choice_id')
 			));
 			if (isset($result['Condition']))

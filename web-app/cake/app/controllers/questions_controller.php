@@ -63,7 +63,7 @@ class QuestionsController extends AppController
 		{
 			$result = $this->Question->find('first', array
 			(
-				'conditions' => array('id' => $questionid),
+				'conditions' => array('Question.id' => $questionid),
 				'fields' => array('q_text','survey_id')
 			));
 			if (isset($result['Question']))
@@ -93,7 +93,7 @@ class QuestionsController extends AppController
 		{
 			$result = $this->Question->find('first', array
 			(
-				'conditions' => array('id' => $questionid),
+				'conditions' => array('Question.id' => $questionid),
 				'fields' => array('q_text')
 			));
 			if (isset($result['Question']))

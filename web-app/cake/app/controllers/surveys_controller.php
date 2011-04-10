@@ -57,7 +57,7 @@ class SurveysController extends AppController
 		{
 			$result = $this->Survey->find('first', array
 			(
-				'conditions' => array('id' => $surveyid),
+				'conditions' => array('Survey.id' => $surveyid),
 				'fields' => array('name')
 			));
 			
@@ -88,7 +88,7 @@ class SurveysController extends AppController
 		{
 			$result = $this->Survey->find('first', array
 			(
-				'conditions' => array('id' => $surveyid),
+				'conditions' => array('Survey.id' => $surveyid),
 				'fields' => array('name')
 			));
 			if (isset($result['Survey']))
