@@ -54,7 +54,10 @@ CREATE TABLE conditions (
 	/* question this condition references */
 	question_id INT UNSIGNED NOT NULL,
 	/* choice that is required as the answer for the above question for this condition to be true */
-	choice_id INT UNSIGNED NOT NULL);
+	choice_id INT UNSIGNED NOT NULL,
+	/* type of condition: 0 for answer given in current survey, 1 for answer given at some time in a previous
+	   survey, and 2 for an answer never given in a previous survey. */
+	type TINY INT UNSIGNED NOT NULL);
 	
 CREATE TABLE choices (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

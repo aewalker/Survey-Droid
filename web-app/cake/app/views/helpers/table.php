@@ -8,7 +8,7 @@ class TableHelper extends Helper
 {
 	var $model = NULL;
 	
-	var $helpers = array('Html');
+	var $helpers = array('Html', 'Js' => 'jquery');
 	
 	//returns a string that is the header of a display table
 	//$style is as below.
