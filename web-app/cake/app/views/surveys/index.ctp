@@ -15,5 +15,5 @@ echo $table->tableBody($results, array(
 			),
 			array('id', 'name')
 		);
-echo $table->endTable(array('Add Survey' => array('command' => 'addsurvey', 'type' => 'link')));
+echo $table->endTable(array('Add Survey' => array('command' => 'addsurvey', 'type' => 'link', 'arg' => NULL)));
 ?>
