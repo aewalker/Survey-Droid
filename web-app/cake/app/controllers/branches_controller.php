@@ -37,15 +37,12 @@ class BranchesController extends AppController
     function addbranch($questionid)
     {
     	$this->set('questionid', $questionid);
-    	if ($this->data['Branch']['confirm'] == true)
-		{
-	    	$this->Branch->create();
-			if ($this->Branch->save($this->data))
-	        {
-	         	$this->Session->setFlash('New branch created!');
-	         	$this->set('result', true);
-	    	}
-		}
+    	$this->Branch->create();
+		if ($this->Branch->save($this->data))
+        {
+         	$this->Session->setFlash('New branch created!');
+         	$this->set('result', true);
+    	}
     }
     
     //edit a particular branch
