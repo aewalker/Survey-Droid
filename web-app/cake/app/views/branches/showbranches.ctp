@@ -21,8 +21,12 @@ echo $table->tableBody($results, array(
                    'type' => 'ajax')
             ));
 		
-echo $table->endTable(array('Add Branch' => array('command' => "addbranch/$questionid", 'type' => 'link')));
+echo $table->endTable(array('Add Branch' => array('command' => "../addbranch/$questionid", 
+					'update'=>'#addbranchdiv',
+                   'type' => 'ajax')));
 
 ?>
 <div id="#conditiondiv">
+</div>
+<div id="#addbranchdiv">
 </div>
