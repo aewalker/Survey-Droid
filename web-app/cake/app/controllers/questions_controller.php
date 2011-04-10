@@ -13,10 +13,10 @@ class QuestionsController extends AppController
 	var $components = array('Auth');
     var $helpers = array('Table', 'Js' => 'jquery');
     
-    //var $layout = 'ajax';
+    var $layout = 'ajax';
     
     //show all questions associated with a particular survey
-    function showquestions($surveyid)
+    function showquestions($surveyid = NULL)
     {
     	$this->set('results', $this->Question->find('all', array
 		(
@@ -27,23 +27,21 @@ class QuestionsController extends AppController
 		$this->set('surveyid', $surveyid);
     }
     
-    //show all the details of a particluar question
-    function viewquestion($questionid)
-    {
-    	//TODO I don't think this is really needed, have to ask Sema about it
-    }
-    
     //add a new question to the current survey
     function addquestion($surveyid)
     {
     	$this->set('surveyid', $surveyid);
+    	if (isset($this->data['Question']['cancel']) && $this->data['Question']['cancel'] == true)
+    	{
+   			$this->set('result', true);
+   			return;
+    	}
     	if ($this->data['Question']['confirm'] == true)
 		{
 	    	$this->Question->create();
 			if ($this->Question->save($this->data))
 	        {
 	         	$this->Session->setFlash('New question created!');
-	         	$this->redirect('showquestions/'.$surveyid);
 	         	$this->set('result', true);
 	    	}
 		}		
@@ -52,37 +50,59 @@ class QuestionsController extends AppController
     //edit the text of a particular question
     function editquestion($questionid)
     {
-    	if ($questionid == NULL) return;
+    	$result = $this->Question->find('first', array
+    	(
+    		'conditions' => array('Question.id' => $questionid),
+    		'fields' => array('survey_id')
+    	));
+    	$this->set('surveyid', $result['Question']['survey_id']);
+    	if (isset($this->data['Question']['cancel']) && $this->data['Question']['cancel'] == true)
+    	{
+    		$this->set('result', true);
+    		return;
+    	}
 		if ($this->data['Question']['confirm'] == true)
 		{
-			$this->Question->save();
-			$this->Session->setFlash('Question edited!');
-			$this->set('result', true);
+			if ($this->Question->save($this->data))
+			{
+				$this->Session->setFlash('Question edited!');
+				$this->set('result', true);
+				return;
+			}
+			$this->set('result', false);
+		}
+		
+		$result = $this->Question->find('first', array
+		(
+			'conditions' => array('Question.id' => $questionid),
+			'fields' => array('q_text','survey_id')
+		));
+		if (isset($result['Question']))
+		{
+			$this->set('q_text', $result['Question']['q_text']);
+			$this->set('questionid', $questionid);
+			$this->set('surveyid', $result['Question']['survey_id']);
 		}
 		else
 		{
-			$result = $this->Question->find('first', array
-			(
-				'conditions' => array('Question.id' => $questionid),
-				'fields' => array('q_text','survey_id')
-			));
-			if (isset($result['Question']))
-			{
-				$this->set('q_text', $result['Question']['q_text']);
-				$this->set('questionid', $questionid);
-				$this->set('surveyid', $result['Question']['survey_id']);
-			}
-			else
-			{
-				$this->Session->setFlash('That question does not exist!  If you recieved this message after following a link, please email your system administrator.');
-			}
+			$this->Session->setFlash('That question does not exist!  If you recieved this message after following a link, please email your system administrator.');
 		}
     }
     
     //delete a particular question
     function deletequestion($questionid)
     {
-    	if ($questionid == NULL) return;
+    	$result = $this->Question->find('first', array
+    	(
+    		'conditions' => array('Question.id' => $questionid),
+    		'fields' => array('survey_id')
+    	));
+    	$this->set('surveyid', $result['Question']['survey_id']);
+    	if (isset($this->data['Question']['cancel']) && $this->data['Question']['cancel'] == true)
+    	{
+    		$this->set('result', true);
+    		return;
+    	}
 		if ($this->data['Question']['confirm'] == true)
 		{
 			$this->Question->delete($questionid);
@@ -94,12 +114,12 @@ class QuestionsController extends AppController
 			$result = $this->Question->find('first', array
 			(
 				'conditions' => array('Question.id' => $questionid),
-				'fields' => array('q_text')
+				'fields' => array('Question.id, survey_id')
 			));
 			if (isset($result['Question']))
 			{
-				$this->set('q_text', $result['Question']['q_text']);
-				$this->set('id', $questionid);
+				$this->set('survey_id', $result['Question']['survey_id']);
+				$this->set('questionid', $questionid);
 			}
 			else
 			{

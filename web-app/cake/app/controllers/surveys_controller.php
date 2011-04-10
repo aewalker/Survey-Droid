@@ -12,6 +12,8 @@ class SurveysController extends AppController
 	var $components = array('Auth');
     var $helpers = array('Table');
     
+    var $currentSruvey = NULL; //keep track of current survey so AJAX calls don't need to give an id
+    
     //show all surveys in a table
     function index()
     {
@@ -25,8 +27,7 @@ class SurveysController extends AppController
     //show the details of a particular survey
     function viewsurvey($surveyid)
     {
-    	//this function intentionally left empty
-    	//views should use AJAX calls to questions controller, etc.
+    	$this->set('surveyid', $surveyid);
     }
     
     //add a new survey

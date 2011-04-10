@@ -10,18 +10,16 @@ echo $this->Session->flash();
 echo $table->startTable('Question');
 echo $table->tableBody($results, array(
             'Edit' => array(
-                  'command' => 'editquestion', 'arg' => 'id', 'type' => 'link'),
+                  'command' => '/questions/editquestion', 'arg' => 'id', 'type' => 'ajax', 'update' => '#q_space'),
             'Delete' => array(
-                  'command' => 'deletequestion', 'arg' => 'id', 'type' => 'link'),
+                  'command' => '/questions/deletequestion', 'arg' => 'id', 'type' => 'ajax', 'update' => '#q_space'),
             'Select' =>array(
-                   'command' => '../../branches/showbranches',
+                   'command' => '/branches/showbranches',
                    'arg' => 'id',
                    'update'=>'#branchdiv',
                    'type' => 'ajax')
             ));
 		
-echo $table->endTable(array('Add Question' => array('command' => "addquestion/$surveyid", 'type' => 'link')));
-
+echo $table->endTable(array('Add Question' => array('command' => '/questions/addquestion', 'arg' => $surveyid, 'type' => 'ajax', 'update' => '#q_space')));
+echo $this->Js->writeBuffer();
 ?>
-<div id="branchdiv">
-</div>

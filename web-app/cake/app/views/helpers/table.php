@@ -69,8 +69,7 @@ class TableHelper extends Helper
 					}
 					else if ($val['type'] == 'ajax')
 					{
-						$s = $s.$this->Js->link($command, $this->_getURLName($this->model).DS
-							.$val['command'].DS
+						$s = $s.$this->Js->link($command, $val['command'].DS
 							.$info[$val['arg']], array('async' => true, 'update' => $val['update']));
 					}
 					$s = $s.'</td>';
@@ -83,7 +82,7 @@ class TableHelper extends Helper
 	
 	//returns a string that is a the end of a display table.  Also adds commands to be added
 	//as links after the body of the table.  $commands and $style are as above
-	function endTable($commands = array('Add' => array('command' => 'add', 'type' => 'link')), $style = array())
+	function endTable($commands = array('Add' => array('command' => 'add', 'type' => 'link', 'arg' => NULL)), $style = array())
 	{
 		if (empty($this->model)) throw new Exception('Must call startTable() before endTable()');
 		$s = '</table>';
@@ -93,12 +92,12 @@ class TableHelper extends Helper
 			if ($val['type'] == 'link')
 			{
 				$s = $s.$this->Html->link($command,
-					array('controller' => $this->_getURLName($this->model), 'action' => $val['command']));
+					array('controller' => $this->_getURLName($this->model), 'action' => $val['command'].DS.$val['arg']));
 			}
 			else if ($val['type'] == 'ajax')
 			{
-				$s = $s.$this->Js->link($command, $this->_getURLName($this->model).DS
-					.$val['command'], array('async' => true, 'update' => $val['update']));
+				$s = $s.$this->Js->link($command,
+					$val['command'].DS.$val['arg'], array('async' => true, 'update' => $val['update']));
 			}
 			$s = $s.'</div>';
 		}
@@ -117,7 +116,7 @@ class TableHelper extends Helper
 		return $s;
 	}
 	
-	//wrapper for Inflector functions to change a singular, CamelCase word into a plural, underscored word
+	//wrapper for Inflector functions to change a singular, CamelCaseWord into a plural, underscored_word
 	function _getURLName($word)
 	{
 		return Inflector::underscore(Inflector::pluralize($word));
