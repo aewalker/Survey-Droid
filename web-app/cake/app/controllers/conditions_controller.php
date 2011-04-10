@@ -33,7 +33,7 @@ class ConditionsController extends AppController
 		if ($this->Condition->save($this->data))
         {
          	$this->Session->setFlash('New condition created!');
-         	$this->set('result' => true);
+         	$this->set('result', true);
     	}
     }
     
@@ -45,7 +45,7 @@ class ConditionsController extends AppController
 		{
 			$this->Condition->save();
 			$this->Session->setFlash('Condition edited!');
-			$this->set('result' => true);
+			$this->set('result', true);
 		}
 		else
 		{
@@ -75,7 +75,7 @@ class ConditionsController extends AppController
 		{
 			$this->Condition->delete($conditionid);
 			$this->Session->setFlash('Condition deleted!');
-			$this->set('result' => true);
+			$this->set('result', true);
 		}
 		else
 		{

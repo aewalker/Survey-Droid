@@ -15,7 +15,7 @@ echo $table->tableBody($results, array(
             'Delete' => array(
                   'command' => 'deletebranch', 'arg' => 'id', 'type' => 'link'),
             'Select' =>array(
-                   'command' => '../conditions/showconditions',
+                   'command' => '../../conditions/showconditions',
                    'arg' => 'id',
                    'update'=>'#conditiondiv',
                    'type' => 'ajax')
@@ -26,7 +26,7 @@ echo $table->endTable(array('Add Branch' => array('command' => "../addbranch/$qu
                    'type' => 'ajax')));
 
 ?>
-<div id="#conditiondiv">
+<div id="conditiondiv">
 </div>
-<div id="#addbranchdiv">
+<div id="addbranchdiv">
 </div>

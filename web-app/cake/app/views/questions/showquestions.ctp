@@ -25,3 +25,7 @@ echo $table->endTable(array('Add Question' => array('command' => "addquestion/$s
 ?>
 <div id="branchdiv">
 </div>
+<div id="conditiondiv">
+</div>
+<div id="addbranchdiv">
+</div>
