@@ -39,7 +39,7 @@ class QuestionsController extends AppController
 		if ($this->Question->save($this->data))
         {
          	$this->Session->setFlash('New question created!');
-         	$this->set('result' => true);
+         	$this->set('result', true);
     	}
     }
     
@@ -51,7 +51,7 @@ class QuestionsController extends AppController
 		{
 			$this->Question->save();
 			$this->Session->setFlash('Question edited!');
-			$this->set('result' => true);
+			$this->set('result', true);
 		}
 		else
 		{
@@ -80,7 +80,7 @@ class QuestionsController extends AppController
 		{
 			$this->Question->delete($questionid);
 			$this->Session->setFlash('Question deleted!');
-			$this->set('result' => true);
+			$this->set('result', true);
 		}
 		else
 		{

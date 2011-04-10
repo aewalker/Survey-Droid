@@ -6,7 +6,7 @@
 	<title><?php echo $title_for_layout; ?></title>
 	<?php
 		echo $html->css('peoples');
-		echo $html->meta('peoples.ico', '/img/peoples.ico', array('type' => 'icon'))
+		echo $html->meta('peoples.ico', '/img/peoples.ico', array('type' => 'icon'));
 		echo $this->Html->script('jquery');
 		echo $scripts_for_layout;
 	?>
