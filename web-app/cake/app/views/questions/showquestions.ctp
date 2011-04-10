@@ -7,11 +7,21 @@
 echo $this->Session->flash();
 
 //show the results
-echo $table->startTable('Questions');
-
-echo $table->tableBody($results, array('Select' => array('url' => $ajax->link( 'Select', array ('controller' => 'branches', 'action' => 'showbranches', 'arg' => 'questionid' ), 
-	array ('update' => 'branch' ) )) ) );
-echo $table->endTable(array('Add Question' => array('command' => '/addquestion', 'arg' => 'questionid')));
-
+echo $table->startTable('Question');
+echo $table->tableBody($results, array(
+            'Edit' => array(
+                  'command' => 'editquestion', 'arg' => 'id', 'type' => 'link'),
+            'Delete' => array(
+                  'command' => 'deletequestion', 'arg' => 'id', 'type' => 'link'),
+            'Select' =>array(
+                   'command' => '../branches/showbranches',
+                   'arg' => 'id',
+                   'update'=>'branchdiv',
+                   'type' => 'ajax')
+            ));
+		
+echo $table->endTable(array('Add Question' => array('command' => "addquestion", 'type' => 'link')));
 
 ?>
+<div class="branchdiv">
+</div>
