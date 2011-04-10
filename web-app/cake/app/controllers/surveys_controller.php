@@ -28,6 +28,7 @@ class SurveysController extends AppController
     function viewsurvey($surveyid)
     {
     	$this->set('surveyid', $surveyid);
+    	$this->redirect("../questions/showquestions/".$surveyid);
     }
     
     //add a new survey

@@ -22,4 +22,6 @@ echo $table->tableBody($results, array(
 		
 echo $table->endTable(array('Add Question' => array('command' => '/questions/addquestion', 'arg' => $surveyid, 'type' => 'ajax', 'update' => '#q_space')));
 echo $this->Js->writeBuffer();
+
 ?>
+

@@ -1,11 +1,10 @@
 <?php
 /*****************************************************************************
- * app_model.php                                                             *
+ * views/questions/index.ctp                                                 *
  *                                                                           *
- * Holds application-wide model-related code.                                *
+ * Questions of a specific survey.                                           *
  *****************************************************************************/
-class AppModel extends Model
-{
-	
-}
+
+
 ?>
+

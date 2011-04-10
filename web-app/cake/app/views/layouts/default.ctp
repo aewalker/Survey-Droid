@@ -51,6 +51,8 @@
 	?>
 	<hr />
 </div>
+<div id="q_space">
+</div>
 <?php if (isset($this->Js)) echo $this->Js->writeBuffer(); ?>
 </body>
 </html>
