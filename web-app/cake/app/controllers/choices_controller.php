@@ -24,6 +24,7 @@ class ChoicesController extends AppController
 			'fields' => array('id', 'choice_text'),
 			'order' => array('choice_text')
 		)));
+		$this->set('questionid', $questionid);
     }
     
     //add a new choice to the current question
@@ -33,7 +34,7 @@ class ChoicesController extends AppController
 		if ($this->Choice->save($this->data))
         {
          	$this->Session->setFlash('New choice created!');
-         	$this->set('result' => true);
+         	$this->set('result', true);
     	}
     }
     
@@ -45,7 +46,7 @@ class ChoicesController extends AppController
 		{
 			$this->Choice->save();
 			$this->Session->setFlash('Choice edited!');
-			$this->set('result' => true);
+			$this->set('result', true);
 		}
 		else
 		{
@@ -74,7 +75,7 @@ class ChoicesController extends AppController
 		{
 			$this->Choice->delete($choiceid);
 			$this->Session->setFlash('Choice deleted!');
-			$this->set('result' => true);
+			$this->set('result', true);
 		}
 		else
 		{

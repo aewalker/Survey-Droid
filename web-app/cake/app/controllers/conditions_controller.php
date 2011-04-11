@@ -24,11 +24,13 @@ class ConditionsController extends AppController
 			'fields' => array('id', 'question_id', 'choice_id'),
 			'order' => array('id')
 		)));
+		$this->set('branchid', $branchid);
     }
     
     //add a new condition to the current branch
     function addcondition($branchid)
     {
+    	$this->set('branchid', $branchid);
     	$this->Condition->create();
 		if ($this->Condition->save($this->data))
         {
@@ -41,10 +43,17 @@ class ConditionsController extends AppController
     function editcondition($conditionid)
     {
     	if ($conditionid == NULL) return;
+    	if (isset($this->data['Condition']['cancel']) && $this->data['Condition']['cancel'] == true)
+    	{
+    		$this->set('branchid', $this->data['Condition']['branch_id']);
+    		$this->set('result', true);
+    		return;
+    	}
 		if ($this->data['Condition']['confirm'] == true)
 		{
 			$this->Condition->save();
 			$this->Session->setFlash('Condition edited!');
+			$this->set('branchid', $this->data['Condition']['branch_id']);
 			$this->set('result', true);
 		}
 		else
@@ -52,13 +61,14 @@ class ConditionsController extends AppController
 			$result = $this->Condition->find('first', array
 			(
 				'conditions' => array('Condition.id' => $conditionid),
-				'fields' => array('question_id', 'choice_id')
+				'fields' => array('question_id', 'choice_id', 'branch_id')
 			));
 			if (isset($result['Condition']))
 			{
 				$this->set('question_id', $result['Condition']['question_id']);
 				$this->set('choice_id', $result['Condition']['choice_id']);
 				$this->set('id', $conditionid);
+				$this->set('branchid', $result['Condition']['branch_id']);
 			}
 			else
 			{
@@ -71,10 +81,17 @@ class ConditionsController extends AppController
     function deletecondition($conditionid)
     {
     	if ($conditionid == NULL) return;
+   		 if (isset($this->data['Condition']['cancel']) && $this->data['Condition']['cancel'] == true)
+    	{
+    		$this->set('branchid', $this->data['Condition']['branch_id']);
+    		$this->set('result', true);
+    		return;
+    	}
 		if ($this->data['Condition']['confirm'] == true)
 		{
 			$this->Condition->delete($conditionid);
 			$this->Session->setFlash('Condition deleted!');
+			$this->set('branchid', $this->data['Condition']['branch_id']);
 			$this->set('result', true);
 		}
 		else
@@ -82,12 +99,13 @@ class ConditionsController extends AppController
 			$result = $this->Condition->find('first', array
 			(
 				'conditions' => array('Condition.id' => $conditionid),
-				'fields' => array('question_id', 'choice_id')
+				'fields' => array('question_id', 'choice_id', 'branch_id')
 			));
 			if (isset($result['Condition']))
 			{
 				$this->set('question_id', $result['Condition']['question_id']);
 				$this->set('choice_id', $result['Condition']['choice_id']);
+				$this->set('branchid', $result['Condition']['branch_id']);
 				$this->set('id', $conditionid);
 			}
 			else
