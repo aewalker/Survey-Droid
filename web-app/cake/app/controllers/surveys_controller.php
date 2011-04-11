@@ -12,7 +12,7 @@ class SurveysController extends AppController
 	var $components = array('Auth');
     var $helpers = array('Table');
     
-    var $currentSruvey = NULL; //keep track of current survey so AJAX calls don't need to give an id
+    var $days = array('mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'); //for convienence
     
     //show all surveys in a table
     function index()
@@ -50,22 +50,36 @@ class SurveysController extends AppController
 		if ($surveyid == NULL) $this->redirect('/surveys/');
 		if ($this->data['Survey']['confirm'] == true)
 		{
-			$this->Survey->save();
-			$this->Session->setFlash('Survey edited!');
-			$this->redirect('/surveys');
+			if ($this->Survey->save($this->data))
+			{
+				$this->Session->setFlash('Survey edited!');
+				$this->redirect('/surveys');
+			}
+			else
+			{
+				
+			}
 		}
 		else
 		{
 			$result = $this->Survey->find('first', array
 			(
 				'conditions' => array('Survey.id' => $surveyid),
-				'fields' => array('name')
+				'fields' => array_merge(array('name', 'question_id'), $this->days)
 			));
 			
 			if (isset($result['Survey']))
 			{
 				$this->set('name', $result['Survey']['name']);
-				$this->set('id', $surveyid);
+				$this->set('surveyid', $surveyid);
+				$this->set('questionid', $result['Survey']['question_id']);
+				$days_result = array();
+				foreach ($this->days as $day)
+				{
+					$days_result[$day] = $result['Survey'][$day];
+				}
+				$this->set('days', $days_result);
+				$this->set('testing', $result);
 			}
 			else
 			{
