@@ -25,3 +25,6 @@ echo $this->Js->writeBuffer();
 
 ?>
 
+<div id="questions">
+</div>
+
