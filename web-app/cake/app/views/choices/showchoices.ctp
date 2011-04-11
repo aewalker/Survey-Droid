@@ -6,6 +6,7 @@
  *****************************************************************************/
 echo $this->Session->flash();
 
+
 //show the results
 echo '<br/><br/>';
 echo $table->startTable('Choice');
@@ -20,6 +21,8 @@ echo $table->endTable(array('Add Choice' => array('command' => "/choices/addchoi
 					'type' => 'ajax',
 					'update'=>'#ch_space')));
                    
+echo '<br/><br/>'.$this->Js->link('Show Branches', "/branches/showbranches/$questionid", array('async' => true, 'update' => '#branches'));
+
 echo $this->Js->writeBuffer();
 
 ?>

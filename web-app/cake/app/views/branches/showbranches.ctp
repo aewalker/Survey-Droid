@@ -5,7 +5,6 @@
  * Branches of a question.                                                   *
  *****************************************************************************/
 echo $this->Session->flash();
-echo $this->Js->link(' ', "/choices/showchoices/$questionid", array('async' => true, 'update' => '#choices'));
 
 //show the results
 echo '<br/><br/>';

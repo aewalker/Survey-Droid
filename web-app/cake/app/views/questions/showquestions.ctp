@@ -14,9 +14,9 @@ echo $table->tableBody($results, array(
             'Delete' => array(
                   'command' => '/questions/deletequestion', 'arg' => 'id', 'type' => 'ajax', 'update' => '#q_space'),
             'Select' =>array(
-                   'command' => '/branches/showbranches',
+                   'command' => '/choices/showchoices',
                    'arg' => 'id',
-                   'update'=>'#branches',
+                   'update'=>'#choices',
                    'type' => 'ajax')
             ));
 		
