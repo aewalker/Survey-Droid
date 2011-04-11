@@ -16,7 +16,7 @@ echo $table->tableBody($results, array(
             'Select' =>array(
                    'command' => '/branches/showbranches',
                    'arg' => 'id',
-                   'update'=>'#branchdiv',
+                   'update'=>'#branches',
                    'type' => 'ajax')
             ));
 		

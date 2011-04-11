@@ -49,10 +49,17 @@ class BranchesController extends AppController
     function editbranch($branchid)
     {
     	if ($branchid == NULL) return;
+    	if (isset($this->data['Branch']['cancel']) && $this->data['Branch']['cancel'] == true)
+    	{
+    		$this->set('questionid', $this->data['Branch']['question_id']);
+    		$this->set('result', true);
+    		return;
+    	}
 		if ($this->data['Branch']['confirm'] == true)
 		{
 			$this->Branch->save();
 			$this->Session->setFlash('Branch edited!');
+			$this->set('questionid', $this->data['Branch']['question_id']);
 			$this->set('result', true);
 		}
 		else
@@ -60,12 +67,13 @@ class BranchesController extends AppController
 			$result = $this->Branch->find('first', array
 			(
 				'conditions' => array('Branch.id' => $branchid),
-				'fields' => array('next_q')
+				'fields' => array('next_q', 'question_id')
 			));
 			if (isset($result['Branch']))
 			{
 				$this->set('next_q', $result['Branch']['next_q']);
 				$this->set('id', $branchid);
+				$this->set('questionid', $result['Branch']['question_id']);
 			}
 			else
 			{
@@ -78,10 +86,17 @@ class BranchesController extends AppController
     function deletebranch($branchid)
     {
     	if ($branchid == NULL) return;
+   		if (isset($this->data['Branch']['cancel']) && $this->data['Branch']['cancel'] == true)
+    	{
+    		$this->set('questionid', $this->data['Branch']['question_id']);
+    		$this->set('result', true);
+    		return;
+    	}
 		if ($this->data['Branch']['confirm'] == true)
 		{
 			$this->Branch->delete($branchid);
 			$this->Session->setFlash('Branch deleted!');
+			$this->set('questionid', $this->data['Branch']['question_id']);
 			$this->set('result', true);
 		}
 		else
@@ -89,12 +104,13 @@ class BranchesController extends AppController
 			$result = $this->Branch->find('first', array
 			(
 				'conditions' => array('Branch.id' => $branchid),
-				'fields' => array('next_q')
+				'fields' => array('next_q', 'question_id')
 			));
 			if (isset($result['Branch']))
 			{
 				$this->set('next_q', $result['Branch']['next_q']);
 				$this->set('id', $branchid);
+				$this->set('questionid', $result['Branch']['question_id']);
 			}
 			else
 			{

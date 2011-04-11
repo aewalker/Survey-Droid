@@ -11,22 +11,21 @@ echo '<br/><br/>';
 echo $table->startTable('Branch');
 echo $table->tableBody($results, array(
             'Edit' => array(
-                  'command' => 'editbranch', 'arg' => 'id', 'type' => 'link'),
+                  'command' => '/branches/editbranch', 'arg' => 'id', 'type' => 'ajax', 'update'=> '#b_space'),
             'Delete' => array(
-                  'command' => 'deletebranch', 'arg' => 'id', 'type' => 'link'),
+                  'command' => '/branches/deletebranch', 'arg' => 'id', 'type' => 'ajax', 'update'=> '#b_space'),
             'Select' =>array(
-                   'command' => '../../conditions/showconditions',
+                   'command' => '/conditions/showconditions',
                    'arg' => 'id',
-                   'update'=>'#conditiondiv',
-                   'type' => 'ajax')
+                   'type' => 'ajax',
+                   'update'=>'#conditions')
+
             ));
 		
-echo $table->endTable(array('Add Branch' => array('command' => "../addbranch/$questionid", 
-					'update'=>'#addbranchdiv',
-                   'type' => 'ajax')));
+echo $table->endTable(array('Add Branch' => array('command' => "/branches/addbranch", 'arg' =>$questionid, 
+					'type' => 'ajax',
+					'update'=>'#b_space')));
+                   
+echo $this->Js->writeBuffer();
 
 ?>
-<div id="conditiondiv">
-</div>
-<div id="addbranchdiv">
-</div>

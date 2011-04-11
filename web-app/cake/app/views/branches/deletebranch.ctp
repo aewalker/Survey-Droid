@@ -4,12 +4,35 @@
  *                                                                           *
  * Page to delete a branch.                                                  *
  *****************************************************************************/
-echo $this->Session->flash();
-echo $form->create('Branch');
+ echo $this->Session->flash();
+
+if (isset($result))
+{
+	if ($result == true)
+	{
+		echo '<script>'.$this->Js->request(array
+		(
+			'action' => "showbranches/$questionid"),
+			array('async' => true, 'update' => '#branches')
+		).'</script>';
+		echo $this->Js->writeBuffer();
+		return;
+	}
+	echo '<h3>There were errors</h3>';
+}
+echo $form->create('Branch', array('url' => "deletebranch/$id", 'default' => false));
+echo '<p>Are you sure you want to delete this branch pointing to $next_q?  This action cannot be undone.</p>';
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
-echo "<p>Are you sure you want to delete the branch pointing to $next_q?</p>";
-echo '<p><strong>This action cannot be undone.</strong></p>';
-echo $form->end('Yes');
-echo $form->create('Branch');
-echo $form->end('No');
+echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
+echo $form->input('id', array('type' => 'hidden', 'value' => $id));
+echo $this->Js->submit('Delete', array('action' => "deletebranch/$id", 'update' => '#b_space'));
+echo $form->end();
+echo $form->create('Branch', array('default' => false));
+echo $form->input('cancel', array('type' => 'hidden', 'value' => true));
+echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
+echo $this->Js->submit('Cancel', array('action' => 'deletebranch', 'update' => '#b_space'));
+echo $form->end();
+
+echo $this->Js->writeBuffer();
+
 ?>
