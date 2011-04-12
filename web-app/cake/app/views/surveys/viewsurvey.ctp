@@ -8,10 +8,10 @@ echo $this->Session->flash();
 
 echo '<div id="questions"></div>';
 echo '<div id="q_space"></div>';
-echo '<div id="branches"></div>';
-echo '<div id="b_space"></div>';
 echo '<div id="choices"></div>';
 echo '<div id="ch_space"></div>';
+echo '<div id="branches"></div>';
+echo '<div id="b_space"></div>';
 echo '<div id="conditions"></div>';
 echo '<div id="con_space"></div>';
 
