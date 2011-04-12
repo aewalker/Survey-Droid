@@ -10,7 +10,7 @@ if($session->read('Auth.User.admin'))
 	
 	echo $table->startTable('User');
 	echo $table->tableBody($users);
-	echo $table->endTable(array('Create new user' => array('command' => 'register', 'type' => 'link')));
+	echo $table->endTable(array('Create new user' => array('command' => 'register', 'arg' => NULL, 'type' => 'link')));
 }
 else
 {
