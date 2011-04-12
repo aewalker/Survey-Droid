@@ -20,15 +20,15 @@
 }
  else
  {
-	echo $form->create('Branch', array('action' => "addbranch/$questionid", 'default' => false));
-	echo $form->input('next_q');
+	echo $form->create('Choice', array('action' => "addchoice/$questionid", 'default' => false));
+	echo $form->input('choice_text');
 	echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 	echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
-	echo $this->Js->submit('Add', array('action' => "addbranch/$questionid", 'update' => '#b_space'));
+	echo $this->Js->submit('Add', array('action' => "addchoice/$questionid", 'update' => '#ch_space'));
 	echo $form->end();
-	echo $form->create('Branch', array('default' => false));
+	echo $form->create('Choice', array('default' => false));
 	echo $form->input('cancel', array('type' => 'hidden', 'value' => true));
-	echo $this->Js->submit('Cancel', array('action' => "addbranch/$questionid", 'update' => '#b_space'));
+	echo $this->Js->submit('Cancel', array('action' => "addchoice/$questionid", 'update' => '#ch_space'));
 	echo $form->end();
 
 	echo $this->Js->writeBuffer();

@@ -30,6 +30,7 @@ class ChoicesController extends AppController
     //add a new choice to the current question
     function addchoice($questionid)
     {
+    	$this->set('questionid', $questionid);
     	$this->Choice->create();
 		if ($this->Choice->save($this->data))
         {
@@ -42,22 +43,30 @@ class ChoicesController extends AppController
     function editchoice($choiceid)
     {
     	if ($choiceid == NULL) return;
+    	if (isset($this->data['Choice']['cancel']) && $this->data['Choice']['cancel'] == true)
+    	{
+    		$this->set('questionid', $this->data['Choice']['question_id']);
+    		$this->set('result', true);
+    		return;
+    	}
 		if ($this->data['Choice']['confirm'] == true)
 		{
 			$this->Choice->save();
 			$this->Session->setFlash('Choice edited!');
 			$this->set('result', true);
+			$this->set('questionid', $this->data['Choice']['question_id']);
 		}
 		else
 		{
 			$result = $this->Choice->find('first', array
 			(
 				'conditions' => array('Choice.id' => $choiceid),
-				'fields' => array('choice_text')
+				'fields' => array('choice_text', 'question_id')
 			));
 			if (isset($result['Choice']))
 			{
 				$this->set('choice_text', $result['Choice']['choice_text']);
+				$this->set('questionid', $result['Choice']['question_id']);
 				$this->set('id', $choiceid);
 			}
 			else
@@ -71,23 +80,31 @@ class ChoicesController extends AppController
     function deletechoice($choiceid)
     {
     	if ($choiceid == NULL) return;
+    	if (isset($this->data['Choice']['cancel']) && $this->data['Choice']['cancel'] == true)
+    	{
+    		$this->set('questionid', $this->data['Choice']['question_id']);
+    		$this->set('result', true);
+    		return;
+    	}
 		if ($this->data['Choice']['confirm'] == true)
 		{
 			$this->Choice->delete($choiceid);
 			$this->Session->setFlash('Choice deleted!');
 			$this->set('result', true);
+			$this->set('questionid', $this->data['Choice']['question_id']);
 		}
 		else
 		{
 			$result = $this->Choice->find('first', array
 			(
 				'conditions' => array('Choice.id' => $choiceid),
-				'fields' => array('choice_text')
+				'fields' => array('choice_text', 'question_id')
 			));
 			if (isset($result['Choice']))
 			{
 				$this->set('choice_text', $result['Choice']['choice_text']);
 				$this->set('id', $choiceid);
+				$this->set('questionid', $result['Choice']['question_id']);
 			}
 			else
 			{
