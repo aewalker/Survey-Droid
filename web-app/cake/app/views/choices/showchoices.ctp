@@ -5,6 +5,7 @@
  * Choices of a question.                                                   *
  *****************************************************************************/
 echo $this->Session->flash();
+echo '<br/><br/>'.$this->Js->link('Show Branches', "/branches/showbranches/$questionid", array('async' => true, 'update' => '#branches'));
 
 
 //show the results
@@ -21,7 +22,6 @@ echo $table->endTable(array('Add Choice' => array('command' => "/choices/addchoi
 					'type' => 'ajax',
 					'update'=>'#ch_space')));
                    
-echo '<br/><br/>'.$this->Js->link('Show Branches', "/branches/showbranches/$questionid", array('async' => true, 'update' => '#branches'));
 
 echo $this->Js->writeBuffer();
 
