@@ -73,25 +73,28 @@ CREATE TABLE answers (
 	created DATETIME);
 	
 	
-CREATE TABLE location_actions (
+CREATE TABLE locations (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	subject_id INT UNSIGNED NOT NULL,
 	created DATETIME NOT NULL,
 	longitude DOUBLE NOT NULL,
 	lattitude DOUBLE NOT NULL);
 	
-CREATE TABLE call_actions (
+CREATE TABLE calls (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	subject_id INT UNSIGNED NOT NULL,
 	contact_id INT UNSIGNED NOT NULL,
 	created DATETIME NOT NULL,
-	act_type ENUM('call', 'text') NOT NULL DEFAULT 'call',
-	duration SMALLINT UNSIGNED
-	/* other things? */);
+	/* outgoing call 0, incoming call 1, outgoing text 2, incoming text 3, missed call 4 */
+	type TINYINT NOT NULL,
+	/* call duration in seconds, NULL for texts, missed calls */
+	duration SMALLINT UNSIGNED);
 	
 CREATE TABLE status_changes (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	subject_id INT UNSIGNED NOT NULL,
 	created DATETIME NOT NULL,
-	status ENUM('enabled', 'disbled') NOT NULL,
-	feature ENUM('gps', 'call log', 'text log', 'app') NOT NULL);
+	/* 1 for enabled, 0 for disabled */
+	status TINYINT NOT NULL,
+	/* gps 0, call log, 1, text log 2, whole app 3 */
+	feature TINYINT NOT NULL);
