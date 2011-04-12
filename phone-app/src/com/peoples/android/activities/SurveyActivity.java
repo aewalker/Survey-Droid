@@ -6,9 +6,11 @@ import com.peoples.android.views.SurveyView;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -37,8 +39,11 @@ public class SurveyActivity extends ListActivity {
 		
 		// TODO Auto-generated method stub
         
+        int i = R.layout.survey_list_view;
         
-        this.setSurveyAdapter(new SurveyAdapter(this, R.layout.survey_list_view, CHOICES));
+        SurveyAdapter<String> adapter = new SurveyAdapter<String>( this, i, CHOICES);	
+        
+        this.setListAdapter(adapter);
         ListView lv = this.getListView();
         lv.setChoiceMode(1);
         lv.setTextFilterEnabled(true);
@@ -54,10 +59,10 @@ public class SurveyActivity extends ListActivity {
 	}
 	
 	
-	private void setSurveyAdapter(SurveyAdapter surveyAdapter2) {
-		// TODO Auto-generated method stub
-		
-	}
+//	private void setSurveyAdapter(SurveyAdapter surveyAdapter2) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 
 	/**
