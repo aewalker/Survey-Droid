@@ -1,8 +1,8 @@
 <?php
 /*****************************************************************************
- * views/conditions/editcondition.ctp                                          *
+ * views/conditions/editcondition.ctp                                        *
  *                                                                           *
- * Page to edit a condition.                                                  *
+ * Page to edit a condition.                                                 *
  *****************************************************************************/
 
 echo $this->Session->flash();
@@ -22,8 +22,14 @@ if (isset($result))
 	echo '<h3>There were errors</h3>';
 }
 echo $form->create('Condition', array('url' => "editcondition/$id", 'default' => false));
-echo $form->input('question_id', array('value' => $question_id));
-echo $form->input('choice_id', array('value' => $choice_id));
+echo $form->input('question_id', array('type' => 'text', 'value' => $question_id));
+echo $form->input('type', array
+(
+	'type' => 'select',
+	'options' => array('just was', 'ever was', 'never has been'),
+	'value' => $type
+));
+echo $form->input('choice_id', array('type' => 'text', 'value' => $choice_id));
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 echo $form->input('branch_id', array('type' => 'hidden', 'value' => $branchid));
 echo $this->Js->submit('Edit', array('action' => "editcondition/$id", 'update' => '#con_space'));

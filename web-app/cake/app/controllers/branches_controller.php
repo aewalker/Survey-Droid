@@ -27,58 +27,64 @@ class BranchesController extends AppController
 		$this->set('questionid', $questionid);
     }
     
-    //show all conditions related to a particular branch
-    function viewbranch($branchid)
-    {
-    	//TODO I don't think this is really needed, have to ask Sema about it
-    }
-    
     //add a new branch to the current question
     function addbranch($questionid)
     {
     	$this->set('questionid', $questionid);
-    	$this->Branch->create();
-		if ($this->Branch->save($this->data))
-        {
-         	$this->Session->setFlash('New branch created!');
-         	$this->set('result', true);
+    	if (isset($this->data['Branch']['cancel']) && $this->data['Branch']['cancel'] == true)
+    	{
+   			$this->set('result', true);
+   			return;
+    	}
+    	if ($this->data['Branch']['confirm'] == true)
+    	{
+	    	$this->Branch->create();
+			if ($this->Branch->save($this->data))
+	        {
+	         	$this->Session->setFlash('New branch created!');
+	         	$this->set('result', true);
+	    	}
     	}
     }
     
     //edit a particular branch
     function editbranch($branchid)
     {
-    	if ($branchid == NULL) return;
+    	$result = $this->Branch->find('first', array
+    	(
+    		'conditions' => array('Branch.id' => $branchid),
+    		'fields' => array('question_id')
+    	));
+    	$this->set('questionid', $result['Branch']['question_id']);
     	if (isset($this->data['Branch']['cancel']) && $this->data['Branch']['cancel'] == true)
     	{
-    		$this->set('questionid', $this->data['Branch']['question_id']);
     		$this->set('result', true);
     		return;
     	}
 		if ($this->data['Branch']['confirm'] == true)
 		{
-			$this->Branch->save();
-			$this->Session->setFlash('Branch edited!');
-			$this->set('questionid', $this->data['Branch']['question_id']);
-			$this->set('result', true);
+			if ($this->Branch->save($this->data))
+			{
+				$this->Session->setFlash('Branch edited!');
+				$this->set('result', true);
+				return;
+			}
+			$this->set('result', false);
+		}
+		$result = $this->Branch->find('first', array
+		(
+			'conditions' => array('Branch.id' => $branchid),
+			'fields' => array('next_q', 'question_id')
+		));
+		if (isset($result['Branch']))
+		{
+			$this->set('next_q', $result['Branch']['next_q']);
+			$this->set('branchid', $branchid);
+			$this->set('questionid', $result['Branch']['question_id']);
 		}
 		else
 		{
-			$result = $this->Branch->find('first', array
-			(
-				'conditions' => array('Branch.id' => $branchid),
-				'fields' => array('next_q', 'question_id')
-			));
-			if (isset($result['Branch']))
-			{
-				$this->set('next_q', $result['Branch']['next_q']);
-				$this->set('id', $branchid);
-				$this->set('questionid', $result['Branch']['question_id']);
-			}
-			else
-			{
-				$this->Session->setFlash('That branch does not exist!  If you recieved this message after following a link, please email your system administrator.');
-			}
+			$this->Session->setFlash('That branch does not exist!  If you recieved this message after following a link, please email your system administrator.');
 		}
     }
     
@@ -94,7 +100,8 @@ class BranchesController extends AppController
     	}
 		if ($this->data['Branch']['confirm'] == true)
 		{
-			$this->Branch->delete($branchid);
+			//want to delete all the conditions associated with a branch, so use $cascade = true
+			$this->Branch->delete($branchid, true);
 			$this->Session->setFlash('Branch deleted!');
 			$this->set('questionid', $this->data['Branch']['question_id']);
 			$this->set('result', true);

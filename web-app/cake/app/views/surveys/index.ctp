@@ -1,8 +1,8 @@
 <?php
 /*****************************************************************************
- * views/survey/index.ctp                                                   *
+ * views/survey/index.ctp                                                    *
  *                                                                           *
- * Survey overview page.                                                   *
+ * Survey overview page.                                                     *
  *****************************************************************************/
 echo $this->Session->flash();
 

@@ -27,6 +27,12 @@ class SurveysController extends AppController
     //show the details of a particular survey
     function viewsurvey($surveyid)
     {
+    	$result = $this->Survey->find('first', array
+    	(
+    		'fields' => array('name'),
+    		'conditions' => array('Survey.id' => $surveyid))
+    	);
+    	$this->set('surveyname', $result['Survey']['name']);
     	$this->set('surveyid', $surveyid);
     }
     
@@ -95,7 +101,8 @@ class SurveysController extends AppController
 		if ($surveyid == NULL) $this->redirect('/surveys/');
 		if ($this->data['Survey']['confirm'] == true)
 		{
-			$this->Survey->delete($surveyid);
+			//set $cascade = true to delete all questions, etc. that in in this survey.
+			$this->Survey->delete($surveyid, true);
 			$this->Session->setFlash('Survey deleted!');
 			$this->redirect('/surveys');
 		}

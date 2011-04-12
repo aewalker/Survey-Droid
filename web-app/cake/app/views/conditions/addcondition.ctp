@@ -1,12 +1,12 @@
 <?php
 /*****************************************************************************
- * views/conditions/addcondition.ctp                                                *
+ * views/conditions/addcondition.ctp                                         *
  *                                                                           *
- * add a new condition.                                                         *
+ * add a new condition.                                                      *
  *****************************************************************************/
- if(isset($result))
- {
-	 if ($result == true)
+if(isset($result))
+{
+	if ($result == true)
 	{
 		echo '<script>'.$this->Js->request(array
 		(
@@ -21,9 +21,9 @@
  else
  {
 	echo $form->create('Condition', array('action' => "addcondition/$branchid", 'default' => false));
-	echo $form->input('question_id');
-	echo $form->input('choice_id');
-	echo $form->input('type');
+	echo $form->input('question_id', array('type' => 'text'));
+	echo $form->input('type', array('type' => 'select', 'options' => array('just was', 'ever was', 'never has been')));
+	echo $form->input('choice_id', array('type' => 'text'));
 	echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 	echo $form->input('branch_id', array('type' => 'hidden', 'value' => $branchid));
 	echo $this->Js->submit('Add', array('action' => "addcondition/$branchid", 'update' => '#con_space'));
@@ -34,8 +34,5 @@
 	echo $form->end();
 
 	echo $this->Js->writeBuffer();
-
 }
-
-
 ?>

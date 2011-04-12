@@ -1,8 +1,8 @@
 <?php
 /*****************************************************************************
- * views/choices/editchoice.ctp                                          *
+ * views/choices/editchoice.ctp                                              *
  *                                                                           *
- * Page to edit a choice.                                                  *
+ * Page to edit a choice.                                                    *
  *****************************************************************************/
 
 echo $this->Session->flash();
@@ -21,11 +21,11 @@ if (isset($result))
 	}
 	echo '<h3>There were errors</h3>';
 }
-echo $form->create('Choice', array('url' => "editchoice/$id", 'default' => false));
+echo $form->create('Choice', array('url' => "editchoice/$choiceid", 'default' => false));
 echo $form->input('choice_text', array('value' => $choice_text));
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
-echo $this->Js->submit('Edit', array('action' => "editchoice/$id", 'update' => '#ch_space'));
+echo $this->Js->submit('Edit', array('action' => "editchoice/$choiceid", 'update' => '#ch_space'));
 echo $form->end();
 echo $form->create('Choice', array('default' => false));
 echo $form->input('cancel', array('type' => 'hidden', 'value' => true));

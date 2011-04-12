@@ -1,6 +1,6 @@
 <?php
 /*****************************************************************************
- * views/branches/addbranch.ctp                                                *
+ * views/branches/addbranch.ctp                                              *
  *                                                                           *
  * add a new branch.                                                         *
  *****************************************************************************/
@@ -18,8 +18,8 @@
 	}
 	echo '<h3>There were errors</h3>';
 }
- else
- {
+else
+{
 	echo $form->create('Branch', array('action' => "addbranch/$questionid", 'default' => false));
 	echo $form->input('next_q');
 	echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
@@ -32,8 +32,5 @@
 	echo $form->end();
 
 	echo $this->Js->writeBuffer();
-
 }
-
-
 ?>

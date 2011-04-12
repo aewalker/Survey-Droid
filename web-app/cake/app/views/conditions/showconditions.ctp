@@ -1,6 +1,6 @@
 <?php
 /*****************************************************************************
- * views/conditions/showconditions.ctp                                           *
+ * views/conditions/showconditions.ctp                                       *
  *                                                                           *
  * Branches of a question.                                                   *
  *****************************************************************************/
@@ -9,6 +9,15 @@
 //show the results
 echo '<br/><br/>';
 echo $table->startTable('Condition');
+
+//change the types to user-readable versions
+foreach ($results as &$result)
+{
+	if ($result['Condition']['type'] == 0) $result['Condition']['type'] = 'just was';
+	else if ($result['Condition']['type'] == 1) $result['Condition']['type'] = 'ever was';
+	else if ($result['Condition']['type'] == 2) $result['Condition']['type'] = 'never has been';
+}
+
 echo $table->tableBody($results, array(
             'Edit' => array(
                   'command' => '/conditions/editcondition', 'arg' => 'id', 'type' => 'ajax', 'update'=> '#con_space'),

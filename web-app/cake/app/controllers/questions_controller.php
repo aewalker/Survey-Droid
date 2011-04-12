@@ -105,7 +105,8 @@ class QuestionsController extends AppController
     	}
 		if ($this->data['Question']['confirm'] == true)
 		{
-			$this->Question->delete($questionid);
+			//want to delete all things (eg choices) that depend on this question, so set $cascade = true
+			$this->Question->delete($questionid, true);
 			$this->Session->setFlash('Question deleted!');
 			$this->set('result', true);
 		}

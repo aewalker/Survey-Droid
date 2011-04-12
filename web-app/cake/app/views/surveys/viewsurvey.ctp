@@ -1,10 +1,12 @@
 <?php
 /*****************************************************************************
- * views/survey/viewsurvey.ctp *
- * *
- * Main survey page; shows one survey in detail via AJAX. *
+ * views/survey/viewsurvey.ctp                                               *
+ *                                                                           *
+ * Main survey page; shows one survey in detail via AJAX.                    *
  *****************************************************************************/
 echo $this->Session->flash();
+
+echo "<h2>Survey \"$surveyname\"</h2>";
 
 echo '<div id="questions"></div>';
 echo '<div id="q_space"></div>';
