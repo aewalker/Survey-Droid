@@ -66,6 +66,7 @@ public class Peoples extends ListActivity {
         
         
         
+        
 	//testing ui above        
 //        this.startService(new Intent(this, BootService.class));
 //        this.startService(new Intent(this, CallLogService.class));

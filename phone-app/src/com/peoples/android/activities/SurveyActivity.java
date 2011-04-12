@@ -2,11 +2,14 @@ package com.peoples.android.activities;
 
 import com.peoples.android.R;
 import com.peoples.android.views.SurveyAdapter;
+import com.peoples.android.views.SurveyView;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -14,13 +17,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class SurveyActivity extends Activity {
+public class SurveyActivity extends ListActivity {
 	
 	/**
 	 * debugging
 	 */
 	private static final String TAG = "PEOPLES";
     private static final boolean D = true;
+    
+    
+    SurveyAdapter surveyAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +38,9 @@ public class SurveyActivity extends Activity {
 		// TODO Auto-generated method stub
         
         
-        this.setListAdapter(new SurveyAdapter(this, R.layout.multiplechoiceview, CHOICES));
-
+        this.setSurveyAdapter(new SurveyAdapter(this, R.layout.survey_list_view, CHOICES));
         ListView lv = this.getListView();
+        lv.setChoiceMode(1);
         lv.setTextFilterEnabled(true);
 
         lv.setOnItemClickListener(new OnItemClickListener() {
@@ -48,11 +54,17 @@ public class SurveyActivity extends Activity {
 	}
 	
 	
+	private void setSurveyAdapter(SurveyAdapter surveyAdapter2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	/**
 	 * Get the SurveyAdapter associated with this activity's SurveyView.
 	 * @return
 	 */
-	public ListAdapter getListAdapter () {
+	public ListAdapter getSurveyAdapter () {
 		
 		//TODO
 		return null;
@@ -63,7 +75,7 @@ public class SurveyActivity extends Activity {
 	 * Get the activity's survey view widget.
 	 * @return
 	 */
-	public ListView getListView () {
+	public ListView setSurveyView () {
 		return null;
 	}
 
@@ -107,7 +119,7 @@ public class SurveyActivity extends Activity {
 	 * 
 	 * @param adapter
 	 */
-	public void setListAdapter (ListAdapter adapter) {
+	public void setSurveyAdapter (ListAdapter adapter) {
 		
 		//TODO
 		return;
