@@ -4,12 +4,18 @@
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:text="@string/hello"
+    android:text="Welcome to PEOPLES!"
     />
    
 <Button
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:text="this is not a button" />
+	android:id="@+id/Enter"
+	android:text="Enter here! (or maybe not)" />
+<Button
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:id="@+id/GPS"
+	android:text="panda" />
 
 </LinearLayout>

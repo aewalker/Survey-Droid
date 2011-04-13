@@ -26,8 +26,8 @@ public class SurveyActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-        if(D) Log.e(TAG, "+++ ON CREATE +++");
-
+        /*if(D) Log.e(TAG, "+++ ON CREATE +++");*/
+        setContentView(R.layout.multiple4choiceview);
 		
 		// TODO Auto-generated method stub
         
