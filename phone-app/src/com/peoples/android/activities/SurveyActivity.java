@@ -32,7 +32,7 @@ public class SurveyActivity extends Activity {
 		// TODO Auto-generated method stub
         
         
-        this.setListAdapter(new SurveyAdapter(this, R.layout.multiplechoiceview, CHOICES));
+        /*this.setListAdapter(new SurveyAdapter(this, R.layout.multiplechoiceview, CHOICES));
 
         ListView lv = this.getListView();
         lv.setTextFilterEnabled(true);
@@ -44,7 +44,7 @@ public class SurveyActivity extends Activity {
             Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
                 Toast.LENGTH_SHORT).show();
           }
-        });
+        });*/
 	}
 	
 	
