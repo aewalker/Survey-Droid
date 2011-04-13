@@ -10,12 +10,7 @@
 <Button
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:id="@+id/Enter"
-	android:text="Enter here! (or maybe not)" />
-<Button
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:id="@+id/GPS"
-	android:text="panda" />
+	android:id="@+id/goback"
+	android:text="Back" />
 
 </LinearLayout>

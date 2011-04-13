@@ -15,7 +15,7 @@ public class Survey {
 	/**first_q INT UNSIGNED NOT NULL**/
 	private int first_q;
 	
-	/**field for each day; holds times in 24 hour format separtated by commas
+	/**field for each day; holds times in 24 hour format separated by commas
 	mo VARCHAR(255),
 	tu VARCHAR(255),
 	we VARCHAR(255),

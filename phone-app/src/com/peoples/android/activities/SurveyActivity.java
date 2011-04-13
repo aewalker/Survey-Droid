@@ -4,13 +4,9 @@ import com.peoples.android.R;
 import com.peoples.android.views.SurveyAdapter;
 import com.peoples.android.views.SurveyView;
 import android.app.Activity;
-import android.app.ListActivity;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -18,33 +14,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class SurveyActivity extends ListActivity {
+public class SurveyActivity extends Activity {
 	
 	/**
 	 * debugging
 	 */
 	private static final String TAG = "PEOPLES";
     private static final boolean D = true;
-    
-    
-    SurveyAdapter surveyAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-        if(D) Log.e(TAG, "+++ ON CREATE +++");
-
+        /*if(D) Log.e(TAG, "+++ ON CREATE +++");*/
+        setContentView(R.layout.multiple4choiceview);
 		
 		// TODO Auto-generated method stub
         
-        int i = R.layout.survey_list_view;
         
-        SurveyAdapter<String> adapter = new SurveyAdapter<String>( this, i, CHOICES);	
-        
-        this.setListAdapter(adapter);
+        /*this.setListAdapter(new SurveyAdapter(this, R.layout.multiplechoiceview, CHOICES));
+
         ListView lv = this.getListView();
-        lv.setChoiceMode(1);
         lv.setTextFilterEnabled(true);
 
         lv.setOnItemClickListener(new OnItemClickListener() {
@@ -54,21 +44,15 @@ public class SurveyActivity extends ListActivity {
             Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
                 Toast.LENGTH_SHORT).show();
           }
-        });
+        });*/
 	}
 	
 	
-//	private void setSurveyAdapter(SurveyAdapter surveyAdapter2) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-
-
 	/**
 	 * Get the SurveyAdapter associated with this activity's SurveyView.
 	 * @return
 	 */
-	public ListAdapter getSurveyAdapter () {
+	public ListAdapter getListAdapter () {
 		
 		//TODO
 		return null;
@@ -79,7 +63,7 @@ public class SurveyActivity extends ListActivity {
 	 * Get the activity's survey view widget.
 	 * @return
 	 */
-	public ListView setSurveyView () {
+	public ListView getListView () {
 		return null;
 	}
 
@@ -123,7 +107,7 @@ public class SurveyActivity extends ListActivity {
 	 * 
 	 * @param adapter
 	 */
-	public void setSurveyAdapter (ListAdapter adapter) {
+	public void setListAdapter (ListAdapter adapter) {
 		
 		//TODO
 		return;
