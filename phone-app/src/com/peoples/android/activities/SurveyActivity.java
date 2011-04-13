@@ -27,9 +27,11 @@ public class SurveyActivity extends Activity {
 		
 		super.onCreate(savedInstanceState);
         /*if(D) Log.e(TAG, "+++ ON CREATE +++");*/
-        setContentView(R.layout.multiple4choiceview);
+        setContentView(R.layout.survey_list_view);
 		
-		// TODO Auto-generated method stub
+        
+        
+        // TODO Auto-generated method stub
         
         
         /*this.setListAdapter(new SurveyAdapter(this, R.layout.multiplechoiceview, CHOICES));
