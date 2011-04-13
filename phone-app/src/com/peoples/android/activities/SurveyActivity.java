@@ -3,7 +3,6 @@ package com.peoples.android.activities;
 import com.peoples.android.R;
 import com.peoples.android.views.SurveyAdapter;
 import com.peoples.android.views.SurveyView;
-
 import android.app.Activity;
 import android.app.ListActivity;
 import android.database.DataSetObserver;
