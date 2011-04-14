@@ -115,7 +115,16 @@
 		4/6
 		<ul>
 			<li>Met with Naomi.</li>
-			<li>Designed survey model.</li>
+			<li>Designed survey model:
+				<ul>
+					<li>5 level system - highest is survey level</li>
+					<li>survey has questions</li>
+					<li>question has choices (as in multiple choice; a question without choices is interpreted as a free-response question)</li>
+					<li>question has branches which create control flow; a branch is a link from a parent question to the next question</li>
+					<li>branches have conditions, which check previous questions; if all conditions for a branch (can be 0) are true, then that branch is followed</li>
+					<li>once there are no more possible branches, the survey ends</li>
+				</ul>
+			</li>
 			<li>(Vlad) Worked on call log.</li>
 			<li>(Austin and Tony) Updated SQL for database setup to reflect new survey model.</li>
 			<li>(Austin) Wrote Cake models for new survey model.<li>
@@ -126,6 +135,12 @@
 		<ul>
 			<li>(Austin) Wrote survey-related models and controllers.</li>
 			<li>(Sema) Wrote survey-related views.</li>
+		</ul>
+	</li>
+	<li>
+		4/14
+		<ul>
+			<li>(Austin) Updated project overview document.</li>
 		</ul>
 	</li>
 </ul>

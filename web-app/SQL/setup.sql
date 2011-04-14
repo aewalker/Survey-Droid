@@ -17,10 +17,6 @@ CREATE TABLE subjects (
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL);
 	
-CREATE TABLE contacts (
-	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	subject_id INT UNSIGNED NOT NULL);
-	
 CREATE TABLE surveys (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(255),
@@ -83,7 +79,8 @@ CREATE TABLE locations (
 CREATE TABLE calls (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	subject_id INT UNSIGNED NOT NULL,
-	contact_id INT UNSIGNED NOT NULL,
+	/* phone serial number plus the contact number in that phone */
+	contact_id VARCHAR(255) /* what's the format of the phones serial number?? */ NOT NULL,
 	created DATETIME NOT NULL,
 	/* outgoing call 0, incoming call 1, outgoing text 2, incoming text 3, missed call 4 */
 	type TINYINT NOT NULL,
