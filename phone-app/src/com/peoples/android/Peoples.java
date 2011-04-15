@@ -46,21 +46,38 @@ public class Peoples extends ListActivity {
         /**
          * This samples a simple text box with the view xml specified below
          */
-//        setContentView(R.layout.multiplechoiceview);
+//        setContentView(R.layout.list_item);
 //        final EditText edittext = (EditText) findViewById(R.id.question_textView);
 //        edittext.setOnKeyListener(new OnKeyListener() {
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                // If the event is a key-down event on the "enter" button
-//                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-//                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
-//                  // Perform action on key press
-//                  Toast.makeText(Peoples.this, edittext.getText(), Toast.LENGTH_SHORT).show();
-//                  return true;
-//                }
-//                return false;
-//            }
+//        	public boolean onKey(View v, int keyCode, KeyEvent event) {
+//        		// If the event is a key-down event on the "enter" button
+//        		if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+//        				(keyCode == KeyEvent.KEYCODE_ENTER)) {
+//        			// Perform action on key press
+//        			Toast.makeText(Peoples.this, edittext.getText(), Toast.LENGTH_SHORT).show();
+//        			return true;
+//        		}
+//        		return false;
+//        	}
 //        });
+
         
+        setListAdapter(new SurveyAdapter<String>(this, R.layout.list_item, CHOICES));
+
+        ListView lv = getListView();
+        lv.setTextFilterEnabled(true);
+
+        lv.setOnItemClickListener(new OnItemClickListener() {
+          public void onItemClick(AdapterView<?> parent, View view,
+              int position, long id) {
+            // When clicked, show a toast with the TextView text
+            Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
+                Toast.LENGTH_SHORT).show();
+          }
+        });
+        
+        lv.setItemsCanFocus(false);
+        lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         
         
         
