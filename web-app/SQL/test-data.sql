@@ -43,7 +43,7 @@ INSERT INTO choices (id, choice_text, question_id) VALUES
 	(3, 'Yes!', 3),
 	(4, 'No!', 3);
 	
-INSERT INTO location_actions (id, subject_id, created, longitude, lattitude) VALUES
+INSERT INTO locations (id, subject_id, created, longitude, latitude) VALUES
 	(1, 1, '1969-01-01 11:11:11', 51.511056, -0.224977),
 	(2, 2, '1969-01-01 11:11:11', 51.511056, -0.224977),
 	(3, 3, '1969-01-01 11:11:11', 51.511056, -0.224977),
@@ -51,7 +51,7 @@ INSERT INTO location_actions (id, subject_id, created, longitude, lattitude) VAL
 	(5, 5, '1969-01-01 11:11:11', 51.511056, -0.224977),
 	(6, 6, '1969-01-01 11:11:11', 51.511056, -0.224977);
 	
-INSERT INTO call_actions (id, subject_id, created, act_type, duration) VALUES
+INSERT INTO calls (id, subject_id, created, type, duration) VALUES
 	(1, 1, '1969-01-01 11:11:11', 'call', 10),
 	(2, 2, '1969-01-01 11:11:11', 'call', 10),
 	(3, 3, '1969-01-01 11:11:11', 'call', 10),

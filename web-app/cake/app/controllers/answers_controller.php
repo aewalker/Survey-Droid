@@ -33,5 +33,12 @@ class AnswersController extends AppController
 	{
 		
 	}
+	
+	/* some notes:
+	 * 
+	 * convert an array to json => use js helper: $Js->value($array);
+	 * 
+	 * DATETIME <=> Unix timestamp => see http://snippets.dzone.com/posts/show/1455
+	 */
 }
 ?>
