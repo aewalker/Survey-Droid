@@ -16,9 +16,9 @@ public class Branch {
 	private int BRANCH_KEY;
 
 	//prev_q INT UNSIGNED NOT NULL, /*foreign keys*/
-	private int prev_q;
+	private Question prev_q;
 
 	//next_q INT UNSIGNED NOT NULL);
-	private int next_q;
+	private Question next_q;
 	
 }

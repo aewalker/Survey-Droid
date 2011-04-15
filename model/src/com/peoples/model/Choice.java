@@ -20,6 +20,6 @@ public class Choice {
 	private String choice_text;
 	
 	//question_id INT UNSIGNED);
-	private int question_id;
+	private Question question;
 
 }

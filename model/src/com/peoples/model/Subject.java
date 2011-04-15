@@ -14,8 +14,5 @@ public class Subject {
 	//last_name VARCHAR(255) NOT NULL,
 	private String last_name;
 	
-	//TODO: what is this?
-	//data_cache TEXT;
-
 
 }
