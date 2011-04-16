@@ -15,5 +15,5 @@ echo $form->end('Search');
 //show the results
 echo $table->startTable('Subject');
 echo $table->tableBody($results);
-echo $table->endTable(array('Add Subject' => array('command' => 'add')));
+echo $table->endTable(array('Add Subject' => array('command' => 'add', 'type' => 'link', 'arg' => NULL)));
 ?>

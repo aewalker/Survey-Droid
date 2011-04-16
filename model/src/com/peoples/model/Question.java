@@ -17,7 +17,6 @@ public class Question {
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	private int QUESTION_KEY;
 	
-	//TODO: String?
 	//text TEXT
-
+	private String text;
 }

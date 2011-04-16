@@ -22,13 +22,13 @@ public class Answer {
 	private int ANSWER_KEY;
 	
 	//question_id INT UNSIGNED NOT NULL,
-	private int question_id;
+	private Question question;
 	
 	//subject_id INT UNSIGNED NOT NULL,
-	private int subject_int;
+	private Subject subject;
 	
 	//choice_id INT UNSIGNED,
-	private int choice_id;
+	private Choice choice;
 	
 	//ans_text TEXT,
 	private String text;

@@ -1,8 +1,9 @@
 <?php
 
 ?><div id="content">
-	<?php //if ($this->Session->check('User.isAdmin'))
-	//{
+	<?php 
+	if ($session->read('Auth.User.admin'))
+	{
 		if (!isset($result))
 		{
 			echo '<p><strong>Are you sure you want to delete this user?</strong></p>';
@@ -26,6 +27,6 @@
 			}
 			echo '<h3>'.$html->link('Back', '/users/').'<h3>';
 		}
-	//}
+	}
 	 ?>
 </div>

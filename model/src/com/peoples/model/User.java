@@ -30,5 +30,5 @@ public class User {
 	private String last_name;
 	
 	//admin TINYINT(1) DEFAULT 0);
-	private int admin;
+	private boolean admin;
 }

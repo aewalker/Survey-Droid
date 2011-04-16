@@ -17,16 +17,4 @@ class Answer extends AppModel
 		//response, meaning that it's ans_text field will contain content.
 		'conditions' => array('Choice.ans_text' => NULL)
 	));
-	
-	var $validate = array
-	(
-		'ans_text' => array
-		(
-			'minLength' => array
-			(
-				'rule' => array('minLength', 1),
-				'message' => 'Please provide a survey name'
-			)
-		)
-	);
 }

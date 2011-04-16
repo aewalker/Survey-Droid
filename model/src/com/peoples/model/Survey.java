@@ -13,7 +13,7 @@ public class Survey {
 	private String DATETIME;
 	
 	/**first_q INT UNSIGNED NOT NULL**/
-	private int first_q;
+	private Question first_q;
 	
 	/**field for each day; holds times in 24 hour format separated by commas
 	mo VARCHAR(255),

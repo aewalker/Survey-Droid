@@ -6,7 +6,9 @@
 	<title><?php echo $title_for_layout; ?></title>
 	<?php
 		echo $html->css('peoples');
-		echo $html->meta('peoples.ico', '/img/peoples.ico', array('type' => 'icon'))
+		echo $html->meta('peoples.ico', '/img/peoples.ico', array('type' => 'icon'));
+		echo $this->Html->script('jquery');
+		echo $scripts_for_layout;
 	?>
 </head>
 <body>
@@ -17,9 +19,10 @@
 		if (($user = $session->read('Auth.User')) != NULL)
 		{
 			echo $html->link('Subjects', array('controller' => 'subjects', 'action' => 'index'));
-			echo $html->link('Control Pannel', array('controller' => 'users', 'action' => 'index'));
+			if ($user['admin'] == 1)
+				echo $html->link('Control Pannel', array('controller' => 'users', 'action' => 'index'));
 			//echo $html->link('Data', array('controller' => 'data', 'action' => 'index'));
-			//echo $html->link('Surveys', array('controller' => 'surveys', 'action' => 'index'));
+			echo $html->link('Surveys', array('controller' => 'surveys', 'action' => 'index'));
 		}
 		?>
 	</div>
@@ -49,5 +52,8 @@
 	?>
 	<hr />
 </div>
+<div id="q_space">
+</div>
+<?php if (isset($this->Js)) echo $this->Js->writeBuffer(); ?>
 </body>
 </html>

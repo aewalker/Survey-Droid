@@ -1,0 +1,53 @@
+{
+    "deviceId" : "",
+    "answers": [
+        {
+            //"id": 0,
+            "question_id": 0,
+            "choice_id": 0,
+            "answer_text": "",
+            "created": 0
+        }, {
+            ...
+        }, {
+            ...
+        }
+    ],
+    "locations": [
+        {
+            //"id": 0,
+            "long": 0,
+            "lat": 0,
+            "created": 0
+        }, {
+            ...
+        }, {
+            ...
+        }
+    ],
+    "calls": [
+        {
+            //"id": 0,
+            "contact_id": 0,
+            "type": 0, // enum {outgoing calll, incoming call, outgoing text, incoming text, missed call}
+            "duration": 0 // null for text, 0 for missed calls,  # of seconds for calls
+            "created": 0 // unix timestamp again, in fact all created are unix.
+        }, {
+            ...
+        }, {
+            ...
+        }
+    ],
+    "statusChanges": [
+        {
+            //"id": 0,
+            "status": 0, // 1 for enabling, or turning on, 0 for turning off or disabling
+            "type": 0, // enum {gps, calllog, textlog, app}
+            "created": 0 // unix timestamp again, in fact all created are unix.
+        }, {
+            ...
+        }, {
+            ...
+        }
+    ]
+}
