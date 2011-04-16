@@ -11,6 +11,7 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Criteria;
 import android.location.GpsSatellite;
@@ -81,7 +82,9 @@ public class GPSLocationService extends Service {
 		 * eventually fixate call status 3, when a fix is obtained.
 		 * 	
 		 */
-		if(D) Log.e(TAG, "Signing up for GpsStatus:");
+		if(D) {
+			Log.e(TAG, "Signing up for GpsStatus:");
+
 			locManager.addGpsStatusListener( new GpsStatus.Listener() {
 					
 					public void onGpsStatusChanged(int event) {
@@ -138,6 +141,7 @@ public class GPSLocationService extends Service {
 						Log.e(TAG, "GPS Status: " + event );					
 				}
 			});
+		}
 	}
 	
 	
@@ -153,12 +157,52 @@ public class GPSLocationService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if(D) Log.e(TAG, "+++GPSLocationService.onStartCommand()+++");
 		
+		
+		
+		if(D){
+			
+			Log.e(TAG, "+++Here are all the stored locations+++");
+			
+			//Get the helper
+			PeoplesDB dbHelper = new PeoplesDB(getApplicationContext());
+			
+			//Get the database
+			SQLiteDatabase peoplesDB = dbHelper.getWritableDatabase();
+			
+			//query
+			Cursor cur = peoplesDB.rawQuery("select * from "+PeoplesDB.GPS_TABLE_NAME, null);
+			
+			boolean next = true;
+			while(cur.isAfterLast() == false && next){
+			
+				String[] columnNames = cur.getColumnNames();
+				int		 numColumns	 = cur.getColumnCount();
+				
+				String locString = "LOCATION: \n";
+				
+				while( cur.isAfterLast() == false ){
+					locString += columnNames[0] + cur.getInt(0) + "\n";
+					locString += columnNames[0] + cur.getDouble(0) + "\n";
+					locString += columnNames[0] + cur.getDouble(0) + "\n";
+					locString += columnNames[0] + cur.getInt(0) + "\n";
+				}
+				
+				Log.e(TAG, locString);
+				next = cur.moveToNext();
+			}
+			
+			cur.close();
+			peoplesDB.close();
+			dbHelper.close();
+		}
+		
 		Context context = getApplicationContext();
 		CharSequence text = "onStartCommand GPSLocation Service";
 		int duration = Toast.LENGTH_LONG;
-
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
+		
+		
 				
 		return super.onStartCommand(intent, flags, startId);
 	}
