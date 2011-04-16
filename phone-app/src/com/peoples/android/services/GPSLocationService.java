@@ -2,12 +2,16 @@ package com.peoples.android.services;
 
 import java.util.Date;
 
+import com.peoples.android.PeoplesDB;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Criteria;
 import android.location.GpsSatellite;
 import android.location.GpsStatus.Listener;
@@ -86,13 +90,39 @@ public class GPSLocationService extends Service {
 						
 						switch(event){
 							case 1: Log.e(TAG, "GPS Status: started"); break;
+							
 							case 2: Log.e(TAG, "GPS Status: stopped"); break;
+							
 							case 3: Log.e(TAG, "GPS Status: first fix at time:");
 									Log.e(TAG, ""+status.getTimeToFirstFix());
 									Location loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 									Log.e(TAG, "Location object is:");
 									Log.e(TAG, loc.toString() + "\n");
+									
+									//Get the helper
+									PeoplesDB dbHelper = new PeoplesDB(getApplicationContext());
+									
+									//Get the database
+									SQLiteDatabase peoplesDB = dbHelper.getWritableDatabase();
+									
+									//lock transaction
+									peoplesDB.beginTransaction();
+									
+										//There are currently 4 columns GPS table, 3 w/o the auto increment
+										//column
+										ContentValues values = new ContentValues( 3 );
+										values.put(PeoplesDB.GPSTable.LATITUDE, loc.getLatitude());
+										values.put(PeoplesDB.GPSTable.LONGITUDE, loc.getLongitude());
+										values.put(PeoplesDB.GPSTable.TIME, loc.getTime());
+										peoplesDB.insert(PeoplesDB.GPS_TABLE_NAME, null, values);
+									
+									//end transaction and close stuff
+									peoplesDB.endTransaction();
+									peoplesDB.close();
+									dbHelper.close();
+									
 									break;
+									
 							case 4: Log.e(TAG, "GPS Status: max satellites:");
 									Log.e(TAG, ""+status.getMaxSatellites());
 									Log.e(TAG, "GPS Status: but actual satellites:");

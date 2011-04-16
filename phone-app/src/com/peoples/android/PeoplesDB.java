@@ -20,8 +20,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
 
     public static final class GPSTable implements BaseColumns {
         // This class cannot be instantiated
-        private GPSTable() {
-        }
+        private GPSTable() {}
 
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
 
@@ -34,8 +33,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
 
     public static final class CallLogTable implements BaseColumns {
         // This class cannot be instantiated
-        private CallLogTable() {
-        }
+        private CallLogTable() {}
 
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
 
@@ -58,8 +56,8 @@ public class PeoplesDB extends SQLiteOpenHelper {
         
         try {
             db.execSQL("CREATE TABLE " + GPS_TABLE_NAME + " (" + GPSTable._ID
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT," + GPSTable.LONGITUDE + " INTEGER,"
-                    + GPSTable.LATITUDE + " INTEGER," + GPSTable.TIME + " INTEGER"
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT," + GPSTable.LONGITUDE + " DOUBLE,"
+                    + GPSTable.LATITUDE + " DOUBLE," + GPSTable.TIME + "INTEGER"
                     + ");");
     
             db.execSQL("CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
@@ -139,4 +137,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
         
         c.close();
     }
+    
+    
 }

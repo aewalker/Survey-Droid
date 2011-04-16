@@ -50,11 +50,10 @@ public class MainActivity extends Activity {
 
         });
         
+        //This is just code to test GPS location gathering and persisting to database
         Context context = getApplicationContext();
-        
         Intent gpsIntent = new Intent(context, GPSLocationService.class);
         gpsIntent = gpsIntent.setClass(context, GPSLocationService.class);
-
         context.startService(gpsIntent);
         
     }
