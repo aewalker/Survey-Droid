@@ -37,3 +37,25 @@ form div
 {
 	
 }
+table
+{
+  border-collapse: collapse;
+}
+
+th
+{
+  background-color: #00A300;
+  color: #ffffff;
+  text-align:left;
+}
+
+tr
+{
+  background-color: #D4FFA8;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+td
+{
+  text-align:left;
+}
