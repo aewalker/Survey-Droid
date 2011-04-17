@@ -88,10 +88,15 @@ class AnswersController extends AppController
 			}
 			else
 			{
+				/******************************/
+				//testing only!!!!
+				$info['deviceId'] = 'phone1';
+				/******************************/
+				
 				//now, make sure the given deviceId is registered to a subject
 				$subjectid = $this->Subject->find('first', array
 				(
-					'conditions' => array('device_id' => /* $info['deviceId'] */ 'phone1'),
+					'conditions' => array('device_id' => $info['deviceId']),
 					'fields' => array('id')
 				));
 				if ($subjectid == NULL)
@@ -117,6 +122,12 @@ class AnswersController extends AppController
 										if ($key == 'created' || $key == 'modified' || $key == 'updated')
 											// From http://snippets.dzone.com/posts/show/1455
 											$val = gmdate('Y-m-d H:i:s', $val);
+										
+										//add the deviceId to the contact_id to create an anonomyous number
+										//in place of the phone number:
+										if ($key == 'contact_id')
+											$val = $info['deviceId'].$val
+										
 										$toSave[$cake_name][$key] = $val;
 									}
 									//set the subject_id for all data based on deviceID
