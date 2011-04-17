@@ -126,7 +126,7 @@ class AnswersController extends AppController
 										//add the deviceId to the contact_id to create an anonomyous number
 										//in place of the phone number:
 										if ($key == 'contact_id')
-											$val = $info['deviceId'].$val
+											$val = $info['deviceId'].$val;
 										
 										$toSave[$cake_name][$key] = $val;
 									}
