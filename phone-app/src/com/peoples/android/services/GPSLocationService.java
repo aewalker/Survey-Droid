@@ -21,6 +21,7 @@ import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -46,6 +47,42 @@ public class GPSLocationService extends Service {
 		super.onCreate();
 
 		if(D) Log.e(TAG, "+++GPSLocationService.onCreate()+++");
+		
+		if(D) Log.e(TAG, "Here are our databases before:");
+		
+		String[] dbs = this.databaseList();
+		
+		if(D){ 			
+			for(String s:dbs)
+				Log.e(TAG, s);
+		}
+		
+		
+		
+		//use table handler
+		LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
+		//open to write
+		locHandler.openWrite();
+		
+		Location loc = new Location(LocationManager.GPS_PROVIDER);
+		loc.setLatitude(1);
+		loc.setLongitude(2);
+		loc.setTime(1234);
+		
+		//pass location to write
+		locHandler.insertLocation(loc);
+		//close
+		locHandler.close();
+		
+		
+		if(D) Log.e(TAG, "Here are our databases after:");
+		
+		dbs = this.databaseList();
+		
+		if(D){ 			
+			for(String s:dbs)
+				Log.e(TAG, s);
+		}
 		
 		
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

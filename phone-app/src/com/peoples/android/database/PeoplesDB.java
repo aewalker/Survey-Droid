@@ -13,7 +13,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     private static final boolean D = true;
 
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static final String GPS_TABLE_NAME = "gps";
     public static final String CALLLOG_TABLE_NAME = "calllog";
     
@@ -81,11 +81,11 @@ public class PeoplesDB extends SQLiteOpenHelper {
     	
     	//I think this is being called every time I create a nre PeoplesDB
     	
-//        Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-//                + newVersion + ", which will destroy all old data");
-//        db.execSQL("DROP TABLE IF EXISTS " + GPS_TABLE_NAME);
-//        db.execSQL("DROP TABLE IF EXISTS " + CALLLOG_TABLE_NAME);
-//        onCreate(db);
+        Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+                + newVersion + ", which will destroy all old data");
+        db.execSQL("DROP TABLE IF EXISTS " + GPS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CALLLOG_TABLE_NAME);
+        onCreate(db);
     }
 
     private void buildInitialCallLog(SQLiteDatabase db) {
