@@ -21,7 +21,7 @@
 			echo $html->link('Subjects', array('controller' => 'subjects', 'action' => 'index'));
 			if ($user['admin'] == 1)
 				echo $html->link('Control Pannel', array('controller' => 'users', 'action' => 'index'));
-			echo $html->link('Data', array('controller' => 'data', 'action' => 'index'));
+			echo $html->link('Data Collection', array('controller' => 'datas', 'action' => 'index'));
 			echo $html->link('Surveys', array('controller' => 'surveys', 'action' => 'index'));
 		}
 		?>
