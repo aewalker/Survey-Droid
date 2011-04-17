@@ -15,7 +15,8 @@ CREATE TABLE subjects (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	phone_num VARCHAR(13) NOT NULL,
 	first_name VARCHAR(255) NOT NULL,
-	last_name VARCHAR(255) NOT NULL);
+	last_name VARCHAR(255) NOT NULL,
+	device_id VARCHAR(255) /* serial number of the phone */);
 	
 CREATE TABLE surveys (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
