@@ -1,4 +1,4 @@
-package com.peoples.android;
+package com.peoples.android.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.util.Log;
 
 public class PeoplesDB extends SQLiteOpenHelper {
     private static final String TAG = "PeoplesDB";
+    private static final boolean D = true;
 
     private static final String DATABASE_NAME = "peoples.db";
     private static final int DATABASE_VERSION = 1;
@@ -44,14 +45,13 @@ public class PeoplesDB extends SQLiteOpenHelper {
         public static final String TIME = "time";
     }
 
-    public PeoplesDB(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        
-        this.context = context;
-    }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+    	
+    	Log.e(TAG, "onCreate");
+    	
         db.beginTransaction();
         
         try {
@@ -78,11 +78,14 @@ public class PeoplesDB extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + GPS_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CALLLOG_TABLE_NAME);
-        onCreate(db);
+    	
+    	//I think this is being called every time I create a nre PeoplesDB
+    	
+//        Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+//                + newVersion + ", which will destroy all old data");
+//        db.execSQL("DROP TABLE IF EXISTS " + GPS_TABLE_NAME);
+//        db.execSQL("DROP TABLE IF EXISTS " + CALLLOG_TABLE_NAME);
+//        onCreate(db);
     }
 
     private void buildInitialCallLog(SQLiteDatabase db) {
@@ -137,6 +140,33 @@ public class PeoplesDB extends SQLiteOpenHelper {
         
         c.close();
     }
+    
+    
+    /**
+     * Not sure if we need to keep the context around
+     * 
+     * @param context
+     */
+    public PeoplesDB(Context context){
+    	super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
+        Log.e(TAG, "in constructor");
+    }
+    
+    //testings
+    @Override
+    public synchronized SQLiteDatabase getReadableDatabase() {
+    	if(D) Log.e(TAG, "getReadable");
+    	return super.getReadableDatabase();
+    }
+    
+    @Override
+    public synchronized SQLiteDatabase getWritableDatabase() {
+    	if(D) Log.e(TAG, "getWriteable");
+    	return super.getWritableDatabase();
+    }
+    
+    
     
     
 }

@@ -2,7 +2,8 @@ package com.peoples.android.services;
 
 import java.util.Date;
 
-import com.peoples.android.PeoplesDB;
+import com.peoples.android.database.LocationTableHandler;
+import com.peoples.android.database.PeoplesDB;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -31,8 +32,8 @@ public class GPSLocationService extends Service {
 	
 	private static final String TAG = "GPSLocationService";
     private static final boolean D = true;
+
     
-    private static Location location;
 
 	/**
 	 * 
@@ -45,14 +46,14 @@ public class GPSLocationService extends Service {
 		super.onCreate();
 
 		if(D) Log.e(TAG, "+++GPSLocationService.onCreate()+++");
-
+		
 		
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent gpsServiceIntent = new Intent(getApplicationContext(), GPSLocationService.class);
 		
 		//TODO: probably not the best way to getApplicaitonContext()
 		//TODO: sort out which flag to send
-		PendingIntent pendingGPS = PendingIntent.getService(getApplicationContext(),
+		PendingIntent updateGPSDB = PendingIntent.getService(getApplicationContext(),
 																0,
 																gpsServiceIntent,
 																PendingIntent.FLAG_UPDATE_CURRENT);
@@ -62,86 +63,84 @@ public class GPSLocationService extends Service {
 		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 									SystemClock.elapsedRealtime(),
 									30*1000,
-									pendingGPS);
+									updateGPSDB);
 		
-		if(D) Log.e(TAG, "added alarm item, now signing up with LocationManager");
-		
-		//get a location manager from the system
-		final LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		
-		
-		if(D) Log.e(TAG, "Best provider:");
-			String provider = locManager.getBestProvider(new Criteria(), true);
-			Log.e(TAG, provider);
-			
-			
-		/**
-		 * 
-		 * this is neat, move phone from indoors to somewhere it can get GPS signal
-		 * you'll see it increase the number of satellites it can pick up and
-		 * eventually fixate call status 3, when a fix is obtained.
-		 * 	
-		 */
 		if(D) {
+			Log.e(TAG, "added alarm item, now signing up with LocationManager");
+		
+			//get a location manager from the system
+			final LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		
+		
+			Log.e(TAG, "Best provider:");
+			String provider = locManager.getBestProvider(new Criteria(), true);
+			
+			if(provider != null)
+				Log.e(TAG, provider);
+			else
+				Log.e(TAG, "TURN GPS ON!"); //TODO turn GPS on programatically
+			
+			/**
+			 * this is neat, move phone from indoors to somewhere it can get GPS signal
+			 * you'll see it increase the number of satellites it can pick up and
+			 * eventually fixate call status 3, when a fix is obtained.	
+			 */
 			Log.e(TAG, "Signing up for GpsStatus:");
 
 			locManager.addGpsStatusListener( new GpsStatus.Listener() {
+
+				public void onGpsStatusChanged(int event) {
+
+					GpsStatus status = locManager.getGpsStatus(null);
+
+					Log.e(TAG, "GPS Status: " + event );
+					switch(event){
+					case 1: Log.e(TAG, "GPS Status: started"); break;
+
+					case 2: Log.e(TAG, "GPS Status: stopped"); break;
+
+					case 3: Log.e(TAG, "GPS Status: first fix at time:");
+					Log.e(TAG, ""+status.getTimeToFirstFix());
+					Location loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+					Log.e(TAG, "Location object is:");
+					Log.e(TAG, loc.toString() + "\n");
 					
-					public void onGpsStatusChanged(int event) {
+					//use table handler
+					LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
+					//open to write
+					locHandler.openWrite();
+					//pass location to write
+					locHandler.insertLocation(loc);
+					//close
+					locHandler.close();
+
 					
-						GpsStatus status = locManager.getGpsStatus(null);
-						
-						switch(event){
-							case 1: Log.e(TAG, "GPS Status: started"); break;
-							
-							case 2: Log.e(TAG, "GPS Status: stopped"); break;
-							
-							case 3: Log.e(TAG, "GPS Status: first fix at time:");
-									Log.e(TAG, ""+status.getTimeToFirstFix());
-									Location loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-									Log.e(TAG, "Location object is:");
-									Log.e(TAG, loc.toString() + "\n");
-									
-									//Get the helper
-									PeoplesDB dbHelper = new PeoplesDB(getApplicationContext());
-									
-									//Get the database
-									SQLiteDatabase peoplesDB = dbHelper.getWritableDatabase();
-									
-									//lock transaction
-									peoplesDB.beginTransaction();
-									
-										//There are currently 4 columns GPS table, 3 w/o the auto increment
-										//column
-										ContentValues values = new ContentValues( 3 );
-										values.put(PeoplesDB.GPSTable.LATITUDE, loc.getLatitude());
-										values.put(PeoplesDB.GPSTable.LONGITUDE, loc.getLongitude());
-										values.put(PeoplesDB.GPSTable.TIME, loc.getTime());
-										peoplesDB.insert(PeoplesDB.GPS_TABLE_NAME, null, values);
-									
-									//end transaction and close stuff
-									peoplesDB.endTransaction();
-									peoplesDB.close();
-									dbHelper.close();
-									
-									break;
-									
-							case 4: Log.e(TAG, "GPS Status: max satellites:");
-									Log.e(TAG, ""+status.getMaxSatellites());
-									Log.e(TAG, "GPS Status: but actual satellites:");
-									
-									int i = 0;
-									for(GpsSatellite s : status.getSatellites() ){
-										i++;
-										Log.e(TAG, s.toString());
-									}
-									Log.e(TAG, "There were "+i+" satellites in total");
-									break;
-						}
-						Log.e(TAG, "GPS Status: " + event );					
+					break;
+
+					case 4: Log.e(TAG, "GPS Status: max satellites:");
+					Log.e(TAG, ""+status.getMaxSatellites());
+					Log.e(TAG, "GPS Status: but actual satellites:");
+
+					int i = 0;
+					for(GpsSatellite s : status.getSatellites() ){
+						i++;
+						Log.e(TAG, s.toString());
+					}
+					Log.e(TAG, "There were "+i+" satellites in total");
+					break;
+					}
+										
 				}
 			});
+			
+			Log.e(TAG, "Is best provider enabled? " + locManager.isProviderEnabled(provider) );
+			
+			locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 7*1000, 0, updateGPSDB);
 		}
+		
+		
+		
+		
 	}
 	
 	
@@ -158,42 +157,40 @@ public class GPSLocationService extends Service {
 		if(D) Log.e(TAG, "+++GPSLocationService.onStartCommand()+++");
 		
 		
-		
 		if(D){
 			
 			Log.e(TAG, "+++Here are all the stored locations+++");
 			
-			//Get the helper
-			PeoplesDB dbHelper = new PeoplesDB(getApplicationContext());
-			
-			//Get the database
-			SQLiteDatabase peoplesDB = dbHelper.getWritableDatabase();
-			
+			//Get the handler
+			LocationTableHandler dbHandler = new LocationTableHandler(getApplicationContext());
+			//open to read
+			dbHandler.openRead();
 			//query
-			Cursor cur = peoplesDB.rawQuery("select * from "+PeoplesDB.GPS_TABLE_NAME, null);
-			
-			boolean next = true;
-			while(cur.isAfterLast() == false && next){
-			
-				String[] columnNames = cur.getColumnNames();
-				int		 numColumns	 = cur.getColumnCount();
+			Cursor cur = dbHandler.getStoredLocations();
+			//iterate over results if any
+			if(cur != null){
+				boolean next = true;
+				while(cur.isAfterLast() == false && next){
 				
-				String locString = "LOCATION: \n";
-				
-				while( cur.isAfterLast() == false ){
-					locString += columnNames[0] + cur.getInt(0) + "\n";
-					locString += columnNames[0] + cur.getDouble(0) + "\n";
-					locString += columnNames[0] + cur.getDouble(0) + "\n";
-					locString += columnNames[0] + cur.getInt(0) + "\n";
+					String[] columnNames = cur.getColumnNames();
+					int		 numColumns	 = cur.getColumnCount();
+					
+					String locString = "LOCATION: \n";
+					
+					while( cur.isAfterLast() == false ){
+						locString += columnNames[0] + cur.getInt(0) + "\n";
+						locString += columnNames[0] + cur.getDouble(0) + "\n";
+						locString += columnNames[0] + cur.getDouble(0) + "\n";
+						locString += columnNames[0] + cur.getInt(0) + "\n";
+					}
+					
+					Log.e(TAG, locString);
+					next = cur.moveToNext();
 				}
-				
-				Log.e(TAG, locString);
-				next = cur.moveToNext();
+				cur.close();
 			}
-			
-			cur.close();
-			peoplesDB.close();
-			dbHelper.close();
+			//close
+			dbHandler.close();
 		}
 		
 		Context context = getApplicationContext();
@@ -266,7 +263,7 @@ public class GPSLocationService extends Service {
 
 		
 		// create a Listener interface that will handle the GPS location update
-		LocationListener locListener = new MyLocationListener(); 
+		//LocationListener locListener = new MyLocationListener(); 
 		
 		//subscribe our Listener to the locManager
 		/*locManager.addGpsStatusListener(gpsLocListener);*/
