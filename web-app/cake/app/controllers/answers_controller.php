@@ -132,7 +132,6 @@ class AnswersController extends AppController
 									}
 									//set the subject_id for all data based on deviceID
 									$toSave[$cake_name]['subject_id'] = $subjectid;
-									print_r($toSave);
 									$this->$cake_name->create();
 									if (!$this->$cake_name->save($toSave))
 									{
