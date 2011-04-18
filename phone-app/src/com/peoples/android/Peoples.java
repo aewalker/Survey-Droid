@@ -1,10 +1,17 @@
 package com.peoples.android;
 
+import src.com.peoples.model.Question;
+import src.com.peoples.model.Survey;
+
+import com.peoples.android.activities.ConfirmSubmissionSurvey;
+import com.peoples.android.activities.SampleQuestionActivity2;
+import com.peoples.android.processTest.LocationTestActivity;
 import com.peoples.android.services.CallLogService;
 import com.peoples.android.views.SurveyAdapter;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +21,11 @@ import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 /**
@@ -38,41 +47,86 @@ public class Peoples extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if(D) Log.e(TAG, "+++ ON CREATE +++");
-        
-        
-        
-        /**
-         * This samples a simple text box with the view xml specified below
-         */
-//        setContentView(R.layout.multiplechoiceview);
-//        final EditText edittext = (EditText) findViewById(R.id.question_textView);
-//        edittext.setOnKeyListener(new OnKeyListener() {
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                // If the event is a key-down event on the "enter" button
-//                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-//                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
-//                  // Perform action on key press
-//                  Toast.makeText(Peoples.this, edittext.getText(), Toast.LENGTH_SHORT).show();
-//                  return true;
-//                }
-//                return false;
-//            }
-//        });
-        
-        
-        
-        
-        
-        
-        
-	//testing ui above        
-//        this.startService(new Intent(this, BootService.class));
-//        this.startService(new Intent(this, CallLogService.class));
+        setContentView(R.layout.survey_list_view);
 
+		//Creating a bogus Survey!
+        final Survey survey = new Survey();
+        
+        final Question question1 = new Question("Who is your favorite actress?", 
+        		"Keira Knightley",
+        		"Natalie Portman",
+        		"Emmanuelle Chiriqui");
+        final Question question2 = new Question("What is your favorite color", 
+        		"Red",
+        		"Blue",
+        		"Green");	
+        final Question question3 = new Question("What is your favorite animal?", 
+        		"Panda",
+        		"Tiger",
+        		"Penguin");	
+        final Question question4 = new Question("How old are you?", 
+        		"10",
+        		"24",
+        		"33");	
+        final Question question5 = new Question("I can't think of anymore lame questions", 
+        		"ag;oagrf",
+        		"qgwljdbsn;f",
+        		"afilue4atg");
+        
+        question1.setNextQuestionID(2);
+        question2.setNextQuestionID(3);
+        question3.setNextQuestionID(4);
+        question4.setNextQuestionID(5);
+        question5.setNextQuestionID(1104);
+        
+        survey.addQuestion(1, question1);
+        survey.addQuestion(2, question2);
+        survey.addQuestion(3, question3);
+        survey.addQuestion(4, question4);
+        survey.addQuestion(5, question5);
+        
+        survey.updateCurrentQuestionID(1);
+        
+        final Question question = question1;
+    	final Context panda = this;
+    	final TextView q = (TextView)this.findViewById(R.id.question_textView);
+    	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, question.getChoices()));
+    	q.setText(question.getQuestionText());
+          
+        Button next = (Button) findViewById(R.id.button1);
+        next.setText("Next Question");
+        next.setOnClickListener(new View.OnClickListener() {
+              public void onClick(View view) {
+            	  /*save response gogo?*/
+            	  
+            	  ListView lv = getListView();
 
-
+            	  //this stuff will be created dynamically based on the choice!
+            	  Toast.makeText(getApplicationContext(), 
+            			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
+                          Toast.LENGTH_SHORT).show();
+            	  
+            	  int nextQuestionID = survey.getQuestion(survey.getCurrentQuestionID()).getNextQuestionID();
+                  if (nextQuestionID == 1104)
+                  {
+                	  //display submission page?
+                	  Log.e(TAG, "im a cool kid");
+                	  Toast.makeText(getApplicationContext(), "Display submission page yo!",
+                              Toast.LENGTH_SHORT).show();
+                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
+                      startActivityForResult(myIntent, 0);
+                	  finish();
+                  }
+                  else 
+                  {
+                  setListAdapter(new ArrayAdapter<String>(panda, 
+                		  R.layout.simple_list_item_single_choice, survey.getQuestion(nextQuestionID).getChoices()));
+              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
+                  survey.updateCurrentQuestionID(nextQuestionID);
+                  }
+              }
+          });
     }
     
     static final String[] CHOICES = new String[] {

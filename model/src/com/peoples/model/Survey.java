@@ -1,4 +1,8 @@
-package com.peoples.model;
+package src.com.peoples.model;
+
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class Survey {
 	
@@ -24,6 +28,36 @@ public class Survey {
 	sa VARCHAR(255),
 	su VARCHAR(255));**/
 	private String mo, tu, we, th, fr, sa, su;
+	
+	private int currentQuestionID;
+	
+	private HashMap<Integer, Question> panda;
+	
+	public Survey() {
+		panda = new HashMap<Integer, Question>();
+	}
+	
+	public void addQuestion(int id, Question question)
+	{
+		panda.put(id, question);
+	}
+	
+	public Question getQuestion(int id)
+	{
+		return panda.get(id);
+	}
+	
+	public int getCurrentQuestionID() 
+	{
+		return currentQuestionID;
+	}
+	
+	public void updateCurrentQuestionID(int id)
+	{
+		currentQuestionID = id;
+	}
+	
+	
 
 
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.peoples.model;
+package src.com.peoples.model;
 
 /**
  * @author Diego

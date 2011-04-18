@@ -29,16 +29,14 @@
             </intent-filter>
         </service>
 
-		<activity android:name=".activities.MainActivity" android:label="@string/app_name">
+		<activity android:name=".Peoples" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".activities.SampleQuestionActivity"></activity>
-		<activity android:name=".activities.SampleQuestionActivity2"></activity>
-		<activity android:name=".activities.SampleQuestionActivity3"></activity>
-		<activity android:name=".activities.SampleQuestionActivity4"></activity>
+		<activity android:name=".activities.MainActivity"></activity>
+		<activity android:name=".activities.ConfirmSubmissionSurvey"></activity>
 		<activity android:name=".processTest.LocationTestActivity"></activity>
 
 	</application>

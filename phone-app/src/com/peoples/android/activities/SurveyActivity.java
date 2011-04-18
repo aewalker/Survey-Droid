@@ -4,9 +4,11 @@ import com.peoples.android.R;
 import com.peoples.android.views.SurveyAdapter;
 import com.peoples.android.views.SurveyView;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -14,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class SurveyActivity extends Activity {
+public class SurveyActivity extends ListActivity {
 	
 	/**
 	 * debugging
@@ -23,28 +25,22 @@ public class SurveyActivity extends Activity {
     private static final boolean D = true;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		
-		super.onCreate(savedInstanceState);
-        /*if(D) Log.e(TAG, "+++ ON CREATE +++");*/
-        setContentView(R.layout.multiple4choiceview);
-		
-		// TODO Auto-generated method stub
-        
-        
-        /*this.setListAdapter(new SurveyAdapter(this, R.layout.multiplechoiceview, CHOICES));
+	public void onCreate(Bundle savedInstanceState) {
+		  super.onCreate(savedInstanceState);
 
-        ListView lv = this.getListView();
-        lv.setTextFilterEnabled(true);
+		  setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, CHOICES));
 
-        lv.setOnItemClickListener(new OnItemClickListener() {
-          public void onItemClick(AdapterView<?> parent, View view,
-              int position, long id) {
-            // When clicked, show a toast with the TextView text
-            Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-                Toast.LENGTH_SHORT).show();
-          }
-        });*/
+		  ListView lv = getListView();
+		  lv.setTextFilterEnabled(true);
+
+		  lv.setOnItemClickListener(new OnItemClickListener() {
+		    public void onItemClick(AdapterView<?> parent, View view,
+		        int position, long id) {
+		      // When clicked, show a toast with the TextView text
+		      Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
+		          Toast.LENGTH_SHORT).show();
+		    }
+		  });
 	}
 	
 	

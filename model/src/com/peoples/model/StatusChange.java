@@ -1,4 +1,4 @@
-package com.peoples.model;
+package src.com.peoples.model;
 
 /**
  * CREATE TABLE status_changes (
