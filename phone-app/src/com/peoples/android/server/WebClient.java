@@ -1,4 +1,4 @@
-package server;
+package com.peoples.android.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
