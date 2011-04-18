@@ -10,6 +10,7 @@ $_SESSION['exportData'] = $results;
 $_SESSION['exportColumnNames'] =  array(
 					'Id', 'Choice Id', 'Answer Text', 'Time', 'Subject Id', 'Choice Text'
 					);
+$_SESSION['info'] = "";
 
 //show the results
 echo $tablefordata->startTable('Answer', array(

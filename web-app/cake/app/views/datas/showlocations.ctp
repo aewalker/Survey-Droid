@@ -8,6 +8,8 @@ echo $this->Session->flash();
 
 $_SESSION['exportData'] = $results;
 $_SESSION['exportColumnNames'] =  array('Longitude', 'Latitude', 'Time');
+$_SESSION['info'] = "";
+
 
 //show the results
 echo $tablefordata->startTable('Location', array('Longitude', 'Latitude', 'Time'));
