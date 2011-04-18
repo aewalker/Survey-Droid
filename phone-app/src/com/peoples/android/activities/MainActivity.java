@@ -1,21 +1,19 @@
 package com.peoples.android.activities;
 
-import src.com.peoples.model.Question;
-import src.com.peoples.model.Survey;
-
-import com.peoples.android.Peoples;
-import com.peoples.android.R;
-import com.peoples.android.processTest.LocationTestActivity;
-import com.peoples.android.services.GPSLocationService;
-
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.peoples.android.Peoples;
+import com.peoples.android.R;
+import com.peoples.android.model.Question;
+import com.peoples.android.model.Survey;
+import com.peoples.android.processTest.LocationTestActivity;
+import com.peoples.android.services.GPSLocationService;
 
 
 

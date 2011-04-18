@@ -1,4 +1,4 @@
-package src.com.peoples.model;
+package com.peoples.android.model;
 
 /**
  * CREATE TABLE status_changes (

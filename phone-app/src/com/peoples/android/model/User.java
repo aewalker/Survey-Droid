@@ -1,7 +1,7 @@
 /**
  * 
  */
-package src.com.peoples.model;
+package com.peoples.android.model;
 
 /**
  * @author Diego

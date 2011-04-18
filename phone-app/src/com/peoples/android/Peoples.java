@@ -1,32 +1,20 @@
 package com.peoples.android;
 
-import src.com.peoples.model.Question;
-import src.com.peoples.model.Survey;
-
-import com.peoples.android.activities.ConfirmSubmissionSurvey;
-import com.peoples.android.activities.SampleQuestionActivity2;
-import com.peoples.android.processTest.LocationTestActivity;
-import com.peoples.android.services.CallLogService;
-import com.peoples.android.views.SurveyAdapter;
-
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.peoples.android.activities.ConfirmSubmissionSurvey;
+import com.peoples.android.model.Question;
+import com.peoples.android.model.Survey;
 
 /**
  * 

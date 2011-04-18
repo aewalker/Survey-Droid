@@ -1,4 +1,4 @@
-package src.com.peoples.model;
+package com.peoples.android.model;
 
 
 import java.util.HashMap;
