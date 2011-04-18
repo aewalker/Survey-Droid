@@ -49,7 +49,6 @@ public class Peoples extends ListActivity {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
         setContentView(R.layout.survey_list_view);
-
 		//Creating a bogus Survey!
         final Survey survey = new Survey();
         
