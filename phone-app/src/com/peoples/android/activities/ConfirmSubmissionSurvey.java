@@ -1,17 +1,9 @@
 package com.peoples.android.activities;
 
-import src.com.peoples.model.Question;
-import src.com.peoples.model.Survey;
-
-import com.peoples.android.Peoples;
-import com.peoples.android.R;
-import com.peoples.android.processTest.LocationTestActivity;
-
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+
+import com.peoples.android.R;
 
 public class ConfirmSubmissionSurvey extends Activity {
 	
