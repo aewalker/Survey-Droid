@@ -20,21 +20,11 @@ class UsersController extends AppController
 	
 	function beforeSave()
 	{
-		//Need to tell Auth to hash the confirm password so the model can check that they match
-		//if (!empty($this->data['User']['password']))
-		
 		parent::beforeSave();
 	}
 	
 	function index($showList = false)
 	{
-		//we want the default action of the users controller to be login (for now)
-		//$this->redirect('login');
-		//$results = $this->User->find('all', array('order> 'User.username ASC', 'limit' => 20));
-		//foreach($results as &$result)
-			//$result = $result['User'];
-		//$this->set('users', $results);
-		
 		$this->set('users', $this->User->find('all', array(
 			'fields' => array('id', 'username'),
 			'order' => 'User.username ASC'
@@ -93,69 +83,63 @@ class UsersController extends AppController
 	function edit($id)
     {
     	//edit user's information
-    	//if (!$this->Session->check('User.admin'))
-		//{		
-			$results = $this->User->find('all', array('conditions' => array('User.id' => $id)));
-			foreach($results as &$result)
+
+		$results = $this->User->find('all', array('conditions' => array('User.id' => $id)));
+		foreach($results as &$result)
+		{
+			$result = $result['User'];
+			$this->set('user', $result);
+		}
+		
+		$this->set('saved', false);
+
+		if(isset($this->data['User']['id']))
+		{
+			if (empty($this->data['User']['password_copy']) && empty($this->data['User']['password_confirm']))
+    		{
+    			$this->data['User']['password_confirm'] = "XXXXXXXX";
+    			$this->data['User']['password_copy'] = $this->data['User']['password_confirm'];
+    			$this->data['User']['password'] = $result['password'];
+    		}
+    		else
+    		{
+    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password_copy']);
+    		}
+
+			$saved = $this->User->save($this->data);
+			
+			if ($saved)
 			{
-				$result = $result['User'];
-				$this->set('user', $result);
+				$this->Session->setFlash('User is edited!');
+				$this->redirect('/users');
+			}
+			else
+			{
+				$this->set('saved', $this->User->validationErrors);
+				$this->set('id', $id);
 			}
 			
-			$this->set('saved', false);
-
-			if(isset($this->data['User']['id']))
-			{
-				if (empty($this->data['User']['password_copy']) && empty($this->data['User']['password_confirm']))
-	    		{
-	    			$this->data['User']['password_confirm'] = "XXXXXXXX";
-	    			$this->data['User']['password_copy'] = $this->data['User']['password_confirm'];
-	    			$this->data['User']['password'] = $result['password'];
-	    		}
-	    		else
-	    		{
-	    			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password_copy']);
-	    		}
-
-				$saved = $this->User->save($this->data);
-				
-				if ($saved)
-				{
-					$this->set('saved', true);
-				}
-				else
-				{
-					$this->set('saved', $this->User->validationErrors);
-					$this->set('id', $id);
-				}
-				//clear the form
-		    	$this->data['User']['password_copy'] = null;
-		    	$this->data['User']['password_confirm'] = null;
-			}
+		}
 			
-    	//}
     }
     
 	function delete($id)
     {
-    	//if ($this->Session->check('User.isAdmin'))
-		//{
-    			if ($this->data['User']['confirm'] == 'true')
-				{
-					if ($id != null)
-					{
-						$this->set('result', $this->User->delete($id));
-					}
-					else
-					{
-						$this->set('result', false);
-					}
-				}
-				else
-				{
-					$this->set('id', $id);
-				}
-		//}
+   		if ($this->data['User']['confirm'] == 'true')
+		{
+			if ($id != null)
+			{
+				$this->set('result', $this->User->delete($id));
+			}
+			else
+			{
+				$this->set('result', false);
+			}
+		}
+		else
+		{
+			$this->set('id', $id);
+		}
     	
     }
 

@@ -17,7 +17,6 @@ public class Question {
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	private int QUESTION_KEY;
 	
-	//TODO: String?
 	//text TEXT
 	
 	//The adapter we are using to display choices in the survey GUI
@@ -56,6 +55,8 @@ public class Question {
 	{
 		return nextQuestionID;
 	}
+	private String text;
+
 }
 	
 

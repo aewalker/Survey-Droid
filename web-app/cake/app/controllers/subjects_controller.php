@@ -35,10 +35,10 @@ class SubjectsController extends AppController
 	{
 		$this->Subject->create();
 		if ($this->Subject->save($this->data))
-	        {
-	         	$this->Session->setFlash('New subject created!');
-	        	$this->redirect('/subjects/');
-	    	}
+        {
+         	$this->Session->setFlash('New subject created!');
+        	$this->redirect('/subjects/');
+    	}
 	}
 	
 	//delete an existing subject

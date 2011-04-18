@@ -10,6 +10,6 @@ class AppController extends Controller
     var $components = array('Auth', 'Session');
     
     //load helpers
-    var $helpesr = array('Html', 'Form');
+    //var $helpers = array('Html', 'Form', 'Ajax');
 }
 ?>

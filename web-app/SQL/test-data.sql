@@ -23,25 +23,27 @@ INSERT INTO contacts (id, subject_id) VALUES
 	(15, 5), (16, 2), (17, 2),
 	(18, 5), (19, 4), (20, 1);
 	
-INSERT INTO surveys (id, name) VALUES
-	(1, 'The Life of Brian'),
-	(2, 'The Meaming of Life');
+INSERT INTO surveys (id, name, question_id) VALUES
+	(1, 'The Life of Brian', 1),
+	(2, 'The Meaming of Life', 3);
 	
-INSERT INTO questions (id, survey_id, ques_type, text) VALUES
-	(1, 1, 'choice', 'Shall we follow the gord?'),
-	(2, 1, 'free_resp', 'What side of life do you always look on?'),
-	(3, 2, 'choice', 'Another mint?'),
-	(4, 2, 'free_resp', 'What is the meaning of life?');
+INSERT INTO questions (id, survey_id, q_text) VALUES
+	(1, 1, 'Shall we follow the gord?'),
+	(2, 1, 'What side of life do you always look on?'),
+	(3, 2, 'Another mint?'),
+	(4, 2, 'What is the meaning of life?');
 	
-INSERT INTO options (id, text) VALUES
-	(1, 'Yes!'),
-	(2, 'No!');
+INSERT INTO branches (id, question_id, next_q) VALUES
+	(1, 1, 2),
+	(2, 3, 4);
 	
-INSERT INTO questions_optionss (question_id, opt_id) VALUES
-	(1, 1), (4, 1),
-	(1, 2), (4, 2);
+INSERT INTO choices (id, choice_text, question_id) VALUES
+	(1, 'Yes!', 1),
+	(2, 'No!', 1),
+	(3, 'Yes!', 3),
+	(4, 'No!', 3);
 	
-INSERT INTO location_actions (id, subject_id, created, longitude, lattitude) VALUES
+INSERT INTO locations (id, subject_id, created, longitude, latitude) VALUES
 	(1, 1, '1969-01-01 11:11:11', 51.511056, -0.224977),
 	(2, 2, '1969-01-01 11:11:11', 51.511056, -0.224977),
 	(3, 3, '1969-01-01 11:11:11', 51.511056, -0.224977),
@@ -49,7 +51,7 @@ INSERT INTO location_actions (id, subject_id, created, longitude, lattitude) VAL
 	(5, 5, '1969-01-01 11:11:11', 51.511056, -0.224977),
 	(6, 6, '1969-01-01 11:11:11', 51.511056, -0.224977);
 	
-INSERT INTO call_actions (id, subject_id, created, act_type, duration) VALUES
+INSERT INTO calls (id, subject_id, created, type, duration) VALUES
 	(1, 1, '1969-01-01 11:11:11', 'call', 10),
 	(2, 2, '1969-01-01 11:11:11', 'call', 10),
 	(3, 3, '1969-01-01 11:11:11', 'call', 10),

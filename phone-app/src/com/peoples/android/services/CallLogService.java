@@ -1,6 +1,6 @@
 package com.peoples.android.services;
 
-import com.peoples.android.PeoplesDB;
+import com.peoples.android.database.PeoplesDB;
 
 import android.app.IntentService;
 import android.content.Intent;

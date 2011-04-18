@@ -10,6 +10,7 @@ class Survey extends AppModel
 	var $name = 'Survey';
 	
 	var $belongsTo = 'Question';
+	var $hasMany = 'Question';
 	
 	var $validate = array
 	(

@@ -2,7 +2,7 @@ package src.com.peoples.model;
 
 
 /**
- * CREATE TABLE location_actions (
+ * CREATE TABLE locations (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	subject_id INT UNSIGNED NOT NULL,
 	created DATETIME NOT NULL,
@@ -12,13 +12,13 @@ package src.com.peoples.model;
  * @author Diego
  *
  */
-public class LocationAction {
+public class Location {
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	private int LOCATIONACTION_KEY;
+	private int LOCATION_KEY;
 	
 	//subject_id INT UNSIGNED NOT NULL,
-	private int subject_id;
+	private Subject subject;
 	
 	//created DATETIME NOT NULL,
 	private int datetime;
@@ -26,9 +26,8 @@ public class LocationAction {
 	//longitude DOUBLE NOT NULL,
 	private double longitude;
 	
-	//lattitude DOUBLE NOT NULL);
-	//TODO: misspelled
-	private double lattitude;
+	//latitude DOUBLE NOT NULL);
+	private double latitude;
 	
 
 }

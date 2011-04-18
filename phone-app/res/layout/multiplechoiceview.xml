@@ -6,6 +6,8 @@
     <RadioGroup android:id="@+id/choices_radioGroup" android:layout_height="wrap_content" android:layout_width="wrap_content">
         <RadioButton android:layout_width="wrap_content" android:text="RadioButton" android:id="@+id/radio1" android:layout_height="wrap_content"></RadioButton>
         
+        
+        
         <RadioButton android:layout_width="wrap_content" android:text="RadioButton" android:id="@+id/radio2" android:layout_height="wrap_content"></RadioButton>
     </RadioGroup>
     <Button android:text="Button" android:id="@+id/button1" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>

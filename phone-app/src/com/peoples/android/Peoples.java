@@ -85,7 +85,7 @@ public class Peoples extends ListActivity {
         survey.addQuestion(3, question3);
         survey.addQuestion(4, question4);
         survey.addQuestion(5, question5);
-        
+    
         survey.updateCurrentQuestionID(1);
         
         final Question question = question1;

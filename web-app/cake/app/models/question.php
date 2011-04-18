@@ -10,6 +10,7 @@ class Question extends AppModel
 	var $name = 'Question';
 	
 	var $hasMany = array('Choice', 'Branch', 'Condition', 'Answer');
+	var $belongsTo = 'Survey';
 	
 	var $validate = array
 	(

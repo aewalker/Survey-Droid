@@ -8,7 +8,7 @@ class TableHelper extends Helper
 {
 	var $model = NULL;
 	
-	var $helpers = array('Html');
+	var $helpers = array('Html', 'Js' => 'jquery');
 	
 	//returns a string that is the header of a display table
 	//$style is as below.
@@ -28,15 +28,15 @@ class TableHelper extends Helper
 	//returns a string that is the body of the display table
 	//$results holds the data (takes data in the form that find() returns),
 	//$commands holds what options to give for each row in the form of
-	//'printed command' => array('controller function' => 'arguments')
+	//'printed command' => array('command' => 'controller function', 'arg' => 'model field', 'type' => 'link or ajax')
 	//$fields is the list of fields to print out; if the empty array (the default), prints all
 	//$style takes the form of array('tag' => array('element' => 'value')) and adds 'value' as
 	//the value of the HTML attribute 'tag' for the 'element' tags
 	function tableBody($results,
 		$commands = array
 		(
-			'Edit' => array('command' => 'edit', 'arg' => 'id'),
-			'Delete' => array('command' => 'delete', 'arg' => 'id')
+			'Edit' => array('command' => 'edit', 'arg' => 'id', 'type' => 'link'),
+			'Delete' => array('command' => 'delete', 'arg' => 'id', 'type' => 'link')
 		),
 		$fields = array(), $style = array())
 	{
@@ -58,12 +58,20 @@ class TableHelper extends Helper
 				foreach ($commands as $command => $val)
 				{
 					$s = $s.'<td'.$this->_getHTMLVal($style, 'td').'>';
-					$s = $s.$this->Html->link($command, array
-					(
-						'controller' => $this->_getURLName($this->model),
-						'action' => $val['command'],
-						$info[$val['arg']])
-					);
+					if ($val['type'] == 'link')
+					{
+						$s = $s.$this->Html->link($command, array
+						(
+							'controller' => $this->_getURLName($this->model),
+							'action' => $val['command'],
+							$info[$val['arg']])
+						);
+					}
+					else if ($val['type'] == 'ajax')
+					{
+						$s = $s.$this->Js->link($command, $val['command'].DS
+							.$info[$val['arg']], array('async' => true, 'update' => $val['update']));
+					}
 					$s = $s.'</td>';
 				}
 				$s = $s.'</tr>';
@@ -74,15 +82,23 @@ class TableHelper extends Helper
 	
 	//returns a string that is a the end of a display table.  Also adds commands to be added
 	//as links after the body of the table.  $commands and $style are as above
-	function endTable($commands = array('Add' => array('command' => 'add')), $style = array())
+	function endTable($commands = array('Add' => array('command' => 'add', 'type' => 'link', 'arg' => NULL)), $style = array())
 	{
 		if (empty($this->model)) throw new Exception('Must call startTable() before endTable()');
 		$s = '</table>';
 		foreach ($commands as $command => $val)
 		{
 			$s = $s.'<div'.$this->_getHTMLVal($style, 'td').'>';
-			$s = $s.$this->Html->link($command,
-				array('controller' => $this->_getURLName($this->model), 'action' => $val['command']));
+			if ($val['type'] == 'link')
+			{
+				$s = $s.$this->Html->link($command,
+					array('controller' => $this->_getURLName($this->model), 'action' => $val['command'].DS.$val['arg']));
+			}
+			else if ($val['type'] == 'ajax')
+			{
+				$s = $s.$this->Js->link($command,
+					$val['command'].DS.$val['arg'], array('async' => true, 'update' => $val['update']));
+			}
 			$s = $s.'</div>';
 		}
 		return $s;
@@ -100,7 +116,7 @@ class TableHelper extends Helper
 		return $s;
 	}
 	
-	//wrapper for Inflector functions to change a singular, CamelCase word into a plural, underscored word
+	//wrapper for Inflector functions to change a singular, CamelCaseWord into a plural, underscored_word
 	function _getURLName($word)
 	{
 		return Inflector::underscore(Inflector::pluralize($word));

@@ -6,10 +6,14 @@ import src.com.peoples.model.Survey;
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
 import com.peoples.android.processTest.LocationTestActivity;
+import com.peoples.android.services.GPSLocationService;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -17,10 +21,19 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 	
+	// Debugging
+	// TEST
+	//TEST
+    private static final String TAG = "MainActivity";
+    private static final boolean D = true;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        if(D) Log.e(TAG, "+++ ON CREATE +++");
+        
         setContentView(R.layout.main);
 
         //Creating a bogus Survey!
@@ -92,6 +105,13 @@ public class MainActivity extends Activity {
             }
 
         });
+        
+        //This is just code to test GPS location gathering and persisting to database
+        Context context = getApplicationContext();
+        Intent gpsIntent = new Intent(context, GPSLocationService.class);
+        gpsIntent = gpsIntent.setClass(context, GPSLocationService.class);
+        context.startService(gpsIntent);
+        
     }
 
 }

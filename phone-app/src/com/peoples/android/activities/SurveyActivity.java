@@ -25,6 +25,7 @@ public class SurveyActivity extends ListActivity {
     private static final boolean D = true;
 	
 	@Override
+
 	public void onCreate(Bundle savedInstanceState) {
 		  super.onCreate(savedInstanceState);
 
@@ -42,7 +43,8 @@ public class SurveyActivity extends ListActivity {
 		    }
 		  });
 	}
-	
+		  
+
 	
 	/**
 	 * Get the SurveyAdapter associated with this activity's SurveyView.
