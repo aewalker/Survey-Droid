@@ -17,7 +17,7 @@ public class Push extends WebClient {
         JSONObject data = new JSONObject();
         data.put("answers", answers);
         data.put("deviceId", "testingId");
-        boolean success = postToUrl(PUSH_URL, "data", data.toString());
+        boolean success = postJsonToUrl(PUSH_URL, data.toString());
         return success;
         } catch (Exception e) {
             Log.e("Push", e.getMessage());

@@ -11,15 +11,17 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
 
@@ -80,17 +82,16 @@ public class WebClient {
         }
     }
     
-    protected static synchronized boolean postToUrl(String url, String name, String value) {
+    protected static synchronized boolean postJsonToUrl(String url, String value) {
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
-            List nameValuePairs = new ArrayList(1);
-            nameValuePairs.add(new BasicNameValuePair(name, value));
-            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            
+            StringEntity se = new StringEntity(value);  
+            se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            httpPost.setEntity(se);
             
             // Execute HTTP Post Request
-            Log.d("Posting", "name : " + name);
-            Log.d("Posting", "value : " + value);
             HttpResponse response = httpclient.execute(httpPost);
             
             Log.d("Posting", getInputStreamAsString(response.getEntity().getContent()));

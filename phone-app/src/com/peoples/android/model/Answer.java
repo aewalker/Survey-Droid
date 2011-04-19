@@ -65,13 +65,13 @@ public class Answer {
         JSONObject j = null;
         try {
             j = new JSONObject();
-            j.put("question_id", 0); // hack for now
+            j.put("question_id", 1); // hack for now
             if (type == 0) {
-                j.put("answer_text", text);
+                j.put("ans_text", text);
             } else {
-                j.put("answer_text", text);
+                j.put("ans_text", text);
             }
-            j.put("created", Long.toString(System.currentTimeMillis()));
+            j.put("created", Long.toString(System.currentTimeMillis() / 1000));
         } catch (JSONException e) {
             Log.e("Answer", e.getMessage());
         }
