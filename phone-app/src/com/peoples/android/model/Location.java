@@ -15,7 +15,7 @@ package com.peoples.android.model;
 public class Location {
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	private int LOCATION_KEY;
+	private int id;
 	
 	//subject_id INT UNSIGNED NOT NULL,
 	private Subject subject;

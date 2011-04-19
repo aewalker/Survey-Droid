@@ -12,7 +12,7 @@ public class Survey {
 	
 	
 	/**id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,**/
-	private int SURVEY_KEY;
+	private int id;
 	
 	/**name VARCHAR(255)),**/
 	private String name;

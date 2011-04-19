@@ -20,7 +20,7 @@ public class Condition {
 	private static final int HAS_NEVER_BEEN = 2;
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	private int CONDITION_KEY;
+	private int id;
 	
 	//branch_id INT UNSIGNED NOT NULL,
 	private Branch branch;

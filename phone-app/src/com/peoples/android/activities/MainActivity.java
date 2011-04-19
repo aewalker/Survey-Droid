@@ -20,25 +20,26 @@ import com.peoples.android.services.GPSLocationService;
 
 
 public class MainActivity extends Activity {
-	
+
 	// Debugging
 	// TEST
 	//TEST
     private static final String TAG = "MainActivity";
     private static final boolean D = true;
-	
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         if(D) Log.e(TAG, "+++ ON CREATE +++");
-        
-        setContentView(R.layout.main);      
-        
+
+        setContentView(R.layout.main);
+
         Log.d(TAG, "Fetching surveys");
-        List<Survey> surveys = Pull.getNewSurveys();
-        
+
+        Pull.syncWithWeb(this);
+
         Button sample = (Button) findViewById(R.id.Enter);
         sample.setText("Take a sample survey");
         sample.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +49,7 @@ public class MainActivity extends Activity {
             }
 
         });
-        
+
         Button gps = (Button) findViewById(R.id.GPS);
         gps.setText("Tell me my location every 15 seconds!");
         gps.setOnClickListener(new View.OnClickListener() {
@@ -58,13 +59,13 @@ public class MainActivity extends Activity {
             }
 
         });
-        
+
         //This is just code to test GPS location gathering and persisting to database
         Context context = getApplicationContext();
         Intent gpsIntent = new Intent(context, GPSLocationService.class);
         gpsIntent = gpsIntent.setClass(context, GPSLocationService.class);
         context.startService(gpsIntent);
-        
+
     }
 
 }

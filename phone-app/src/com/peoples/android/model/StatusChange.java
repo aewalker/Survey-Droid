@@ -21,7 +21,7 @@ public class StatusChange {
 	private static final boolean DISABLED = false;
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	private int STATUSCHANGE_KEY;
+	private int id;
 	
 	//subject_id INT UNSIGNED NOT NULL,
 	private Subject subject;

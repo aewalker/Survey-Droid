@@ -13,7 +13,6 @@ public class Push extends WebClient {
     public static final String PUSH_URL = "http://www.eigendiego.com/cake/app/webroot/answers/push";
 
     public static boolean sendAnswersToServer(JSONArray answers) {
-        
         try {
         JSONObject data = new JSONObject();
         data.put("answers", answers);
@@ -24,5 +23,17 @@ public class Push extends WebClient {
             Log.e("Push", e.getMessage());
         }
         return false;
+    }
+
+    public static boolean sendLocations(JSONArray locations) {
+    	return false;
+    }
+
+    public static boolean sendCalllog(JSONArray calllog) {
+    	return false;
+    }
+
+    public static boolean sendAll() {
+    	return false;
     }
 }

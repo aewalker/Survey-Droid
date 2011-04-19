@@ -22,7 +22,7 @@ import android.util.Log;
 public class Answer {
 
     // id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    private int ANSWER_KEY;
+    private int id;
 
     // question_id INT UNSIGNED NOT NULL,
     private Question question;

@@ -17,7 +17,7 @@ import android.util.Log;
 public class Question {
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	private int QUESTION_KEY;
+	private int id;
 	
 	//text TEXT
 	
@@ -38,7 +38,7 @@ public class Question {
 	private String questionText;
 	public Question(int key, String q, String[] choices, Branch[] branches)
 	{
-		QUESTION_KEY = key;
+		id = key;
 		if (branches != null)
 		{
 			BRANCHES = new Branch[branches.length];
@@ -68,8 +68,8 @@ public class Question {
 	}
 	
 	public int getId() {
-	    Log.d("Question", Integer.toString(QUESTION_KEY));
-	    return QUESTION_KEY;
+	    Log.d("Question", Integer.toString(id));
+	    return id;
 	}
 	
 	public String getAnswer() {
@@ -88,7 +88,7 @@ public class Question {
 	
 	
 	public int getQuestionKey() {
-		return QUESTION_KEY;
+		return id;
 	}
 	
 	public String[] getChoices() {

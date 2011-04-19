@@ -3,7 +3,7 @@ package com.peoples.android.model;
 public class Subject {
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	private int SUBJECT_KEY;
+	private int id;
 	
 	//phone_num VARCHAR(13) NOT NULL,
 	private String phone_num;
