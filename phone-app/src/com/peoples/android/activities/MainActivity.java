@@ -1,5 +1,7 @@
 package com.peoples.android.activities;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +12,9 @@ import android.widget.Button;
 
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
-import com.peoples.android.model.Question;
 import com.peoples.android.model.Survey;
 import com.peoples.android.processTest.LocationTestActivity;
+import com.peoples.android.server.Pull;
 import com.peoples.android.services.GPSLocationService;
 
 
@@ -32,48 +34,10 @@ public class MainActivity extends Activity {
         
         if(D) Log.e(TAG, "+++ ON CREATE +++");
         
-        setContentView(R.layout.main);
-
-        //Creating a bogus Survey!
-        /*Survey survey = new Survey();
+        setContentView(R.layout.main);      
         
-        final Question question1 = new Question("Who is your favorite actress?", 
-        		"Keira Knightley",
-        		"Natalie Portman",
-        		"Emmanuelle Chiriqui");
-        final Question question2 = new Question("What is your favorite color", 
-        		"Red",
-        		"Blue",
-        		"Green");	
-        final Question question3 = new Question("What is your favorite animal?", 
-        		"Panda",
-        		"Tiger",
-        		"Penguin");	
-        final Question question4 = new Question("How old are you?", 
-        		"10",
-        		"24",
-        		"33");	
-        final Question question5 = new Question("I can't think of anymore lame questions", 
-        		"ag;oagrf",
-        		"qgwljdbsn;f",
-        		"afilue4atg");
-        
-        question1.setNextQuestionID(2);
-        question2.setNextQuestionID(3);
-        question3.setNextQuestionID(4);
-        question4.setNextQuestionID(5);
-        question5.setNextQuestionID(1);
-        
-        survey.addQuestion(1, question1);
-        survey.addQuestion(2, question2);
-        survey.addQuestion(3, question3);
-        survey.addQuestion(4, question4);
-        survey.addQuestion(5, question5);*/
-        
-        
-        
-        
-        
+        Log.d(TAG, "Fetching surveys");
+        List<Survey> surveys = Pull.getNewSurveys();
         
         Button sample = (Button) findViewById(R.id.Enter);
         sample.setText("Take a sample survey");

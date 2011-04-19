@@ -1,5 +1,7 @@
 package com.peoples.android.model;
 
+import android.util.Log;
+
 
 /**
  * 
@@ -28,7 +30,7 @@ public class Question {
 	private int nextQuestionID;
 	private Branch[] BRANCHES;
 	
-	private Answer answer;
+	public Answer answer;
 	private int type; // 0 if multiple choice, 1 if free response
 	
 	//This is a completely bogus constructor make entirely for
@@ -64,6 +66,12 @@ public class Question {
 			type = 1;
 		}
 	}
+	
+	public int getId() {
+	    Log.d("Question", Integer.toString(QUESTION_KEY));
+	    return QUESTION_KEY;
+	}
+	
 	public String getAnswer() {
 		if (answer == null)
 			return "No answer found for question";
@@ -103,6 +111,7 @@ public class Question {
 	public int getType() {
 		return type;
 	}
+	
 }
 	
 

@@ -39,6 +39,7 @@ public class Peoples extends ListActivity {
         if(D) Log.e(TAG, "+++ ON CREATE +++");
         setContentView(R.layout.survey_list_view);
 		//Creating a bogus Survey!
+        
         final Survey survey = new Survey();
         
         String[] question1choices = {"Keira Knightley",
@@ -132,6 +133,8 @@ public class Peoples extends ListActivity {
 	                	  
 	                	  Bundle bundle = new Bundle();
 	                	  bundle.putString("confirm", s.toString());
+	                	  bundle.putString("answers", survey.getAnswersAsJson().toString());
+	                	  
 	                	  /*Toast.makeText(getApplicationContext(), s.toString(),
 	                              Toast.LENGTH_SHORT).show();*/
 	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);

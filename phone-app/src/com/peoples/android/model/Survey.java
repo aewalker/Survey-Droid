@@ -1,8 +1,12 @@
 package com.peoples.android.model;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Survey {
 	
@@ -44,6 +48,21 @@ public class Survey {
 	public Question getQuestion(int id)
 	{
 		return survey.get(id);
+	}
+	
+	public List<Question> getQuestions() {
+	    List<Question> qs = new ArrayList<Question>();
+	    for (int id : survey.keySet()) 
+	        qs.add(survey.get(id));
+	    return qs;
+	}
+	
+	public JSONArray getAnswersAsJson() {
+	    JSONArray answers = new JSONArray();
+	    for (Question q : getQuestions()) {
+	        answers.put(q.answer.getAsJson());
+	    }
+	    return answers;
 	}
 	
 	public int getCurrentQuestionID() 

@@ -21,6 +21,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.util.Log;
+
 /**
  * Helper methods to simplify talking with and parsing responses from a
  * SOC Online API. 
@@ -71,20 +73,8 @@ public class WebClient {
                         status.toString());
             }
 
-            // Pull content stream from response
-            HttpEntity entity = response.getEntity();
-            InputStream inputStream = entity.getContent();
-
-            ByteArrayOutputStream content = new ByteArrayOutputStream();
-
-            // Read response into a buffered stream
-            int readBytes = 0;
-            while ((readBytes = inputStream.read(sBuffer)) != -1) {
-                content.write(sBuffer, 0, readBytes);
-            }
-
-            // Return result from buffered stream
-            return new String(content.toByteArray());
+            return getInputStreamAsString(response.getEntity().getContent());
+            
         } catch (IOException e) {
             throw new ApiException("Problem communicating with API", e);
         }
@@ -99,12 +89,31 @@ public class WebClient {
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             
             // Execute HTTP Post Request
+            Log.d("Posting", "name : " + name);
+            Log.d("Posting", "value : " + value);
             HttpResponse response = httpclient.execute(httpPost);
+            
+            Log.d("Posting", getInputStreamAsString(response.getEntity().getContent()));
             
             StatusLine status = response.getStatusLine();
             if (status.getStatusCode() == HTTP_STATUS_OK)
                 return true;
         } catch (Exception e) { }
         return false;
+    }
+    
+    private static String getInputStreamAsString(InputStream is) {
+        byte[] sBuffer = new byte[512];
+        ByteArrayOutputStream content = new ByteArrayOutputStream();
+        // Read response into a buffered stream
+        int readBytes = 0;
+        try {
+            while ((readBytes = is.read(sBuffer)) != -1) {
+                content.write(sBuffer, 0, readBytes);
+            }
+        } catch (IOException e) {
+            Log.e("Push", e.getMessage());
+        }
+        return new String(content.toByteArray());
     }
 }
