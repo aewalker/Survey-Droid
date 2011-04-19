@@ -99,6 +99,7 @@ class AnswersController extends AppController
 					'conditions' => array('device_id' => $info['deviceId']),
 					'fields' => array('id')
 				));
+				$subjectid = $subjectid['Subject']['id'];
 				if ($subjectid == NULL)
 				{
 					$result = false;
