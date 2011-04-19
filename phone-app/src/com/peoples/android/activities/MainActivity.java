@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
         
         if(D) Log.e(TAG, "+++ ON CREATE +++");
         
-        setContentView(R.layout.survey_list_view);
+        setContentView(R.layout.main);
 
         //Creating a bogus Survey!
         /*Survey survey = new Survey();
@@ -75,26 +75,17 @@ public class MainActivity extends Activity {
         
         
         
-        /*Button sample = (Button) findViewById(R.id.Enter);
+        Button sample = (Button) findViewById(R.id.Enter);
         sample.setText("Take a sample survey");
         sample.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	
-                String QuestionText = question1.getQuestionText();
-                String[] QuestionChoices = question1.getChoices();
-                  
-                Bundle bundle = new Bundle();
-                bundle.putString("question", QuestionText);
-                bundle.putStringArray("choices", QuestionChoices);
-                
                 Intent myIntent = new Intent(view.getContext(), Peoples.class);
-                myIntent.putExtras(bundle);
                 startActivityForResult(myIntent, 0);
             }
 
-        });*/
+        });
         
-        /*Button gps = (Button) findViewById(R.id.GPS);
+        Button gps = (Button) findViewById(R.id.GPS);
         gps.setText("Tell me my location every 15 seconds!");
         gps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -102,7 +93,7 @@ public class MainActivity extends Activity {
                 startActivityForResult(myIntent, 0);
             }
 
-        });*/
+        });
         
         //This is just code to test GPS location gathering and persisting to database
         Context context = getApplicationContext();

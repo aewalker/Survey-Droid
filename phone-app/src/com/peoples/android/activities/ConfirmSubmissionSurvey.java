@@ -1,10 +1,15 @@
 package com.peoples.android.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.peoples.android.Peoples;
 import com.peoples.android.R;
 
 public class ConfirmSubmissionSurvey extends Activity {
@@ -13,17 +18,30 @@ public class ConfirmSubmissionSurvey extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.main);
+        setContentView(R.layout.confirmpage);
         
-        /*String value = "";
+        String value = "panda";
         Bundle extras = getIntent().getExtras(); 
         if(extras !=null) {
-            value = extras.getString("confirmation");
+            value = extras.getString("confirm");
         }
         
-        TextView t = (TextView)this.findViewById(R.id.confirmation);
+        //Log.e("PEOPLES", value);
+        
+        TextView t = (TextView)this.findViewById(R.id.confirm);
     	t.setText(value);
-		*/
+    	
+    	Button sample = (Button) findViewById(R.id.finish);
+        sample.setText("Submit Survey");
+        sample.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent myIntent = new Intent(view.getContext(), MainActivity.class);
+                startActivityForResult(myIntent, 0);
+                finish();
+            }
+
+        });
+		
     }
 
 }

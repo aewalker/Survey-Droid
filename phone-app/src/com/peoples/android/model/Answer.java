@@ -53,6 +53,10 @@ public class Answer {
 		index = a;
 		text = "" + index;
 	}
+	
+	public int getIndex() {
+		return index;
+	}
 
 
 }

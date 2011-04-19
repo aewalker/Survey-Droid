@@ -89,68 +89,81 @@ public class Peoples extends ListActivity {
         next.setText("Next Question");
         next.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
+            	  
             	  ListView lv = getListView();
-            	  /*save response gogo?*/
-            	  if (survey.getQuestion(survey.getCurrentQuestionID()).getType() == 0)
+            	  if ((survey.getQuestion(survey.getCurrentQuestionID()).getType() == 0
+            			  && lv.getCheckedItemPosition() != -1)||
+            			  (survey.getQuestion(survey.getCurrentQuestionID()).getType() == 1))
             	  {
-            		  survey.getQuestion(survey.getCurrentQuestionID()).setAnswer(lv.getCheckedItemPosition());
-            		  Toast.makeText(getApplicationContext(), 
-                			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
-                              Toast.LENGTH_SHORT).show();
+	            	  /*save response gogo?*/
+	            	  if (survey.getQuestion(survey.getCurrentQuestionID()).getType() == 0)
+	            	  {
+	            		  survey.getQuestion(survey.getCurrentQuestionID()).setAnswer(
+	            				  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()]);
+	            		  Toast.makeText(getApplicationContext(), 
+	                			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
+	                              Toast.LENGTH_SHORT).show();
+	            	  }
+	            	  else
+	            	  {
+	            		  EditText edit = (EditText)findViewById(R.id.editText1);
+	            		  survey.getQuestion(survey.getCurrentQuestionID()).setAnswer(edit.getText().toString());
+	            		  Toast.makeText(getApplicationContext(), 
+	            				  edit.getText().toString(),
+	                              Toast.LENGTH_SHORT).show();
+	            	  }
+	            	  
+	            	  //this stuff will be created dynamically based on the choice!
+	            	  /*Toast.makeText(getApplicationContext(), 
+	            			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
+	                          Toast.LENGTH_SHORT).show();*/
+	            	  
+	            	  int nextQuestionID = survey.getQuestion(survey.getCurrentQuestionID()).getNextQuestionID();
+	                  if (nextQuestionID == 1104)
+	                  {
+	                	  //display submission page?
+	                	  StringBuilder s = new StringBuilder();
+	                	  s.append("Your choices are: \n");
+	                	  for (int i = 1; i < 6; i++)
+	                	  {
+	                		  if (survey.getQuestion(i).getAnswer() != null)
+	                		  s.append("Question " + i + ": " + survey.getQuestion(i).getAnswer() + "\n");
+	                	  }
+	                	  
+	                	  Bundle bundle = new Bundle();
+	                	  bundle.putString("confirm", s.toString());
+	                	  /*Toast.makeText(getApplicationContext(), s.toString(),
+	                              Toast.LENGTH_SHORT).show();*/
+	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
+	                      myIntent.putExtras(bundle);
+	                	  startActivityForResult(myIntent, 0);
+	                	  finish();
+	                  }
+	                  else 
+	                  {
+	                	  if (survey.getQuestion(nextQuestionID).getType() == 0)
+	                	  {
+			                  setListAdapter(new ArrayAdapter<String>(panda, 
+			                		  R.layout.simple_list_item_single_choice, survey.getQuestion(nextQuestionID).getChoices()));
+			              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
+			                  survey.updateCurrentQuestionID(nextQuestionID);
+	                	  }
+	                	  else
+	                	  {
+	                		  String[] test = new String[1];
+	                		  test[0] = "Enter your response here";
+	                		  setListAdapter(new ArrayAdapter<String>(panda, 
+			                		  R.layout.list_item, test));
+			              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
+			                  survey.updateCurrentQuestionID(nextQuestionID);
+			                  
+	                	  }
+	                  }
             	  }
-            	  else
+            	  else 
             	  {
-            		  EditText edit = (EditText)findViewById(R.id.editText1);
-            		  survey.getQuestion(survey.getCurrentQuestionID()).setAnswer(edit.getText().toString());
-            		  Toast.makeText(getApplicationContext(), 
-            				  edit.getText().toString(),
-                              Toast.LENGTH_SHORT).show();
+            		  Toast.makeText(getApplicationContext(), "Please select a choice", Toast.LENGTH_SHORT).show();
             	  }
-            	  
-            	  //this stuff will be created dynamically based on the choice!
-            	  /*Toast.makeText(getApplicationContext(), 
-            			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
-                          Toast.LENGTH_SHORT).show();*/
-            	  
-            	  int nextQuestionID = survey.getQuestion(survey.getCurrentQuestionID()).getNextQuestionID();
-                  if (nextQuestionID == 1104)
-                  {
-                	  //display submission page?
-                	  StringBuilder s = new StringBuilder();
-                	  s.append("Your choices are: \n");
-                	  for (int i = 1; i < 6; i++)
-                	  {
-                		  if (survey.getQuestion(i).getAnswer() != null)
-                		  s.append("Question " + i + ": " + survey.getQuestion(i).getAnswer() + "\n");
-                	  }
-                	  
-                	  
-                	  Toast.makeText(getApplicationContext(), s.toString(),
-                              Toast.LENGTH_SHORT).show();
-                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
-                      startActivityForResult(myIntent, 0);
-                	  finish();
-                  }
-                  else 
-                  {
-                	  if (survey.getQuestion(nextQuestionID).getType() == 0)
-                	  {
-		                  setListAdapter(new ArrayAdapter<String>(panda, 
-		                		  R.layout.simple_list_item_single_choice, survey.getQuestion(nextQuestionID).getChoices()));
-		              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
-		                  survey.updateCurrentQuestionID(nextQuestionID);
-                	  }
-                	  else
-                	  {
-                		  String[] test = new String[1];
-                		  test[0] = "Enter your response here";
-                		  setListAdapter(new ArrayAdapter<String>(panda, 
-		                		  R.layout.list_item, test));
-		              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
-		                  survey.updateCurrentQuestionID(nextQuestionID);
-		                  
-                	  }
-                  }
               }
           });
     }
