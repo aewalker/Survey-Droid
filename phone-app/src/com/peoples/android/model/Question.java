@@ -26,17 +26,61 @@ public class Question {
 	private String[] CHOICES;
 	private int numberOfChoices;
 	private int nextQuestionID;
+	private Branch[] BRANCHES;
+	
+	private Answer answer;
+	private int type; // 0 if multiple choice, 1 if free response
 	
 	//This is a completely bogus constructor make entirely for
 	//testing purposes.
 	private String questionText;
-	public Question(String q, String a1, String a2, String a3)
+	public Question(int key, String q, String[] choices, Branch[] branches)
 	{
-		CHOICES = new String[3];
-		CHOICES[0] = a1;
-		CHOICES[1] = a2;
-		CHOICES[2] = a3;
+		QUESTION_KEY = key;
+		if (branches != null)
+		{
+			BRANCHES = new Branch[branches.length];
+			for (int i = 0; i < branches.length; i++)
+			{
+				BRANCHES[i] = branches[i];
+			}
+		}
+		
 		questionText = q;
+		if (choices != null)
+		{
+			numberOfChoices = choices.length;
+			CHOICES = new String[numberOfChoices];
+			for (int i = 0; i < numberOfChoices; i++)
+			{
+				CHOICES[i] = choices[i];
+			}
+			type = 0;
+		}
+		else
+		{
+			/*CHOICES = new String[1];
+			CHOICES[0] = "Enter your response here";*/
+			type = 1;
+		}
+	}
+	public String getAnswer() {
+		if (answer == null)
+			return "No answer found for question";
+		else return answer.getText();
+	}
+	
+	public void setAnswer(int c) {
+		answer = new Answer(c);
+	}
+	
+	public void setAnswer(String r) {
+		answer = new Answer(r);
+	}
+	
+	
+	public int getQuestionKey() {
+		return QUESTION_KEY;
 	}
 	
 	public String[] getChoices() {
@@ -55,8 +99,10 @@ public class Question {
 	{
 		return nextQuestionID;
 	}
-	private String text;
-
+	
+	public int getType() {
+		return type;
+	}
 }
 	
 

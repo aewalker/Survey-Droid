@@ -21,4 +21,10 @@ public class Branch {
 	//next_q INT UNSIGNED NOT NULL);
 	private Question next_q;
 	
+	public Branch (Question p, Question n, int id) {
+		prev_q = p;
+		next_q = n;
+		BRANCH_KEY = id;
+	}
+	
 }

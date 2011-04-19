@@ -30,21 +30,20 @@ public class Survey {
 	private String mo, tu, we, th, fr, sa, su;
 	
 	private int currentQuestionID;
-	
-	private HashMap<Integer, Question> panda;
+	private HashMap<Integer, Question> survey;
 	
 	public Survey() {
-		panda = new HashMap<Integer, Question>();
+		survey = new HashMap<Integer, Question>();
 	}
 	
-	public void addQuestion(int id, Question question)
+	public void addQuestion(Question question)
 	{
-		panda.put(id, question);
+		survey.put(question.getQuestionKey(), question);
 	}
 	
 	public Question getQuestion(int id)
 	{
-		return panda.get(id);
+		return survey.get(id);
 	}
 	
 	public int getCurrentQuestionID() 
@@ -56,8 +55,4 @@ public class Survey {
 	{
 		currentQuestionID = id;
 	}
-	
-	
-
-
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,26 +41,29 @@ public class Peoples extends ListActivity {
 		//Creating a bogus Survey!
         final Survey survey = new Survey();
         
-        final Question question1 = new Question("Who is your favorite actress?", 
-        		"Keira Knightley",
+        String[] question1choices = {"Keira Knightley",
         		"Natalie Portman",
-        		"Emmanuelle Chiriqui");
-        final Question question2 = new Question("What is your favorite color", 
-        		"Red",
+        		"Emmanuelle Chiriqui"};
+        final Question question1 = new Question(1, "Who is your favorite actress?",
+        		question1choices, null);
+        String[] question2choices = {"Red",
         		"Blue",
-        		"Green");	
-        final Question question3 = new Question("What is your favorite animal?", 
-        		"Panda",
+        		"Green",
+        		"Purple"};
+        final Question question2 = new Question(2, "What is your favorite color", 
+        		null, null);	
+        String[] question3choices = {"Panda",
         		"Tiger",
-        		"Penguin");	
-        final Question question4 = new Question("How old are you?", 
-        		"10",
+        		"Penguin"};
+        final Question question3 = new Question(3, "What is your favorite animal?", 
+        		question3choices, null);
+        String[] question4choices = {"10",
         		"24",
-        		"33");	
-        final Question question5 = new Question("I can't think of anymore lame questions", 
-        		"ag;oagrf",
-        		"qgwljdbsn;f",
-        		"afilue4atg");
+        		"33"};
+        final Question question4 = new Question(4, "How old are you?", 
+        		question4choices, null);	
+        final Question question5 = new Question(5, "What country are you from?", 
+        		CHOICES, null);
         
         question1.setNextQuestionID(2);
         question2.setNextQuestionID(3);
@@ -67,17 +71,17 @@ public class Peoples extends ListActivity {
         question4.setNextQuestionID(5);
         question5.setNextQuestionID(1104);
         
-        survey.addQuestion(1, question1);
-        survey.addQuestion(2, question2);
-        survey.addQuestion(3, question3);
-        survey.addQuestion(4, question4);
-        survey.addQuestion(5, question5);
+        survey.addQuestion(question1);
+        survey.addQuestion(question2);
+        survey.addQuestion(question3);
+        survey.addQuestion(question4);
+        survey.addQuestion(question5);
     
         survey.updateCurrentQuestionID(1);
         
         final Question question = question1;
     	final Context panda = this;
-    	final TextView q = (TextView)this.findViewById(R.id.question_textView);
+    	final TextView q = (TextView) this.findViewById(R.id.question_textView);
     	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, question.getChoices()));
     	q.setText(question.getQuestionText());
           
@@ -85,21 +89,43 @@ public class Peoples extends ListActivity {
         next.setText("Next Question");
         next.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
-            	  /*save response gogo?*/
-            	  
             	  ListView lv = getListView();
-
+            	  /*save response gogo?*/
+            	  if (survey.getQuestion(survey.getCurrentQuestionID()).getType() == 0)
+            	  {
+            		  survey.getQuestion(survey.getCurrentQuestionID()).setAnswer(lv.getCheckedItemPosition());
+            		  Toast.makeText(getApplicationContext(), 
+                			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
+                              Toast.LENGTH_SHORT).show();
+            	  }
+            	  else
+            	  {
+            		  EditText edit = (EditText)findViewById(R.id.editText1);
+            		  survey.getQuestion(survey.getCurrentQuestionID()).setAnswer(edit.getText().toString());
+            		  Toast.makeText(getApplicationContext(), 
+            				  edit.getText().toString(),
+                              Toast.LENGTH_SHORT).show();
+            	  }
+            	  
             	  //this stuff will be created dynamically based on the choice!
-            	  Toast.makeText(getApplicationContext(), 
+            	  /*Toast.makeText(getApplicationContext(), 
             			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
-                          Toast.LENGTH_SHORT).show();
+                          Toast.LENGTH_SHORT).show();*/
             	  
             	  int nextQuestionID = survey.getQuestion(survey.getCurrentQuestionID()).getNextQuestionID();
                   if (nextQuestionID == 1104)
                   {
                 	  //display submission page?
-                	  Log.e(TAG, "im a cool kid");
-                	  Toast.makeText(getApplicationContext(), "Display submission page yo!",
+                	  StringBuilder s = new StringBuilder();
+                	  s.append("Your choices are: \n");
+                	  for (int i = 1; i < 6; i++)
+                	  {
+                		  if (survey.getQuestion(i).getAnswer() != null)
+                		  s.append("Question " + i + ": " + survey.getQuestion(i).getAnswer() + "\n");
+                	  }
+                	  
+                	  
+                	  Toast.makeText(getApplicationContext(), s.toString(),
                               Toast.LENGTH_SHORT).show();
                 	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
                       startActivityForResult(myIntent, 0);
@@ -107,10 +133,23 @@ public class Peoples extends ListActivity {
                   }
                   else 
                   {
-                  setListAdapter(new ArrayAdapter<String>(panda, 
-                		  R.layout.simple_list_item_single_choice, survey.getQuestion(nextQuestionID).getChoices()));
-              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
-                  survey.updateCurrentQuestionID(nextQuestionID);
+                	  if (survey.getQuestion(nextQuestionID).getType() == 0)
+                	  {
+		                  setListAdapter(new ArrayAdapter<String>(panda, 
+		                		  R.layout.simple_list_item_single_choice, survey.getQuestion(nextQuestionID).getChoices()));
+		              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
+		                  survey.updateCurrentQuestionID(nextQuestionID);
+                	  }
+                	  else
+                	  {
+                		  String[] test = new String[1];
+                		  test[0] = "Enter your response here";
+                		  setListAdapter(new ArrayAdapter<String>(panda, 
+		                		  R.layout.list_item, test));
+		              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
+		                  survey.updateCurrentQuestionID(nextQuestionID);
+		                  
+                	  }
                   }
               }
           });

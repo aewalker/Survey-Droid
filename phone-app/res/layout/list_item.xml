@@ -1,8 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="10dp"
-    android:textSize="16sp" >
-</TextView>
+    <EditText android:text="EditText" android:id="@+id/editText1" android:layout_width="250px" android:layout_height="150px" xmlns:android="http://schemas.android.com/apk/res/android"></EditText>
 
