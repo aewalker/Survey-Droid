@@ -8,7 +8,7 @@
 if ($result === true) echo 'success';
 else
 {
-	echo 'failure: ';
-	echo $message;
+	$this->error(400, 'Bad Request', "failure: $message");
+	exit;
 }
 ?>
