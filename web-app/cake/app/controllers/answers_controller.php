@@ -122,7 +122,7 @@ class AnswersController extends AppController
 										//turn Unix timestamps into MySQL DATETIME format
 										if ($key == 'created' || $key == 'modified' || $key == 'updated')
 											// From http://snippets.dzone.com/posts/show/1455
-											$val = gmdate('Y-m-d H:i:s', $val/1000);
+											$val = gmdate('Y-m-d H:i:s', $val);
 										
 										//add the deviceId to the contact_id to create an anonomyous number
 										//in place of the phone number:
