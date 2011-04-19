@@ -55,7 +55,7 @@ class AnswersController extends AppController
 	//push answers, locations, statuschanges, and calls to the database
 	function push()
 	{
-		$info = $this->data['data'];
+		$info = $_REQUEST['data'];
 		//$info = '{"deviceId":"lololol","surveys":[{"field":"value"},{"field":"value"}],'.
 		//	'"answers":[{"question_id":1,"choice_id":1,"created":'.time().'}, {"question_id":2,"choice_id":3,"created":'.time().'}]}';
 		
