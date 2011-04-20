@@ -51,7 +51,7 @@ public class ConfirmSubmissionSurvey extends Activity {
                 if (success) {
                     t.setText("Successfull submitted the survey");  
                 } else {
-                    t.setText("Ooops, something wwent wrong");
+                    t.setText("Ooops, something went wrong");
                 }
 //                
 //                finish();
