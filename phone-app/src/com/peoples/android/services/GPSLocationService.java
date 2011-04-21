@@ -6,6 +6,7 @@ import com.peoples.android.database.LocationTableHandler;
 import com.peoples.android.database.PeoplesDB;
 
 import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
@@ -28,13 +29,21 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
-public class GPSLocationService extends Service {
-	
-	
+public class GPSLocationService extends IntentService {
+
 	private static final String TAG = "GPSLocationService";
     private static final boolean D = true;
 
+    public GPSLocationService() {
+		super(null);
+		// TODO Auto-generated constructor stub
+	}
     
+	@Override
+	public IBinder onBind(Intent arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/**
 	 * 
@@ -56,8 +65,63 @@ public class GPSLocationService extends Service {
 			for(String s:dbs)
 				Log.e(TAG, s);
 		}
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 * this will be called by AlarmManager
+	 * 
+	 * 
+	 */
+	@Override
+	protected void onHandleIntent(Intent intent) {
 		
+		if(D) Log.e(TAG, "+++GPSLocationService.onHandleIntent+++");
 		
+		if(D){
+			
+			Log.e(TAG, "+++Here are all the stored locations+++");
+			
+			//Get the handler
+			LocationTableHandler dbHandler = new LocationTableHandler(getApplicationContext());
+			//open to read
+			dbHandler.openRead();
+			//query
+			Cursor cur = dbHandler.getStoredLocations();
+			//iterate over results if any
+			if(cur != null){
+				boolean next = true;
+				while(cur.isAfterLast() == false && next){
+				
+					String[] columnNames = cur.getColumnNames();
+					int		 numColumns	 = cur.getColumnCount();
+					
+					String locString = "LOCATION: \n";
+					
+					while( cur.isAfterLast() == false ){
+						locString += columnNames[0] + cur.getInt(0) + "\n";
+						locString += columnNames[0] + cur.getDouble(0) + "\n";
+						locString += columnNames[0] + cur.getDouble(0) + "\n";
+						locString += columnNames[0] + cur.getInt(0) + "\n";
+					}
+					
+					Log.e(TAG, locString);
+					next = cur.moveToNext();
+				}
+				cur.close();
+			}
+			//close
+			dbHandler.close();
+		}
+		
+		Context context = getApplicationContext();
+		CharSequence text = "onStartCommand GPSLocation Service";
+		int duration = Toast.LENGTH_LONG;
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 		
 		//use table handler
 		LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
@@ -77,6 +141,8 @@ public class GPSLocationService extends Service {
 		
 		if(D) Log.e(TAG, "Here are our databases after:");
 		
+		String[] dbs = this.databaseList();
+		
 		dbs = this.databaseList();
 		
 		if(D){ 			
@@ -84,31 +150,12 @@ public class GPSLocationService extends Service {
 				Log.e(TAG, s);
 		}
 		
-		
-		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Intent gpsServiceIntent = new Intent(getApplicationContext(), GPSLocationService.class);
-		
-		//TODO: probably not the best way to getApplicaitonContext()
-		//TODO: sort out which flag to send
-		PendingIntent updateGPSDB = PendingIntent.getService(getApplicationContext(),
-																0,
-																gpsServiceIntent,
-																PendingIntent.FLAG_UPDATE_CURRENT);
-		
-		//TODO: first argument determines whether to wake phone up, must consider battery life with final call
-		//TODO: 3rd argument is time to fi
-		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-									SystemClock.elapsedRealtime(),
-									30*1000,
-									updateGPSDB);
-		
 		if(D) {
-			Log.e(TAG, "added alarm item, now signing up with LocationManager");
+			Log.e(TAG, "now signing up with LocationManager");
 		
 			//get a location manager from the system
 			final LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		
-		
+			
 			Log.e(TAG, "Best provider:");
 			String provider = locManager.getBestProvider(new Criteria(), true);
 			
@@ -172,73 +219,8 @@ public class GPSLocationService extends Service {
 			
 			Log.e(TAG, "Is best provider enabled? " + locManager.isProviderEnabled(provider) );
 			
-			locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 7*1000, 0, updateGPSDB);
+			//locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 7*1000, 0, updateGPSDB);
 		}
-		
-		
-		
-		
-	}
-	
-	
-	
-	
-	/**
-	 * 
-	 * this will be called by AlarmManager
-	 * 
-	 * 
-	 */
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		if(D) Log.e(TAG, "+++GPSLocationService.onStartCommand()+++");
-		
-		
-		if(D){
-			
-			Log.e(TAG, "+++Here are all the stored locations+++");
-			
-			//Get the handler
-			LocationTableHandler dbHandler = new LocationTableHandler(getApplicationContext());
-			//open to read
-			dbHandler.openRead();
-			//query
-			Cursor cur = dbHandler.getStoredLocations();
-			//iterate over results if any
-			if(cur != null){
-				boolean next = true;
-				while(cur.isAfterLast() == false && next){
-				
-					String[] columnNames = cur.getColumnNames();
-					int		 numColumns	 = cur.getColumnCount();
-					
-					String locString = "LOCATION: \n";
-					
-					while( cur.isAfterLast() == false ){
-						locString += columnNames[0] + cur.getInt(0) + "\n";
-						locString += columnNames[0] + cur.getDouble(0) + "\n";
-						locString += columnNames[0] + cur.getDouble(0) + "\n";
-						locString += columnNames[0] + cur.getInt(0) + "\n";
-					}
-					
-					Log.e(TAG, locString);
-					next = cur.moveToNext();
-				}
-				cur.close();
-			}
-			//close
-			dbHandler.close();
-		}
-		
-		Context context = getApplicationContext();
-		CharSequence text = "onStartCommand GPSLocation Service";
-		int duration = Toast.LENGTH_LONG;
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
-		
-		
-				
-		return super.onStartCommand(intent, flags, startId);
 	}
 	
 	public class MyLocationListener implements LocationListener
@@ -314,11 +296,7 @@ public class GPSLocationService extends Service {
 		
 	}
 
-	@Override
-	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	
 	

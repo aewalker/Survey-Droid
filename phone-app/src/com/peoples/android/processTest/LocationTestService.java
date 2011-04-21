@@ -80,12 +80,4 @@ public class LocationTestService extends IntentService {
 		}
 
 	}/* End of Class MyLocationListener */
-
-	
-	
-	
-	
-	
-
-
 }

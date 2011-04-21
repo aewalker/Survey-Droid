@@ -43,7 +43,7 @@
 		<activity android:name=".processTest.LocationTestActivity"></activity>
 
 		
-		<service android:name="services.GPSLocationService" android:label="GPSLocationService">
+		<service android:name=".services.GPSLocationService" android:label="GPSLocationService">
 			
 			<!-- <intent-filter>
 				<action android:name=".activities.MainActivity" />
