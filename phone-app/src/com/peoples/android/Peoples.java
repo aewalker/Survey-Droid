@@ -28,7 +28,7 @@ public class Peoples extends ListActivity {
     // Debugging
 	// TEST
 	//TEST
-    private static final String TAG = "PEOPLES";
+    private static final String TAG = "Peoples";
     private static final boolean D = true;
     
     
