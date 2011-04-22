@@ -117,11 +117,11 @@ public class GPSLocationService extends IntentService {
 			dbHandler.close();
 		}
 		
-		Context context = getApplicationContext();
-		CharSequence text = "onStartCommand GPSLocation Service";
-		int duration = Toast.LENGTH_LONG;
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
+//		Context context = getApplicationContext();
+//		CharSequence text = "onStartCommand GPSLocation Service";
+//		int duration = Toast.LENGTH_LONG;
+//		Toast toast = Toast.makeText(context, text, duration);
+//		toast.show();
 		
 		//use table handler
 		LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
@@ -154,7 +154,7 @@ public class GPSLocationService extends IntentService {
 			Log.e(TAG, "now signing up with LocationManager");
 		
 			//get a location manager from the system
-			final LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			
 			Log.e(TAG, "Best provider:");
 			String provider = locManager.getBestProvider(new Criteria(), true);
@@ -174,6 +174,8 @@ public class GPSLocationService extends IntentService {
 			locManager.addGpsStatusListener( new GpsStatus.Listener() {
 
 				public void onGpsStatusChanged(int event) {
+					
+					LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 					GpsStatus status = locManager.getGpsStatus(null);
 
@@ -223,54 +225,6 @@ public class GPSLocationService extends IntentService {
 		}
 	}
 	
-	public class MyLocationListener implements LocationListener
-	{
-		public MyLocationListener() {
-			super();
-		}
-		
-		@Override
-		public void onLocationChanged(Location loc)
-		{
-			
-			Date date = new Date();
-			loc.getLatitude();
-			loc.getLongitude();
-			String Text = "My current location is: \n" +
-			"Latitude = " + loc.getLatitude() +
-			"\nLongitude = " + loc.getLongitude() + 
-			"\n" + date.toString();
-			Toast.makeText( getApplicationContext(),
-					Text,
-					Toast.LENGTH_SHORT).show();
-
-		}
-	
-	
-		@Override
-		public void onProviderDisabled(String provider)
-		{
-			Toast.makeText( getApplicationContext(),
-			"Gps Disabled",
-			Toast.LENGTH_SHORT ).show();
-		}
-	
-	
-		@Override
-		public void onProviderEnabled(String provider)
-		{
-			Toast.makeText( getApplicationContext(),
-			"Gps Enabled",
-			Toast.LENGTH_SHORT).show();
-		}
-	
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras)
-		{
-			if(D) Log.e(TAG, "+++GPS onStatusChanged+++");
-		}
-
-	}/* End of Class MyLocationListener */
 	
 	
 	private void initializeGPS(LocationManager locManager, PendingIntent pendingGPS) {

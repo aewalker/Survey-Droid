@@ -58,14 +58,14 @@ public class MainActivity extends Activity {
                 Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
                 startActivityForResult(myIntent, 0);
             }
-
         });
 
         //This is just code to test GPS location gathering and persisting to database
-        Context context = getApplicationContext();
-        Intent gpsIntent = new Intent(context, GPSLocationService.class);
-        gpsIntent = gpsIntent.setClass(context, GPSLocationService.class);
-        context.startService(gpsIntent);
+        //starts the Activity I"m interested in testing w/o waiting for button handler
+        Context context = this;
+        Intent gpsIntent = new Intent(context, LocationTestActivity.class);
+        gpsIntent = gpsIntent.setClass(context, LocationTestActivity.class);
+        context.startActivity(gpsIntent);
 
     }
     
