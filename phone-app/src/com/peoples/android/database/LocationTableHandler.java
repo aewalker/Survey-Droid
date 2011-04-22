@@ -38,7 +38,7 @@ public class LocationTableHandler {
 		
 		//There are currently 4 columns GPS table, 3 w/o the auto increment
 		//column
-		ContentValues values = new ContentValues( 3 );
+		ContentValues values = new ContentValues();
 		
 		values.put(PeoplesDB.GPSTable.LATITUDE, loc.getLatitude());
 		values.put(PeoplesDB.GPSTable.LONGITUDE, loc.getLongitude());
