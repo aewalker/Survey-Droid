@@ -1,4 +1,4 @@
-package com.peoples.model;
+package com.peoples.android.model;
 
 
 /**
@@ -14,7 +14,7 @@ package com.peoples.model;
 public class Choice {
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	private int CHOICE_KEY;
+	private int id;
 	
 	//text VARCHAR(255),
 	private String choice_text;

@@ -40,7 +40,6 @@ public class LocationTestService extends IntentService {
 	}
 	
 	/* Class My Location Listener */
-
 	public class MyLocationListener implements LocationListener
 	{
 
@@ -81,12 +80,4 @@ public class LocationTestService extends IntentService {
 		}
 
 	}/* End of Class MyLocationListener */
-
-	
-	
-	
-	
-	
-
-
 }

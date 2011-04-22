@@ -9,7 +9,7 @@ model/.settings
 model/bin/*
 
 
-
+*~
 *.*~
 web-app/cake/app/tmp/sessions
 .project

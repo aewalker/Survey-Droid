@@ -1,5 +1,5 @@
 {
-    "deviceId" : "",
+    "deviceId" : "", // phone's serial number or something that would allow the subject to be uniquely identified.
     "answers": [
         {
             //"id": 0,
@@ -29,7 +29,7 @@
         {
             //"id": 0,
             "contact_id": 0,
-            "type": 0, // enum {outgoing calll, incoming call, outgoing text, incoming text, missed call}
+            "type": 0, // enum {outgoing calll 0, incoming call 1, outgoing text 2, incoming text 3, missed call 4}
             "duration": 0 // null for text, 0 for missed calls,  # of seconds for calls
             "created": 0 // unix timestamp again, in fact all created are unix.
         }, {
@@ -41,9 +41,9 @@
     "statusChanges": [
         {
             //"id": 0,
-            "status": 0, // 1 for enabling, or turning on, 0 for turning off or disabling
-            "type": 0, // enum {gps, calllog, textlog, app}
-            "created": 0 // unix timestamp again, in fact all created are unix.
+            "status": 0, // 1 for enabling, or turning on, 0 for turning off or disabling a feature
+            "type": 0, // enum {gps, calllog, textlog, app} - what is being enabled / disabled
+            "created": 0 // unix timestamp again, in fact all "created" are unix.
         }, {
             ...
         }, {
