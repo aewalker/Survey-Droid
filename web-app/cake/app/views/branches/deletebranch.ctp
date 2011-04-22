@@ -13,7 +13,7 @@ if (isset($result))
 		echo '<script>'.$this->Js->request(array
 		(
 			'action' => "showbranches/$questionid"),
-			array('async' => true, 'update' => '#branches')
+			array('async' => true, 'update' => "#question_branches_$questionid")
 		).'</script>';
 		echo $this->Js->writeBuffer();
 		return;
@@ -26,12 +26,12 @@ echo 'This action cannot be undone.</p>';
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
 echo $form->input('id', array('type' => 'hidden', 'value' => $id));
-echo $this->Js->submit('Delete', array('action' => "deletebranch/$id", 'update' => '#b_space'));
+echo $this->Js->submit('Delete', array('action' => "deletebranch/$id", 'update' => "#branch_space_$id"));
 echo $form->end();
 echo $form->create('Branch', array('default' => false));
 echo $form->input('cancel', array('type' => 'hidden', 'value' => true));
 echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
-echo $this->Js->submit('Cancel', array('action' => 'deletebranch', 'update' => '#b_space'));
+echo $this->Js->submit('Cancel', array('action' => 'deletebranch', 'update' => "#branch_space_$id"));
 echo $form->end();
 
 echo $this->Js->writeBuffer();

@@ -11,7 +11,7 @@ if(isset($result))
 		echo '<script>'.$this->Js->request(array
 		(
 			'action' => "showconditions/$branchid"),
-			array('async' => true, 'update' => '#conditions')
+			array('async' => true, 'update' => "#branch_conditions_$branchid")
 		).'</script>';
 		echo $this->Js->writeBuffer();
 		return;
@@ -26,11 +26,11 @@ if(isset($result))
 	echo $form->input('choice_id', array('type' => 'text'));
 	echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 	echo $form->input('branch_id', array('type' => 'hidden', 'value' => $branchid));
-	echo $this->Js->submit('Add', array('action' => "addcondition/$branchid", 'update' => '#con_space'));
+	echo $this->Js->submit('Add', array('action' => "addcondition/$branchid", 'update' => "#branch_conditions_space_$branchid"));
 	echo $form->end();
 	echo $form->create('Condition', array('default' => false));
 	echo $form->input('cancel', array('type' => 'hidden', 'value' => true));
-	echo $this->Js->submit('Cancel', array('action' => "addcondition/$branchid", 'update' => '#con_space'));
+	echo $this->Js->submit('Cancel', array('action' => "addcondition/$branchid", 'update' => "#branch_conditions_space_$branchid"));
 	echo $form->end();
 
 	echo $this->Js->writeBuffer();

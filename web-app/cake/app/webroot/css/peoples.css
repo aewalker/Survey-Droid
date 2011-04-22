@@ -39,22 +39,92 @@ form div
 }
 table
 {
-  border-collapse: collapse;
+	border-spacing: 0;
+	border: none;
+}
+
+table a
+{
+	padding: 0 5px 0 5px;
 }
 
 th
 {
-  background-color: #00A300;
-  color: #ffffff;
-  text-align:left;
+	background-color: #00A300;
+	color: #ffffff;
+	text-align: left;
 }
-
 tr
 {
-  background-color: #D4FFA8;
-  border-top: 1px solid #000000;
-  border-bottom: 1px solid #000000;
+	background-color: #D4FFA8;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
 }
+
+/***** Survey table stuff *****/
+.questions th
+{
+	background-color: #00A300;
+	color: #ffffff;
+	text-align: left;
+}
+.questions tr
+{
+	background-color: #D4FFA8;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.choices th
+{
+	background-color: #0000A3;
+	color: #ffffff;
+	text-align: left;
+}
+.choices tr
+{
+	background-color: #99CCFF;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.choices table
+{
+	margin: 0 0 0 100px;
+}
+.branches th
+{
+	background-color: #A30000;
+	color: #ffffff;
+	text-align: left;
+}
+.branches tr
+{
+	background-color: #FFCC99;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.branches table
+{
+	margin: 0 0 0 100px;
+}
+.conditions th
+{
+	background-color: #CC9900;
+	color: #ffffff;
+	text-align: left;
+}
+.conditions tr
+{
+	background-color: #FFFF99;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.conditions table
+{
+	margin: 0 0 0 200px;
+}
+/*************************/
+
+
 td
 {
   text-align:left;

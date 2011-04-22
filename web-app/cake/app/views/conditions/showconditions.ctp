@@ -7,7 +7,6 @@
  echo $this->Session->flash();
 
 //show the results
-echo '<br/><br/>';
 echo $table->startTable('Condition');
 
 //change the types to user-readable versions
@@ -20,14 +19,14 @@ foreach ($results as &$result)
 
 echo $table->tableBody($results, array(
             'Edit' => array(
-                  'command' => '/conditions/editcondition', 'arg' => 'id', 'type' => 'ajax', 'update'=> '#con_space'),
+                  'command' => '/conditions/editcondition', 'arg' => 'id', 'type' => 'ajax', 'update'=> '#condition_space_'),
             'Delete' => array(
-                  'command' => '/conditions/deletecondition', 'arg' => 'id', 'type' => 'ajax', 'update'=> '#con_space'),
+                  'command' => '/conditions/deletecondition', 'arg' => 'id', 'type' => 'ajax', 'update'=> '#condition_space_'),
             ));
 		
-echo $table->endTable(array('Add Condition' => array('command' => "/conditions/addcondition", 'arg' =>$branchid, 
+echo $table->endTable(array('Add Condition' => array('command' => "/conditions/addcondition", 'arg' => $branchid, 
 					'type' => 'ajax',
-					'update'=>'#con_space')));
+					'update'=> "#branch_conditions_space_$branchid")));
                    
 echo $this->Js->writeBuffer();
 
