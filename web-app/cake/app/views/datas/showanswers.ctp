@@ -4,13 +4,15 @@
  *                                                                           *
  * Show answers.                                                       *
  *****************************************************************************/
-echo $this->Session->flash();
 
+echo $this->Session->flash();
+$pagename = "Answers for: ".$questiontext;
 $_SESSION['exportData'] = $results;
 $_SESSION['exportColumnNames'] =  array(
 					'Id', 'Choice Id', 'Answer Text', 'Time', 'Subject Id', 'Choice Text'
 					);
 $_SESSION['info'] = "";
+$_SESSION['pagename'] = $pagename;
 
 //show the results
 echo $tablefordata->startTable('Answer', array(
@@ -18,10 +20,10 @@ echo $tablefordata->startTable('Answer', array(
 					));
 echo $tablefordata->tableBody($results, array(),
             array(
-            	'id', 'choice_id', 'choice_text', 'ans_text', 'created', 'subject_id'
+            	'id', 'choice_id', 'ans_text', 'created', 'subject_id', 'choice_text'
             ));
-$arg = "Answers for question: ".$questionid;
-echo $tablefordata->endTable(array('Export as xls file' => array('command' => "../datas/export_xls", 'arg' =>$arg, 
+
+echo $tablefordata->endTable(array('Export as xls file' => array('command' => "../datas/export_xls", 'arg' =>"", 
 					'type' => 'link')));
 echo $this->Js->writeBuffer();
 

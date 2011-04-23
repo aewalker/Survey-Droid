@@ -17,5 +17,4 @@ echo $table->tableBody($results, array(
             ));
 echo $table->endTable(array(' ' =>' '));
 
-
 ?>

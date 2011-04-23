@@ -40,7 +40,8 @@ class DatasController extends AppController
     
 	function showanswers($questionid)
     {
-    	$this->layout = 'ajax';
+    	//$this->layout = 'ajax';
+
     	$this->set('results', $this->Answer->find('all', array
 		(
 			'conditions' => array('Answer.question_id' => $questionid),
@@ -49,13 +50,15 @@ class DatasController extends AppController
 			'order' => array('Answer.id')
 		)));
 		
-		/*$this->set('questiontext',$this->Question->find('all', array
+		$qs = $this->Question->find('all', array
 		(
 			'conditions' => array('Question.id' => $questionid),
 			'fields' => array('q_text')
-		)));
-		*/
+		));
+		foreach($qs as $q)
+			$this->set('questiontext', $q["Question"]["q_text"]);
 		$this->set('questionid', $questionid);
+
     }
     
 	function locations()
@@ -117,13 +120,14 @@ class DatasController extends AppController
 		)));
 	}
     
-	function export_xls($pagename) 
+	function export_xls() 
 	{
 		$this->Data->recursive = 1;
 		
 		$data = $_SESSION['exportData'];
 		$columns = $_SESSION['exportColumnNames'];
 		$info = $_SESSION['info'];
+		$pagename = $_SESSION['pagename'];
 		
 		$this->set('rows',$data);
 		$this->set('columns',$columns);
@@ -134,6 +138,7 @@ class DatasController extends AppController
 		$_SESSION['exportData'] = '';
 		$_SESSION['exportColumnNames'] = '';
 		$_SESSION['info'] = '';
+		$_SESSION['pagename'] = '';
 
 	}
     

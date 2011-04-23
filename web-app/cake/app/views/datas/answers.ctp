@@ -10,16 +10,15 @@ echo $this->Session->flash();
 echo $table->startTable('Question');
 echo $table->tableBody($results, array(
             'Select' =>array(
-                   'command' => '/datas/showanswers',
+                   'command' => '../datas/showanswers',
                    'arg' => 'id',
-                   'update'=>'#answers',
-                   'type' => 'ajax')
+                  // 'update'=>'#answersdiv',
+                   'type' => 'link')
             ));
 		
 echo $table->endTable(array(' ' =>' '));
 echo $this->Js->writeBuffer();
 
 ?>
-
-<div id='answers'>
+<div id="answersdiv">
 </div>
