@@ -32,7 +32,7 @@ public class LocationTestActivity extends Activity {
 	
 	private static final String TAG = "LocTestActi";
     private static final boolean D = true;
-    private static final long PERIOD = 10*1000;
+    private static final long PERIOD = 30*1000;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -40,24 +40,29 @@ public class LocationTestActivity extends Activity {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.gps);
     	
-    	//TODO: start GPS process
-    	//TODO: or sign it up with the alarm service to run it every 15 or w.e. seconds
+//		Previous idea was to have a service for GPS stuff. However, we don't need to do that if
+//    	and we can rely on the functionality provided by the location providers.
+//
+//    	start GPS process
+//    	or sign it up with the alarm service to run it every 15 or w.e. seconds
 //    	AlarmManager alarmManager	= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 //		Intent gpsServiceIntent 	= new Intent(getApplicationContext(), GPSLocationService.class);
 //		
-//		//TODO: probably not the best way to getApplicaitonContext()
-//		//TODO: sort out which flag to send
+//		// probably not the best way to getApplicaitonContext()
+//		// sort out which flag to send
 //		PendingIntent updateGPSDB = PendingIntent.getService(getApplicationContext(),
 //																0,
 //																gpsServiceIntent,
 //																PendingIntent.FLAG_UPDATE_CURRENT);
-//		//TODO: first argument determines whether to wake phone up, must consider battery life with final call
-//		//TODO: 3rd argument is time to fi
+//		//first argument determines whether to wake phone up, must consider battery life with final call
+//		//3rd argument is time to fi
 //		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 //									SystemClock.elapsedRealtime(),
 //									PERIOD,
 //									updateGPSDB);
 //		
+    	
+    	//adding functionality to button
     	Button back = (Button) findViewById(R.id.goback);
     	back.setText("Back to selection screen");
     	back.setOnClickListener(new View.OnClickListener() {
@@ -66,63 +71,16 @@ public class LocationTestActivity extends Activity {
     			startActivityForResult(myIntent, 0);
     			finish();
     		}
-
     	});
     	
     	
-    	//Let's not sign up a listener while we store the location data
-//    	LocationManager mlocManager =(LocationManager)getSystemService(Context.LOCATION_SERVICE);
-//		LocationListener mlocListener = new MyLocationListener();
-//		mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, PERIOD, 0, mlocListener);
+    	//Signing up for location data
+    	LocationManager mlocManager =(LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		LocationListener mlocListener = new MyLocationListener();
+		mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, PERIOD, 0, mlocListener);
 		
-		
-		
-		
-		
-		//////////////
-		
-		if(D){
-			
-			Log.e(TAG, "+++Here are all the stored locations+++");
-			
-			//Get the handler
-			LocationTableHandler dbHandler = new LocationTableHandler(getApplicationContext());
-			//open to read
-			dbHandler.openRead();
-			//query
-			Cursor cur = dbHandler.getStoredLocations();
-			//iterate over results if any
-			if(cur != null){
-				boolean next = cur.moveToFirst();
-				while(cur.isAfterLast() == false && next){
-				
-					String[] columnNames = cur.getColumnNames();
-					int		 numColumns	 = cur.getColumnCount();
-					
-					String locString = "LOCATION: \n";
-					
-					while( cur.isAfterLast() == false ){
-						locString += columnNames[0] + cur.getInt(0) + "\n";
-						locString += columnNames[0] + cur.getDouble(0) + "\n";
-						locString += columnNames[0] + cur.getDouble(0) + "\n";
-						locString += columnNames[0] + cur.getInt(0) + "\n";
-					}
-					
-					Log.e(TAG, locString);
-					next = cur.moveToNext();
-				}
-				cur.close();
-			}
-			//close
-			dbHandler.close();
-		}
-		
-//		Context context = getApplicationContext();
-//		CharSequence text = "onStartCommand GPSLocation Service";
-//		int duration = Toast.LENGTH_LONG;
-//		Toast toast = Toast.makeText(context, text, duration);
-//		toast.show();
-		
+		///////////////////
+		//Writing a mock location to test persistance and doing other DB tests
 		//use table handler
 		LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
 		//open to write
@@ -137,8 +95,6 @@ public class LocationTestActivity extends Activity {
 		locHandler.insertLocation(loc);
 		//close
 		
-		
-		
 		if(D) Log.e(TAG, "Here are our databases after:");
 		
 		String[] dbs = this.databaseList();
@@ -150,6 +106,7 @@ public class LocationTestActivity extends Activity {
 				Log.e(TAG, s);
 		}
 		
+		//getting database table
 		Cursor cur = locHandler.getListOfTables();
 		//iterate over results if any
 		if(cur != null){
@@ -168,6 +125,7 @@ public class LocationTestActivity extends Activity {
 			cur.close();
 		}
 		
+		//getting database schema
 		cur = locHandler.getDescription();
 		//iterate over results if any
 		if(cur != null){
@@ -185,7 +143,6 @@ public class LocationTestActivity extends Activity {
 			}
 			cur.close();
 		}
-		
 		locHandler.close();
 		
 		
@@ -203,14 +160,10 @@ public class LocationTestActivity extends Activity {
 			else
 				Log.e(TAG, "TURN GPS ON!"); //TODO turn GPS on programatically
 			
-			/**
-			 * this is neat, move phone from indoors to somewhere it can get GPS signal
-			 * you'll see it increase the number of satellites it can pick up and
-			 * eventually fixate call status 3, when a fix is obtained.	
-			 */
+			
 			Log.e(TAG, "Signing up for GpsStatus:");
 
-			//locManager.addGpsStatusListener( new GPSStatusListener() );
+			locManager.addGpsStatusListener( new GPSStatusListener() );
 			
 			Log.e(TAG, "Is best provider enabled? " + locManager.isProviderEnabled(provider) );
 		}
@@ -271,7 +224,6 @@ public class LocationTestActivity extends Activity {
     	// TODO Auto-generated method stub
     	
     	
-    	
     	super.onDestroy();
     }
     
@@ -290,14 +242,42 @@ public class LocationTestActivity extends Activity {
 			Date date = new Date();
 			loc.getLatitude();
 			loc.getLongitude();
-			String Text = "My current location is: \n" +
+			String Text = "See log for all locations, here is current: \n" +
 			"Latitude = " + loc.getLatitude() +
 			"\nLongitude = " + loc.getLongitude() + 
 			"\n" + date.toString();
 			Toast.makeText( getApplicationContext(),
 					Text,
 					Toast.LENGTH_SHORT).show();
+			
+			Log.e(TAG, "+++Here are all the stored locations+++");
+			
+			//Get the handler
+			LocationTableHandler dbHandler = new LocationTableHandler(getApplicationContext());
+			//open to read
+			dbHandler.openRead();
+			//query
+			Cursor cur = dbHandler.getStoredLocations();
+			//iterate over results if any
+			if(cur != null){
+				String[] columnNames = cur.getColumnNames();
+				int		 numColumns	 = cur.getColumnCount();
+				boolean next = cur.moveToFirst();
+				String locString = "";
+				while(cur.isAfterLast() == false && next){
+					locString  = "Location: \n";		
+					locString += columnNames[0] + cur.getInt(0) + "\n";
+					locString += columnNames[0] + cur.getDouble(0) + "\n";
+					locString += columnNames[0] + cur.getDouble(0) + "\n";
+					locString += columnNames[0] + cur.getInt(0) + "\n";
 
+					Log.e(TAG, locString);
+					next = cur.moveToNext();
+				}
+				cur.close();
+			}
+			//close
+			dbHandler.close();
 		}
 	
 	
@@ -328,49 +308,49 @@ public class LocationTestActivity extends Activity {
 	
 	private class GPSStatusListener implements GpsStatus.Listener {
 		
-		public void onGpsStatusChanged(int event) {
+	public void onGpsStatusChanged(int event) {
 			
 			LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 			GpsStatus status = locManager.getGpsStatus(null);
-
+			
+			/**
+			 * this is neat, move phone from indoors to somewhere it can get GPS signal
+			 * you'll see it increase the number of satellites it can pick up and
+			 * eventually fixate call status 3, when a fix is obtained.	
+			 */
 			Log.e(TAG, "GPS Status: " + event );
 			switch(event){
-			case 1: Log.e(TAG, "GPS Status: started"); break;
+				case 1: Log.e(TAG, "GPS Status: started"); break;
+	
+				case 2: Log.e(TAG, "GPS Status: stopped"); break;
+	
+				case 3: Log.e(TAG, "GPS Status: first fix at time:");
+						Log.e(TAG, ""+status.getTimeToFirstFix());
+						Location loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+						Log.e(TAG, "Location object is:");
+						Log.e(TAG, loc.toString() + "\n");
+						
+						//use table handler
+						LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
+						//open to write
+						locHandler.openWrite();
+						//pass location to write
+						locHandler.insertLocation(loc);
+						//close
+						locHandler.close();	break;
 
-			case 2: Log.e(TAG, "GPS Status: stopped"); break;
-
-			case 3: Log.e(TAG, "GPS Status: first fix at time:");
-			Log.e(TAG, ""+status.getTimeToFirstFix());
-			Location loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			Log.e(TAG, "Location object is:");
-			Log.e(TAG, loc.toString() + "\n");
-			
-			//use table handler
-			LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
-			//open to write
-			locHandler.openWrite();
-			//pass location to write
-			locHandler.insertLocation(loc);
-			//close
-			locHandler.close();
-
-			
-			break;
-
-			case 4: Log.e(TAG, "GPS Status: max satellites:");
-			Log.e(TAG, ""+status.getMaxSatellites());
-			Log.e(TAG, "GPS Status: but actual satellites:");
-
-			int i = 0;
-			for(GpsSatellite s : status.getSatellites() ){
-				i++;
-				Log.e(TAG, s.toString());
+				case 4: Log.e(TAG, "GPS Status: max satellites:");
+						Log.e(TAG, ""+status.getMaxSatellites());
+						Log.e(TAG, "GPS Status: but actual satellites:");
+	
+						int i = 0;
+						for(GpsSatellite s : status.getSatellites() ){
+							i++;
+							Log.e(TAG, s.toString());
+						}
+						Log.e(TAG, "There were "+i+" satellites in total"); break;
 			}
-			Log.e(TAG, "There were "+i+" satellites in total");
-			break;
-			}
-								
 		}
 	}/*End of GpsStatusListener*/
 
