@@ -93,7 +93,7 @@ public class LocationTestActivity extends Activity {
 			Cursor cur = dbHandler.getStoredLocations();
 			//iterate over results if any
 			if(cur != null){
-				boolean next = true;
+				boolean next = cur.moveToFirst();
 				while(cur.isAfterLast() == false && next){
 				
 					String[] columnNames = cur.getColumnNames();
@@ -136,7 +136,7 @@ public class LocationTestActivity extends Activity {
 		//pass location to write
 		locHandler.insertLocation(loc);
 		//close
-		locHandler.close();
+		
 		
 		
 		if(D) Log.e(TAG, "Here are our databases after:");
@@ -149,6 +149,45 @@ public class LocationTestActivity extends Activity {
 			for(String s:dbs)
 				Log.e(TAG, s);
 		}
+		
+		Cursor cur = locHandler.getListOfTables();
+		//iterate over results if any
+		if(cur != null){
+			boolean next = cur.moveToFirst();
+			String[] columnNames = cur.getColumnNames();
+			int nameIndex		 = cur.getColumnIndex("name");
+			String locString = "LOCATION: \n";
+			while(cur.isAfterLast() == false && next){
+				
+				//locString = columnNames[0] + cur.getString(nameIndex);
+				locString = cur.getString(nameIndex);
+				
+				Log.e(TAG, locString);
+				next = cur.moveToNext();
+			}
+			cur.close();
+		}
+		
+		cur = locHandler.getDescription();
+		//iterate over results if any
+		if(cur != null){
+			boolean next = cur.moveToFirst();
+			String[] columnNames = cur.getColumnNames();
+			int nameIndex		 = cur.getColumnIndex("sql");
+			String locString = "LOCATION: \n";
+			while(cur.isAfterLast() == false && next){
+				
+				//locString = columnNames[0] + cur.getString(nameIndex);
+				locString = cur.getString(nameIndex);
+				
+				Log.e(TAG, locString);
+				next = cur.moveToNext();
+			}
+			cur.close();
+		}
+		
+		locHandler.close();
+		
 		
 		if(D) {
 			Log.e(TAG, "now signing up with LocationManager");

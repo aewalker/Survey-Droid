@@ -40,8 +40,8 @@ public class PeoplesDB extends SQLiteOpenHelper {
         private static String createSql() {
         	return "CREATE TABLE " + GPS_TABLE_NAME + " (" + GPSTable._ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + GPSTable.LONGITUDE + " DOUBLE,"
-            + GPSTable.LATITUDE + " DOUBLE," + GPSTable.TIME + "INTEGER"
-            + ");";
+            + GPSTable.LATITUDE + " DOUBLE," + GPSTable.TIME + " INTEGER"
+            + " );";
         }
     }
     public static final class CallLogTable implements BaseColumns {
