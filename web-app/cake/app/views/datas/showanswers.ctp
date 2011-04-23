@@ -20,7 +20,7 @@ echo $tablefordata->tableBody($results, array(),
             array(
             	'id', 'choice_id', 'choice_text', 'ans_text', 'created', 'subject_id'
             ));
-$arg = "Answers for question".$questionid;
+$arg = "Answers for question: ".$questionid;
 echo $tablefordata->endTable(array('Export as xls file' => array('command' => "../datas/export_xls", 'arg' =>$arg, 
 					'type' => 'link')));
 echo $this->Js->writeBuffer();

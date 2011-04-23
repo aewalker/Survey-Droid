@@ -49,6 +49,12 @@ class DatasController extends AppController
 			'order' => array('Answer.id')
 		)));
 		
+		/*$this->set('questiontext',$this->Question->find('all', array
+		(
+			'conditions' => array('Question.id' => $questionid),
+			'fields' => array('q_text')
+		)));
+		*/
 		$this->set('questionid', $questionid);
     }
     
