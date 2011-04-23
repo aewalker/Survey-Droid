@@ -266,10 +266,10 @@ public class LocationTestActivity extends Activity {
 				String locString = "";
 				while(cur.isAfterLast() == false && next){
 					locString  = "Location: \n";		
-					locString += columnNames[0] + cur.getInt(0) + "\n";
-					locString += columnNames[0] + cur.getDouble(0) + "\n";
-					locString += columnNames[0] + cur.getDouble(0) + "\n";
-					locString += columnNames[0] + cur.getInt(0) + "\n";
+					locString += columnNames[0]+ "\n" + cur.getInt(0) + "\n";
+					locString += columnNames[1]+ "\n" + cur.getDouble(1) + "\n";
+					locString += columnNames[2]+ "\n" + cur.getDouble(2) + "\n";
+					locString += columnNames[3]+ "\n" + cur.getInt(3) + "\n";
 
 					Log.e(TAG, locString);
 					next = cur.moveToNext();
@@ -336,8 +336,9 @@ public class LocationTestActivity extends Activity {
 						//open to write
 						locHandler.openWrite();
 						//pass location to write
-						locHandler.insertLocation(loc);
+						long result = locHandler.insertLocation(loc);
 						//close
+						Log.e(TAG, "Result of db insertion: " + result );
 						locHandler.close();	break;
 
 				case 4: Log.e(TAG, "GPS Status: max satellites:");

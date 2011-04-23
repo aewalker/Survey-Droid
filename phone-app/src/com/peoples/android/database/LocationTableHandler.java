@@ -40,9 +40,17 @@ public class LocationTableHandler {
 		//column
 		ContentValues values = new ContentValues();
 		
-		values.put(PeoplesDB.GPSTable.LATITUDE,		"\'" + loc.getLatitude()	+ "\'" );
-		values.put(PeoplesDB.GPSTable.LONGITUDE,	"\'" + loc.getLongitude()	+ "\'" );
-		values.put(PeoplesDB.GPSTable.TIME,			"\'" + loc.getTime()		+ "\'" );
+		double lat = loc.getLatitude();
+		double lon = loc.getLongitude();
+		long time= loc.getTime();
+		
+		values.put(PeoplesDB.GPSTable.LATITUDE,		 loc.getLatitude() 	);
+		values.put(PeoplesDB.GPSTable.LONGITUDE,	 loc.getLongitude() );
+		values.put(PeoplesDB.GPSTable.TIME,			 loc.getTime()		);
+		
+//		values.put(PeoplesDB.GPSTable.LATITUDE,		"\'" + loc.getLatitude()	+ "\'" );
+//		values.put(PeoplesDB.GPSTable.LONGITUDE,	"\'" + loc.getLongitude()	+ "\'" );
+//		values.put(PeoplesDB.GPSTable.TIME,			"\'" + loc.getTime()		+ "\'" );
 		
 		return db.insert(PeoplesDB.GPS_TABLE_NAME, null, values);
 	}
