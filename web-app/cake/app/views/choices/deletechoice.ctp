@@ -13,7 +13,7 @@ if (isset($result))
 		echo '<script>'.$this->Js->request(array
 		(
 			'action' => "showchoices/$questionid"),
-			array('async' => true, 'update' => '#choices')
+			array('async' => true, 'update' => "#question_choices_$questionid")
 		).'</script>';
 		echo $this->Js->writeBuffer();
 		return;
@@ -25,12 +25,12 @@ echo '<p>Are you sure you want to delete this choice?  This action cannot be und
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
 echo $form->input('id', array('type' => 'hidden', 'value' => $id));
-echo $this->Js->submit('Delete', array('action' => "deletechoice/$id", 'update' => '#ch_space'));
+echo $this->Js->submit('Delete', array('action' => "deletechoice/$id", 'update' => "#choice_space_$id"));
 echo $form->end();
 echo $form->create('Choice', array('default' => false));
 echo $form->input('cancel', array('type' => 'hidden', 'value' => true));
 echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
-echo $this->Js->submit('Cancel', array('action' => 'deletechoice', 'update' => '#ch_space'));
+echo $this->Js->submit('Cancel', array('action' => 'deletechoice', 'update' => "#choice_space_$id"));
 echo $form->end();
 
 echo $this->Js->writeBuffer();
