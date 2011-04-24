@@ -113,11 +113,6 @@ public class Peoples extends ListActivity {
 	                              Toast.LENGTH_SHORT).show();
 	            	  }
 	            	  
-	            	  //this stuff will be created dynamically based on the choice!
-	            	  /*Toast.makeText(getApplicationContext(), 
-	            			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
-	                          Toast.LENGTH_SHORT).show();*/
-	            	  
 	            	  survey.nextQuestion(); //go to the next Question
 	            	  
 	                  if (survey.done()) //if there are no more Questions....
