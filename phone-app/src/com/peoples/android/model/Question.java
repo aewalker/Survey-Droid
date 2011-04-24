@@ -1,117 +1,201 @@
+/*---------------------------------------------------------------------------*
+ * Question.java                                                             *
+ *                                                                           *
+ * Model for a survey question.  Has Choices and Branches along with some    *
+ * functionality for generating answers and progressing the survey.          *
+ *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-import android.util.Log;
-
+import java.util.Stack
 
 /**
- * 
+ * Model for a survey Question.  Based on the SQL:
  * 
  * CREATE TABLE questions (
-	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	text TEXT);
+ *  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ *  text TEXT);
  * 
- * 
- * @author Diego
- *
+ * @author Diego Vargas
+ * @author Austin Walker
  */
-public class Question {
-	
-	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+public class Question
+{
+	//have to keep the Question id to look up history in the DB
 	private int id;
 	
-	//text TEXT
+	//question text
+	private String q_text;
 	
-	//The adapter we are using to display choices in the survey GUI
-	//requires a String array for the choices. Database ppl: is it 
-	//possible to have such an array passed as part of the question
-	//data type? it would make my life easier :) <3 panda
-	private String[] CHOICES;
-	private int numberOfChoices;
-	private int nextQuestionID;
-	private Branch[] BRANCHES;
+	//the answers that have been given for this question
+	//(starts empty => no answer has been given)
+	private Stack<Answer> answers = new Stack<Answer>();
 	
-	public Answer answer;
-	private int type; // 0 if multiple choice, 1 if free response
+	/* Note: the reason that we have to use a Stack of Answers instead of just
+	 * keeping the most recent one is looping.  A Survey could loop back to the
+	 * same Question multiple times, so we have to keep track of that.
+	 */
 	
-	//This is a completely bogus constructor make entirely for
-	//testing purposes.
-	private String questionText;
-	public Question(int key, String q, String[] choices, Branch[] branches)
+	//has the current Question been answered?
+	private boolean answered = false;
+	
+	//set of branches
+	private Collection<Branch> branches;
+	
+	//set of choices
+	private Collection<Choice> choices;
+	
+	/*-----------------------------------------------------------------------*/
+	
+	/**
+	 * Create a new Question
+	 * 
+	 * @param text - the question text as a String
+	 */
+	public Question(String text, Collection<Branch> b, Collection<Choice> c)
 	{
-		id = key;
-		if (branches != null)
-		{
-			BRANCHES = new Branch[branches.length];
-			for (int i = 0; i < branches.length; i++)
-			{
-				BRANCHES[i] = branches[i];
-			}
-		}
+		q_text = text;
+		branches = b;
+		choices = c;
+	}
+	
+	/*-----------------------------------------------------------------------*/
+	
+	/**
+	 * Get all this Question's Choices as an array
+	 * 
+	 * @return all Choices as an array
+	 */
+	public Choice[] getChoices()
+	{
+		//little hack to get the right types
+		Choice[] cArray = new Choice[];
+		return choices.toArray(cArray);
+	}
+	
+	/**
+	 * Answer this Question.  This should (and can) only be used to provide
+	 * an answer if this is a free response question (ie has no Choices).
+	 * 
+	 * @param text - the text to answer with
+	 * 
+	 * @return the Answer created
+	 * 
+	 * @throws RuntimeException if called when there are Choices
+	 * @throws RuntimeException if the current Question has already been
+	 * answered.
+	 */
+	public Answer answer(String text)
+	{
+		if (answered) throw new RuntimeException(
+				"atempt to answer the same Question multiple times");
 		
-		questionText = q;
-		if (choices != null)
+		if (choices.size() != 0)
 		{
-			numberOfChoices = choices.length;
-			CHOICES = new String[numberOfChoices];
-			for (int i = 0; i < numberOfChoices; i++)
-			{
-				CHOICES[i] = choices[i];
-			}
-			type = 0;
+			throw new RuntimeException(
+					"call to answer() on a non-free response question");
 		}
 		else
 		{
-			/*CHOICES = new String[1];
-			CHOICES[0] = "Enter your response here";*/
-			type = 1;
+			Answer newAnswer = new Answer(this, id, null, 0, text);
+			answers.push(Answer);
+			answered = true;
+			return newAnswer;
 		}
 	}
 	
-	public int getId() {
-	    Log.d("Question", Integer.toString(id));
-	    return id;
-	}
-	
-	public String getAnswer() {
-		if (answer == null)
-			return "No answer found for question";
-		else return answer.getText();
-	}
-	
-	public void setAnswer(int c) {
-		answer = new Answer(c);
-	}
-	
-	public void setAnswer(String r) {
-		answer = new Answer(r);
-	}
-	
-	
-	public int getQuestionKey() {
-		return id;
-	}
-	
-	public String[] getChoices() {
-		return CHOICES;
-	}
-	
-	public String getQuestionText() {
-		return questionText;
-	}
-	public void setNextQuestionID(int id)
+	/**
+	 * Answer this Question.  This should (and can) only be used to provide
+	 * an answer if this is a multiple choice question.
+	 * 
+	 * @param c - the Choice to answer with
+	 * 
+	 * @return the Answer created
+	 * 
+	 * @throws RuntimeException if called when there are no Choices
+	 * @throws RuntimeException if given an invalid Choice
+	 * @throws RuntimeException if the current Question has already been
+	 * answered.
+	 */
+	public Answer answer(Choice c)
 	{
-		nextQuestionID = id;
+		if (answered) throw new RuntimeException(
+				"atempt to answer the same Question multiple times");
+		
+		if (choices.size() == 0)
+		{
+			throw new RuntimeException(
+					"call to answer() on a multiple-choice question");
+		}
+		else
+		{
+			if (!choices.contains(c))
+			{
+				throw new RuntimeException("invalid Choice")
+			}
+			else
+			{
+				Answer newAnswer = c.answer(this, this.id);
+				answers.push(newAnswer);
+				answered = true;
+				return newAnswer;
+			}
+		}
 	}
 	
-	public int getNextQuestionID()
+	/**
+	 * Evlauate Branches to find the next Question.
+	 * 
+	 * @return the next Question
+	 * 
+	 * @throws RuntimeException if the current Question hasn't been answered
+	 */
+	public Question nextQuestion()
 	{
-		return nextQuestionID;
+		if (answered == false) throw new RuntimeException(
+				"must answer current Question before calling nextQuestion");
+		for (Branch b : branches)
+		{
+			if (b.eval()) return b.nextQuestion();
+		}
 	}
 	
-	public int getType() {
-		return type;
+	/*-----------------------------------------------------------------------*/
+	
+	/**
+	 * Checks whether the question has ever been answered with a particular
+	 * Choice.
+	 * 
+	 * @param c - the Choice to have been
+	 * 
+	 * @return true or false
+	 */
+	public boolean hasEverBeen(Choice c)
+	{
+		return c.hasEverBeen(id);
 	}
 	
+	/**
+	 * Checks that the question has never been answered with a particular
+	 * Choice.
+	 * 
+	 * @param c - the Choice to have been
+	 * 
+	 * @return true or false
+	 */
+	public boolean hasNeverBeen(Choice c)
+	{
+		return c.hasNeverBeen(id);
+	}
+	
+	/**
+	 * Remove the most recent Answer from the stack.
+	 * 
+	 * @return the most recent Answer
+	 */
+	public Answer popAns()
+	{
+		return answers.pop();
+	}
 }
 	
 
