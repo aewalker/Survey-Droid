@@ -11,7 +11,7 @@
 		echo '<script>'.$this->Js->request(array
 		(
 			'action' => "showbranches/$questionid"),
-			array('async' => true, 'update' => '#branches')
+			array('async' => true, 'update' => "#question_branches_$questionid")
 		).'</script>';
 		echo $this->Js->writeBuffer();
 		return;
@@ -24,11 +24,11 @@ else
 	echo $form->input('next_q');
 	echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 	echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
-	echo $this->Js->submit('Add', array('action' => "addbranch/$questionid", 'update' => '#b_space'));
+	echo $this->Js->submit('Add', array('action' => "addbranch/$questionid", 'update' => "#question_branches_space_$questionid"));
 	echo $form->end();
 	echo $form->create('Branch', array('default' => false));
 	echo $form->input('cancel', array('type' => 'hidden', 'value' => true));
-	echo $this->Js->submit('Cancel', array('action' => "addbranch/$questionid", 'update' => '#b_space'));
+	echo $this->Js->submit('Cancel', array('action' => "addbranch/$questionid", 'update' => "#question_branches_space_$questionid"));
 	echo $form->end();
 
 	echo $this->Js->writeBuffer();

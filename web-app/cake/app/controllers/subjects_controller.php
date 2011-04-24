@@ -103,5 +103,24 @@ class SubjectsController extends AppController
 			}
 		}
 	}
+	
+	//view subject's information
+	function view($subjectid)
+	{
+		$result = $this->Subject->find('first', array
+		(
+			'conditions' => array('id' => $subjectid),
+			'fields' => array('first_name', 'last_name', 'phone_num')
+		));
+		if (isset($result['Subject']))
+		{
+			$this->set('first_name', $result['Subject']['first_name']);
+			$this->set('last_name', $result['Subject']['last_name']);
+			$this->set('phone_num', $result['Subject']['phone_num']);
+		}
+		else
+			echo 'An error has occured!';
+	}
+	
 }
 ?>

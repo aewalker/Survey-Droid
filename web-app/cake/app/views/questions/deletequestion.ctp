@@ -26,11 +26,11 @@ echo '<p>Are you sure you want to delete this question?  This action cannot be u
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 echo $form->input('survey_id', array('type' => 'hidden', 'value' => $surveyid));
 echo $form->input('id', array('type' => 'hidden', 'value' => $questionid));
-echo $this->Js->submit('Delete', array('action' => "deletequestion/$questionid", 'update' => '#q_space'));
+echo $this->Js->submit('Delete', array('action' => "deletequestion/$questionid", 'update' => "#question_space_$questionid"));
 echo $form->end();
 echo $form->create('Question', array('default' => false));
 echo $form->input('cancel', array('type' => 'hidden', 'value' => true));
-echo $this->Js->submit('Cancel', array('action' => 'deletequestion', 'update' => '#q_space'));
+echo $this->Js->submit('Cancel', array('action' => 'deletequestion', 'update' => "#question_space_$questionid"));
 echo $form->end();
 
 echo $this->Js->writeBuffer();

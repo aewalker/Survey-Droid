@@ -38,11 +38,19 @@ public class LocationTableHandler {
 		
 		//There are currently 4 columns GPS table, 3 w/o the auto increment
 		//column
-		ContentValues values = new ContentValues( 3 );
+		ContentValues values = new ContentValues();
 		
-		values.put(PeoplesDB.GPSTable.LATITUDE, loc.getLatitude());
-		values.put(PeoplesDB.GPSTable.LONGITUDE, loc.getLongitude());
-		values.put(PeoplesDB.GPSTable.TIME, loc.getTime());
+		double lat = loc.getLatitude();
+		double lon = loc.getLongitude();
+		long time= loc.getTime();
+		
+		values.put(PeoplesDB.GPSTable.LATITUDE,		 loc.getLatitude() 	);
+		values.put(PeoplesDB.GPSTable.LONGITUDE,	 loc.getLongitude() );
+		values.put(PeoplesDB.GPSTable.TIME,			 loc.getTime()		);
+		
+//		values.put(PeoplesDB.GPSTable.LATITUDE,		"\'" + loc.getLatitude()	+ "\'" );
+//		values.put(PeoplesDB.GPSTable.LONGITUDE,	"\'" + loc.getLongitude()	+ "\'" );
+//		values.put(PeoplesDB.GPSTable.TIME,			"\'" + loc.getTime()		+ "\'" );
 		
 		return db.insert(PeoplesDB.GPS_TABLE_NAME, null, values);
 	}
@@ -67,6 +75,40 @@ public class LocationTableHandler {
 		
 		return mCursor;
 	}
+	
+	/**
+	 * 
+	 * Queries to find all Tables in this DB
+	 * 
+	 * @return
+	 */
+	public Cursor getListOfTables(){
+		
+		if(D) Log.e(TAG, "in getListOfTables()");
+		
+		Cursor mCursor = db.rawQuery("SELECT name " +
+									 "FROM sqlite_master "+
+									 "WHERE type=\"table\"", null);
+		return mCursor;
+	}
+	
+	
+	/**
+	 * 
+	 * Self-described 
+	 * 
+	 * @return
+	 */
+	public Cursor getDescription(){
+		
+		if(D) Log.e(TAG, "in getListOfTables()");
+		
+		Cursor mCursor = db.rawQuery("SELECT sql " +
+									 "FROM sqlite_master "+
+									 "WHERE name=\"gps\"", null);
+		return mCursor;
+	}
+	
 
 	/**
 	 * 
@@ -75,5 +117,7 @@ public class LocationTableHandler {
 		if(D) Log.e(TAG, "in close()");
 		pdb.close();
 	}
+	
+	
 
 }

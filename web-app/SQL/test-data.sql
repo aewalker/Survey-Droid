@@ -6,13 +6,13 @@ INSERT INTO users (id, username, email, password, first_name, last_name) VALUES
 	(1, 'johnd', 'john.doe@example.com', 'b499bd98fcddc9ea3ce0cecf4521e9f7a9d21f05', 'John', 'Doe'),
 	(2, 'janed', 'jane.doe@example.com', '0dca80e58ff7df07bf7d8847a8b6b598fbd9df6f', 'Jane', 'Doe');
 
-INSERT INTO subjects (id, phone_num, first_name, last_name) VALUES
-	(1, '0521035555', 'Graham', 'Chapman'),
-	(2, '1936035555', 'Eric', 'Idle'),
-	(3, '1234565555', 'Terry', 'Gilliam'),
-	(4, '2905345555', 'Terry', 'Jones'),
-	(5, '2936025555', 'John', 'Cleese'),
-	(6, '2936905555', 'Michael', 'Palin');
+INSERT INTO subjects (id, phone_num, first_name, last_name, device_id) VALUES
+	(1, '0521035555', 'Graham', 'Chapman', 'phone1'),
+	(2, '1936035555', 'Eric', 'Idle', 'phone2'),
+	(3, '1234565555', 'Terry', 'Gilliam', 'phone3'),
+	(4, '2905345555', 'Terry', 'Jones', 'phone4'),
+	(5, '2936025555', 'John', 'Cleese', 'phone5'),
+	(6, '2936905555', 'Michael', 'Palin', 'phone6');
 	
 INSERT INTO contacts (id, subject_id) VALUES
 	(21, 2), (1, 4), (2, 3),

@@ -13,7 +13,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     private static final boolean D = true;
 
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
     public static final String GPS_TABLE_NAME = "gps";
     public static final String CALLLOG_TABLE_NAME = "calllog";
     public static final String ANSWER_TABLE_NAME = "answers";
@@ -40,8 +40,8 @@ public class PeoplesDB extends SQLiteOpenHelper {
         private static String createSql() {
         	return "CREATE TABLE " + GPS_TABLE_NAME + " (" + GPSTable._ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + GPSTable.LONGITUDE + " DOUBLE,"
-            + GPSTable.LATITUDE + " DOUBLE," + GPSTable.TIME + "INTEGER"
-            + ");";
+            + GPSTable.LATITUDE + " DOUBLE," + GPSTable.TIME + " INTEGER"
+            + " );";
         }
     }
     public static final class CallLogTable implements BaseColumns {

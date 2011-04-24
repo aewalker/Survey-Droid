@@ -21,7 +21,7 @@
 			echo $html->link('Subjects', array('controller' => 'subjects', 'action' => 'index'));
 			if ($user['admin'] == 1)
 				echo $html->link('Control Pannel', array('controller' => 'users', 'action' => 'index'));
-			//echo $html->link('Data', array('controller' => 'data', 'action' => 'index'));
+			echo $html->link('Data Collection', array('controller' => 'datas', 'action' => 'index'));
 			echo $html->link('Surveys', array('controller' => 'surveys', 'action' => 'index'));
 		}
 		?>
@@ -51,8 +51,6 @@
 		}
 	?>
 	<hr />
-</div>
-<div id="q_space">
 </div>
 <?php if (isset($this->Js)) echo $this->Js->writeBuffer(); ?>
 </body>

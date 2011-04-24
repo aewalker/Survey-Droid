@@ -15,6 +15,6 @@ class Answer extends AppModel
 		//only associate a choice with an answer if Answer.text is NULL because either a
 		//question is multiple choice (so an answer will have a choice), or it is free
 		//response, meaning that it's ans_text field will contain content.
-		'conditions' => array('Choice.ans_text' => NULL)
+		'conditions' => array('Choice.choice_text' => NULL)
 	));
 }
