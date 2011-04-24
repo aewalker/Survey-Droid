@@ -136,6 +136,23 @@ public class Survey
 	}
 	
 	/**
+	 * Get an array of Strings corresponding to the text of the Choices for the
+	 * current Question.
+	 * 
+	 * @return array of Choice texts as Strings
+	 */
+	public String[] getChoiceTexts()
+	{
+		Choice[] choices = currentQ.getChoices();
+		String[] choiceTexts = new String[choices.length];
+		for (int i = choices.length; i < 0; i++)
+		{
+			choiceTexts[i] = choices[i].getText();
+		}
+		return choiceTexts;
+	}
+	
+	/**
 	 * Get the current Question's text
 	 * 
 	 * @return the current Question's text as a String
@@ -190,32 +207,23 @@ public class Survey
 	}
 	
 	/**
-	 * Answer a Question.
+	 * Answer a  multiple choice Question.
 	 * 
-	 * @param q - the Question to answer
 	 * @param c - the Choice to answer with
-	 * @param text - the text to answer with
-	 * 
-	 * @throws RuntimeException if either c and text are null or both are
-	 * not null.  For a free response Question, c should be null, and for a
-	 * multiple-choice Question, text should be null.
 	 */
-	public void answer(Question q, Choice c, String text)
+	public void answer(Choice c)
 	{
-		//free response
-		if (c == null)
-		{
-			if (text == null) throw new RuntimeException(
-					"must give either a Choice or answer text");
-			registry.push(currentQ.answer(text));
-		}
-		//multiple choice
-		else
-		{
-			if (text != null) throw new RuntimeException(
-					"cannot give both a Choice and answer text");
-			registry.push(currentQ.answer(c));
-		}
+		registry.push(currentQ.answer(c));
+	}
+	
+	/**
+	 * Answer a free response Question.
+	 * 
+	 * @param text - the String to answer with
+	 */
+	public void answer(String text)
+	{
+		registry.push(currentQ.answer(text));
 	}
 	
 	/**
