@@ -6,7 +6,9 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+import java.util.LinkedList;
 import java.util.Stack;
+import com.peoples.android.database.PeoplesDB;
 
 //import org.json.JSONArray;
 //import org.json.JSONObject;
@@ -23,10 +25,6 @@ public class Survey
 {
 	//the survey name
 	private String name;
-
-	//The survey's creation time
-	//TODO probably don't need this
-	//private String created;
 	
 	//the first question in the survey
 	private Question firstQ;
@@ -58,6 +56,51 @@ public class Survey
 	public Survey(int id)
 	{
 		//TODO database stuff
+	}
+	
+	//fake constructor for testing only
+	public Survey()
+	{
+		String[] questionTexts =
+		{
+			"Who is your favorite actress?",
+			"What is your favorite color",
+			"What is your favorite animal?",
+			"How old are you?",
+			"What country are you from?"
+		};
+		
+		String[][] choices =
+		{
+			{"Keira Knightley", "Natalie Portman", "Emmanuelle Chiriqui"},
+			{"Red", "Blue", "Green", "Purple"},
+			{"Panda", "Tiger", "Penguin"},
+			{"10", "24", "33"},
+			{"United States", "Canada", "Turkey"}
+		};
+		
+		//new Question(String text, int id, Collection<Branch> b, Collection<Choice> c)
+		//new Branch(Question q, Collection<Condition> c)
+		//new Choice(String text, int id)
+		
+		Question prevQ = null;
+		for (int i = questionTexts.length - 1; i >= 0; i--)
+		{
+			LinkedList<Choice> choicesList = new LinkedList<Choice>();
+			for (String choice : choices[i])
+			{
+				choicesList.add(new Choice(choice, 0));
+			}
+			LinkedList<Branch> branches = new LinkedList<Branch>();
+			if (prevQ != null)
+			{
+				branches.add(new Branch(prevQ, new LinkedList<Condition>()));
+			}
+			prevQ = new Question(questionTexts[i], 0, branches, choicesList);
+		}
+		firstQ = prevQ;
+		currentQ = prevQ;
+		name = "Test Survey";
 	}
 	
 	/**
@@ -176,13 +219,17 @@ public class Survey
 	}
 	
 	/**
-	 * Finalize the Answers to this Survey and enter them in the database.
+	 * Finalize the Answers to this Survey and enter them in the database. Also
+	 * deletes all given answers after they are written to the database, leaving
+	 * this Survey in it's original form.
 	 * 
 	 * @return true on success
 	 */
 	public boolean sumbit()
 	{
 		boolean worked = true;
+		
+		//save all the live Answers
 		while (!registry.empty())
 		{
 			if (registry.pop().write() == false)
@@ -190,6 +237,13 @@ public class Survey
 				worked = false;
 			}
 		}
+		
+		//wipe the Question history
+		while (!history.empty())
+		{
+			history.pop().popAns();
+		}
+		
 		return worked;
 	}
 	

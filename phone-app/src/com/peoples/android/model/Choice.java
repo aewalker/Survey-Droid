@@ -6,6 +6,8 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+import com.peoples.android.database.PeoplesDB;
+
 /**
  * Model for a survey choice.  Based on the SQL:
  * 

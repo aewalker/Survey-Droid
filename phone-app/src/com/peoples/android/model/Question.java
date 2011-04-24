@@ -51,12 +51,16 @@ public class Question
 	 * Create a new Question
 	 * 
 	 * @param text - the question text as a String
+	 * @param id - the Question's id from the database
+	 * @param b - a Collection of Branches for this Question
+	 * @param c - a Collection of Choices for this Question
 	 */
-	public Question(String text, Collection<Branch> b, Collection<Choice> c)
+	public Question(String text, int id, Collection<Branch> b, Collection<Choice> c)
 	{
 		q_text = text;
 		branches = b;
 		choices = c;
+		this.id = id;
 	}
 	
 	/*-----------------------------------------------------------------------*/

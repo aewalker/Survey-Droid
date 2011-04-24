@@ -35,7 +35,7 @@ public class Branch
 	 * @param q - Question this Branch should point to
 	 * @param c - Conditions for this Branch
 	 */
-	public Branch (Question q, Collection<Condition> c)
+	public Branch(Question q, Collection<Condition> c)
 	{
 		next_q = q;
 		conditions = c;

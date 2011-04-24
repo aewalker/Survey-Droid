@@ -6,10 +6,12 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.peoples.android.database.PeoplesDB;
 
-import android.util.Log;
+//import org.json.JSONException;
+//import org.json.JSONObject;
+
+//import android.util.Log;
 
 /**
  * Model for a Survey answer.  Based on the SQL:
