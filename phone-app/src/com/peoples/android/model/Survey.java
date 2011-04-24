@@ -177,10 +177,20 @@ public class Survey
 	
 	/**
 	 * Finalize the Answers to this Survey and enter them in the database.
+	 * 
+	 * @return true on success
 	 */
-	public void sumbit()
+	public boolean sumbit()
 	{
-		//TODO database stuff
+		boolean worked = true;
+		while (!registry.empty())
+		{
+			if (registry.pop().write() == false)
+			{
+				worked = false;
+			}
+		}
+		return worked;
 	}
 	
 	
