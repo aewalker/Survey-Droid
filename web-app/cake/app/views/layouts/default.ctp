@@ -35,11 +35,16 @@
 	<?php
 		if (($user = $session->read('Auth.User')) != NULL)
 		{
+			echo '<b>'.$user['first_name'].' '.$user['last_name'].', </b>';
+			if($user['admin']==1)
+				echo ' (Administrator) ';
 			echo $html->link('Logout', array('controller' => 'users', 'action' => 'logout'));
 		}
 		else
 		{
+			echo 'Please log in here: ';
 			echo $html->link('Login', array('controller' => 'users', 'action' => 'login'));
+			
 		}
 	?>
 </div>

@@ -6,9 +6,10 @@ body
 	padding: 0;
 	font-family: Verdana, sans-serif;
 	background-color: lightsteelblue;
+	background-attachment:fixed;
 	background-image: url("../img/around_world.jpg");
 	background-repeat:no-repeat;
-	background-position:right top;
+	background-position:right bottom;
 }
 form div
 {
@@ -20,14 +21,15 @@ form div
 #endTable a
 {
 	display: block;
-	padding: 0;
-	margin: 0;
 	text-align: center;
 	text-decoration: none;
+	float: left;
+	width: 100px;
 	background-color: lightgray;
-	font-weight: 900;
+	font-weight: 700;
 	border-style: solid;
 	border-color: midnightblue;
+	
 }
 #endTable a:hover
 {
@@ -105,23 +107,44 @@ h1
 #main
 {
 	text-align: left;
-	margin-left: 50px;
 }
 #main a
 {
-	display: inline;
-	padding: 1px;
-	text-align: left;
+	display: block;
+	padding:  1px;
+	float:none;
+	text-align: center;
+	margin-top:auto;
+	margin-bottom:auto;
+	margin-left: 0;
+	width: 100px;
 	text-decoration: none;
 	background-color: lightgray;
-	font-weight: 500;
+	border-style: solid;
+	border-color: midnightblue;
+}
+#links a
+{
+	display: block;
+	padding:  1px;
+	float:none;
+	text-align: left;
+	margin-top:auto;
+	margin-bottom:auto;
+	margin-left: 0;
+	width: 400px;
+	text-decoration: none;
+	background-color: lightgray;
 	border-style: solid;
 	border-color: midnightblue;
 }
 #footer
 {
 	font-size: 12px;
-	display: inline;
+	text-align: center;
+	float:bottom;
+	clear: both;
+
 }
 #footer a
 {
@@ -136,13 +159,19 @@ table
 	border-spacing: 0;
 	border: none;
 }
+#userInfo 
+{
+	font-size: 10px;
+	float: right;
+	display:inline;
 
+}
 #userInfo a
 {
-	font-size: 12px;
-	float: right;
+	display:inline;
 	color: darkred;
 	font-weight: bold;
+	
 
 }
 table a
