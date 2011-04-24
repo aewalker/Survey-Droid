@@ -38,6 +38,7 @@ public class Peoples extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
+        setTheme(1);
         setContentView(R.layout.survey_list_view);
 		//Creating a bogus Survey!
         
@@ -87,7 +88,7 @@ public class Peoples extends ListActivity {
     	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
     	q.setText(survey.getText());
           
-        Button next = (Button) findViewById(R.id.button1);
+        Button next = (Button) findViewById(R.id.button2);
         next.setText("Next Question");
         next.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
