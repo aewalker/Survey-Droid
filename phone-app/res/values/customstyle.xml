@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<color name="custom_theme_color">#ccffff</color>
+<style name="CustomTheme" parent="android:Theme.Light">
+    <item name="android:windowBackground">@color/custom_theme_color</item>
+    <item name="android:colorBackground">@color/custom_theme_color</item>
+</style>
+</resources>

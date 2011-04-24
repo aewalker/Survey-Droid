@@ -49,7 +49,8 @@ public class ConfirmSubmissionSurvey extends Activity {
             public void onClick(View view) {
                 boolean success = Push.sendAnswersToServer(answers);
                 if (success) {
-                    t.setText("Successfull submitted the survey");  
+                    t.setText("Successfully submitted the survey");
+                    finish();
                 } else {
                     t.setText("Ooops, something went wrong");
                 }
