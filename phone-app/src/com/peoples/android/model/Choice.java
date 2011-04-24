@@ -24,7 +24,7 @@ public class Choice
 	
 	//the Choice id
 	//unlike some of the other survey classes, we have to keep track of the
-	//id here because conditions need to have a way to look up thier history
+	//id here because conditions need to have a way to look up their history
 	//in the database
 	private final int id;
 	

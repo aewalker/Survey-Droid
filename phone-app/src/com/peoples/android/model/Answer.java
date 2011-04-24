@@ -20,9 +20,23 @@ import android.util.Log;
  * 
  */
 public class Answer {
-
-    // id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    private int id;
+	
+	public Answer(Question q, int q_id, Choice c, int c_id, String t)
+	{
+		question = q;
+		choice = c;
+		text = t;
+	}
+	
+	public Question getQuestion()
+	{
+		return question;
+	}
+	
+	public Choice getChoice()
+	{
+		return choice;
+	}
 
     // question_id INT UNSIGNED NOT NULL,
     private Question question;
@@ -35,9 +49,9 @@ public class Answer {
 
     // ans_text TEXT,
     private String text;
-    private int index;
 
-    public String getText() {
+    public String getText()
+    {
         return text;
     }
 

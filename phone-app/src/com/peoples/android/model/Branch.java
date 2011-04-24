@@ -2,9 +2,11 @@
  * Branch.java                                                               *
  *                                                                           *
  * Model for a survey branch. Can be evaluated to true/false to determine    *
- * what question to display next.  Contians a set of conditions.             *
+ * what question to display next.  Contains a set of conditions.             *
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
+
+import java.util.Collection;
 
 /**
  * Model for a survey branch.  Based on the SQL:
@@ -37,11 +39,12 @@ public class Branch
 	{
 		next_q = q;
 		conditions = c;
+	}
 	
 	/**
 	 * Evaluate this Branch.
 	 * 
-	 * @return ture or false
+	 * @return true or false
 	 */
 	public boolean eval()
 	{

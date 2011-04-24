@@ -73,6 +73,16 @@ public class Survey
 	}
 	
 	/**
+	 * Get this Survey's name/title
+	 * 
+	 * @return the name/title as a String
+	 */
+	public String getName()
+	{
+		return name;
+	}
+	
+	/**
 	 * Get the current Question's Choices.
 	 * 
 	 * @return the current Question's Choices as an array
@@ -80,6 +90,16 @@ public class Survey
 	public Choice[] getChoices()
 	{
 		return currentQ.getChoices();
+	}
+	
+	/**
+	 * Get the current Question's text
+	 * 
+	 * @return the current Question's text as a String
+	 */
+	public String getText()
+	{
+		return currentQ.getText();
 	}
 	
 	/**
@@ -99,7 +119,7 @@ public class Survey
 	public void nextQuestion()
 	{
 		history.push(currentQ);
-		currentQ = currentQ.nextQusetion();
+		currentQ = currentQ.nextQuestion();
 	}
 	
 	/**
@@ -116,14 +136,14 @@ public class Survey
 	}
 	
 	/**
-	 * Is the Survey on the first Question?  Useful when chosing to whether or
+	 * Is the Survey on the first Question?  Useful when choosing to whether or
 	 * not to display a back button.
 	 * 
 	 * @return true or false
 	 */
 	public boolean isOnFirst()
 	{
-		return (currentQ.equals(firstQ))
+		return (currentQ.equals(firstQ));
 	}
 	
 	/**

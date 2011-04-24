@@ -6,7 +6,8 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-import java.util.Stack
+import java.util.Collection;
+import java.util.Stack;
 
 /**
  * Model for a survey Question.  Based on the SQL:
@@ -68,8 +69,18 @@ public class Question
 	public Choice[] getChoices()
 	{
 		//little hack to get the right types
-		Choice[] cArray = new Choice[];
+		Choice[] cArray = new Choice[0];
 		return choices.toArray(cArray);
+	}
+	
+	/**
+	 * Get this Question's text
+	 * 
+	 * @return the Question's text as a String
+	 */
+	public String getText()
+	{
+		return q_text;
 	}
 	
 	/**
@@ -97,7 +108,7 @@ public class Question
 		else
 		{
 			Answer newAnswer = new Answer(this, id, null, 0, text);
-			answers.push(Answer);
+			answers.push(newAnswer);
 			answered = true;
 			return newAnswer;
 		}
@@ -130,7 +141,7 @@ public class Question
 		{
 			if (!choices.contains(c))
 			{
-				throw new RuntimeException("invalid Choice")
+				throw new RuntimeException("invalid Choice");
 			}
 			else
 			{
@@ -143,7 +154,7 @@ public class Question
 	}
 	
 	/**
-	 * Evlauate Branches to find the next Question.
+	 * Evaluate Branches to find the next Question.
 	 * 
 	 * @return the next Question
 	 * 
@@ -157,6 +168,7 @@ public class Question
 		{
 			if (b.eval()) return b.nextQuestion();
 		}
+		return null;
 	}
 	
 	/*-----------------------------------------------------------------------*/

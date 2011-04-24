@@ -37,7 +37,7 @@ public class Condition
 	
 	//answer set from the Survey
 	//required in order to check current answers
-	//beacue of this, Conditions need to be initialized in the Survey
+	//because of this, Conditions need to be initialized in the Survey
 	private Iterable<Answer> answers;
 	
 	/*-----------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ public class Condition
 	/**
 	 * Evaluate this Condition.
 	 * 
-	 * @return ture or false
+	 * @return true or false
 	 */
 	public boolean eval()
 	{
