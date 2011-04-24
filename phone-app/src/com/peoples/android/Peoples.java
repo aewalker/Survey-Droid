@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.peoples.android.activities.ConfirmSubmissionSurvey;
+import com.peoples.android.model.Choice;
 import com.peoples.android.model.Question;
 import com.peoples.android.model.Survey;
 
@@ -43,49 +44,49 @@ public class Peoples extends ListActivity {
         
         final Survey survey = new Survey();
         
-        String[] question1choices = {"Keira Knightley",
-        		"Natalie Portman",
-        		"Emmanuelle Chiriqui"};
-        final Question question1 = new Question(1, "Who is your favorite actress?",
-        		question1choices, null);
-        String[] question2choices = {"Red",
-        		"Blue",
-        		"Green",
-        		"Purple"};
-        final Question question2 = new Question(2, "What is your favorite color", 
-        		null, null);	
-        String[] question3choices = {"Panda",
-        		"Tiger",
-        		"Penguin"};
-        final Question question3 = new Question(3, "What is your favorite animal?", 
-        		question3choices, null);
-        String[] question4choices = {"10",
-        		"24",
-        		"33"};
-        final Question question4 = new Question(4, "How old are you?", 
-        		question4choices, null);	
-        final Question question5 = new Question(5, "What country are you from?", 
-        		CHOICES, null);
+//        String[] question1choices = {"Keira Knightley",
+//        		"Natalie Portman",
+//        		"Emmanuelle Chiriqui"};
+//        final Question question1 = new Question(1, "Who is your favorite actress?",
+//        		question1choices, null);
+//        String[] question2choices = {"Red",
+//        		"Blue",
+//        		"Green",
+//        		"Purple"};
+//        final Question question2 = new Question(2, "What is your favorite color", 
+//        		null, null);	
+//        String[] question3choices = {"Panda",
+//        		"Tiger",
+//        		"Penguin"};
+//        final Question question3 = new Question(3, "What is your favorite animal?", 
+//        		question3choices, null);
+//        String[] question4choices = {"10",
+//        		"24",
+//        		"33"};
+//        final Question question4 = new Question(4, "How old are you?", 
+//        		question4choices, null);	
+//        final Question question5 = new Question(5, "What country are you from?", 
+//        		CHOICES, null);
+//        
+//        question1.setNextQuestionID(2);
+//        question2.setNextQuestionID(3);
+//        question3.setNextQuestionID(4);
+//        question4.setNextQuestionID(5);
+//        question5.setNextQuestionID(1104);
+//        
+//        survey.addQuestion(question1);
+//        survey.addQuestion(question2);
+//        survey.addQuestion(question3);
+//        survey.addQuestion(question4);
+//        survey.addQuestion(question5);
+//    
+//        survey.updateCurrentQuestionID(1);
         
-        question1.setNextQuestionID(2);
-        question2.setNextQuestionID(3);
-        question3.setNextQuestionID(4);
-        question4.setNextQuestionID(5);
-        question5.setNextQuestionID(1104);
-        
-        survey.addQuestion(question1);
-        survey.addQuestion(question2);
-        survey.addQuestion(question3);
-        survey.addQuestion(question4);
-        survey.addQuestion(question5);
-    
-        survey.updateCurrentQuestionID(1);
-        
-        final Question question = question1;
+//        final Question question = question1;
     	final Context panda = this;
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
-    	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, question.getChoices()));
-    	q.setText(question.getQuestionText());
+    	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
+    	q.setText(survey.getText());
           
         Button next = (Button) findViewById(R.id.button2);
         next.setText("Next Question");
@@ -93,23 +94,21 @@ public class Peoples extends ListActivity {
               public void onClick(View view) {
             	  
             	  ListView lv = getListView();
-            	  if ((survey.getQuestion(survey.getCurrentQuestionID()).getType() == 0
-            			  && lv.getCheckedItemPosition() != -1)||
-            			  (survey.getQuestion(survey.getCurrentQuestionID()).getType() == 1))
+            	  if ((survey.getChoices().length != 0 && lv.getCheckedItemPosition() != -1)||
+            			  (survey.getChoices().length == 0))
             	  {
 	            	  /*save response gogo?*/
-	            	  if (survey.getQuestion(survey.getCurrentQuestionID()).getType() == 0)
+	            	  if (survey.getChoices().length != 0) //multiple choice
 	            	  {
-	            		  survey.getQuestion(survey.getCurrentQuestionID()).setAnswer(
-	            				  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()]);
+	            		  survey.answer(survey.getChoices()[lv.getCheckedItemPosition()]);
 	            		  Toast.makeText(getApplicationContext(), 
-	                			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
+	                			  survey.getChoices()[lv.getCheckedItemPosition()].getText(),
 	                              Toast.LENGTH_SHORT).show();
 	            	  }
-	            	  else
+	            	  else //free response
 	            	  {
 	            		  EditText edit = (EditText)findViewById(R.id.editText1);
-	            		  survey.getQuestion(survey.getCurrentQuestionID()).setAnswer(edit.getText().toString());
+	            		  survey.answer(edit.getText().toString());
 	            		  Toast.makeText(getApplicationContext(), 
 	            				  edit.getText().toString(),
 	                              Toast.LENGTH_SHORT).show();
@@ -120,46 +119,45 @@ public class Peoples extends ListActivity {
 	            			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
 	                          Toast.LENGTH_SHORT).show();*/
 	            	  
-	            	  int nextQuestionID = survey.getQuestion(survey.getCurrentQuestionID()).getNextQuestionID();
-	                  if (nextQuestionID == 1104)
+	            	  survey.nextQuestion(); //go to the next Question
+	            	  
+	                  if (survey.done()) //if there are no more Questions....
 	                  {
 	                	  //display submission page?
-	                	  StringBuilder s = new StringBuilder();
-	                	  s.append("Your choices are: \n");
-	                	  for (int i = 1; i < 6; i++)
-	                	  {
-	                		  if (survey.getQuestion(i).getAnswer() != null)
-	                		  s.append("Question " + i + ": " + survey.getQuestion(i).getAnswer() + "\n");
-	                	  }
+//	                	  StringBuilder s = new StringBuilder();
+//	                	  s.append("Your choices are: \n");
+//	                	  for (int i = 1; i < 6; i++)
+//	                	  {
+//	                		  if (survey.getQuestion(i).getAnswer() != null)
+//	                		  s.append("Question " + i + ": " + survey.getQuestion(i).getAnswer() + "\n");
+//	                	  }
 	                	  
-	                	  Bundle bundle = new Bundle();
-	                	  bundle.putString("confirm", s.toString());
-	                	  bundle.putString("answers", survey.getAnswersAsJson().toString());
+//	                	  Bundle bundle = new Bundle();
+//	                	  bundle.putString("confirm", s.toString());
+//	                	  bundle.putString("answers", survey.getAnswersAsJson().toString());
 	                	  
 	                	  /*Toast.makeText(getApplicationContext(), s.toString(),
 	                              Toast.LENGTH_SHORT).show();*/
-	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
-	                      myIntent.putExtras(bundle);
-	                	  startActivityForResult(myIntent, 0);
-	                	  finish();
+	                	  survey.sumbit();
+//	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
+//	                      myIntent.putExtras(bundle);
+//	                	  startActivityForResult(myIntent, 0);
+//	                	  finish();
 	                  }
-	                  else 
+	                  else //there are still more Questions
 	                  {
-	                	  if (survey.getQuestion(nextQuestionID).getType() == 0)
+	                	  if (survey.getChoices().length != 0) //if multiple choice
 	                	  {
 			                  setListAdapter(new ArrayAdapter<String>(panda, 
-			                		  R.layout.simple_list_item_single_choice, survey.getQuestion(nextQuestionID).getChoices()));
-			              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
-			                  survey.updateCurrentQuestionID(nextQuestionID);
+			                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
+			              	  q.setText(survey.getText());
 	                	  }
-	                	  else
+	                	  else //if free response
 	                	  {
-	                		  String[] test = new String[1];
-	                		  test[0] = "Enter your response here";
+	                		  String[] test = {"Enter your response here"};
 	                		  setListAdapter(new ArrayAdapter<String>(panda, 
 			                		  R.layout.list_item, test));
-			              	  q.setText(survey.getQuestion(nextQuestionID).getQuestionText());
-			                  survey.updateCurrentQuestionID(nextQuestionID);
+			              	  q.setText(survey.getText());
 			                  
 	                	  }
 	                  }
