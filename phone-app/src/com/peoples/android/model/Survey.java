@@ -145,7 +145,7 @@ public class Survey
 	{
 		Choice[] choices = currentQ.getChoices();
 		String[] choiceTexts = new String[choices.length];
-		for (int i = choices.length; i < 0; i++)
+		for (int i = 0; i < choices.length; i++)
 		{
 			choiceTexts[i] = choices[i].getText();
 		}
