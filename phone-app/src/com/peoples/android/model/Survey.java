@@ -483,7 +483,7 @@ public class Survey
 	 * 
 	 * @return true on success
 	 */
-	public boolean sumbit()
+	public boolean submit()
 	{
 		boolean worked = true;
 		
