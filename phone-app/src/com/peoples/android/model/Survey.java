@@ -101,6 +101,8 @@ public class Survey
 		firstQ = prevQ;
 		currentQ = prevQ;
 		name = "Test Survey";
+		if (firstQ == null) throw new RuntimeException("null question");
+		if (firstQ.getChoices().length == 0) throw new RuntimeException("no choices");
 	}
 	
 	/**
@@ -145,7 +147,7 @@ public class Survey
 	{
 		Choice[] choices = currentQ.getChoices();
 		String[] choiceTexts = new String[choices.length];
-		for (int i = choices.length; i < 0; i++)
+		for (int i = 0; i < choices.length; i++)
 		{
 			choiceTexts[i] = choices[i].getText();
 		}

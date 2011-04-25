@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,55 +39,17 @@ public class Peoples extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
-        setTheme(1);
         setContentView(R.layout.survey_list_view);
-		//Creating a bogus Survey!
-        
+		
+        //Creating a bogus Survey!    
         final Survey survey = new Survey();
-        
-//        String[] question1choices = {"Keira Knightley",
-//        		"Natalie Portman",
-//        		"Emmanuelle Chiriqui"};
-//        final Question question1 = new Question(1, "Who is your favorite actress?",
-//        		question1choices, null);
-//        String[] question2choices = {"Red",
-//        		"Blue",
-//        		"Green",
-//        		"Purple"};
-//        final Question question2 = new Question(2, "What is your favorite color", 
-//        		null, null);	
-//        String[] question3choices = {"Panda",
-//        		"Tiger",
-//        		"Penguin"};
-//        final Question question3 = new Question(3, "What is your favorite animal?", 
-//        		question3choices, null);
-//        String[] question4choices = {"10",
-//        		"24",
-//        		"33"};
-//        final Question question4 = new Question(4, "How old are you?", 
-//        		question4choices, null);	
-//        final Question question5 = new Question(5, "What country are you from?", 
-//        		CHOICES, null);
-//        
-//        question1.setNextQuestionID(2);
-//        question2.setNextQuestionID(3);
-//        question3.setNextQuestionID(4);
-//        question4.setNextQuestionID(5);
-//        question5.setNextQuestionID(1104);
-//        
-//        survey.addQuestion(question1);
-//        survey.addQuestion(question2);
-//        survey.addQuestion(question3);
-//        survey.addQuestion(question4);
-//        survey.addQuestion(question5);
-//    
-//        survey.updateCurrentQuestionID(1);
-        
-//        final Question question = question1;
+
     	final Context panda = this;
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
     	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
     	q.setText(survey.getText());
+    	
+    	//testing yo
           
         Button next = (Button) findViewById(R.id.button2);
         next.setText("Next Question");
@@ -97,7 +60,7 @@ public class Peoples extends ListActivity {
             	  if ((survey.getChoices().length != 0 && lv.getCheckedItemPosition() != -1)||
             			  (survey.getChoices().length == 0))
             	  {
-	            	  /*save response gogo?*/
+	            	  //save response gogo?
 	            	  if (survey.getChoices().length != 0) //multiple choice
 	            	  {
 	            		  survey.answer(survey.getChoices()[lv.getCheckedItemPosition()]);
@@ -113,12 +76,7 @@ public class Peoples extends ListActivity {
 	            				  edit.getText().toString(),
 	                              Toast.LENGTH_SHORT).show();
 	            	  }
-	            	  
-	            	  //this stuff will be created dynamically based on the choice!
-	            	  /*Toast.makeText(getApplicationContext(), 
-	            			  survey.getQuestion(survey.getCurrentQuestionID()).getChoices()[lv.getCheckedItemPosition()],
-	                          Toast.LENGTH_SHORT).show();*/
-	            	  
+
 	            	  survey.nextQuestion(); //go to the next Question
 	            	  
 	                  if (survey.done()) //if there are no more Questions....
@@ -167,6 +125,30 @@ public class Peoples extends ListActivity {
             		  Toast.makeText(getApplicationContext(), "Please select a choice", Toast.LENGTH_SHORT).show();
             	  }
               }
+          });
+        
+        Button prev = (Button) findViewById(R.id.button1);
+        prev.setText("Previous Question");
+        prev.setOnClickListener(new View.OnClickListener() {
+              public void onClick(View view) {
+            	  
+            	  survey.prevQuestion(); //go to the previous Question
+	            	  
+            	  if (survey.getChoices().length != 0) //if multiple choice
+            	  {
+	                  setListAdapter(new ArrayAdapter<String>(panda, 
+	                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
+	              	  q.setText(survey.getText());
+            	  }
+            	  else //if free response
+            	  {
+            		  String[] test = {"Enter your response here"};
+            		  setListAdapter(new ArrayAdapter<String>(panda, 
+	                		  R.layout.list_item, test));
+	              	  q.setText(survey.getText());
+            	  }
+	                  
+        	  }
           });
     }
     

@@ -35,10 +35,6 @@
 	</LinearLayout>
 		</TableRow>
 		   	<TableRow>
-<ListView android:layout_height="fill_parent" 
-android:id="@id/android:list" 
-android:layout_width="fill_parent" 
-android:choiceMode="singleChoice" 
-android:layout_alignParentRight="true"></ListView>
+<ListView android:layout_height="fill_parent" android:id="@id/android:list" android:layout_width="fill_parent" android:choiceMode="singleChoice" android:layout_alignParentRight="true"></ListView>
    	</TableRow>
 </TableLayout>
