@@ -2,6 +2,7 @@ package com.peoples.android;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +36,7 @@ public class Peoples extends ListActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(D) Log.d(TAG, "+++ ON CREATE +++");
+        if(D) Log.e(TAG, "+++ ON CREATE +++");
         Log.d(TAG, "Fetching surveys");
         Pull.syncWithWeb(this);
 
@@ -181,6 +182,13 @@ public class Peoples extends ListActivity {
                           Toast.LENGTH_SHORT).show();
         	  }
           });
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+      //super.onConfigurationChanged(newConfig);
+      //setContentView(R.layout.myLayout);
+    	Log.e(TAG, "panddaaaa");
     }
     
     static final String[] CHOICES = new String[] {
