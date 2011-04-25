@@ -134,7 +134,7 @@ public class Question
 	public Answer answer(Choice c)
 	{
 		if (answered) throw new RuntimeException(
-				"atempt to answer the same Question multiple times");
+				"attempt to answer the same Question multiple times");
 		
 		if (choices.size() == 0)
 		{
