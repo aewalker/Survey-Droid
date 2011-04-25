@@ -8,7 +8,7 @@ package com.peoples.android.model;
 
 import java.util.LinkedList;
 import java.util.Stack;
-import com.peoples.android.database.PeoplesDB;
+import com.peoples.android.database.SurveyDBHandler;
 
 //import org.json.JSONArray;
 //import org.json.JSONObject;
@@ -163,14 +163,50 @@ public class Survey
 	}
 	
 	/**
-	 * Get the current Question's current Answer
+	 * Get the current Question's current Answer's Choice's index
 	 * 
-	 * @return null if the Question has never been answered, Answer given
-	 * if it has been
+	 * @return the index as an int, or -1 if this was a free response Question
+	 * or no Choice has yet been selected.
+	 * 
+	 * @throws RuntimeException on internal error
 	 */
-	public Answer getAnswer()
+	public int getAnswerChoice()
 	{
-		return currentAns;
+		if (currentAns == null)
+		{
+			return -1;
+		}
+		Choice choice = currentAns.getChoice();
+		if (choice != null) //multiple choice
+		{
+			int i = 0;
+			for (Choice c : currentQ.getChoices())
+			{
+				if (c.equals(choice))
+				{
+					return i;
+				}
+				i++;
+			}
+			throw new RuntimeException(
+					"something is very wrong: choice not found");
+		}
+		else return -1;
+	}
+	
+	/**
+	 * Get the current Question's current Answer's text
+	 * 
+	 * @return the text as a String, or the empty string if no answer has
+	 * been given yet, or null if this was a multiple choice question
+	 */
+	public String getAnswerText()
+	{
+		if (currentAns == null)
+		{
+			return "";
+		}
+		return currentAns.getText();
 	}
 	
 	/**
