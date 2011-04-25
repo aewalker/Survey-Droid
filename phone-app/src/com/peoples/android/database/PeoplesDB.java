@@ -74,7 +74,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     		return "CREATE TABLE answers (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"question_id INT UNSIGNED NOT NULL," +
-    				"subject_id INT UNSIGNED NOT NULL,choice_id INT UNSIGNED," +
+    				"choice_id INT UNSIGNED," +
     				"ans_text TEXT,created DATETIME);";
     	}
     }
