@@ -97,7 +97,28 @@ public class Peoples extends ListActivity {
 	                	  
 	                	  /*Toast.makeText(getApplicationContext(), s.toString(),
 	                              Toast.LENGTH_SHORT).show();*/
-	                	  survey.sumbit();
+	                	  
+	                	  final TextView t = (TextView) findViewById(R.id.confirm);
+	                	  
+	                	  setContentView(R.layout.confirmpage);
+	                	  
+	                	  
+		                  Button sample = (Button) findViewById(R.id.finish);
+		                  sample.setText("Submit Survey");
+		                  sample.setOnClickListener(new View.OnClickListener() {
+		                        public void onClick(View view) {
+		                            boolean success = survey.submit(); //Push.sendAnswersToServer(answers);
+		                            if (success) {
+		                                t.setText("Successfully submitted the survey");
+		                                finish();
+		                            } else {
+		                                t.setText("Ooops, something went wrong");
+		                            }
+	//	                            
+	//	                            finish();
+		                        }
+	
+		                  });
 //	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
 //	                      myIntent.putExtras(bundle);
 //	                	  startActivityForResult(myIntent, 0);
