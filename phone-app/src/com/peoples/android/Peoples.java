@@ -46,6 +46,8 @@ public class Peoples extends ListActivity {
         //Creating a bogus Survey!
     	final Context panda = this;
         final Survey survey = new Survey(3, panda);
+        
+        Log.d(TAG, "Finished creating survey");
         if (survey.done()) throw new RuntimeException("Survey has no questions!");
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
     	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
