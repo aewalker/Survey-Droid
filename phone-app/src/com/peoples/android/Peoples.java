@@ -41,8 +41,6 @@ public class Peoples extends ListActivity {
         setContentView(R.layout.survey_list_view);
 		//Creating a bogus Survey!
         
-        final Survey survey = new Survey();
-        
 //        String[] question1choices = {"Keira Knightley",
 //        		"Natalie Portman",
 //        		"Emmanuelle Chiriqui"};
@@ -83,6 +81,7 @@ public class Peoples extends ListActivity {
         
 //        final Question question = question1;
     	final Context panda = this;
+        final Survey survey = new Survey(panda);
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
     	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
     	q.setText(survey.getText());
