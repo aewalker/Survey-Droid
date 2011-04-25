@@ -2,21 +2,16 @@ package com.peoples.android;
 
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.peoples.android.activities.ConfirmSubmissionSurvey;
-import com.peoples.android.model.Choice;
-import com.peoples.android.model.Question;
 import com.peoples.android.model.Survey;
 
 /**
@@ -35,7 +30,8 @@ public class Peoples extends ListActivity {
     
     
     /** Called when the activity is first created. */
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
