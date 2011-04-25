@@ -112,6 +112,7 @@ public class Survey
 		
 		//set up the first question, then iterate until done
 		firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
+		currentQ = firstQ;
 		while (!toDo.isEmpty())
 		{
 			setUpQuestion(toDo.remove(),
@@ -224,6 +225,7 @@ public class Survey
 			return cMap.get(id);
 		}
 		Cursor c = db.getChoice(id);
+		c.moveToFirst();
 		Choice newC = new Choice(c.getString(
 				c.getColumnIndexOrThrow(PeoplesDB.ChoiceTable.CHOICE_TEXT)),
 				id, ctxt);
