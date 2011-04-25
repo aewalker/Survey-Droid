@@ -6,16 +6,29 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Stack;
-//import com.peoples.android.database.SurveyDBHandler;
+
+import com.peoples.android.database.SurveyDBHandler;
+
+import java.util.HashMap;
+
+import android.content.Context;
+import android.database.Cursor;
+
+import com.peoples.android.database.PeoplesDB;
+import com.peoples.android.database.SurveyDBHandler;
 
 //import org.json.JSONArray;
 //import org.json.JSONObject;
 
 /**
  * The highest-level survey-related class.  A survey object contains everything
- * needed to administer a given survey to subjects.
+ * needed to administer a given survey to subjects.  For a summary of how to
+ * use this class, see the model-design document.
  * 
  * @author Diego Vargas
  * @author Tony Xaio
@@ -23,11 +36,15 @@ import java.util.Stack;
  */
 public class Survey
 {
+	//the database helper instance and Context
+	private final SurveyDBHandler db;
+	private final Context ctxt;
+	
 	//the survey name
-	private String name;
+	private final String name;
 	
 	//the first question in the survey
-	private Question firstQ;
+	private final Question firstQ;
 	
 	//TODO I think this should be handled somewhere else
 	//field for each day; holds times in 24 hour format separated by commas
@@ -40,10 +57,10 @@ public class Survey
 	private Answer currentAns;
 	
 	//a registry of live Answers for Conditions to look at
-	private Stack<Answer> registry = new Stack<Answer>();
+	private final Stack<Answer> registry = new Stack<Answer>();
 	
 	//the Question history via a stack
-	private Stack<Question> history = new Stack<Question>();
+	private final Stack<Question> history = new Stack<Question>();
 	
 	/*-----------------------------------------------------------------------*/
 	
@@ -52,15 +69,181 @@ public class Survey
 	 * database and initializing the child objects.
 	 * 
 	 * @param id - the survey_id from the database to base this Survey on
+	 * @param ctxt - the current Context
+	 * 
+	 * @throws IllegalArgumentException if the survey with id does not exist
+	 * @throws IllegalArgumentException if any of the required columns do not
+	 * exist in the database or can't be found in the results set
+	 * 
+	 * @see SurveyDBHandler
+	 * @see PeoplesDB
 	 */
-	public Survey(int id)
+	public Survey(int id, Context ctxt)
 	{
-		//TODO database stuff
+		/*
+		 * Just a friendly warning: this constructor and it's helpers are
+		 * just really ugly.  I (Austin) don't think there's much that can
+		 * be done about it; it is just a really complicated data structure to
+		 * initialize.  The rationale behind the design is the need for the UI
+		 * to be snappy.  By doing all the work in the constructor, a Survey
+		 * can be built once, and then the subject can be notified that it is
+		 * time to take the survey.  At that point, all operations are constant
+		 * time, so the subject gets a very responsive UI.
+		 */
+		
+		//open up a database helper
+		this.ctxt = ctxt;
+		db = new SurveyDBHandler(ctxt);
+		db.openRead();
+		
+		//start out by getting the survey level stuff done
+		Cursor s = db.getSurvey(id);
+		if (!s.moveToFirst())
+			throw new IllegalArgumentException("no such survey");
+		name = s.getString(
+				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.NAME));
+		int firstQID = s.getInt(
+				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.QUESTION_ID));
+		
+		//set up a bunch of data structures to help out
+		Map<Integer, Question> qMap = new HashMap<Integer, Question>();
+		Map<Integer, Choice> cMap = new HashMap<Integer, Choice>();
+		Map<Integer, Boolean> seen = new HashMap<Integer, Boolean>();
+		Queue<Integer> toDo = new LinkedList<Integer>();
+		Collection<Branch> bList = new LinkedList<Branch>();
+		Collection<Condition> cList = new LinkedList<Condition>();
+		
+		//set up the first question, then iterate until done
+		firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
+		while (!toDo.isEmpty())
+		{
+			setUpQuestion(toDo.remove(),
+					qMap, cMap, seen, bList, cList, toDo);
+		}
+		db.close();
+		
+		//now that we have a complete Question mapping, go back and set
+		//all the Branches and Conditions
+		for (Branch branch : bList)
+		{
+			branch.setQuestion(qMap);
+		}
+		for (Condition condition : cList)
+		{
+			condition.setQuestion(qMap);
+		}
+		
 	}
 	
-	//fake constructor for testing only
-	public Survey()
+	//set up the Question object with id
+	private Question setUpQuestion(
+			int id,
+			Map<Integer, Question> qMap,
+			Map<Integer, Choice> cMap,
+			Map<Integer, Boolean> seen,
+			Collection<Branch> bList,
+			Collection<Condition> cList,
+			Queue<Integer> toDo)
 	{
+		Cursor q = db.getQuestion(id);
+		q.moveToFirst();
+		String text = q.getString(
+				q.getColumnIndexOrThrow(PeoplesDB.QuestionTable.Q_TEXT));
+		
+		//set up Branches
+		Cursor b = db.getBranches(id);
+		b.moveToFirst();
+		LinkedList<Branch> branches = new LinkedList<Branch>();
+		while (!b.isAfterLast())
+		{
+			int b_id = b.getInt(
+					b.getColumnIndexOrThrow(PeoplesDB.BranchTable._ID));
+			int q_id = b.getInt(
+					b.getColumnIndexOrThrow(PeoplesDB.BranchTable.NEXT_Q));
+			branches.add(new Branch(q_id,
+					getConditions(b_id, cMap, seen, toDo, cList)));
+			if (!seen.containsKey(q_id))
+			{
+				seen.put(q_id, true);
+				toDo.add(q_id);
+			}
+			b.moveToNext();
+		}
+		for (Branch branch : branches)
+		{
+			bList.add(branch);
+		}
+		b.close();
+		
+		//set up Choices
+		Cursor ch = db.getChoices(id);
+		ch.moveToFirst();
+		LinkedList<Choice> choices = new LinkedList<Choice>();
+		while (!ch.isAfterLast())
+		{
+			choices.add(getChoice(ch.getInt(ch.getColumnIndexOrThrow(
+							PeoplesDB.ChoiceTable._ID)),
+							cMap));
+			ch.moveToNext();
+		}
+		ch.close();
+		
+		//finally, create the new Question
+		Question newQ = new Question(text, id, branches, choices, ctxt);
+		qMap.put(id, newQ);
+		return newQ;
+	}
+	
+	//gets a Branch's Conditions by branch_id
+	private Collection<Condition> getConditions(
+			int id,
+			Map<Integer, Choice> cMap,
+			Map<Integer, Boolean> seen,
+			Queue<Integer> toDo,
+			Collection<Condition> cList)
+	{
+		Collection<Condition> conditions = new LinkedList<Condition>();
+		Cursor c = db.getConditions(id);
+		c.moveToFirst();
+		while (!c.isAfterLast())
+		{
+			int q_id = c.getInt(c.getColumnIndexOrThrow(
+					PeoplesDB.ConditionTable. QUESTION_ID));
+			int t = c.getInt(c.getColumnIndexOrThrow(
+					PeoplesDB.ConditionTable.TYPE));
+			int c_id = c.getInt(c.getColumnIndexOrThrow(
+					PeoplesDB.ConditionTable.CHOICE_ID));
+			conditions.add(new Condition(q_id, getChoice(c_id, cMap), t, registry));
+		}
+		
+		return conditions;
+	}
+	
+	//get the Choice corresponding to id
+	private Choice getChoice(int id, Map<Integer, Choice> cMap)
+	{
+		if (cMap.containsKey(id))
+		{
+			return cMap.get(id);
+		}
+		Cursor c = db.getChoice(id);
+		Choice newC = new Choice(c.getString(
+				c.getColumnIndexOrThrow(PeoplesDB.ChoiceTable.CHOICE_TEXT)),
+				id, ctxt);
+		cMap.put(id, newC);
+		return newC;
+	}
+	
+	/**
+	 * A simple constructor to put together a sample survey.
+	 * 
+	 * @deprecated
+	 */
+	public Survey(Context ctxt)
+	{
+		this.ctxt = ctxt;
+		db = null;
+		
 		String[] questionTexts =
 		{
 			"Who is your favorite actress?",
@@ -89,14 +272,18 @@ public class Survey
 			LinkedList<Choice> choicesList = new LinkedList<Choice>();
 			for (String choice : choices[i])
 			{
-				choicesList.add(new Choice(choice, 0));
+				choicesList.add(new Choice(choice, 0, ctxt));
 			}
 			LinkedList<Branch> branches = new LinkedList<Branch>();
 			if (prevQ != null)
 			{
-				branches.add(new Branch(prevQ, new LinkedList<Condition>()));
+				Branch b = new Branch(i, new LinkedList<Condition>());
+				Map<Integer, Question> qMap = new HashMap<Integer, Question>();
+				qMap.put(i, prevQ);
+				b.setQuestion(qMap);
+				branches.add(b);
 			}
-			prevQ = new Question(questionTexts[i], 0, branches, choicesList);
+			prevQ = new Question(questionTexts[i], i, branches, choicesList, ctxt);
 		}
 		firstQ = prevQ;
 		currentQ = prevQ;
@@ -104,6 +291,8 @@ public class Survey
 		if (firstQ == null) throw new RuntimeException("null question");
 		if (firstQ.getChoices().length == 0) throw new RuntimeException("no choices");
 	}
+	
+	/*-----------------------------------------------------------------------*/
 	
 	/**
 	 * Is the Survey over?

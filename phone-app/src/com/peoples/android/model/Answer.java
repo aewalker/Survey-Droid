@@ -6,7 +6,9 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-import com.peoples.android.database.PeoplesDB;
+import android.content.Context;
+
+import com.peoples.android.database.SurveyDBHandler;
 
 //import org.json.JSONException;
 //import org.json.JSONObject;
@@ -30,18 +32,21 @@ import com.peoples.android.database.PeoplesDB;
 public class Answer
 {
     //the Question being answered
-    private Question question;
-    private int questionID;
+    private final Question question;
+    private final int questionID;
 
     //the Choice given for that Question
-    private Choice choice;
-    private int choiceID;
+    private final Choice choice;
+    private final int choiceID;
 
     //the text given for a free-response Question
-    private String text;
+    private final String text;
 
     //time when this Answer was given/created
-    private long created;
+    private final long created;
+    
+    //Android Context for database call
+    private final Context ctxt;
 	
     /*-----------------------------------------------------------------------*/
     
@@ -54,7 +59,7 @@ public class Answer
      * @param c_id - that Choice's id (ignored if Choice is null)
      * @param t - the answer text for a free response Question
      */
-	public Answer(Question q, int q_id, Choice c, int c_id, String t)
+	public Answer(Question q, int q_id, Choice c, int c_id, String t, Context ctxt)
 	{
 		question = q;
 		questionID = q_id;
@@ -70,6 +75,7 @@ public class Answer
 			choice = null;
 			choiceID = 0;
 		}
+		this.ctxt = ctxt;
 		created = System.currentTimeMillis() / 1000;
 	}
 	
@@ -112,11 +118,22 @@ public class Answer
      */
     public boolean write()
     {
-    	//TODO database stuff
-    	return true;
+    	SurveyDBHandler db = new SurveyDBHandler(ctxt);
+    	db.openWrite();
+    	boolean worked = false;
+    	if (text == null) //multiple choice
+    	{
+    		worked = db.writeAnswer(questionID, choiceID, created);
+    	}
+    	else //free response
+    	{
+    		worked = db.writeAnswer(questionID, text, created);
+    	}
+    	db.close();
+    	return worked;
     }
 
-    //TODO I think this should be done elsewhere
+    //TODO I (Austin) think this should be done elsewhere
     /*public JSONObject getAsJson() {
         JSONObject j = null;
         try {
