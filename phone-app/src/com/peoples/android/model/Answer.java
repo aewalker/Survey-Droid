@@ -120,15 +120,17 @@ public class Answer
     {
     	SurveyDBHandler db = new SurveyDBHandler(ctxt);
     	db.openWrite();
+    	boolean worked = false;
     	if (text == null) //multiple choice
     	{
-    		return db.writeAnswer(questionID, choiceID, created);
+    		worked = db.writeAnswer(questionID, choiceID, created);
     	}
     	else //free response
     	{
-    		return db.writeAnswer(questionID, text, created);
+    		worked = db.writeAnswer(questionID, text, created);
     	}
-    	
+    	db.close();
+    	return worked;
     }
 
     //TODO I (Austin) think this should be done elsewhere

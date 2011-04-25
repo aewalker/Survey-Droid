@@ -92,6 +92,7 @@ public class Choice
 		SurveyDBHandler db = new SurveyDBHandler(ctxt);
 		db.openRead();
 		Cursor c = db.getQuestionHistory(id);
+		db.close();
 		c.moveToFirst();
 		while (!c.isAfterLast())
 		{
