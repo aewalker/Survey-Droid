@@ -323,7 +323,11 @@ public class Survey
 	 */
 	public Choice[] getChoices()
 	{
-		return currentQ.getChoices();
+		if (currentQ != null)
+		{
+			return currentQ.getChoices();
+		}
+		return new Choice[0];
 	}
 	
 	/**
@@ -409,7 +413,10 @@ public class Survey
 	{
 		history.push(currentQ);
 		currentQ = currentQ.nextQuestion();
-		currentAns = currentQ.peekAns();
+		if (currentQ != null)
+		{
+			currentAns = currentQ.peekAns();
+		}
 	}
 	
 	/**

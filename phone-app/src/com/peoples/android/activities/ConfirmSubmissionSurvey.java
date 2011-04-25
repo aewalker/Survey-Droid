@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.peoples.android.R;
-import com.peoples.android.server.Push;
 
 public class ConfirmSubmissionSurvey extends Activity {
 	
@@ -47,7 +46,7 @@ public class ConfirmSubmissionSurvey extends Activity {
         sample.setText("Submit Survey");
         sample.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                boolean success = Push.sendAnswersToServer(answers);
+                boolean success = true; //Push.sendAnswersToServer(answers);
                 if (success) {
                     t.setText("Successfully submitted the survey");
                     finish();
