@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.peoples.android.database.PeoplesDB;
 import static com.peoples.android.database.PeoplesDB.*;
-import com.peoples.android.model.Survey;
+import com.peoples.android.server.WebClient;
 
 public class Pull extends WebClient {
 
