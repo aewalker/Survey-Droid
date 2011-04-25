@@ -48,8 +48,6 @@ public class Peoples extends ListActivity {
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
     	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
     	q.setText(survey.getText());
-    	
-    	//testing yo
           
         Button next = (Button) findViewById(R.id.button2);
         next.setText("Next Question");
@@ -57,6 +55,7 @@ public class Peoples extends ListActivity {
               public void onClick(View view) {
             	  
             	  ListView lv = getListView();
+
             	  if ((survey.getChoices().length != 0 && lv.getCheckedItemPosition() != -1)||
             			  (survey.getChoices().length == 0))
             	  {
@@ -78,6 +77,10 @@ public class Peoples extends ListActivity {
 	            	  }
 
 	            	  survey.nextQuestion(); //go to the next Question
+	            	  
+	            	  //if (survey.getAnswerChoice() != -1)
+	            		  //lv.setItemChecked(survey.getAnswerChoice(), true);
+	            	  lv.setItemChecked(1, true);
 	            	  
 	                  if (survey.done()) //if there are no more Questions....
 	                  {
@@ -133,7 +136,12 @@ public class Peoples extends ListActivity {
               public void onClick(View view) {
             	  
             	  survey.prevQuestion(); //go to the previous Question
-	            	  
+            	  ListView lv = getListView();
+            	  
+            	  lv.setItemChecked(1, true);
+            	  //if (survey.getAnswerChoice() != -1)
+            		  //lv.setItemChecked(survey.getAnswerChoice(), true);
+            	  
             	  if (survey.getChoices().length != 0) //if multiple choice
             	  {
 	                  setListAdapter(new ArrayAdapter<String>(panda, 
