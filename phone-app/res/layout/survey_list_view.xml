@@ -4,7 +4,8 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:stretchColumns="1">
+    android:stretchColumns="1"
+    android:background="@drawable/around_world">
    	<TableRow>
 	    <TextView 
 	    xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,7 +25,7 @@
 	android:layout_height="wrap_content"
 	android:text="Previous Question"
 	android:layout_weight="1" android:layout_width="0dip"
-	style="Widget.ImageButton">
+	android:background="@drawable/custom_button">
 	</Button>
 	<Button 
 	xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,14 +33,14 @@
 	android:layout_height="wrap_content"
 	android:text="Next Question"
 	android:layout_weight="1" android:layout_width="0dip"
-	style="Widget.ImageButton">
+	android:background="@drawable/custom_button">
 	</Button>
 	</LinearLayout>
 		</TableRow>
 		   	<TableRow>
-<ListView android:layout_height="fill_parent" 
+<ListView android:layout_height="fill_parent"
 android:id="@id/android:list" 
-android:layout_width="fill_parent" 
+android:layout_width="wrap_content" 
 android:choiceMode="singleChoice" 
 android:layout_alignParentRight="true"></ListView>
    	</TableRow>

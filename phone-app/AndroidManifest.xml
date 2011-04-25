@@ -32,7 +32,7 @@
             </intent-filter>
         </service>
 
-		<activity android:name=".Peoples" android:label="@string/app_name">
+		<activity android:name=".activities.MainActivity" android:label="@string/app_name">
 		<!-- <activity android:name=".Peoples" android:label="@string/app_name"> -->
 
 			<intent-filter>
@@ -40,7 +40,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-
+		<activity android:name=".Peoples"></activity>
 		<activity android:name=".activities.ConfirmSubmissionSurvey"></activity>
 		<activity android:name=".processTest.LocationTestActivity"></activity>
 
