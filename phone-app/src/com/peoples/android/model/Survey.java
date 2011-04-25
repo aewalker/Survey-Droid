@@ -218,7 +218,7 @@ public class Survey
 	{
 		history.push(currentQ);
 		currentQ = currentQ.nextQuestion();
-		currentAns = currentQ.popAns();
+		currentAns = currentQ.peekAns();
 	}
 	
 	/**
@@ -230,7 +230,7 @@ public class Survey
 	{
 		if (isOnFirst()) throw new RuntimeException("no previous Question");
 		currentQ = history.pop();
-		currentAns = currentQ.peekAns();
+		currentAns = registry.pop();
 	}
 	
 	/**
