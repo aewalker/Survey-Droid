@@ -176,6 +176,8 @@ public class Survey
 		{
 			return -1;
 		}
+		if (!currentAns.getQuestion().equals(currentQ))
+			throw new RuntimeException("questions aren't equal");
 		Choice choice = currentAns.getChoice();
 		if (choice != null) //multiple choice
 		{
