@@ -236,7 +236,7 @@ public class Survey
 	
 	/**
 	 * Is the Survey on the first Question?  Useful when choosing to whether or
-	 * not to display a back button.
+	 * not to display a back button. 
 	 * 
 	 * @return true or false
 	 */
