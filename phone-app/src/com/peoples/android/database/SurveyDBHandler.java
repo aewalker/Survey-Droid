@@ -32,19 +32,51 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	}
 	
 	/**
+	 * Get the Survey level data.
 	 * 
+	 * @param id - the survey_id
 	 */
-	public Cursor getSurveys()
+	public Cursor getSurvey(int id)
 	{
-		if (D) Log.e(TAG, "getting surveys");
+		if (D) Log.e(TAG, "getting survey");
 		
 		//set up the query
-		String table = PeoplesDB.SURVEY_TABLE_NAME;
-		String[] cols = {PeoplesDB.SurveyTable.NAME,
-						 PeoplesDB.SurveyTable.QUESTION_ID};
-		String selection = PeoplesDB.SurveyTable.ID;
-		return null;
+
+		String    table    = PeoplesDB.SURVEY_TABLE_NAME;
+		String[]  cols     = {PeoplesDB.SurveyTable.NAME,
+						      PeoplesDB.SurveyTable.QUESTION_ID};
+		String    selc     = PeoplesDB.SurveyTable.ID + " =  ?";
+		String[]  selcArgs = {Integer.toString(id)};
+		String    group    = null;
+		String    having   = null;
+		String    orderBy  = null;
 		
+		//run it
+		return db.query(table, cols, selc, selcArgs, group, having, orderBy);
+	}
+	
+	/**
+	 * Get the Question level data.
+	 * 
+	 * @param id - the survey_id
+	 */
+	public Cursor getQuestions(int id)
+	{
+		if (D) Log.e(TAG, "getting questions");
+		
+		//set up the query
+		String    table    = PeoplesDB.QUESTION_TABLE_NAME;
+		String[]  cols     = {PeoplesDB.QuestionTable.Q_TEXT,
+						      PeoplesDB.SurveyTable.QUESTION_ID};
+		String    selc     = PeoplesDB.SurveyTable.ID + " =  ?";
+		String[]  selcArgs = {Integer.toString(id)};
+		String    group    = null;
+		String    having   = null;
+		String    orderBy  = null;
+
+		
+		//run it
+		return db.query(table, cols, selc, selcArgs, group, having, orderBy);
 	}
 	
 	
