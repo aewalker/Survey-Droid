@@ -18,12 +18,12 @@ import android.util.Log;
  */
 public class PeoplesDBHandler {
 	
-	private static final String TAG = "LocationTableHandler";
-	private static final boolean D = true;
+	protected static final String TAG = "LocationTableHandler";
+	protected static final boolean D = true;
 	
-	private PeoplesDB pdb;
-	private Context   contx;
-	private SQLiteDatabase db;
+	protected PeoplesDB pdb;
+	protected Context   contx;
+	protected SQLiteDatabase db;
 	
 	public PeoplesDBHandler(Context context){
 		this.contx = context;

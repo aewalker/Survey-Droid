@@ -232,8 +232,8 @@ public class Survey
 	{
 		if (isOnFirst()) throw new RuntimeException("no previous Question");
 		currentQ = history.pop();
-		currentAns = currentQ.popAns();
-		registry.pop();
+		currentQ.popAns();
+		currentAns = registry.pop();
 	}
 	
 	/**
