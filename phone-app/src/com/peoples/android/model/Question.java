@@ -218,6 +218,12 @@ public class Question
 		return null;
 	}
 	
+	/**
+	 * Look at the most recent Answer.  Doesn't mark the question as having not
+	 * been answered.
+	 * 
+	 * @return the most recent Answer
+	 */
 	public Answer peekAns()
 	{
 		if (!answers.isEmpty())
