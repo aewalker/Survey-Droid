@@ -211,7 +211,11 @@ public class Question
 	public Answer popAns()
 	{
 		answered = false;
-		return answers.pop();
+		if (!answers.isEmpty())
+		{
+			return answers.pop();
+		}
+		return null;
 	}
 }
 	
