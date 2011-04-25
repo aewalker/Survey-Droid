@@ -171,13 +171,13 @@ public class Survey
 					b.getColumnIndexOrThrow(PeoplesDB.BranchTable._ID));
 			int q_id = b.getInt(
 					b.getColumnIndexOrThrow(PeoplesDB.BranchTable.NEXT_Q));
+			if (!seen.containsKey(q_id))
+            {
+                seen.put(q_id, true);
+                toDo.add(q_id);
+            }
 			branches.add(new Branch(q_id,
 					getConditions(b_id, cMap, seen, toDo, cList)));
-			if (!seen.containsKey(q_id))
-			{
-				seen.put(q_id, true);
-				toDo.add(q_id);
-			}
 			b.moveToNext();
 		}
 		for (Branch branch : branches)
@@ -189,6 +189,7 @@ public class Survey
 		//set up Choices
 		Cursor ch = db.getChoices(id);
 		ch.moveToFirst();
+		Log.d("Survey", "I have this many choices " +  ch.getColumnCount());
 		LinkedList<Choice> choices = new LinkedList<Choice>();
 		while (!ch.isAfterLast())
 		{
@@ -198,7 +199,7 @@ public class Survey
 			ch.moveToNext();
 		}
 		ch.close();
-		
+		Log.d("Survey", "Building new question");
 		//finally, create the new Question
 		Question newQ = new Question(text, id, branches, choices, ctxt);
 		qMap.put(id, newQ);
@@ -225,6 +226,7 @@ public class Survey
 			int c_id = c.getInt(c.getColumnIndexOrThrow(
 					PeoplesDB.ConditionTable.CHOICE_ID));
 			conditions.add(new Condition(q_id, getChoice(c_id, cMap), t, registry));
+			c.moveToNext();
 		}
 		c.close();
 		return conditions;
