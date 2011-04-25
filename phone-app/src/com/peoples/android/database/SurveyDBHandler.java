@@ -48,7 +48,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 		String    table    = PeoplesDB.SURVEY_TABLE_NAME;
 		String[]  cols     = {PeoplesDB.SurveyTable.NAME,
 						      PeoplesDB.SurveyTable.QUESTION_ID};
-		String    selc     = PeoplesDB.SurveyTable.ID + " =  ?";
+		String    selc     = PeoplesDB.SurveyTable._ID + " =  ?";
 		String[]  selcArgs = {Integer.toString(id)};
 		String    group    = null;
 		String    having   = null;

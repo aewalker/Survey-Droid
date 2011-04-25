@@ -30,7 +30,7 @@ public class ConfirmSubmissionSurvey extends Activity {
             try {
                 answersTemp = new JSONArray(answersJson);
             } catch (JSONException e) {
-                Log.e("confirmSubmission", e.getMessage());
+                Log.d("confirmSubmission", e.getMessage());
             }
         }
         final JSONArray answers = answersTemp;

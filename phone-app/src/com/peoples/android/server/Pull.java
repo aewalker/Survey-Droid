@@ -32,7 +32,7 @@ public class Pull extends WebClient {
             syncChocies(sdb, json.getJSONArray("choices"));
             syncBranches(sdb, json.getJSONArray("branches"));
             syncConditions(sdb, json.getJSONArray("conditions"));
-
+            pdb.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
