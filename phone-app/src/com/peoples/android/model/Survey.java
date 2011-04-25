@@ -101,6 +101,8 @@ public class Survey
 		firstQ = prevQ;
 		currentQ = prevQ;
 		name = "Test Survey";
+		if (firstQ == null) throw new RuntimeException("null question");
+		if (firstQ.getChoices().length == 0) throw new RuntimeException("no choices");
 	}
 	
 	/**

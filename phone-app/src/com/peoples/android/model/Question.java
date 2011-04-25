@@ -210,6 +210,7 @@ public class Question
 	 */
 	public Answer popAns()
 	{
+		answered = false;
 		return answers.pop();
 	}
 }
