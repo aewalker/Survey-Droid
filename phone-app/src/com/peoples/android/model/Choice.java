@@ -98,8 +98,12 @@ public class Choice
 		{
 			if (c.getInt(c.getColumnIndexOrThrow(
 					PeoplesDB.AnswerTable.CHOICE_ID)) == this.id)
+			{
+				c.close();
 				return true;
+			}
 		}
+		c.close();
 		return false;
 	}
 }
