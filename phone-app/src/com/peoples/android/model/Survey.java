@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.peoples.android.database.PeoplesDB;
 import com.peoples.android.database.SurveyDBHandler;
@@ -37,6 +38,10 @@ public class Survey
 	//the database helper instance and Context
 	private final SurveyDBHandler db;
 	private final Context ctxt;
+	
+	//Android log stuff
+	private final boolean D = true;
+	private final String TAG = "SURVEY";
 	
 	//the survey name
 	private final String name;
@@ -102,6 +107,7 @@ public class Survey
 				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.NAME));
 		int firstQID = s.getInt(
 				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.QUESTION_ID));
+		s.close();
 		
 		//set up a bunch of data structures to help out
 		Map<Integer, Question> qMap = new HashMap<Integer, Question>();
@@ -116,6 +122,7 @@ public class Survey
 		currentQ = firstQ;
 		while (!toDo.isEmpty())
 		{
+			if (D) Log.d(TAG, "next question");
 			setUpQuestion(toDo.remove(),
 					qMap, cMap, seen, bList, cList, toDo);
 		}
