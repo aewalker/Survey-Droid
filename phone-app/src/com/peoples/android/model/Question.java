@@ -128,13 +128,13 @@ public class Question
 	 * 
 	 * @throws RuntimeException if called when there are no Choices
 	 * @throws RuntimeException if given an invalid Choice
-	 * @throws RuntimeException if the current Question has already been
-	 * answered.
 	 */
 	public Answer answer(Choice c)
 	{
-		if (answered) throw new RuntimeException(
-				"attempt to answer the same Question multiple times");
+//		if (answered) throw new RuntimeException(
+//				"attempt to answer the same Question multiple times");
+		
+		if (answered) answers.pop();
 		
 		if (choices.size() == 0)
 		{
@@ -214,6 +214,15 @@ public class Question
 		if (!answers.isEmpty())
 		{
 			return answers.pop();
+		}
+		return null;
+	}
+	
+	public Answer peekAns()
+	{
+		if (!answers.isEmpty())
+		{
+			return answers.peek();
 		}
 		return null;
 	}

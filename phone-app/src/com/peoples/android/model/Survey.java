@@ -230,13 +230,12 @@ public class Survey
 	{
 		if (isOnFirst()) throw new RuntimeException("no previous Question");
 		currentQ = history.pop();
-		currentQ.popAns();
-		currentAns = registry.pop();
+		currentAns = currentQ.peekAns();
 	}
 	
 	/**
 	 * Is the Survey on the first Question?  Useful when choosing to whether or
-	 * not to display a back button. 
+	 * not to display a back button.
 	 * 
 	 * @return true or false
 	 */
