@@ -109,8 +109,13 @@ public class Peoples extends ListActivity {
 			                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
 			              	  q.setText(survey.getText());
 			              	  
+			              	  Log.e(TAG, "badpanda");
+			              	  ListView hi = getListView();
 			            	  if (survey.getAnswerChoice() != -1)
-			            		  lv.setItemChecked(survey.getAnswerChoice(), true);
+			            	  {
+			            		  hi.setItemChecked(survey.getAnswerChoice(), true);
+			            		  Log.e(TAG, "panda");
+			            	  }
 	                	  }
 	                	  else //if free response
 	                	  {
@@ -121,7 +126,8 @@ public class Peoples extends ListActivity {
 			              	  
 			              	  if (!survey.getAnswerText().equals(""))
 			              	  {
-			              		  //EditText e = (TextView) this.findViewById(R.id.question_textView);
+			              		  EditText e = (EditText) findViewById(R.id.editText1);
+			              		  e.setText(survey.getAnswerText());
 			              	  }
 	                	  }
 	                	  
@@ -139,30 +145,36 @@ public class Peoples extends ListActivity {
         prev.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
             	  
-            	  survey.prevQuestion(); //go to the previous Question
-            	  ListView lv = getListView();
-            	  
-            	  if (survey.getChoices().length != 0) //if multiple choice
-            	  {
-	                  setListAdapter(new ArrayAdapter<String>(panda, 
-	                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
-	              	  q.setText(survey.getText());
-	              	  
-	            	  if (survey.getAnswerChoice() != -1)
-	            		  lv.setItemChecked(survey.getAnswerChoice(), true);
+            	  if (!survey.isOnFirst())
+	            	  {
+	            	  survey.prevQuestion(); //go to the previous Question
+	            	  ListView lv = getListView();
+	            	  
+	            	  if (survey.getChoices().length != 0) //if multiple choice
+	            	  {
+		                  setListAdapter(new ArrayAdapter<String>(panda, 
+		                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
+		              	  q.setText(survey.getText());
+		              	  
+		            	  if (survey.getAnswerChoice() != -1)
+		            		  lv.setItemChecked(survey.getAnswerChoice(), true);
+	            	  }
+	            	  else //if free response
+	            	  {
+	            		  String[] test = {"Enter your response here"};
+	            		  setListAdapter(new ArrayAdapter<String>(panda, 
+		                		  R.layout.list_item, test));
+		              	  q.setText(survey.getText());
+		              	  
+		              	  if (!survey.getAnswerText().equals(""))
+		              	  {
+		              		  EditText e = (EditText) findViewById(R.id.editText1);
+		              		  e.setText(survey.getAnswerText());
+		              	  }
+	            	  }
             	  }
-            	  else //if free response
-            	  {
-            		  String[] test = {"Enter your response here"};
-            		  setListAdapter(new ArrayAdapter<String>(panda, 
-	                		  R.layout.list_item, test));
-	              	  q.setText(survey.getText());
-	              	  
-	              	  if (!survey.getAnswerText().equals(""))
-	              	  {
-	              		  
-	              	  }
-            	  }            
+            	  else Toast.makeText(getApplicationContext(), "You can't go back it's the first question yo!",
+                          Toast.LENGTH_SHORT).show();
         	  }
           });
     }
