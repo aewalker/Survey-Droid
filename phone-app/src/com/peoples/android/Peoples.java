@@ -41,47 +41,8 @@ public class Peoples extends ListActivity {
         if(D) Log.e(TAG, "+++ ON CREATE +++");
         setContentView(R.layout.survey_list_view);
 
-		//Creating a bogus Survey!
-        
-//        String[] question1choices = {"Keira Knightley",
-//        		"Natalie Portman",
-//        		"Emmanuelle Chiriqui"};
-//        final Question question1 = new Question(1, "Who is your favorite actress?",
-//        		question1choices, null);
-//        String[] question2choices = {"Red",
-//        		"Blue",
-//        		"Green",
-//        		"Purple"};
-//        final Question question2 = new Question(2, "What is your favorite color", 
-//        		null, null);	
-//        String[] question3choices = {"Panda",
-//        		"Tiger",
-//        		"Penguin"};
-//        final Question question3 = new Question(3, "What is your favorite animal?", 
-//        		question3choices, null);
-//        String[] question4choices = {"10",
-//        		"24",
-//        		"33"};
-//        final Question question4 = new Question(4, "How old are you?", 
-//        		question4choices, null);	
-//        final Question question5 = new Question(5, "What country are you from?", 
-//        		CHOICES, null);
-//        
-//        question1.setNextQuestionID(2);
-//        question2.setNextQuestionID(3);
-//        question3.setNextQuestionID(4);
-//        question4.setNextQuestionID(5);
-//        question5.setNextQuestionID(1104);
-//        
-//        survey.addQuestion(question1);
-//        survey.addQuestion(question2);
-//        survey.addQuestion(question3);
-//        survey.addQuestion(question4);
-//        survey.addQuestion(question5);
-//    
-//        survey.updateCurrentQuestionID(1);
-        
-//        final Question question = question1;
+		
+        //Creating a bogus Survey!
     	final Context panda = this;
         final Survey survey = new Survey(panda);
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
