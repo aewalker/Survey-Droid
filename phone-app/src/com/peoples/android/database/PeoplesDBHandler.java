@@ -119,7 +119,6 @@ public class PeoplesDBHandler {
 	public void close() {
 		if(D) Log.d(TAG, "in close()");
 		pdb.close();
-		db.close();
 	}
 	
 	

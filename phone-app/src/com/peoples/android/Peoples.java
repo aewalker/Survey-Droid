@@ -185,8 +185,8 @@ public class Peoples extends ListActivity {
     
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-      //super.onConfigurationChanged(newConfig);
-      //setContentView(R.layout.myLayout);
+        super.onConfigurationChanged(newConfig);
+        setContentView(R.layout.survey_list_view);
     	Log.e(TAG, "panddaaaa");
     }
     
