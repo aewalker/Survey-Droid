@@ -321,7 +321,11 @@ public class Survey
 	 */
 	public Choice[] getChoices()
 	{
-		return currentQ.getChoices();
+		if (currentQ != null)
+		{
+			return currentQ.getChoices();
+		}
+		return new Choice[0];
 	}
 	
 	/**
