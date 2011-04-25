@@ -32,11 +32,13 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(D) Log.e(TAG, "+++ ON CREATE +++");
+        if(D) Log.d(TAG, "+++ ON CREATE main activity +++");
 
         setContentView(R.layout.main);
 
         Log.d(TAG, "Fetching surveys");
+        Pull.syncWithWeb(this);
+
 
         Button sample = (Button) findViewById(R.id.Enter);
         sample.setText("Take a sample survey");

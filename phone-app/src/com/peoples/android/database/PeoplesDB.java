@@ -13,7 +13,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     private static final boolean D = true;
 
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static final String GPS_TABLE_NAME = "gps";
     public static final String CALLLOG_TABLE_NAME = "calllog";
     public static final String ANSWER_TABLE_NAME = "answers";
@@ -131,7 +131,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
 
     }
     public static final class SurveyTable implements BaseColumns {
-    	public static final String ID = "id";
     	public static final String NAME = "name";
     	public static final String CREATED = "created";
     	public static final String QUESTION_ID = "question_id";
@@ -162,7 +161,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
     	AnswerTable.createSql();
-    	Log.e(TAG, "onCreate");
+    	Log.d(TAG, "onCreate");
 
         db.beginTransaction();
 
@@ -195,6 +194,12 @@ public class PeoplesDB extends SQLiteOpenHelper {
                 + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + GPS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CALLLOG_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ANSWER_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BRANCH_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CHOICE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CONDITION_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + QUESTION_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SURVEY_TABLE_NAME);
         onCreate(db);
     }
 
@@ -260,20 +265,20 @@ public class PeoplesDB extends SQLiteOpenHelper {
     public PeoplesDB(Context context){
     	super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
-        Log.e(TAG, "in constructor");
+        Log.d(TAG, "in constructor");
     }
 
     //testings
     @Override
     public synchronized SQLiteDatabase getReadableDatabase() {
-    	if(D) Log.e(TAG, "getReadable");
+    	if(D) Log.d(TAG, "getReadable");
     	return super.getReadableDatabase();
     }
 
     @Override
     public synchronized SQLiteDatabase getWritableDatabase() {
-    	if(D) Log.e(TAG, "getWriteable");
+    	if(D) Log.d(TAG, "getWriteable");
     	return super.getWritableDatabase();
     }
-
+    
 }

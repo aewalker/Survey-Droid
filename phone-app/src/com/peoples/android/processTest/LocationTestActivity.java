@@ -104,7 +104,7 @@ public class LocationTestActivity extends Activity {
 		locHandler.insertLocation(loc);
 		//close
 		
-		if(D) Log.e(TAG, "Here are our databases after:");
+		if(D) Log.d(TAG, "Here are our databases after:");
 		
 		String[] dbs = this.databaseList();
 		
@@ -112,7 +112,7 @@ public class LocationTestActivity extends Activity {
 		
 		if(D){ 			
 			for(String s:dbs)
-				Log.e(TAG, s);
+				Log.d(TAG, s);
 		}
 		
 		//getting database table
@@ -128,7 +128,7 @@ public class LocationTestActivity extends Activity {
 				//locString = columnNames[0] + cur.getString(nameIndex);
 				locString = cur.getString(nameIndex);
 				
-				Log.e(TAG, locString);
+				Log.d(TAG, locString);
 				next = cur.moveToNext();
 			}
 			cur.close();
@@ -147,7 +147,7 @@ public class LocationTestActivity extends Activity {
 				//locString = columnNames[0] + cur.getString(nameIndex);
 				locString = cur.getString(nameIndex);
 				
-				Log.e(TAG, locString);
+				Log.d(TAG, locString);
 				next = cur.moveToNext();
 			}
 			cur.close();
@@ -156,25 +156,25 @@ public class LocationTestActivity extends Activity {
 		
 		
 		if(D) {
-			Log.e(TAG, "now signing up with LocationManager");
+			Log.d(TAG, "now signing up with LocationManager");
 		
 			//get a location manager from the system
 			LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			
-			Log.e(TAG, "Best provider:");
+			Log.d(TAG, "Best provider:");
 			String provider = locManager.getBestProvider(new Criteria(), true);
 			
 			if(provider != null)
-				Log.e(TAG, provider);
+				Log.d(TAG, provider);
 			else
-				Log.e(TAG, "TURN GPS ON!"); //TODO turn GPS on programatically
+				Log.d(TAG, "TURN GPS ON!"); //TODO turn GPS on programatically
 			
 			
-			Log.e(TAG, "Signing up for GpsStatus:");
+			Log.d(TAG, "Signing up for GpsStatus:");
 
 			locManager.addGpsStatusListener( new GPSStatusListener() );
 			
-			Log.e(TAG, "Is best provider enabled? " + locManager.isProviderEnabled(provider) );
+			Log.d(TAG, "Is best provider enabled? " + locManager.isProviderEnabled(provider) );
 		}
 		////////////////
     }	
@@ -246,7 +246,7 @@ public class LocationTestActivity extends Activity {
 		public void onLocationChanged(Location loc)
 		{
 			
-			Log.e("LocationListener", "onLocationChanged");
+			Log.d("LocationListener", "onLocationChanged");
 			
 			Date date = new Date();
 			loc.getLatitude();
@@ -259,7 +259,7 @@ public class LocationTestActivity extends Activity {
 					Text,
 					Toast.LENGTH_SHORT).show();
 			
-			Log.e(TAG, "+++Here are all the stored locations+++");
+			Log.d(TAG, "+++Here are all the stored locations+++");
 			
 			//Get the handler
 			PeoplesDBHandler dbHandler = new PeoplesDBHandler(getApplicationContext());
@@ -280,7 +280,7 @@ public class LocationTestActivity extends Activity {
 					locString += columnNames[2]+ "\n" + cur.getDouble(2) + "\n";
 					locString += columnNames[3]+ "\n" + cur.getInt(3) + "\n";
 
-					Log.e(TAG, locString);
+					Log.d(TAG, locString);
 					next = cur.moveToNext();
 				}
 				cur.close();
@@ -310,7 +310,7 @@ public class LocationTestActivity extends Activity {
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras)
 		{
-			if(D) Log.e(TAG, "+++GPS onStatusChanged+++");
+			if(D) Log.d(TAG, "+++GPS onStatusChanged+++");
 		}
 
 	}/* End of Class MyLocationListener */
@@ -328,17 +328,17 @@ public class LocationTestActivity extends Activity {
 			 * you'll see it increase the number of satellites it can pick up and
 			 * eventually fixate call status 3, when a fix is obtained.	
 			 */
-			Log.e(TAG, "GPS Status: " + event );
+			Log.d(TAG, "GPS Status: " + event );
 			switch(event){
-				case 1: Log.e(TAG, "GPS Status: started"); break;
+				case 1: Log.d(TAG, "GPS Status: started"); break;
 	
-				case 2: Log.e(TAG, "GPS Status: stopped"); break;
+				case 2: Log.d(TAG, "GPS Status: stopped"); break;
 	
-				case 3: Log.e(TAG, "GPS Status: first fix at time:");
-						Log.e(TAG, ""+status.getTimeToFirstFix());
+				case 3: Log.d(TAG, "GPS Status: first fix at time:");
+						Log.d(TAG, ""+status.getTimeToFirstFix());
 						Location loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-						Log.e(TAG, "Location object is:");
-						Log.e(TAG, loc.toString() + "\n");
+						Log.d(TAG, "Location object is:");
+						Log.d(TAG, loc.toString() + "\n");
 						
 						//use table handler
 						PeoplesDBHandler locHandler = new PeoplesDBHandler(getApplicationContext());
@@ -347,19 +347,19 @@ public class LocationTestActivity extends Activity {
 						//pass location to write
 						long result = locHandler.insertLocation(loc);
 						//close
-						Log.e(TAG, "Result of db insertion: " + result );
+						Log.d(TAG, "Result of db insertion: " + result );
 						locHandler.close();	break;
 
-				case 4: Log.e(TAG, "GPS Status: max satellites:");
-						Log.e(TAG, ""+status.getMaxSatellites());
-						Log.e(TAG, "GPS Status: but actual satellites:");
+				case 4: Log.d(TAG, "GPS Status: max satellites:");
+						Log.d(TAG, ""+status.getMaxSatellites());
+						Log.d(TAG, "GPS Status: but actual satellites:");
 	
 						int i = 0;
 						for(GpsSatellite s : status.getSatellites() ){
 							i++;
-							Log.e(TAG, s.toString());
+							Log.d(TAG, s.toString());
 						}
-						Log.e(TAG, "There were "+i+" satellites in total"); break;
+						Log.d(TAG, "There were "+i+" satellites in total"); break;
 			}
 		}
 	}/*End of GpsStatusListener*/

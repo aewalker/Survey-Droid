@@ -18,6 +18,7 @@ import com.peoples.android.activities.ConfirmSubmissionSurvey;
 import com.peoples.android.model.Choice;
 import com.peoples.android.model.Question;
 import com.peoples.android.model.Survey;
+import com.peoples.android.server.Pull;
 
 /**
  * 
@@ -38,13 +39,17 @@ public class Peoples extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(D) Log.e(TAG, "+++ ON CREATE +++");
+        if(D) Log.d(TAG, "+++ ON CREATE +++");
+        Log.d(TAG, "Fetching surveys");
+        Pull.syncWithWeb(this);
+
+        
         setContentView(R.layout.survey_list_view);
 
 		
         //Creating a bogus Survey!
     	final Context panda = this;
-        final Survey survey = new Survey(panda);
+        final Survey survey = new Survey(1, panda);
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
     	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
     	q.setText(survey.getText());
@@ -109,12 +114,12 @@ public class Peoples extends ListActivity {
 			                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
 			              	  q.setText(survey.getText());
 			              	  
-			              	  Log.e(TAG, "badpanda");
+			              	  Log.d(TAG, "badpanda");
 			              	  ListView hi = getListView();
 			            	  if (survey.getAnswerChoice() != -1)
 			            	  {
 			            		  hi.setItemChecked(survey.getAnswerChoice(), true);
-			            		  Log.e(TAG, "panda");
+			            		  Log.d(TAG, "panda");
 			            	  }
 	                	  }
 	                	  else //if free response
