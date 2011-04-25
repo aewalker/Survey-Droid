@@ -1,7 +1,5 @@
 package com.peoples.android.database;
 
-import com.peoples.android.model.Survey;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -41,29 +39,6 @@ public class PeoplesDBHandler {
 		if(D) Log.e(TAG, "in openRead()");
 		pdb = new PeoplesDB(contx);
 		db  = pdb.getReadableDatabase();	
-	}
-	
-	
-	public long insertSurveyAsNext(Survey survey){
-		
-		//TODO: Austin implement
-		
-		// see 
-		//http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html
-		
-		//Use static constants found in PeoplesDB, for example:
-		//String surveyTableName = PeoplesDB.SURVEY_TABLE_NAME;
-		
-		//then you can do raw or prepared queries on the DB 
-		
-		return 0L;
-	}
-	
-	public Survey getNextSurvey(){
-		
-		//TODO: Austin implement
-		
-		return null;
 	}
 	
 	public long insertLocation(Location loc){
