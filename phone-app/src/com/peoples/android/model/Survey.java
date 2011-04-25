@@ -218,6 +218,7 @@ public class Survey
 	{
 		history.push(currentQ);
 		currentQ = currentQ.nextQuestion();
+		currentAns = currentQ.popAns();
 	}
 	
 	/**
