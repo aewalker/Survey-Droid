@@ -148,6 +148,7 @@ public class Survey
 		q.moveToFirst();
 		String text = q.getString(
 				q.getColumnIndexOrThrow(PeoplesDB.QuestionTable.Q_TEXT));
+		q.close();
 		
 		//set up Branches
 		Cursor b = db.getBranches(id);
@@ -214,7 +215,7 @@ public class Survey
 					PeoplesDB.ConditionTable.CHOICE_ID));
 			conditions.add(new Condition(q_id, getChoice(c_id, cMap), t, registry));
 		}
-		
+		c.close();
 		return conditions;
 	}
 	
@@ -231,6 +232,7 @@ public class Survey
 				c.getColumnIndexOrThrow(PeoplesDB.ChoiceTable.CHOICE_TEXT)),
 				id, ctxt);
 		cMap.put(id, newC);
+		c.close();
 		return newC;
 	}
 	
