@@ -14,8 +14,14 @@
 	android:layout_height="wrap_content"
 	android:id="@+id/Enter"
 	android:text="Enter here! (or maybe not)"
-	android:background="@drawable/custom_button" />
-<Button android:text="panda" android:layout_width="fill_parent" android:id="@+id/GPS" android:layout_height="wrap_content" android:background="@drawable/custom_button"></Button>
+	android:background="@drawable/custom_button" 
+	android:layout_margin="5dip"/>
+<Button android:text="panda" 
+android:layout_width="fill_parent" 
+android:id="@+id/GPS" 
+android:layout_height="wrap_content" 
+android:background="@drawable/custom_button"
+    android:layout_margin="5dip"></Button>
 
 
 
