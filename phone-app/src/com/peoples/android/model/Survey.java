@@ -225,6 +225,7 @@ public class Survey
 			return cMap.get(id);
 		}
 		Cursor c = db.getChoice(id);
+		c.moveToFirst();
 		Choice newC = new Choice(c.getString(
 				c.getColumnIndexOrThrow(PeoplesDB.ChoiceTable.CHOICE_TEXT)),
 				id, ctxt);

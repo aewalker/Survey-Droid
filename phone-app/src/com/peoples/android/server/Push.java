@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.util.Log;
+import com.peoples.android.server.WebClient;
 
 public class Push extends WebClient {
 
