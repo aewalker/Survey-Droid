@@ -407,7 +407,10 @@ public class Survey
 	{
 		history.push(currentQ);
 		currentQ = currentQ.nextQuestion();
-		currentAns = currentQ.peekAns();
+		if (currentQ != null)
+		{
+			currentAns = currentQ.peekAns();
+		}
 	}
 	
 	/**
