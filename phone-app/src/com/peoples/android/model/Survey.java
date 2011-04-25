@@ -113,6 +113,7 @@ public class Survey
 		
 		//set up the first question, then iterate until done
 		firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
+		currentQ = firstQ;
 		while (!toDo.isEmpty())
 		{
 			setUpQuestion(toDo.remove(),
