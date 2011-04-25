@@ -42,13 +42,13 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getSurvey(int id)
 	{
-		if (D) Log.e(TAG, "getting survey");
+		if (D) Log.d(TAG, "getting survey " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.SURVEY_TABLE_NAME;
 		String[]  cols     = {PeoplesDB.SurveyTable.NAME,
 						      PeoplesDB.SurveyTable.QUESTION_ID};
-		String    selc     = PeoplesDB.SurveyTable.ID + " =  ?";
+		String    selc     = PeoplesDB.SurveyTable._ID + " =  ?";
 		String[]  selcArgs = {Integer.toString(id)};
 		String    group    = null;
 		String    having   = null;
@@ -65,7 +65,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getQuestion(int id)
 	{
-		if (D) Log.e(TAG, "getting questions");
+		if (D) Log.d(TAG, "getting question " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.QUESTION_TABLE_NAME;
@@ -88,7 +88,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getChoices(int id)
 	{
-		if (D) Log.e(TAG, "getting choices");
+		if (D) Log.d(TAG, "getting choices for question " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.CHOICE_TABLE_NAME;
@@ -110,7 +110,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getChoice(int id)
 	{
-		if (D) Log.e(TAG, "getting choice");
+		if (D) Log.d(TAG, "getting choice " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.CHOICE_TABLE_NAME;
@@ -132,7 +132,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getBranches(int id)
 	{
-		if (D) Log.e(TAG, "getting branches");
+		if (D) Log.d(TAG, "getting branches for question " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.BRANCH_TABLE_NAME;
@@ -155,7 +155,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getConditions(int id)
 	{
-		if (D) Log.e(TAG, "getting conditions");
+		if (D) Log.d(TAG, "getting conditions for branch " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.CONDITION_TABLE_NAME;
@@ -184,7 +184,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getQuestionHistory(int id)
 	{
-		if (D) Log.e(TAG, "getting answers");
+		if (D) Log.d(TAG, "getting answers for question " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.ANSWER_TABLE_NAME;
@@ -212,7 +212,8 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public boolean writeAnswer(int q_id, int c_id, long created)
 	{
-		if (D) Log.e(TAG, "writing answer");
+		if (D) Log.d(TAG, "writing answer for question " + q_id
+				+ ": choice " + c_id);
 		ContentValues values = new ContentValues();
 		
 		//set up the query
@@ -235,7 +236,8 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public boolean writeAnswer(int q_id, String text, long created)
 	{
-		if (D) Log.e(TAG, "writing answer");
+		if (D) Log.d(TAG, "writing answer for question " + q_id + ": \""
+				+ text + "\"");
 		ContentValues values = new ContentValues();
 		
 		//set up the query
