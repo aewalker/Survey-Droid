@@ -119,6 +119,7 @@ public class Survey
 		
 		//set up the first question, then iterate until done
 		firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
+		Log.d("Survey", "First question Setup");
 		currentQ = firstQ;
 		while (!toDo.isEmpty())
 		{
@@ -134,10 +135,12 @@ public class Survey
 		{
 			branch.setQuestion(qMap);
 		}
+		Log.d("Survey", "branch Setup");
 		for (Condition condition : cList)
 		{
 			condition.setQuestion(qMap);
 		}
+		Log.d("Survey", "condition Setup");
 		
 	}
 	
@@ -160,6 +163,7 @@ public class Survey
 		//set up Branches
 		Cursor b = db.getBranches(id);
 		b.moveToFirst();
+		Log.d("Survey", "I have this many branches " +  b.getColumnCount());
 		LinkedList<Branch> branches = new LinkedList<Branch>();
 		while (!b.isAfterLast())
 		{
