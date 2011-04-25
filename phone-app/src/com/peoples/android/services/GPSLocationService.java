@@ -2,7 +2,7 @@ package com.peoples.android.services;
 
 import java.util.Date;
 
-import com.peoples.android.database.LocationTableHandler;
+import com.peoples.android.database.PeoplesDBHandler;
 import com.peoples.android.database.PeoplesDB;
 
 import android.app.AlarmManager;
@@ -86,7 +86,7 @@ public class GPSLocationService extends IntentService {
 			Log.e(TAG, "+++Here are all the stored locations+++");
 			
 			//Get the handler
-			LocationTableHandler dbHandler = new LocationTableHandler(getApplicationContext());
+			PeoplesDBHandler dbHandler = new PeoplesDBHandler(getApplicationContext());
 			//open to read
 			dbHandler.openRead();
 			//query
@@ -124,7 +124,7 @@ public class GPSLocationService extends IntentService {
 //		toast.show();
 		
 		//use table handler
-		LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
+		PeoplesDBHandler locHandler = new PeoplesDBHandler(getApplicationContext());
 		//open to write
 		locHandler.openWrite();
 		
@@ -192,7 +192,7 @@ public class GPSLocationService extends IntentService {
 					Log.e(TAG, loc.toString() + "\n");
 					
 					//use table handler
-					LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
+					PeoplesDBHandler locHandler = new PeoplesDBHandler(getApplicationContext());
 					//open to write
 					locHandler.openWrite();
 					//pass location to write

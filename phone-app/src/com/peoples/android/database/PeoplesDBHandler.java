@@ -1,5 +1,7 @@
 package com.peoples.android.database;
 
+import com.peoples.android.model.Survey;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,7 +9,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.util.Log;
 
-public class LocationTableHandler {
+/**
+ * 
+ * Interact with our database using this class, PeoplesDB will
+ * keep track of the version of the DB, creating the DB, updating
+ * the DB, and other versioning manipulations.
+ * 
+ * @author diego
+ *
+ */
+public class PeoplesDBHandler {
 	
 	private static final String TAG = "LocationTableHandler";
 	private static final boolean D = true;
@@ -16,7 +27,7 @@ public class LocationTableHandler {
 	private Context   contx;
 	private SQLiteDatabase db;
 	
-	public LocationTableHandler(Context context){
+	public PeoplesDBHandler(Context context){
 		this.contx = context;
 	}
 	
@@ -32,6 +43,29 @@ public class LocationTableHandler {
 		db  = pdb.getReadableDatabase();	
 	}
 	
+	
+	public long insertSurveyAsNext(Survey survey){
+		
+		//TODO: Austin implement
+		
+		// see 
+		//http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html
+		
+		//Use static constants found in PeoplesDB, for example:
+		//String surveyTableName = PeoplesDB.SURVEY_TABLE_NAME;
+		
+		//then you can do raw or prepared queries on the DB 
+		
+		return 0L;
+	}
+	
+	public Survey getNextSurvey(){
+		
+		//TODO: Austin implement
+		
+		return null;
+	}
+	
 	public long insertLocation(Location loc){
 		
 		if(D) Log.e(TAG, "insertLocation()");
@@ -40,17 +74,9 @@ public class LocationTableHandler {
 		//column
 		ContentValues values = new ContentValues();
 		
-		double lat = loc.getLatitude();
-		double lon = loc.getLongitude();
-		long time= loc.getTime();
-		
 		values.put(PeoplesDB.GPSTable.LATITUDE,		 loc.getLatitude() 	);
 		values.put(PeoplesDB.GPSTable.LONGITUDE,	 loc.getLongitude() );
 		values.put(PeoplesDB.GPSTable.TIME,			 loc.getTime()		);
-		
-//		values.put(PeoplesDB.GPSTable.LATITUDE,		"\'" + loc.getLatitude()	+ "\'" );
-//		values.put(PeoplesDB.GPSTable.LONGITUDE,	"\'" + loc.getLongitude()	+ "\'" );
-//		values.put(PeoplesDB.GPSTable.TIME,			"\'" + loc.getTime()		+ "\'" );
 		
 		return db.insert(PeoplesDB.GPS_TABLE_NAME, null, values);
 	}
@@ -101,7 +127,9 @@ public class LocationTableHandler {
 	 */
 	public Cursor getDescription(){
 		
+		
 		if(D) Log.e(TAG, "in getListOfTables()");
+		if(D) Log.e(TAG, "currently only shows location schema");
 		
 		Cursor mCursor = db.rawQuery("SELECT sql " +
 									 "FROM sqlite_master "+

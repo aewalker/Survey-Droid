@@ -2,7 +2,7 @@ package com.peoples.android.processTest;
 
 import com.peoples.android.R;
 import com.peoples.android.activities.MainActivity;
-import com.peoples.android.database.LocationTableHandler;
+import com.peoples.android.database.PeoplesDBHandler;
 import com.peoples.android.services.GPSLocationService;
 
 import android.app.Activity;
@@ -82,7 +82,7 @@ public class LocationTestActivity extends Activity {
 		///////////////////
 		//Writing a mock location to test persistance and doing other DB tests
 		//use table handler
-		LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
+		PeoplesDBHandler locHandler = new PeoplesDBHandler(getApplicationContext());
 		//open to write
 		locHandler.openWrite();
 		
@@ -253,7 +253,7 @@ public class LocationTestActivity extends Activity {
 			Log.e(TAG, "+++Here are all the stored locations+++");
 			
 			//Get the handler
-			LocationTableHandler dbHandler = new LocationTableHandler(getApplicationContext());
+			PeoplesDBHandler dbHandler = new PeoplesDBHandler(getApplicationContext());
 			//open to read
 			dbHandler.openRead();
 			//query
@@ -332,7 +332,7 @@ public class LocationTestActivity extends Activity {
 						Log.e(TAG, loc.toString() + "\n");
 						
 						//use table handler
-						LocationTableHandler locHandler = new LocationTableHandler(getApplicationContext());
+						PeoplesDBHandler locHandler = new PeoplesDBHandler(getApplicationContext());
 						//open to write
 						locHandler.openWrite();
 						//pass location to write
