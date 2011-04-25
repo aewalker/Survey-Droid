@@ -19,6 +19,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 {
 	//for writing to the log
 	private static final String TAG = "SurveyDBHandler";
+	private static final boolean D = true;
 	
 	/**
 	 * Create a new SurveyDBHandler object.
@@ -42,12 +43,12 @@ public class SurveyDBHandler extends PeoplesDBHandler
 		String[] cols = {PeoplesDB.SurveyTable.NAME,
 						 PeoplesDB.SurveyTable.QUESTION_ID};
 		String selection = PeoplesDB.SurveyTable.ID;
-		
+		return null;
 		
 	}
 	
 	
-public Cursor getStoredLocations(){
+/*public Cursor getStoredLocations(){
 		
 		if(D) Log.e(TAG, "in getStoredLocations()");
 		
@@ -66,7 +67,7 @@ public Cursor getStoredLocations(){
 			mCursor.moveToFirst();
 		
 		return mCursor;
-	}
+	}*/
 	
 	//public long insertSurveyAsNext(Survey survey){
 		
