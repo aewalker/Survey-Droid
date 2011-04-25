@@ -8,7 +8,7 @@ package com.peoples.android.model;
 
 import java.util.LinkedList;
 import java.util.Stack;
-import com.peoples.android.database.SurveyDBHandler;
+//import com.peoples.android.database.SurveyDBHandler;
 
 //import org.json.JSONArray;
 //import org.json.JSONObject;
