@@ -30,7 +30,7 @@ import com.peoples.android.server.Push;
  * use this class, see the model-design document.
  * 
  * @author Diego Vargas
- * @author Tony Xaio
+ * @author Tony Xiao
  * @author Austin Walker
  */
 public class Survey
