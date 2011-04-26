@@ -430,9 +430,10 @@ public class Survey
 	{
 		history.push(currentQ);
 		currentQ = currentQ.nextQuestion();
+		currentAns = null;
 		if (currentQ != null)
 		{
-			currentAns = currentQ.peekAns();
+			currentQ.prime();
 		}
 	}
 	
@@ -446,6 +447,7 @@ public class Survey
 		if (isOnFirst()) throw new RuntimeException("no previous Question");
 		currentQ = history.pop();
 		currentAns = registry.pop();
+		currentQ.popAns();
 	}
 	
 	/**

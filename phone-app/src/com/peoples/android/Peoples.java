@@ -2,6 +2,7 @@ package com.peoples.android;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.peoples.android.activities.ConfirmSubmissionSurvey;
 import com.peoples.android.model.Survey;
 import com.peoples.android.server.Pull;
 
@@ -29,6 +31,9 @@ public class Peoples extends ListActivity {
 	//TEST
     private static final String TAG = "Peoples";
     private static final boolean D = true;
+    private int requestCode;
+    
+    private Survey survey;
     
     
     /** Called when the activity is first created. */
@@ -39,14 +44,27 @@ public class Peoples extends ListActivity {
         if(D) Log.e(TAG, "+++ ON CREATE +++");
         Log.d(TAG, "Fetching surveys");
         Pull.syncWithWeb(this);
-
-        
+      
         setContentView(R.layout.survey_list_view);
 
-		
-        //Creating a bogus Survey!
     	final Context panda = this;
-        final Survey survey = new Survey(3, panda);
+    	
+    	//code you need to put into your file to run my GUI using your survey id
+    	//Bundle bundle = new Bundle();
+ 	    //bundle.putInt("survey_id", YOUR_FAVORITE_INTEGER(the survey id));
+ 		//Intent myIntent = new Intent(this, Peoples.class);
+        //myIntent.putExtras(bundle);
+    	//startActivityForResult(myIntent, 0);
+    	
+    	
+    	
+    	
+    	//here's where i get the survey id from the bundle
+    	//Bundle extras = getIntent().getExtras(); 
+    	//int survey_id = extras.getInt("survey_id");
+    	//survey = new Survey(survey_id, panda);
+    	
+        survey = new Survey(3, panda);
         
         Log.d(TAG, "Finished creating survey");
 
@@ -60,8 +78,7 @@ public class Peoples extends ListActivity {
         final View.OnClickListener prevListener = new View.OnClickListener() {
             public void onClick(View view) {
           	  
-          	  if (!survey.isOnFirst())
-	            	  {
+          	  if (!survey.isOnFirst()) {
 	            	  survey.prevQuestion(); //go to the previous Question
 	            	  ListView lv = getListView();
 	            	  
@@ -126,7 +143,12 @@ public class Peoples extends ListActivity {
 
 	                  if (survey.done()) //if there are no more Questions....
 	                  {
-	                	  //survey.submit();
+	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
+	                	  startActivityForResult(myIntent, requestCode);
+	                	  
+	                	  
+	                	  
+	                	  /*//survey.submit();
 	                	  Log.e(TAG, "it reaches the finish state");
 
 	                	  String[] test = {"Why is this hereeee?"};
@@ -192,7 +214,7 @@ public class Peoples extends ListActivity {
 		                            }
 		                        }
 	
-		                  });
+		                  });*/
 	                	  //if (survey.submit())
 	                		  //Log.e(TAG, "YAY");
 	                  }
@@ -235,6 +257,21 @@ public class Peoples extends ListActivity {
         next.setOnClickListener(nextListener);
         
         
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==1){
+            Toast.makeText(this, "Pass", Toast.LENGTH_LONG).show();
+            if(survey.submit()) Log.e(TAG, "it works!");
+            finish();
+        }
+        else{
+            Toast.makeText(this, "Fail", Toast.LENGTH_LONG).show();
+            //go to the previous question and start over?
+            survey.prevQuestion();
+        }
     }
     
 /*    @Override
