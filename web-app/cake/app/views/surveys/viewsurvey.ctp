@@ -10,12 +10,6 @@ echo "<h2>Survey \"$surveyname\"</h2>";
 ?>
 <div id="questions"></div>
 <div id="questions_space"></div>
-<div id="choices"></div>
-<div id="choices_space"></div>
-<div id="branches"></div>
-<div id="brances_space"></div>
-<div id="conditions"></div>
-<div id="conitions_space"></div>
 <?php
 
 echo '<script>'.$this->Js->request(array
