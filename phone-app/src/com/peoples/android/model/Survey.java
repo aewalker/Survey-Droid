@@ -453,6 +453,7 @@ public class Survey
 	 */
 	public boolean isOnFirst()
 	{
+		if (currentQ == null) return false;
 		return (currentQ.equals(firstQ));
 	}
 	
