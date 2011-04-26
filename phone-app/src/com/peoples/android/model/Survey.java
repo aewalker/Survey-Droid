@@ -118,6 +118,7 @@ public class Survey
 		
 		//set up the first question, then iterate until done
 		firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
+		Log.d("Survey", "First question Setup");
 		currentQ = firstQ;
 		while (!toDo.isEmpty())
 		{
@@ -133,10 +134,12 @@ public class Survey
 		{
 			branch.setQuestion(qMap);
 		}
+		Log.d("Survey", "branch Setup");
 		for (Condition condition : cList)
 		{
 			condition.setQuestion(qMap);
 		}
+		Log.d("Survey", "condition Setup");
 		
 	}
 	
@@ -159,6 +162,7 @@ public class Survey
 		//set up Branches
 		Cursor b = db.getBranches(id);
 		b.moveToFirst();
+		Log.d("Survey", "I have this many branches " +  b.getColumnCount());
 		LinkedList<Branch> branches = new LinkedList<Branch>();
 		while (!b.isAfterLast())
 		{
@@ -166,13 +170,13 @@ public class Survey
 					b.getColumnIndexOrThrow(PeoplesDB.BranchTable._ID));
 			int q_id = b.getInt(
 					b.getColumnIndexOrThrow(PeoplesDB.BranchTable.NEXT_Q));
+			if (!seen.containsKey(q_id))
+            {
+                seen.put(q_id, true);
+                toDo.add(q_id);
+            }
 			branches.add(new Branch(q_id,
 					getConditions(b_id, cMap, seen, toDo, cList)));
-			if (!seen.containsKey(q_id))
-			{
-				seen.put(q_id, true);
-				toDo.add(q_id);
-			}
 			b.moveToNext();
 		}
 		for (Branch branch : branches)
@@ -184,6 +188,7 @@ public class Survey
 		//set up Choices
 		Cursor ch = db.getChoices(id);
 		ch.moveToFirst();
+		Log.d("Survey", "I have this many choices " +  ch.getColumnCount());
 		LinkedList<Choice> choices = new LinkedList<Choice>();
 		while (!ch.isAfterLast())
 		{
@@ -193,7 +198,7 @@ public class Survey
 			ch.moveToNext();
 		}
 		ch.close();
-		
+		Log.d("Survey", "Building new question");
 		//finally, create the new Question
 		Question newQ = new Question(text, id, branches, choices, ctxt);
 		qMap.put(id, newQ);
@@ -220,6 +225,7 @@ public class Survey
 			int c_id = c.getInt(c.getColumnIndexOrThrow(
 					PeoplesDB.ConditionTable.CHOICE_ID));
 			conditions.add(new Condition(q_id, getChoice(c_id, cMap), t, registry));
+			c.moveToNext();
 		}
 		c.close();
 		return conditions;
