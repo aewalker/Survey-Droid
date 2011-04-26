@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,8 +20,33 @@ public class ConfirmSubmissionSurvey extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirmpage);
+            
+        final TextView t = (TextView)this.findViewById(R.id.confirm);
+    	t.setText("Are you sure you want to submit your responses?");
         
-        String value = "panda";
+        Button back = (Button) findViewById(R.id.back);
+        back.setText("No! Go Back");
+        back.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+            	Intent in = new Intent();
+            	setResult(0,in);
+                finish();
+            }
+        });
+        
+        Button confirm = (Button) findViewById(R.id.finish);
+        confirm.setText("Submit my responses");
+        confirm.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+            	Intent in = new Intent();
+            	setResult(1,in);
+                finish();
+            }
+        });
+        
+        
+        /*setResult(0,in);//Here I am Setting the Requestcode 1, you can put according to your requirement
+        finish();
         
         JSONArray answersTemp = null;
         Bundle extras = getIntent().getExtras(); 
@@ -58,7 +84,7 @@ public class ConfirmSubmissionSurvey extends Activity {
             }
 
         });
-		
+		*/
     }
 
 }

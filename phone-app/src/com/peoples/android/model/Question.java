@@ -138,8 +138,8 @@ public class Question
 	 */
 	public Answer answer(Choice c)
 	{
-//		if (answered) throw new RuntimeException(
-//				"attempt to answer the same Question multiple times");
+		if (answered) throw new RuntimeException(
+				"attempt to answer the same Question multiple times");
 		
 		if (answered) answers.pop();
 		
@@ -213,18 +213,11 @@ public class Question
 	}
 	
 	/**
-	 * Look at the most recent Answer.  Doesn't mark the question as having not
-	 * been answered.
-	 * 
-	 * @return the most recent Answer
+	 * Set this Question to be unanswered.
 	 */
-	public Answer peekAns()
+	public void prime()
 	{
-		if (!answers.isEmpty())
-		{
-			return answers.peek();
-		}
-		return null;
+		answered = false;
 	}
 }
 	
