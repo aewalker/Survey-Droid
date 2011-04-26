@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.peoples.android.database.PeoplesDB;
 import com.peoples.android.database.SurveyDBHandler;
+import com.peoples.android.server.Push;
 
 //import org.json.JSONArray;
 //import org.json.JSONObject;
@@ -500,6 +501,9 @@ public class Survey
 				worked = false;
 			}
 		}
+		
+		if (!Push.pushAnswers(ctxt))
+		    worked = false;
 		
 		//wipe the Question history
 		while (!history.empty())

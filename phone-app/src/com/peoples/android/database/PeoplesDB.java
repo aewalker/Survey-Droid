@@ -13,7 +13,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     private static final boolean D = true;
 
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
     public static final String GPS_TABLE_NAME = "gps";
     public static final String CALLLOG_TABLE_NAME = "calllog";
     public static final String ANSWER_TABLE_NAME = "answers";
@@ -30,16 +30,15 @@ public class PeoplesDB extends SQLiteOpenHelper {
         private GPSTable() {}
 
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
-
         public static final String LONGITUDE = "longitude";
-
         public static final String LATITUDE = "latitude";
-
         public static final String TIME = "time";
+        public static final String UPLOADED = "uploaded";
 
         private static String createSql() {
         	return "CREATE TABLE " + GPS_TABLE_NAME + " (" + GPSTable._ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + GPSTable.LONGITUDE + " DOUBLE,"
+            +"uploaded INT UNSIGNED DEFAULT 0,"
             + GPSTable.LATITUDE + " DOUBLE," + GPSTable.TIME + " INTEGER"
             + " );";
         }
@@ -49,17 +48,16 @@ public class PeoplesDB extends SQLiteOpenHelper {
         private CallLogTable() {}
 
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
-
         public static final String PHONE_NUMBER = "phone_number";
-
         public static final String CALL_TYPE = "call_type";
-
         public static final String TIME = "time";
+        public static final String UPLOADED = "uploaded";
 
         private static String createSql() {
         	return "CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
             + CallLogTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + CallLogTable.PHONE_NUMBER + " TEXT,"
+            + "uploaded INT UNSIGNED DEFAULT 0,"
             + CallLogTable.CALL_TYPE + " TEXT," + CallLogTable.TIME
             + " INTEGER" + ");";
         }
@@ -69,13 +67,16 @@ public class PeoplesDB extends SQLiteOpenHelper {
     	public static final String CHOICE_ID = "choice_id";
     	public static final String ANS_TEXT = "ans_text";
     	public static final String CREATED = "created";
+    	public static final String UPLOADED = "uploaded";
 
     	private static String createSql() {
     		return "CREATE TABLE answers (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"question_id INT UNSIGNED NOT NULL," +
     				"choice_id INT UNSIGNED," +
-    				"ans_text TEXT,created DATETIME);";
+    				"ans_text TEXT," +
+    				"uploaded INT UNSIGNED DEFAULT 0," +
+    				"created DATETIME);";
     	}
     }
     public static final class BranchTable implements BaseColumns {
