@@ -38,9 +38,6 @@ public class MainActivity extends Activity {
 
         Log.d(TAG, "Fetching surveys");
 
-        //TODO: getting some parsing error
-        //Pull.syncWithWeb(this);
-
         Button sample = (Button) findViewById(R.id.Enter);
         sample.setText("Take a sample survey");
         sample.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +51,15 @@ public class MainActivity extends Activity {
         Button gps = (Button) findViewById(R.id.GPS);
         gps.setText("Tell me my location every 15 seconds!");
         gps.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
+                startActivityForResult(myIntent, 0);
+            }
+        });
+        
+        Button sync = (Button) findViewById(R.id.Sync);
+        sync.setText("Sync the surveys manually, to update deploy time or questions");
+        sync.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
                 startActivityForResult(myIntent, 0);

@@ -40,6 +40,15 @@ public class LocationTestActivity extends Activity {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.gps);
     	
+    	
+    	//TODO: sync surveys here
+        //TODO: getting some parsing error
+        //Pull.syncWithWeb(this);
+    	
+    	//TODO: run service that takes care of survey scheduling, it should schedule itself(?)
+    	//		that's probably BootService?
+    	
+    	
 //		Previous idea was to have a service for GPS stuff. However, we don't need to do that if
 //    	and we can rely on the functionality provided by the location providers.
 //
