@@ -13,7 +13,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     private static final boolean D = true;
 
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     public static final String GPS_TABLE_NAME = "gps";
     public static final String CALLLOG_TABLE_NAME = "calllog";
     public static final String ANSWER_TABLE_NAME = "answers";
