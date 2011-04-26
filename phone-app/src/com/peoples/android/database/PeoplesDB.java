@@ -36,10 +36,12 @@ public class PeoplesDB extends SQLiteOpenHelper {
         public static final String UPLOADED = "uploaded";
 
         private static String createSql() {
-        	return "CREATE TABLE " + GPS_TABLE_NAME + " (" + GPSTable._ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT," + GPSTable.LONGITUDE + " DOUBLE,"
+        	return "CREATE TABLE " + GPS_TABLE_NAME + " (" 
+        	+ GPSTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
+            + GPSTable.LONGITUDE + " DOUBLE,"
+            + GPSTable.LATITUDE + " DOUBLE," 
+            + GPSTable.TIME + " INTEGER,"
             +"uploaded INT UNSIGNED DEFAULT 0,"
-            + GPSTable.LATITUDE + " DOUBLE," + GPSTable.TIME + " INTEGER"
             + " );";
         }
     }
@@ -50,6 +52,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
         public static final String PHONE_NUMBER = "phone_number";
         public static final String CALL_TYPE = "call_type";
+        public static final String DURATION = "duration";
         public static final String TIME = "time";
         public static final String UPLOADED = "uploaded";
 
@@ -57,9 +60,10 @@ public class PeoplesDB extends SQLiteOpenHelper {
         	return "CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
             + CallLogTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + CallLogTable.PHONE_NUMBER + " TEXT,"
-            + "uploaded INT UNSIGNED DEFAULT 0,"
-            + CallLogTable.CALL_TYPE + " TEXT," + CallLogTable.TIME
-            + " INTEGER" + ");";
+            + CallLogTable.CALL_TYPE + " TEXT," 
+            + CallLogTable.DURATION + " INTEGER," 
+            + CallLogTable.TIME + " INTEGER,"
+            + "uploaded INT UNSIGNED DEFAULT 0)";
         }
     }
     public static final class AnswerTable implements BaseColumns {
