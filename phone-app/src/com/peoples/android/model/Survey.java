@@ -163,7 +163,7 @@ public class Survey
 		//set up Branches
 		Cursor b = db.getBranches(id);
 		b.moveToFirst();
-		Log.d("Survey", "I have this many branches " +  b.getColumnCount());
+		Log.d("Survey", "I have this many branches " +  b.getCount());
 		LinkedList<Branch> branches = new LinkedList<Branch>();
 		while (!b.isAfterLast())
 		{
@@ -189,7 +189,7 @@ public class Survey
 		//set up Choices
 		Cursor ch = db.getChoices(id);
 		ch.moveToFirst();
-		Log.d("Survey", "I have this many choices " +  ch.getColumnCount());
+		Log.d("Survey", "I have this many choices " +  ch.getCount());
 		LinkedList<Choice> choices = new LinkedList<Choice>();
 		while (!ch.isAfterLast())
 		{
