@@ -131,6 +131,7 @@ class TableHelper extends Helper
 			$s = $s.'</td></tr>';
 		}
 		$s = $s.'</table>';
+		return $s;
 	}
 	
 	//returns an HTML attrubte string as specified in $var (formated as $style above) for $key
