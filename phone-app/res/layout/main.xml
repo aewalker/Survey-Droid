@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
+    android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical"
+    android:background="@drawable/around_world">
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
@@ -12,17 +13,16 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:id="@+id/Enter"
-	android:text="Enter here! (or maybe not)" />
-<Button
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:id="@+id/GPS"
-	android:text="panda" />
-	
-<Button
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:id="@+id/Sync"
-	android:text="panda" />
+	android:text="Enter here! (or maybe not)"
+	android:background="@drawable/custom_button" 
+	android:layout_margin="5dip"/>
+<Button android:text="panda" 
+android:layout_width="fill_parent" 
+android:id="@+id/GPS" 
+android:layout_height="wrap_content" 
+android:background="@drawable/custom_button"
+    android:layout_margin="5dip"></Button>
+
+
 
 </LinearLayout>

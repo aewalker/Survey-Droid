@@ -4,8 +4,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:stretchColumns="1"
-    android:background="@drawable/around_world">
+    android:stretchColumns="1">
    	<TableRow>
 	    <TextView 
 	    xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,26 +23,18 @@
 	android:id="@+id/button1" 
 	android:layout_height="wrap_content"
 	android:text="Previous Question"
-	android:layout_weight="1" android:layout_width="0dip"
-	android:background="@drawable/custom_button"
-	android:layout_margin="10dip">
+	android:layout_weight="1" android:layout_width="0dip">
 	</Button>
 	<Button 
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/button2"  
 	android:layout_height="wrap_content"
 	android:text="Next Question"
-	android:layout_weight="1" android:layout_width="0dip"
-	android:background="@drawable/custom_button"
-	android:layout_margin="10dip">
+	android:layout_weight="1" android:layout_width="0dip">
 	</Button>
 	</LinearLayout>
 		</TableRow>
 		   	<TableRow>
-<ListView android:layout_height="fill_parent"
-android:id="@id/android:list" 
-android:layout_width="wrap_content" 
-android:choiceMode="singleChoice" 
-android:layout_alignParentRight="true"></ListView>
+<ListView android:layout_height="fill_parent" android:id="@id/android:list" android:layout_width="fill_parent" android:choiceMode="singleChoice" android:layout_alignParentRight="true"></ListView>
    	</TableRow>
 </TableLayout>

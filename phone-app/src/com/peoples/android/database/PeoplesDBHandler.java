@@ -1,7 +1,5 @@
 package com.peoples.android.database;
 
-import com.peoples.android.model.Survey;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,55 +18,32 @@ import android.util.Log;
  */
 public class PeoplesDBHandler {
 	
-	private static final String TAG = "LocationTableHandler";
-	private static final boolean D = true;
+	protected static final String TAG = "LocationTableHandler";
+	protected static final boolean D = true;
 	
-	private PeoplesDB pdb;
-	private Context   contx;
-	private SQLiteDatabase db;
+	protected PeoplesDB pdb;
+	protected Context   contx;
+	protected SQLiteDatabase db;
 	
 	public PeoplesDBHandler(Context context){
 		this.contx = context;
 	}
 	
 	public void openWrite() {
-		if(D) Log.e(TAG, "in openWrite()");
+		if(D) Log.d(TAG, "in openWrite()");
 		pdb = new PeoplesDB(contx);
 		db  = pdb.getWritableDatabase();
 	}
 	
 	public void openRead(){
-		if(D) Log.e(TAG, "in openRead()");
+		if(D) Log.d(TAG, "in openRead()");
 		pdb = new PeoplesDB(contx);
 		db  = pdb.getReadableDatabase();	
 	}
 	
-	
-	public long insertSurveyAsNext(Survey survey){
-		
-		//TODO: Austin implement
-		
-		// see 
-		//http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html
-		
-		//Use static constants found in PeoplesDB, for example:
-		//String surveyTableName = PeoplesDB.SURVEY_TABLE_NAME;
-		
-		//then you can do raw or prepared queries on the DB 
-		
-		return 0L;
-	}
-	
-	public Survey getNextSurvey(){
-		
-		//TODO: Austin implement
-		
-		return null;
-	}
-	
 	public long insertLocation(Location loc){
 		
-		if(D) Log.e(TAG, "insertLocation()");
+		if(D) Log.d(TAG, "insertLocation()");
 		
 		//There are currently 4 columns GPS table, 3 w/o the auto increment
 		//column
@@ -83,7 +58,7 @@ public class PeoplesDBHandler {
 	
 	public Cursor getStoredLocations(){
 		
-		if(D) Log.e(TAG, "in getStoredLocations()");
+		if(D) Log.d(TAG, "in getStoredLocations()");
 		
 		//Query Arguments
 		String table		= PeoplesDB.GPS_TABLE_NAME;
@@ -110,7 +85,7 @@ public class PeoplesDBHandler {
 	 */
 	public Cursor getListOfTables(){
 		
-		if(D) Log.e(TAG, "in getListOfTables()");
+		if(D) Log.d(TAG, "in getListOfTables()");
 		
 		Cursor mCursor = db.rawQuery("SELECT name " +
 									 "FROM sqlite_master "+
@@ -128,8 +103,8 @@ public class PeoplesDBHandler {
 	public Cursor getDescription(){
 		
 		
-		if(D) Log.e(TAG, "in getListOfTables()");
-		if(D) Log.e(TAG, "currently only shows location schema");
+		if(D) Log.d(TAG, "in getListOfTables()");
+		if(D) Log.d(TAG, "currently only shows location schema");
 		
 		Cursor mCursor = db.rawQuery("SELECT sql " +
 									 "FROM sqlite_master "+
@@ -142,7 +117,7 @@ public class PeoplesDBHandler {
 	 * 
 	 */
 	public void close() {
-		if(D) Log.e(TAG, "in close()");
+		if(D) Log.d(TAG, "in close()");
 		pdb.close();
 	}
 	
