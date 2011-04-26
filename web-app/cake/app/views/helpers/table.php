@@ -90,6 +90,21 @@ class TableHelper extends Helper
 				//$s = $s.'<div class="break"></div>';
 			}
 		}
+		$commandStmts = '"doesnt_exist_"';
+		foreach ($commands as $command => $val)
+		{
+			if ($val['type'] == 'ajax')
+			{
+				$commandStmts = '(type == "'.Inflector::underscore($command).'" ? "'
+				.$val['update'].'" : '.$commandStmts.')';
+			}
+		}
+		if ($commandStmts != '"doesnt_exist_"')	$this->Js->buffer('$("a", ".'.$this->_getURLName($this->model).
+		'").click(function(event) { var tr = $(this).closest("tr"), id = tr.children().first().text(), '.
+		'type = $(this).text().toLowerCase(), target = tr.parent().find('.$commandStmts.'+id); '.
+		'if (!target.is(":empty")) { target.empty(); event.stopImmediatePropagation(); } '.
+		'$(this).toggleClass("opened"); return false; });', true);
+		return $s;
 		return $s;
 	}
 	
@@ -116,20 +131,6 @@ class TableHelper extends Helper
 			$s = $s.'</td></tr>';
 		}
 		$s = $s.'</table>';
-		$this->Js->buffer('
-	$("a", ".'.$this->_getURLName($this->model).'").click(function(event) {
-		var tr = $(this).closest("tr"),
-			id = tr.children().first().text(),
-			type = $(this).text().toLowerCase(),
-			target = tr.parent().find("td#'.Inflector::underscore($this->model).'_"+(type == "edit" || type == "delete" ? "space" : type)+"_"+id);
-		if (!target.is(":empty")) {
-			target.empty();
-			event.stopImmediatePropagation();
-		}
-		$(this).toggleClass("opened");
-		return false;
-	});', true);
-		return $s;
 	}
 	
 	//returns an HTML attrubte string as specified in $var (formated as $style above) for $key
