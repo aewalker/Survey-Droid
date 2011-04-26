@@ -18,6 +18,10 @@ form div
 	margin: 5px 5px 5px 5px;
 	text-align: left;
 }
+#main table td a.opened
+{
+	background-color: gold;
+}
 #endTable a
 {
 	display: block;

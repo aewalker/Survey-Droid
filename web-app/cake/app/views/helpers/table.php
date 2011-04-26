@@ -116,6 +116,19 @@ class TableHelper extends Helper
 			$s = $s.'</td></tr>';
 		}
 		$s = $s.'</table>';
+		$this->Js->buffer('
+	$("a", ".'.$this->_getURLName($this->model).'").click(function(event) {
+		var tr = $(this).closest("tr"),
+			id = tr.children().first().text(),
+			type = $(this).text().toLowerCase(),
+			target = tr.parent().find("td#'.Inflector::underscore($this->model).'_"+(type == "edit" || type == "delete" ? "space" : type)+"_"+id);
+		if (!target.is(":empty")) {
+			target.empty();
+			event.stopImmediatePropagation();
+		}
+		$(this).toggleClass("opened");
+		return false;
+	});', true);
 		return $s;
 	}
 	
