@@ -1,32 +1,26 @@
 package com.peoples.android.processTest;
 
-import com.peoples.android.R;
-import com.peoples.android.activities.MainActivity;
-import com.peoples.android.database.PeoplesDBHandler;
-import com.peoples.android.services.GPSLocationService;
+import java.util.Date;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.location.GpsStatus.Listener;
 import android.location.Criteria;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-import java.util.Date;
+
+import com.peoples.android.R;
+import com.peoples.android.activities.MainActivity;
+import com.peoples.android.database.PeoplesDBHandler;
 
 public class LocationTestActivity extends Activity {
 	

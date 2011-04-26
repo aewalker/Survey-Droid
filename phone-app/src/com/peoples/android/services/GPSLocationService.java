@@ -1,33 +1,19 @@
 package com.peoples.android.services;
 
-import java.util.Date;
-
-import com.peoples.android.database.PeoplesDBHandler;
-import com.peoples.android.database.PeoplesDB;
-
-import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.app.Service;
-import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Criteria;
 import android.location.GpsSatellite;
-import android.location.GpsStatus.Listener;
 import android.location.GpsStatus;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.peoples.android.database.PeoplesDBHandler;
 
 public class GPSLocationService extends IntentService {
 
