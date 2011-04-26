@@ -73,7 +73,6 @@ class SurveysController extends AppController
 				'conditions' => array('Survey.id' => $surveyid),
 				'fields' => array_merge(array('name', 'question_id'), $this->days)
 			));
-			print_r(array_merge(array('name', 'question_id'), $this->days))
 			
 			if (isset($result['Survey']))
 			{
