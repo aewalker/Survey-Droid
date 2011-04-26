@@ -225,7 +225,9 @@ public class Survey
 					PeoplesDB.ConditionTable.TYPE));
 			int c_id = c.getInt(c.getColumnIndexOrThrow(
 					PeoplesDB.ConditionTable.CHOICE_ID));
-			conditions.add(new Condition(q_id, getChoice(c_id, cMap), t, registry));
+			Condition newC = new Condition(q_id, getChoice(c_id, cMap), t, registry);
+			conditions.add(newC);
+			cList.add(newC);
 			c.moveToNext();
 		}
 		c.close();
