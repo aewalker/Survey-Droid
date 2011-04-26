@@ -87,31 +87,15 @@ public class Peoples extends ListActivity {
 	                  {
 	                	  //survey.submit();
 	                	  Log.e(TAG, "it reaches the finish state");
-/*	                	  //display submission page?
-//	                	  StringBuilder s = new StringBuilder();
-//	                	  s.append("Your choices are: \n");
-//	                	  for (int i = 1; i < 6; i++)
-//	                	  {
-//	                		  if (survey.getQuestion(i).getAnswer() != null)
-//	                		  s.append("Question " + i + ": " + survey.getQuestion(i).getAnswer() + "\n");
-//	                	  }
-	                	  
-//	                	  Bundle bundle = new Bundle();
-//	                	  bundle.putString("confirm", s.toString());
-//	                	  bundle.putString("answers", survey.getAnswersAsJson().toString());
-	                	  
-	                	  //Toast.makeText(getApplicationContext(), s.toString(),
-	                              //Toast.LENGTH_SHORT).show();
-//	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
-//	                      myIntent.putExtras(bundle);
-//	                	  startActivityForResult(myIntent, 0);
-//	                	  finish();
-	                	  
-	                	  final TextView t = (TextView) findViewById(R.id.confirm);
+
+	                	  String[] test = {"Why is this hereeee?"};
+                		  setListAdapter(new ArrayAdapter<String>(panda, R.layout.list_item, test));
+	                	  q.setText("Are you sure you want to submit your responses?");
+	                	  //final TextView t = (TextView) findViewById(R.id.confirm);
 	                	  
 	                	  //setContentView(R.layout.confirmpage);
 	                	  
-	                	  Button back = (Button) findViewById(R.id.back);
+	                	  Button back = (Button) findViewById(R.id.button1);
 	                      back.setText("Go Back");
 	                      back.setOnClickListener(new View.OnClickListener() {
 	                            public void onClick(View view) {
@@ -145,22 +129,23 @@ public class Peoples extends ListActivity {
 	                        });
 	                	  
 	                	  
-		                  Button sample = (Button) findViewById(R.id.finish);
+		                  Button sample = (Button) findViewById(R.id.button2);
 		                  sample.setText("Submit Survey");
 		                  sample.setOnClickListener(new View.OnClickListener() {
 		                        public void onClick(View view) {
-		                            boolean success = survey.submit(); //Push.sendAnswersToServer(answers);
+		                            boolean success = true; //Push.sendAnswersToServer(answers);
 		                            if (success) {
-		                                t.setText("Successfully submitted the survey");
+		                                //t.setText("Successfully submitted the survey");
+		                            	Log.e(TAG, "success!");
 		                                finish();
 		                            } else {
-		                                t.setText("Ooops, something went wrong");
+		                                //t.setText("Ooops, something went wrong");
 		                            }
-	//	                            
+	//	                            survey.submit();
 	//	                            finish();
 		                        }
 	
-		                  });*/
+		                  });
 	                	  //if (survey.submit())
 	                		  //Log.e(TAG, "YAY");
 	                  }
