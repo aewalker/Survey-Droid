@@ -18,5 +18,11 @@
 	android:layout_height="wrap_content"
 	android:id="@+id/GPS"
 	android:text="panda" />
+	
+<Button
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:id="@+id/Sync"
+	android:text="panda" />
 
 </LinearLayout>

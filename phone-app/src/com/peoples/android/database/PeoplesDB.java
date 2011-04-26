@@ -157,7 +157,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
     				"sa VARCHAR(255)," +
     				"su VARCHAR(255));";
     	}
-
     }
 
     @Override
