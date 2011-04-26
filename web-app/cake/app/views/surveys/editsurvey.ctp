@@ -7,7 +7,7 @@
 echo $form->create('Survey', array('url' => "editsurvey/$surveyid"));
 echo $form->input('name', array('value' => $name));
 echo $form->input('question_id', array('value' => $questionid,
-	'label' => 'First Question'));
+	'label' => 'First Question', 'type' => 'text'));
 echo '<p>To set when this survey should be administered to subjects, enter'.
 	' 4 digit numbers in the fiends below separated by commas.  For exmple, '.
 	'to set a survey to be administered on Mondays at 11:00 AM and 3:45 PM, '.
