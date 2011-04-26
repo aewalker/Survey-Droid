@@ -46,7 +46,7 @@ public class Peoples extends ListActivity {
 		
         //Creating a bogus Survey!
     	final Context panda = this;
-        final Survey survey = new Survey(3, panda);
+        final Survey survey = new Survey(1, panda);
 
         if (survey.done()) throw new RuntimeException("Survey has no questions!");
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
@@ -74,6 +74,7 @@ public class Peoples extends ListActivity {
 	            	  else //free response
 	            	  {
 	            		  EditText edit = (EditText)findViewById(R.id.editText1);
+	            		  //Log.e(TAG, edit.getText().toString());
 	            		  survey.answer(edit.getText().toString());
 	            		  Toast.makeText(getApplicationContext(), 
 	            				  edit.getText().toString(),
@@ -84,7 +85,9 @@ public class Peoples extends ListActivity {
 
 	                  if (survey.done()) //if there are no more Questions....
 	                  {
-	                	  //display submission page?
+	                	  //survey.submit();
+	                	  Log.e(TAG, "it reaches the finish state");
+/*	                	  //display submission page?
 //	                	  StringBuilder s = new StringBuilder();
 //	                	  s.append("Your choices are: \n");
 //	                	  for (int i = 1; i < 6; i++)
@@ -97,12 +100,49 @@ public class Peoples extends ListActivity {
 //	                	  bundle.putString("confirm", s.toString());
 //	                	  bundle.putString("answers", survey.getAnswersAsJson().toString());
 	                	  
-	                	  /*Toast.makeText(getApplicationContext(), s.toString(),
-	                              Toast.LENGTH_SHORT).show();*/
+	                	  //Toast.makeText(getApplicationContext(), s.toString(),
+	                              //Toast.LENGTH_SHORT).show();
+//	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
+//	                      myIntent.putExtras(bundle);
+//	                	  startActivityForResult(myIntent, 0);
+//	                	  finish();
 	                	  
 	                	  final TextView t = (TextView) findViewById(R.id.confirm);
 	                	  
-	                	  setContentView(R.layout.confirmpage);
+	                	  //setContentView(R.layout.confirmpage);
+	                	  
+	                	  Button back = (Button) findViewById(R.id.back);
+	                      back.setText("Go Back");
+	                      back.setOnClickListener(new View.OnClickListener() {
+	                            public void onClick(View view) {
+	              	            	  survey.prevQuestion(); //go to the previous Question
+	              	            	  ListView lv = getListView();
+	              	            	  
+	              	            	  setContentView(R.layout.survey_list_view);
+	              	            	  if (survey.getChoices().length != 0) //if multiple choice
+	              	            	  {
+	              		                  setListAdapter(new ArrayAdapter<String>(panda, 
+	              		                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
+	              		              	  q.setText(survey.getText());
+	              		              	  
+	              		            	  if (survey.getAnswerChoice() != -1)
+	              		            		  lv.setItemChecked(survey.getAnswerChoice(), true);
+	              	            	  }
+	              	            	  else //if free response
+	              	            	  {
+	              	            		  String[] test = {"Enter your response here"};
+	              	            		  setListAdapter(new ArrayAdapter<String>(panda, 
+	              		                		  R.layout.list_item, test));
+	              		              	  q.setText(survey.getText());
+	              		              	  
+	              		              	  if (!survey.getAnswerText().equals(""))
+	              		              	  {
+	              		              		  EditText e = (EditText) findViewById(R.id.editText1);
+	              		              		  e.setText(survey.getAnswerText());
+	              		              	  }
+	              	            	  }
+	                      	  }
+	                        });
 	                	  
 	                	  
 		                  Button sample = (Button) findViewById(R.id.finish);
@@ -120,11 +160,9 @@ public class Peoples extends ListActivity {
 	//	                            finish();
 		                        }
 	
-		                  });
-//	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
-//	                      myIntent.putExtras(bundle);
-//	                	  startActivityForResult(myIntent, 0);
-//	                	  finish();
+		                  });*/
+	                	  //if (survey.submit())
+	                		  //Log.e(TAG, "YAY");
 	                  }
 	                  else //there are still more Questions
 	                  {
@@ -145,8 +183,7 @@ public class Peoples extends ListActivity {
 	                	  else //if free response
 	                	  {
 	                		  String[] test = {"Enter your response here"};
-	                		  setListAdapter(new ArrayAdapter<String>(panda, 
-			                		  R.layout.list_item, test));
+	                		  setListAdapter(new ArrayAdapter<String>(panda, R.layout.list_item, test));
 			              	  q.setText(survey.getText());
 			              	  
 			              	  if (!survey.getAnswerText().equals(""))
@@ -155,7 +192,6 @@ public class Peoples extends ListActivity {
 			              		  e.setText(survey.getAnswerText());
 			              	  }
 	                	  }
-	                	  
 	                  }
             	  }
             	  else 
