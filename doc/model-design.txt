@@ -1,0 +1,116 @@
+*******************************************************************************
+* Java Survey model design notes and usage guide                Austin Walker *
+*******************************************************************************
+The main idea behind the survey model is shielding the application from
+databased calls (ie object-relational mapping).  Each Survey object is self
+contained and capable of performing all the needed functions within the phone
+application.  As much as possible, the id fields from the database are not
+used; they could not be removed completely without a lot of memory overhead
+because of the need to look up past answers.
+
+Survey objects are essientially designed using the active recored architecture.
+They have some internal state that tracks what the current question is and
+what previous answers have been given with the hope that this removes much of
+the burden from UI code.
+
+**************
+Example usage:
+**************
+
+----------------
+Creating Surveys
+----------------
+
+Survey mySurvey = new Survey(survey_id);
+
+This looks at that database and generates the entire Survey corresponding to
+the survey_id.
+
+--------------------
+Displaying Questions
+--------------------
+
+To get the current Question's text and choices, call:
+
+mySurvey.getText();
+mySurvey.getChoices();
+
+To advance the survey to the next question, just call:
+
+mySurvey.nextQuestion();
+
+The ability to back-track through a survey has also been implemented.  If a
+subject wants to return to a previous question, just call:
+
+mySurvey.prevQuestion();
+
+For the sake of a nice display, the function isOnFirst() is provided.  This
+will return true if the current question is the first question; this can be
+useful when deciding whether or not to show a back button.  prevQuestion()
+updates the current question similar to nextQuestion().
+
+To know when a survey is done, call:
+
+mySurvey.done()
+
+This returns ture if the survey is over.
+
+--------------------
+Answering a Question
+--------------------
+
+When a subject answers a question, call one of:
+
+mySurvey.answer(question, choice, null); //for multiple choice
+mySurvey.answer(question, null, "answer text"); //for free response
+
+Internally, answering a question:
+	-generates an Answer object to be saved later
+	-updates the next question based on branches
+Make sure to answer a question before you call nextQuestion() or nextQuestion()
+will just return the current question!
+
+------------------
+Finishing a Survey
+------------------
+
+When a subject finishes the last question, it is the client code's
+responsibility to call:
+
+mySurvey.submit();
+
+This will serialize all Answers and put them into the database.  It will also
+reset the Survey to be in it's original state.  This allows for the case that
+the same Survey needs to be used multiple times in a short time span without
+requiring that the Survey be rebuilt.
+
+-----------------------
+Putting it all together
+-----------------------
+
+Here's what a real usage might look like.  UI.* are made up:
+
+Suvery mySurvey = new Survey(1);
+while (!mySurvey.done())
+{
+	UI.displayQuestion(mySurvey.getText());
+	String[] choices = mySurvey.getChoices();
+	if (choices == null)
+	{
+		UI.displayTextBox();
+	}
+	else
+	{
+		for (String choice : choices)
+		{
+			UI.displayChoice(choice);
+		}
+	}
+	String answer = UI.waitForAnswer();
+	mySurvey.answer(currentQ, ...);
+	mySurvey.nextQuestion();
+}
+mySurvey.submit();
+
+There are certainly more complex things that can be done, check out the source
+for the full list of functions.

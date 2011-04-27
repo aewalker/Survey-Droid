@@ -306,7 +306,7 @@ The website is written in PHP using the open-source framework CakePHP, which req
 </ol>
 
 <p>
-	Here are the latest updatese on the Phone application design:
+	Here are the latest updates on the Phone application design:
 	<a href="https://docs.google.com/document/pub?id=12AqD6qyfr94OVOdn3HBiAqdpq4WLnYdaQ_aUxXznK1U">Google doc notes</a>
 </p>
 
@@ -375,22 +375,30 @@ Meetings with Naomi will take place on the following dates: 3/21, 4/6, 4/18, 5/2
 	<li>
 		By 4/19 (Alpha version)
 		<ul>
-			<li>Finish communication between the phone and the web server</li>
-			<li>Preliminary user interface complete on phone app</li>
-			<li>Finish data view/export in web app</li>
+			<li class="done">Finish communication between the phone and the web server</li>
+			<li class="done">Preliminary user interface complete on phone app</li>
+			<li class="done">Finish data view/export in web app</li>
+			<li class="failed">Phone builds survey objects from database (moved to beta version)</li>
 		</ul>
 	</li>
 	<li>
 		By 4/26 (Beta version)
 		<ul>
-			<li>CSS/graphics complete on web app</li>
-			<li>Bugs fixed and user interfaces polished</li>
+			<li class="done">CSS/graphics complete on web app</li>
+			<li>
+				Bugs fixed and user interfaces polished:
+				<ul><li class="done">web interface</li><li>phone interface</li></ul>
+			</li>
+			<li>Phone app can be turned on/off</li>
+			<li>GPS and call data are reported to web server</li>
+			<li class="done">Phone builds survey objects from database, administers them, and saves results.</li>
+			<li>Survey results on phone are uploaded to server.</li>
 		</ul>
 	</li>
 	<li>
 		By 5/3 (Presentation and final version)
 		<ul>
-			<li></li>
+			<li>Extensive testing completed on:<ul><li>phone</li><li>website</li></ul></li>
 		</ul>
 	</li>
 	<li>
@@ -413,7 +421,7 @@ Meetings with Naomi will take place on the following dates: 3/21, 4/6, 4/18, 5/2
 
 <p>In addition to the phone application, we will also design a web-portal for researchers such that they can have some amount of control over the application. <del>However it is still an open issue if we will use PHP, Java or something else as server-side web language. Just two of team members know PHP and if we decide to move on with PHP then other team members would have to learn PHP.</del> We have decided to go with PHP, but we decided that the phone app would be more work so only 2 people will be working on the website: Austin and Sema (both know PHP).</p>
 
-<p>Finally, evaluation of usability and success of this application could be nontrivial. For now, survey seems to be one option for evaluation but it is better to find a more reliable way to evaluate the application.</p>
+<p>Finally, evaluation of usability and success of this application could be nontrivial. For now, giving users a survey seems to be one option for evaluation, but it may be better to find a more reliable way to evaluate the application.</p>
 
 <hr />
 

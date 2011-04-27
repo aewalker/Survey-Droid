@@ -1,4 +1,4 @@
-<div id="content">
+
 <?php 
 if ($session->read('Auth.User.admin'))
 {
@@ -12,7 +12,7 @@ if ($session->read('Auth.User.admin'))
 		echo $form->input('User.last_name', array('label' => 'Last Name', 'default' => $user['last_name']));
 		echo "Make Admin";
 		echo $form->checkbox('User.admin', array('checked' => $user['admin']));
-			
+
 		echo $form->hidden('User.id', array('value' => $user['id']));
 		
 		echo $form->end('Submit');
@@ -26,4 +26,4 @@ if ($session->read('Auth.User.admin'))
 		
 }
 	 ?>
-</div>
+

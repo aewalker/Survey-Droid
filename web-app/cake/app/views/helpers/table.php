@@ -90,6 +90,15 @@ class TableHelper extends Helper
 				//$s = $s.'<div class="break"></div>';
 			}
 		}
+		$this->commandStmts = '"doesnt_exist_"';
+		foreach ($commands as $command => $val)
+		{
+			if ($val['type'] == 'ajax')
+			{
+				$this->commandStmts = '(type == "'.Inflector::underscore($command).'" ? "'
+				.$val['update'].'"+id : '.$this->commandStmts.')';
+			}
+		}
 		return $s;
 	}
 	
@@ -116,6 +125,25 @@ class TableHelper extends Helper
 			$s = $s.'</td></tr>';
 		}
 		$s = $s.'</table>';
+		
+		foreach($commands as $command => $val)
+		{
+			if ($val['type'] == 'ajax')
+			{
+				$this->commandStmts = '(type == "'.Inflector::underscore($command).'" ? "'
+				.$val['update'].'" : '.$this->commandStmts.')';
+			}
+		}
+		
+		if ($this->commandStmts != '"doesnt_exist_"')
+		{
+			$this->Js->buffer('$("a", ".'.$this->_getURLName($this->model).
+			'").click(function(event) { var tr = $(this).closest("tr"), id = tr.children().first().text(), '.
+			'type = $(this).text().toLowerCase(), target = '.
+			'$('.$this->commandStmts.'); '. //output of this is halarious, but it works...
+			'if (!target.is(":empty")) { target.empty(); event.stopImmediatePropagation(); } '.
+			'$(this).toggleClass("opened"); return false; });', true);
+		}
 		return $s;
 	}
 	

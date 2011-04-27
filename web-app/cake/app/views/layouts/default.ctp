@@ -12,8 +12,12 @@
 	?>
 </head>
 <body>
+
+
 <div id="header">
-	<h3><a href="/">PEOPLES</a></h3> =>
+	<h3>
+	<a href="/"><?php echo $html->image('/img/peoples.ico');?>PEOPLES</a>
+	</h3> 
 	<div id="menubar">
 		<?php
 		if (($user = $session->read('Auth.User')) != NULL)
@@ -27,9 +31,26 @@
 		?>
 	</div>
 </div>
+<div id="userInfo">
+	<?php
+		if (($user = $session->read('Auth.User')) != NULL)
+		{
+			echo '<b>'.$user['first_name'].' '.$user['last_name'].', </b>';
+			if($user['admin']==1)
+				echo ' (Administrator) ';
+			echo $html->link('Logout', array('controller' => 'users', 'action' => 'logout'));
+		}
+		else
+		{
+			echo 'Please log in here: ';
+			echo $html->link('Login', array('controller' => 'users', 'action' => 'login'));
+			
+		}
+	?>
+</div>
 <div id="main">
 	<hr />
-	<?php echo $content_for_layout; ?>
+	<?php echo $content_for_layout;?>
 </div>
 <div id="footer">
 	<hr />
@@ -37,9 +58,9 @@
 		if (($user = $session->read('Auth.User')) != NULL)
 		{
 			echo '<p>Logged in as ';
-			echo $user['first_name'].' '.$user['last_name'].'. ';
+			echo '<b>'.$user['first_name'].' '.$user['last_name'].', </b>';
 			if($user['admin']==1)
-				echo ' (Administrator)';
+				echo ' (Administrator) ';
 			echo $html->link('Logout', array('controller' => 'users', 'action' => 'logout'));
 			echo '</p>';
 		}

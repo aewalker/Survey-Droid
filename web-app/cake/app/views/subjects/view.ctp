@@ -26,6 +26,12 @@ echo $html->tableCells(
           'Phone Number',
           $phone_num
      )));
+     
+echo $html->tableCells(
+      array(array(
+          'DeviceID',
+          $device_id
+     )));
 
 ?>
 </table>

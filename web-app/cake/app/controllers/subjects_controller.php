@@ -25,7 +25,7 @@ class SubjectsController extends AppController
 				'first_name LIKE' => '%'.$this->data['Subject']['first_name'].'%',
 				'last_name LIKE' => '%'.$this->data['Subject']['last_name'].'%'
 			),
-			'fields' => array('id', 'first_name', 'last_name', 'phone_num'),
+			'fields' => array('id', 'first_name', 'last_name', 'phone_num', 'device_id'),
 			'order' => array('last_name', 'first_name')
 		)));
 	}
@@ -87,13 +87,14 @@ class SubjectsController extends AppController
 			$result = $this->Subject->find('first', array
 			(
 				'conditions' => array('id' => $id),
-				'fields' => array('first_name', 'last_name', 'phone_num')
+				'fields' => array('first_name', 'last_name', 'phone_num', 'device_id')
 			));
 			if (isset($result['Subject']))
 			{
 				$this->set('first_name', $result['Subject']['first_name']);
 				$this->set('last_name', $result['Subject']['last_name']);
 				$this->set('phone_num', $result['Subject']['phone_num']);
+				$this->set('device_id', $result['Subject']['device_id']);
 				$this->set('id', $id);
 			}
 			else
@@ -110,13 +111,14 @@ class SubjectsController extends AppController
 		$result = $this->Subject->find('first', array
 		(
 			'conditions' => array('id' => $subjectid),
-			'fields' => array('first_name', 'last_name', 'phone_num')
+			'fields' => array('first_name', 'last_name', 'phone_num', 'device_id')
 		));
 		if (isset($result['Subject']))
 		{
 			$this->set('first_name', $result['Subject']['first_name']);
 			$this->set('last_name', $result['Subject']['last_name']);
 			$this->set('phone_num', $result['Subject']['phone_num']);
+			$this->set('device_id', $result['Subject']['device_id']);
 		}
 		else
 			echo 'An error has occured!';

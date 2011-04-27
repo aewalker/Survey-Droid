@@ -15,6 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.peoples.android.activities.ConfirmSubmissionSurvey;
+<<<<<<< HEAD
+=======
+import com.peoples.android.model.Choice;
+import com.peoples.android.model.Question;
+>>>>>>> master
 import com.peoples.android.model.Survey;
 import com.peoples.android.server.Pull;
 
@@ -46,7 +51,53 @@ public class Peoples extends ListActivity {
         Pull.syncWithWeb(this);
       
         setContentView(R.layout.survey_list_view);
+<<<<<<< HEAD
 
+=======
+		//Creating a bogus Survey!
+        
+        final Survey survey = new Survey();
+        
+//        String[] question1choices = {"Keira Knightley",
+//        		"Natalie Portman",
+//        		"Emmanuelle Chiriqui"};
+//        final Question question1 = new Question(1, "Who is your favorite actress?",
+//        		question1choices, null);
+//        String[] question2choices = {"Red",
+//        		"Blue",
+//        		"Green",
+//        		"Purple"};
+//        final Question question2 = new Question(2, "What is your favorite color", 
+//        		null, null);	
+//        String[] question3choices = {"Panda",
+//        		"Tiger",
+//        		"Penguin"};
+//        final Question question3 = new Question(3, "What is your favorite animal?", 
+//        		question3choices, null);
+//        String[] question4choices = {"10",
+//        		"24",
+//        		"33"};
+//        final Question question4 = new Question(4, "How old are you?", 
+//        		question4choices, null);	
+//        final Question question5 = new Question(5, "What country are you from?", 
+//        		CHOICES, null);
+//        
+//        question1.setNextQuestionID(2);
+//        question2.setNextQuestionID(3);
+//        question3.setNextQuestionID(4);
+//        question4.setNextQuestionID(5);
+//        question5.setNextQuestionID(1104);
+//        
+//        survey.addQuestion(question1);
+//        survey.addQuestion(question2);
+//        survey.addQuestion(question3);
+//        survey.addQuestion(question4);
+//        survey.addQuestion(question5);
+//    
+//        survey.updateCurrentQuestionID(1);
+        
+//        final Question question = question1;
+>>>>>>> master
     	final Context panda = this;
     	
     	//code you need to put into your file to run my GUI using your survey id
@@ -112,6 +163,7 @@ public class Peoples extends ListActivity {
     	
         Button next = (Button) findViewById(R.id.button2);
         next.setText("Next Question");
+<<<<<<< HEAD
         final View.OnClickListener nextListener = new View.OnClickListener() {
             public void onClick(View view) {
           	  
@@ -121,6 +173,16 @@ public class Peoples extends ListActivity {
           			  (survey.getChoices().length == 0))
           	  {
 	            	  //save response gogo?
+=======
+        next.setOnClickListener(new View.OnClickListener() {
+              public void onClick(View view) {
+            	  
+            	  ListView lv = getListView();
+            	  if ((survey.getChoices().length != 0 && lv.getCheckedItemPosition() != -1)||
+            			  (survey.getChoices().length == 0))
+            	  {
+	            	  /*save response gogo?*/
+>>>>>>> master
 	            	  if (survey.getChoices().length != 0) //multiple choice
 	            	  {
 	            		  survey.answer(survey.getChoices()[lv.getCheckedItemPosition()]);
@@ -131,12 +193,16 @@ public class Peoples extends ListActivity {
 	            	  else //free response
 	            	  {
 	            		  EditText edit = (EditText)findViewById(R.id.editText1);
+<<<<<<< HEAD
 	            		  //Log.e(TAG, edit.getText().toString());
+=======
+>>>>>>> master
 	            		  survey.answer(edit.getText().toString());
 	            		  Toast.makeText(getApplicationContext(), 
 	            				  edit.getText().toString(),
 	                              Toast.LENGTH_SHORT).show();
 	            	  }
+<<<<<<< HEAD
 
 	            	  survey.nextQuestion(); //go to the next Question
 
@@ -216,6 +282,33 @@ public class Peoples extends ListActivity {
 		                  });*/
 	                	  //if (survey.submit())
 	                		  //Log.e(TAG, "YAY");
+=======
+	            	  
+	            	  survey.nextQuestion(); //go to the next Question
+	            	  
+	                  if (survey.done()) //if there are no more Questions....
+	                  {
+	                	  //display submission page?
+//	                	  StringBuilder s = new StringBuilder();
+//	                	  s.append("Your choices are: \n");
+//	                	  for (int i = 1; i < 6; i++)
+//	                	  {
+//	                		  if (survey.getQuestion(i).getAnswer() != null)
+//	                		  s.append("Question " + i + ": " + survey.getQuestion(i).getAnswer() + "\n");
+//	                	  }
+	                	  
+//	                	  Bundle bundle = new Bundle();
+//	                	  bundle.putString("confirm", s.toString());
+//	                	  bundle.putString("answers", survey.getAnswersAsJson().toString());
+	                	  
+	                	  /*Toast.makeText(getApplicationContext(), s.toString(),
+	                              Toast.LENGTH_SHORT).show();*/
+	                	  survey.sumbit();
+//	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
+//	                      myIntent.putExtras(bundle);
+//	                	  startActivityForResult(myIntent, 0);
+//	                	  finish();
+>>>>>>> master
 	                  }
 	                  else //there are still more Questions
 	                  {
@@ -224,6 +317,7 @@ public class Peoples extends ListActivity {
 			                  setListAdapter(new ArrayAdapter<String>(panda, 
 			                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
 			              	  q.setText(survey.getText());
+<<<<<<< HEAD
 			              	  
 			              	  Log.d(TAG, "badpanda");
 			              	  ListView hi = getListView();
@@ -232,10 +326,13 @@ public class Peoples extends ListActivity {
 			            		  hi.setItemChecked(survey.getAnswerChoice(), true);
 			            		  Log.d(TAG, "panda");
 			            	  }
+=======
+>>>>>>> master
 	                	  }
 	                	  else //if free response
 	                	  {
 	                		  String[] test = {"Enter your response here"};
+<<<<<<< HEAD
 	                		  setListAdapter(new ArrayAdapter<String>(panda, R.layout.list_item, test));
 			              	  q.setText(survey.getText());
 			              	  
@@ -244,6 +341,12 @@ public class Peoples extends ListActivity {
 			              		  EditText e = (EditText) findViewById(R.id.editText1);
 			              		  e.setText(survey.getAnswerText());
 			              	  }
+=======
+	                		  setListAdapter(new ArrayAdapter<String>(panda, 
+			                		  R.layout.list_item, test));
+			              	  q.setText(survey.getText());
+			                  
+>>>>>>> master
 	                	  }
 	                  }
           	  }

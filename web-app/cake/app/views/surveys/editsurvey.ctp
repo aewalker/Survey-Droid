@@ -6,7 +6,12 @@
  *****************************************************************************/
 echo $form->create('Survey', array('url' => "editsurvey/$surveyid"));
 echo $form->input('name', array('value' => $name));
-echo $form->input('question_id', array('value' => $questionid));
+echo $form->input('question_id', array('value' => $questionid,
+	'label' => 'First Question', 'type' => 'text'));
+echo '<p>To set when this survey should be administered to subjects, enter'.
+	' 4 digit numbers in the fiends below separated by commas.  For exmple, '.
+	'to set a survey to be administered on Mondays at 11:00 AM and 3:45 PM, '.
+	'enter "1100,1545" in the "Monday" field.';
 echo $form->input('mo', array('value' => $days['mo'], 'label' => 'Monday'));
 echo $form->input('tu', array('value' => $days['tu'], 'label' => 'Tuesday'));
 echo $form->input('we', array('value' => $days['we'], 'label' => 'Wednesday'));

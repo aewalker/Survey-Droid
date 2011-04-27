@@ -144,7 +144,7 @@ class TablefordataHelper extends Helper
 		$s = '</table>';
 		foreach ($commands as $command => $val)
 		{
-			$s = $s.'<div'.$this->_getHTMLVal($style, 'td').'>';
+			$s = $s.'<div id="endTable"'.$this->_getHTMLVal($style, 'td').'>';
 			if ($val['type'] == 'link')
 			{
 				$s = $s.$this->Html->link($command,

@@ -6,14 +6,14 @@
  *****************************************************************************/
 echo $this->Session->flash();
 
-echo $html->link('Location summary (subject based)', array('controller' => 'datas', 'action'=>'locations'));
-echo '<br/><br/>';
+echo '<div id="links">'.$html->link('Location summary (subject based)', array('controller' => 'datas', 'action'=>'locations'));
+echo '</div>';
 
-echo $html->link('Call summary (subject based)', array('controller' => 'datas', 'action'=>'calls'));
-echo '<br/><br/>';
+echo '<div id="links">'.$html->link('Call summary (subject based)', array('controller' => 'datas', 'action'=>'calls'));
+echo '</div>';
 
-echo $html->link("Subject's Status summary (subject based)", array('controller' => 'datas', 'action'=>'subjectstatuses'));
-echo '<br/><br/><br/>';
+echo '<div id="links">'.$html->link("Subject's Status summary (subject based)", array('controller' => 'datas', 'action'=>'subjectstatuses'));
+echo '</div><br/>';
 
 echo 'Select a survey to see <b>Answers to Questions</b>';
 echo $table->startTable('Survey');

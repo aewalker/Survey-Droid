@@ -3,46 +3,177 @@
  *****************************************/
 body
 {
-	
+	padding: 0;
+	font-family: Verdana, sans-serif;
+	background-color: lightsteelblue;
+	background-attachment:fixed;
+	background-image: url("../img/around_world.jpg");
+	background-repeat:no-repeat;
+	background-position:right bottom;
 }
 form div
 {
 	display: block;
-	padding: 0;
-	margin: 0;
+	padding: 3px;
+	margin: 5px 5px 5px 5px;
+	text-align: left;
+}
+#endTable a
+{
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	float: left;
+	width: 100px;
+	background-color: lightgray;
+	font-weight: 700;
+	border-style: solid;
+	border-color: midnightblue;
+	
+}
+#endTable a:hover
+{
+	color: darkred;
+	font-size:120%;
+}
+h1
+{
+	font-family: Purisa;
+	margin-left:auto;
+	margin-right:auto;
+	width:50%;
+	display: block;
+	font-weight:900;
 }
 #header h3
 {
+	font-family: Purisa;
 	display: inline;
 }
 #header h3 a
 {
 	text-decoration: none;
-	color: black;
+	color: midnightblue;
+	font-weight: 900;
+	font-size:150%;
+	display: inline;
 }
 #header h3 a:hover
 {
-	color: blue;
+	color: darkred;
+	font-size:150%;
+	display: inline;
+}
+#menubar
+{
+	padding: 20px;
+	display: inline;
+	text-align: center;
+	margin: 0 auto 0 auto;
+	z-index: 5;
+	position: relative;
+	text-decoration: none;
 }
 #menubar a,div
 {
-	padding: 5px;
+	padding: 15px;
+	display: inline;
+	color: black;
+	text-align: center;
+	width: 200px;
+	margin: 0 auto 0 auto;
+	z-index: 5;
+	position: relative;
+	text-decoration: none;
+}
+#menubar div, a
+{
+	padding: 15px;
+	display: inline;
+	color: black;
+	text-align: center;
+	width: 200px;
+	margin: 0 auto 0 auto;
+	z-index: 5;
+	position: relative;
+	text-decoration: none;
+}
+#menubar a:hover
+{
+	color: darkred;
+	font-size:120%;
 	display: inline;
 }
 #main
 {
-	
+	text-align: left;
+}
+#main a
+{
+	display: block;
+	padding:  1px;
+	float:none;
+	text-align: center;
+	margin-top:auto;
+	margin-bottom:auto;
+	margin-left: 0;
+	width: 100px;
+	text-decoration: none;
+	background-color: lightgray;
+	border-style: solid;
+	border-color: midnightblue;
+}
+#links a
+{
+	display: block;
+	padding:  1px;
+	float:none;
+	text-align: left;
+	margin-top:auto;
+	margin-bottom:auto;
+	margin-left: 0;
+	width: 400px;
+	text-decoration: none;
+	background-color: lightgray;
+	border-style: solid;
+	border-color: midnightblue;
 }
 #footer
 {
-	
+	font-size: 12px;
+	text-align: center;
+	float:bottom;
+	clear: both;
+
+}
+#footer a
+{
+	font-size: 12px;
+	text-align: center;
+	color: darkred;
+	font-weight: bold;
+	display: inline;	
 }
 table
 {
 	border-spacing: 0;
 	border: none;
 }
+#userInfo 
+{
+	font-size: 10px;
+	float: right;
+	display:inline;
 
+}
+#userInfo a
+{
+	display:inline;
+	color: darkred;
+	font-weight: bold;
+	
+
+}
 table a
 {
 	padding: 0 5px 0 5px;
@@ -50,30 +181,39 @@ table a
 
 th
 {
-	background-color: #00A300;
+	background-color: midnightblue;
 	color: #ffffff;
 	text-align: left;
 }
 tr
 {
-	background-color: #D4FFA8;
+	background-color: steelblue;
 	border-top: 1px solid #000000;
 	border-bottom: 1px solid #000000;
+	text-align: left;
+}
+
+td
+{
+	margin: 0;
+	padding: 4px;
+  	text-align:left;
+}
+td a
+{
+	padding: 2px;
+	text-align: center;
+	text-decoration: none;
+	background-color: lightgray;
+	border-style: solid;
+	border-color: midnightblue;
+}
+td a:hover
+{
+	color: darkred;
 }
 
 /***** Survey table stuff *****/
-.questions th
-{
-	background-color: #00A300;
-	color: #ffffff;
-	text-align: left;
-}
-.questions tr
-{
-	background-color: #D4FFA8;
-	border-top: 1px solid #000000;
-	border-bottom: 1px solid #000000;
-}
 .choices th
 {
 	background-color: #0000A3;
@@ -122,10 +262,9 @@ tr
 {
 	margin: 0 0 0 200px;
 }
+
 /*************************/
 
-
-td
+#main table td a.opened
 {
-  text-align:left;
-}
+	background-color: gold;

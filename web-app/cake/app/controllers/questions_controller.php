@@ -22,7 +22,7 @@ class QuestionsController extends AppController
 		(
 			'conditions' => array('survey_id' => $surveyid),
 			'fields' => array('id', 'q_text'),
-			'order' => array('q_text')
+			'order' => array('id')
 		)));
 		$this->set('surveyid', $surveyid);
     }

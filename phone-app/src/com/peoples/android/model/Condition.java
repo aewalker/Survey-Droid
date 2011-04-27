@@ -6,8 +6,6 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-import java.util.Map;
-
 /**
  * Model for a branch condition.  Based on SQL:
  * 
@@ -29,37 +27,34 @@ public class Condition
 	public static final int HAS_NEVER_BEEN = 2;
 	
 	//Question to look at when evaluating this condition
-	private final int q_id;
 	private Question question;
 	
 	//Choice that is required for this condition to be true
-	private final Choice choice;
+	private Choice choice;
 	
 	//"just was", "ever was", or "has never been" as in enum above
-	private final int type;
+	private int type;
 	
 	//answer set from the Survey
 	//required in order to check current answers
 	//because of this, Conditions need to be initialized in the Survey
-	private final Iterable<Answer> answers;
+	private Iterable<Answer> answers;
 	
 	/*-----------------------------------------------------------------------*/
 	
 	/**
 	 * Create a new Condition.
 	 * 
+	 * @param q - Question to look at
 	 * @param c - Choice to look at
 	 * @param t - type of relation required
 	 * 
 	 * @throws RuntimeException if t is not a valid type
-	 * 
-	 * @see setQuestion
 	 */
-	public Condition(int q_id, Choice c, int t, Iterable<Answer> ans)
+	public Condition(Question q, Choice c, int t, Iterable<Answer> ans)
 	{
+		question = q;
 		choice = c;
-		this.q_id = q_id;
-		question = null;
 		switch (t)
 		{
 			case JUST_WAS: type = JUST_WAS; break;
@@ -71,42 +66,17 @@ public class Condition
 	}
 	
 	/**
-	 * Set the Condition's Question.  Needed to avoid infinite recursion in the
-	 * Survey constructor.  Should only be called once.
-	 * 
-	 * @param q_map - a Map of build Question objects
-	 * 
-	 * @throws RuntimeException if called multiple times
-	 * @throws RuntimeException if the given map doesn't have the need Question
-	 */
-	public void setQuestion(Map<Integer, Question> qMap)
-	{
-		if (question != null) throw new RuntimeException(
-				"attempt to set condition question multiple times");
-		if (!qMap.containsKey(q_id)) throw new RuntimeException(
-				"bad question map");
-		question = qMap.get(q_id);
-	}
-	
-	/**
 	 * Evaluate this Condition.
 	 * 
 	 * @return true or false
-	 * 
-	 * @throws RuntimeException if called before setQuestion
 	 */
 	public boolean eval()
 	{
-		if (question == null)
-		{
-			throw new RuntimeException(
-					"must set question before calling eval");
-		}
 		switch (type)
 		{
 			case JUST_WAS: return evalJustWas();
 			case EVER_WAS: return question.hasEverBeen(choice);
-			case HAS_NEVER_BEEN: return !question.hasEverBeen(choice);
+			case HAS_NEVER_BEEN: return question.hasNeverBeen(choice);
 			default: throw new RuntimeException(
 					"Something is very wrong; invalid condition type: "
 					+ type);
