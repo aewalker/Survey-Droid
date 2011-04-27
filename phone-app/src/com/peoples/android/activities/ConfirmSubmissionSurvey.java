@@ -1,17 +1,15 @@
 package com.peoples.android.activities;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.peoples.android.R;
+import com.peoples.android.server.Push;
 
 public class ConfirmSubmissionSurvey extends Activity {
 	
