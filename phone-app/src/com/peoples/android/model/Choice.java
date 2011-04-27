@@ -31,7 +31,7 @@ public class Choice
 	private final int id;
 	
 	/*-----------------------------------------------------------------------*/
-
+	
 	/**
 	 * Create a new Choice.
 	 * 

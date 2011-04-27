@@ -32,14 +32,14 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(D) Log.d(TAG, "+++ ON CREATE main activity +++");
+        if(D) Log.e(TAG, "+++ ON CREATE +++");
 
         setContentView(R.layout.main);
 
-	//Diego moved the survey fetch elsewhere as we make our way to a more solid services implementation
-        //Log.d(TAG, "Fetching surveys");
-        //Pull.syncWithWeb(this);
+        Log.d(TAG, "Fetching surveys");
 
+        //TODO: getting some parsing error
+        //Pull.syncWithWeb(this);
 
         Button sample = (Button) findViewById(R.id.Enter);
         sample.setText("Take a sample survey");
@@ -59,22 +59,13 @@ public class MainActivity extends Activity {
                 startActivityForResult(myIntent, 0);
             }
         });
-        
-        Button sync = (Button) findViewById(R.id.Sync);
-        sync.setText("Sync the surveys manually, to update deploy time or questions");
-        sync.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
-                startActivityForResult(myIntent, 0);
-            }
-        });
 
         //This is just code to test GPS location gathering and persisting to database
         //starts the Activity I"m interested in testing w/o waiting for button handler
-        //Context context = this;
-        //Intent gpsIntent = new Intent(context, LocationTestActivity.class);
-        //gpsIntent = gpsIntent.setClass(context, LocationTestActivity.class);
-        //context.startActivity(gpsIntent);
+        Context context = this;
+        Intent gpsIntent = new Intent(context, LocationTestActivity.class);
+        gpsIntent = gpsIntent.setClass(context, LocationTestActivity.class);
+        context.startActivity(gpsIntent);
 
     }
     

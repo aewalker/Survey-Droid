@@ -6,7 +6,6 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-
 import java.util.LinkedList;
 import java.util.Stack;
 import com.peoples.android.database.PeoplesDB;

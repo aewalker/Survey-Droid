@@ -13,7 +13,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     private static final boolean D = true;
 
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 1;
     public static final String GPS_TABLE_NAME = "gps";
     public static final String CALLLOG_TABLE_NAME = "calllog";
     public static final String ANSWER_TABLE_NAME = "answers";
@@ -30,18 +30,17 @@ public class PeoplesDB extends SQLiteOpenHelper {
         private GPSTable() {}
 
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
+
         public static final String LONGITUDE = "longitude";
+
         public static final String LATITUDE = "latitude";
+
         public static final String TIME = "time";
-        public static final String UPLOADED = "uploaded";
 
         private static String createSql() {
-        	return "CREATE TABLE " + GPS_TABLE_NAME + " (" 
-        	+ GPSTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
-            + GPSTable.LONGITUDE + " DOUBLE,"
-            + GPSTable.LATITUDE + " DOUBLE," 
-            + GPSTable.TIME + " INTEGER,"
-            +"uploaded INT UNSIGNED DEFAULT 0,"
+        	return "CREATE TABLE " + GPS_TABLE_NAME + " (" + GPSTable._ID
+            + " INTEGER PRIMARY KEY AUTOINCREMENT," + GPSTable.LONGITUDE + " DOUBLE,"
+            + GPSTable.LATITUDE + " DOUBLE," + GPSTable.TIME + " INTEGER"
             + " );";
         }
     }
@@ -50,20 +49,19 @@ public class PeoplesDB extends SQLiteOpenHelper {
         private CallLogTable() {}
 
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
+
         public static final String PHONE_NUMBER = "phone_number";
+
         public static final String CALL_TYPE = "call_type";
-        public static final String DURATION = "duration";
+
         public static final String TIME = "time";
-        public static final String UPLOADED = "uploaded";
 
         private static String createSql() {
         	return "CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
             + CallLogTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + CallLogTable.PHONE_NUMBER + " TEXT,"
-            + CallLogTable.CALL_TYPE + " TEXT," 
-            + CallLogTable.DURATION + " INTEGER," 
-            + CallLogTable.TIME + " INTEGER,"
-            + "uploaded INT UNSIGNED DEFAULT 0)";
+            + CallLogTable.CALL_TYPE + " TEXT," + CallLogTable.TIME
+            + " INTEGER" + ");";
         }
     }
     public static final class AnswerTable implements BaseColumns {
@@ -71,16 +69,13 @@ public class PeoplesDB extends SQLiteOpenHelper {
     	public static final String CHOICE_ID = "choice_id";
     	public static final String ANS_TEXT = "ans_text";
     	public static final String CREATED = "created";
-    	public static final String UPLOADED = "uploaded";
 
     	private static String createSql() {
     		return "CREATE TABLE answers (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"question_id INT UNSIGNED NOT NULL," +
-    				"choice_id INT UNSIGNED," +
-    				"ans_text TEXT," +
-    				"uploaded INT UNSIGNED DEFAULT 0," +
-    				"created DATETIME);";
+    				"subject_id INT UNSIGNED NOT NULL,choice_id INT UNSIGNED," +
+    				"ans_text TEXT,created DATETIME);";
     	}
     }
     public static final class BranchTable implements BaseColumns {
@@ -136,6 +131,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
 
     }
     public static final class SurveyTable implements BaseColumns {
+    	public static final String ID = "id";
     	public static final String NAME = "name";
     	public static final String CREATED = "created";
     	public static final String QUESTION_ID = "question_id";
@@ -161,12 +157,13 @@ public class PeoplesDB extends SQLiteOpenHelper {
     				"sa VARCHAR(255)," +
     				"su VARCHAR(255));";
     	}
+
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
     	AnswerTable.createSql();
-    	Log.d(TAG, "onCreate");
+    	Log.e(TAG, "onCreate");
 
         db.beginTransaction();
 
@@ -199,12 +196,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
                 + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + GPS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CALLLOG_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + ANSWER_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + BRANCH_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CHOICE_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CONDITION_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + QUESTION_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + SURVEY_TABLE_NAME);
         onCreate(db);
     }
 
@@ -270,20 +261,20 @@ public class PeoplesDB extends SQLiteOpenHelper {
     public PeoplesDB(Context context){
     	super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
-        Log.d(TAG, "in constructor");
+        Log.e(TAG, "in constructor");
     }
 
     //testings
     @Override
     public synchronized SQLiteDatabase getReadableDatabase() {
-    	if(D) Log.d(TAG, "getReadable");
+    	if(D) Log.e(TAG, "getReadable");
     	return super.getReadableDatabase();
     }
 
     @Override
     public synchronized SQLiteDatabase getWritableDatabase() {
-    	if(D) Log.d(TAG, "getWriteable");
+    	if(D) Log.e(TAG, "getWriteable");
     	return super.getWritableDatabase();
     }
-    
+
 }

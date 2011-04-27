@@ -6,9 +6,8 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+import com.peoples.android.database.PeoplesDB;
 
-import android.content.Context;
-import com.peoples.android.database.SurveyDBHandler;
 //import org.json.JSONException;
 //import org.json.JSONObject;
 
@@ -55,7 +54,6 @@ public class Answer
      * @param c_id - that Choice's id (ignored if Choice is null)
      * @param t - the answer text for a free response Question
      */
-
 	public Answer(Question q, int q_id, Choice c, int c_id, String t)
 	{
 		question = q;
@@ -115,7 +113,7 @@ public class Answer
     public boolean write()
     {
     	//TODO database stuff
-    	return false;
+    	return true;
     }
 
     //TODO I think this should be done elsewhere

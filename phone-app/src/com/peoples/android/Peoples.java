@@ -3,7 +3,6 @@ package com.peoples.android;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,13 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.peoples.android.activities.ConfirmSubmissionSurvey;
-<<<<<<< HEAD
-=======
 import com.peoples.android.model.Choice;
 import com.peoples.android.model.Question;
->>>>>>> master
 import com.peoples.android.model.Survey;
-import com.peoples.android.server.Pull;
 
 /**
  * 
@@ -36,24 +31,14 @@ public class Peoples extends ListActivity {
 	//TEST
     private static final String TAG = "Peoples";
     private static final boolean D = true;
-    private int requestCode;
-    
-    private Survey survey;
     
     
     /** Called when the activity is first created. */
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
-        Log.d(TAG, "Fetching surveys");
-        Pull.syncWithWeb(this);
-      
         setContentView(R.layout.survey_list_view);
-<<<<<<< HEAD
-
-=======
 		//Creating a bogus Survey!
         
         final Survey survey = new Survey();
@@ -97,83 +82,13 @@ public class Peoples extends ListActivity {
 //        survey.updateCurrentQuestionID(1);
         
 //        final Question question = question1;
->>>>>>> master
     	final Context panda = this;
-    	
-    	//code you need to put into your file to run my GUI using your survey id
-    	//Bundle bundle = new Bundle();
- 	    //bundle.putInt("survey_id", YOUR_FAVORITE_INTEGER(the survey id));
- 		//Intent myIntent = new Intent(this, Peoples.class);
-        //myIntent.putExtras(bundle);
-    	//startActivityForResult(myIntent, 0);
-    	
-    	
-    	
-    	
-    	//here's where i get the survey id from the bundle
-    	//Bundle extras = getIntent().getExtras(); 
-    	//int survey_id = extras.getInt("survey_id");
-    	//survey = new Survey(survey_id, panda);
-    	
-        survey = new Survey(3, panda);
-        
-        Log.d(TAG, "Finished creating survey");
-        if (survey.done()) throw new RuntimeException("Survey has no questions!");
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
     	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
     	q.setText(survey.getText());
           
-    	Button prev = (Button) findViewById(R.id.button1);
-        prev.setText("Previous Question");
-        final View.OnClickListener prevListener = new View.OnClickListener() {
-            public void onClick(View view) {
-          	  
-          	  if (!survey.isOnFirst()) {
-	            	  survey.prevQuestion(); //go to the previous Question
-	            	  ListView lv = getListView();
-	            	  
-	            	  if (survey.getChoices().length != 0) //if multiple choice
-	            	  {
-		                  setListAdapter(new ArrayAdapter<String>(panda, 
-		                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
-		              	  q.setText(survey.getText());
-		              	  
-		            	  if (survey.getAnswerChoice() != -1)
-		            		  lv.setItemChecked(survey.getAnswerChoice(), true);
-	            	  }
-	            	  else //if free response
-	            	  {
-	            		  String[] test = {"Enter your response here"};
-	            		  setListAdapter(new ArrayAdapter<String>(panda, 
-		                		  R.layout.list_item, test));
-		              	  q.setText(survey.getText());
-		              	  
-		              	  if (!survey.getAnswerText().equals(""))
-		              	  {
-		              		  EditText e = (EditText) findViewById(R.id.editText1);
-		              		  e.setText(survey.getAnswerText());
-		              	  }
-	            	  }
-          	  }
-          	  else Toast.makeText(getApplicationContext(), "You can't go back it's the first question yo!",
-                        Toast.LENGTH_SHORT).show();
-      	  }
-        };
-        prev.setOnClickListener(prevListener);
-    	
-        Button next = (Button) findViewById(R.id.button2);
+        Button next = (Button) findViewById(R.id.button1);
         next.setText("Next Question");
-<<<<<<< HEAD
-        final View.OnClickListener nextListener = new View.OnClickListener() {
-            public void onClick(View view) {
-          	  
-          	  ListView lv = getListView();
-
-          	  if ((survey.getChoices().length != 0 && lv.getCheckedItemPosition() != -1)||
-          			  (survey.getChoices().length == 0))
-          	  {
-	            	  //save response gogo?
-=======
         next.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
             	  
@@ -182,7 +97,6 @@ public class Peoples extends ListActivity {
             			  (survey.getChoices().length == 0))
             	  {
 	            	  /*save response gogo?*/
->>>>>>> master
 	            	  if (survey.getChoices().length != 0) //multiple choice
 	            	  {
 	            		  survey.answer(survey.getChoices()[lv.getCheckedItemPosition()]);
@@ -193,96 +107,11 @@ public class Peoples extends ListActivity {
 	            	  else //free response
 	            	  {
 	            		  EditText edit = (EditText)findViewById(R.id.editText1);
-<<<<<<< HEAD
-	            		  //Log.e(TAG, edit.getText().toString());
-=======
->>>>>>> master
 	            		  survey.answer(edit.getText().toString());
 	            		  Toast.makeText(getApplicationContext(), 
 	            				  edit.getText().toString(),
 	                              Toast.LENGTH_SHORT).show();
 	            	  }
-<<<<<<< HEAD
-
-	            	  survey.nextQuestion(); //go to the next Question
-
-	                  if (survey.done()) //if there are no more Questions....
-	                  {
-	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
-	                	  startActivityForResult(myIntent, requestCode);
-	                	  
-	                	  
-	                	  
-	                	  /*//survey.submit();
-	                	  Log.e(TAG, "it reaches the finish state");
-
-	                	  String[] test = {"Why is this hereeee?"};
-              		  setListAdapter(new ArrayAdapter<String>(panda, R.layout.list_item, test));
-	                	  q.setText("Are you sure you want to submit your responses?");
-	                	  //final TextView t = (TextView) findViewById(R.id.confirm);
-	                	  
-	                	  //setContentView(R.layout.confirmpage);
-	                	  
-	                	  Button back = (Button) findViewById(R.id.button1);
-	                      back.setText("Go Back");
-	                      back.setOnClickListener(new View.OnClickListener() {
-	                            public void onClick(View view) {
-	              	            	  survey.prevQuestion(); //go to the previous Question
-	              	            	  ListView lv = getListView();
-	              	          	            	  
-	              	            	  if (survey.getChoices().length != 0) //if multiple choice
-	              	            	  {
-	              		                  setListAdapter(new ArrayAdapter<String>(panda, 
-	              		                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
-	              		              	  q.setText(survey.getText());
-	              		              	  
-	              		            	  if (survey.getAnswerChoice() != -1)
-	              		            		  lv.setItemChecked(survey.getAnswerChoice(), true);
-	              	            	  }
-	              	            	  else //if free response
-	              	            	  {
-	              	            		  String[] test = {"Enter your response here"};
-	              	            		  setListAdapter(new ArrayAdapter<String>(panda, 
-	              		                		  R.layout.list_item, test));
-	              		              	  q.setText(survey.getText());
-	              		              	  
-	              		              	  if (!survey.getAnswerText().equals(""))
-	              		              	  {
-	              		              		  EditText e = (EditText) findViewById(R.id.editText1);
-	              		              		  //e.setText(survey.getAnswerText());
-	              		              	  }
-	              	            	  }
-	              	            	Button prev = (Button) findViewById(R.id.button1);
-	              	                prev.setText("Previous Question");
-	              	                prev.setOnClickListener(prevListener);
-	              	                Button next = (Button) findViewById(R.id.button2);
-	              	                next.setText("Next Question");
-	              	                //next.setOnClickListener(nextListener);
-	              	            	  
-	                      	  }
-	                        });
-	                	  
-	                	  
-		                  Button submit = (Button) findViewById(R.id.button2);
-		                  submit.setText("Submit Survey");
-		                  submit.setOnClickListener(new View.OnClickListener() {
-		                        public void onClick(View view) {
-		                            boolean success = survey.submit(); //Push.sendAnswersToServer(answers);
-		                            if (success) {
-		                                //t.setText("Successfully submitted the survey");
-		                            	Log.e(TAG, "success!");
-		                                finish();
-		                            } else {
-		                            	Log.e(TAG, "failure");
-		                            	finish();
-		                                //t.setText("Oops, something went wrong");
-		                            }
-		                        }
-	
-		                  });*/
-	                	  //if (survey.submit())
-	                		  //Log.e(TAG, "YAY");
-=======
 	            	  
 	            	  survey.nextQuestion(); //go to the next Question
 	            	  
@@ -308,7 +137,6 @@ public class Peoples extends ListActivity {
 //	                      myIntent.putExtras(bundle);
 //	                	  startActivityForResult(myIntent, 0);
 //	                	  finish();
->>>>>>> master
 	                  }
 	                  else //there are still more Questions
 	                  {
@@ -317,69 +145,66 @@ public class Peoples extends ListActivity {
 			                  setListAdapter(new ArrayAdapter<String>(panda, 
 			                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
 			              	  q.setText(survey.getText());
-<<<<<<< HEAD
-			              	  
-			              	  Log.d(TAG, "badpanda");
-			              	  ListView hi = getListView();
-			            	  if (survey.getAnswerChoice() != -1)
-			            	  {
-			            		  hi.setItemChecked(survey.getAnswerChoice(), true);
-			            		  Log.d(TAG, "panda");
-			            	  }
-=======
->>>>>>> master
 	                	  }
 	                	  else //if free response
 	                	  {
 	                		  String[] test = {"Enter your response here"};
-<<<<<<< HEAD
-	                		  setListAdapter(new ArrayAdapter<String>(panda, R.layout.list_item, test));
-			              	  q.setText(survey.getText());
-			              	  
-			              	  if (!survey.getAnswerText().equals(""))
-			              	  {
-			              		  EditText e = (EditText) findViewById(R.id.editText1);
-			              		  e.setText(survey.getAnswerText());
-			              	  }
-=======
 	                		  setListAdapter(new ArrayAdapter<String>(panda, 
 			                		  R.layout.list_item, test));
 			              	  q.setText(survey.getText());
 			                  
->>>>>>> master
 	                	  }
 	                  }
-          	  }
-          	  else 
-          	  {
-          		  Toast.makeText(getApplicationContext(), "Please select a choice", Toast.LENGTH_SHORT).show();
-          	  }
-            }
-        };
-        next.setOnClickListener(nextListener);
-        
-        
+            	  }
+            	  else 
+            	  {
+            		  Toast.makeText(getApplicationContext(), "Please select a choice", Toast.LENGTH_SHORT).show();
+            	  }
+              }
+          });
     }
     
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==1){
-            Toast.makeText(this, "Pass", Toast.LENGTH_LONG).show();
-            if(survey.submit()) Log.e(TAG, "it works!");
-            finish();
-        }
-        else{
-            Toast.makeText(this, "Fail", Toast.LENGTH_LONG).show();
-            //go to the previous question and start over?
-            survey.prevQuestion();
-        }
-    }
-    
-/*    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        setContentView(R.layout.survey_list_view);
-    	Log.e(TAG, "panddaaaa");
-    }*/
+    static final String[] CHOICES = new String[] {
+        "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra",
+        "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina",
+        "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan",
+        "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
+        "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
+        "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory",
+        "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+        "Cote d'Ivoire", "Cambodia", "Cameroon", "Canada", "Cape Verde",
+        "Cayman Islands", "Central African Republic", "Chad", "Chile", "China",
+        "Christmas Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo",
+        "Cook Islands", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic",
+        "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+        "East Timor", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea",
+        "Estonia", "Ethiopia", "Faeroe Islands", "Falkland Islands", "Fiji", "Finland",
+        "Former Yugoslav Republic of Macedonia", "France", "French Guiana", "French Polynesia",
+        "French Southern Territories", "Gabon", "Georgia", "Germany", "Ghana", "Gibraltar",
+        "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guinea", "Guinea-Bissau",
+        "Guyana", "Haiti", "Heard Island and McDonald Islands", "Honduras", "Hong Kong", "Hungary",
+        "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica",
+        "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos",
+        "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
+        "Macau", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands",
+        "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia", "Moldova",
+        "Monaco", "Mongolia", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia",
+        "Nauru", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand",
+        "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "North Korea", "Northern Marianas",
+        "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru",
+        "Philippines", "Pitcairn Islands", "Poland", "Portugal", "Puerto Rico", "Qatar",
+        "Reunion", "Romania", "Russia", "Rwanda", "Sqo Tome and Principe", "Saint Helena",
+        "Saint Kitts and Nevis", "Saint Lucia", "Saint Pierre and Miquelon",
+        "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Saudi Arabia", "Senegal",
+        "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
+        "Somalia", "South Africa", "South Georgia and the South Sandwich Islands", "South Korea",
+        "Spain", "Sri Lanka", "Sudan", "Suriname", "Svalbard and Jan Mayen", "Swaziland", "Sweden",
+        "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "The Bahamas",
+        "The Gambia", "Togo", "Tokelau", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey",
+        "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "Virgin Islands", "Uganda",
+        "Ukraine", "United Arab Emirates", "United Kingdom",
+        "United States", "United States Minor Outlying Islands", "Uruguay", "Uzbekistan",
+        "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Wallis and Futuna", "Western Sahara",
+        "Yemen", "Yugoslavia", "Zambia", "Zimbabwe"
+      };
 }

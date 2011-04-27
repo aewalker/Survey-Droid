@@ -4,19 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.widget.Toast;
 
-
-/**
- * 
- * Will run on phone boot and it will:
- * 
- * 1. check on survey run times and schedule their display
- * 2. 
- * 
- * 
- * 
- * @author diego
- *
- */
 public class BootService extends IntentService {
 
     public BootService() {

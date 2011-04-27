@@ -130,7 +130,6 @@ public class Question
 	 * @throws RuntimeException if given an invalid Choice
 	 * @throws RuntimeException if the current Question has already been
 	 * answered.
-
 	 */
 	public Answer answer(Choice c)
 	{
