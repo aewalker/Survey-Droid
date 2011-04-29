@@ -34,6 +34,12 @@
                 <action android:name=".CallLogService" />
             </intent-filter>
         </service>
+        
+        <service android:name=".services.CoordinatorService">
+        	<intent-filter>
+        		<action android:name=".services.CoordinatorService"/>
+        	</intent-filter>
+        </service>
 
 		<activity android:name=".activities.MainActivity" android:label="@string/app_name">
 		<!-- <activity android:name=".Peoples" android:label="@string/app_name"> -->

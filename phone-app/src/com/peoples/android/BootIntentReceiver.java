@@ -21,7 +21,7 @@ public class BootIntentReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
     	
-    	if(D) Log.e(TAG, "oh hi, in BootIntentReceiver");
+    	if(D) Log.e(TAG, "on Receive");
     	
 //    	before (doesn't work):
 //    	new Intent(context, BootService.class)
@@ -31,7 +31,6 @@ public class BootIntentReceiver extends BroadcastReceiver {
     	bootIntent.setAction("com.peoples.android.BootService");
     	bootIntent.setClass(context, BootService.class);
         context.startService(bootIntent);
-        
         
         context.startService(new Intent(context, CallLogService.class));
         context.startService(new Intent(context, GPSLocationService.class));
