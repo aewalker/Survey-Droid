@@ -49,9 +49,12 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		
 		<activity android:name=".Peoples"
-		android:configChanges="keyboardHidden|orientation"
-		android:screenOrientation="portrait"></activity>
+			android:configChanges="keyboardHidden|orientation"
+			android:screenOrientation="portrait">
+		</activity>
+		
 		<activity android:name=".activities.ConfirmSubmissionSurvey"></activity>
 		<activity android:name=".processTest.LocationTestActivity"></activity>
 

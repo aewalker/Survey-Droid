@@ -1,7 +1,13 @@
 package com.peoples.android.services;
 
+import com.peoples.android.Peoples;
+
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.Log;
 
 public class CoordinatorService extends IntentService {
@@ -21,6 +27,35 @@ public class CoordinatorService extends IntentService {
 		//check that everything is running smoothly, and report any errors to the server
 		
 		if(D) Log.e(TAG, "onHandleIntent");
+		
+		
+		
+		
+		//TODO: upload data
+		
+		
+		
+		
+		
+		//TODO: download data
+		
+		
+		
+				
+		
+		//TODO: iterate through survey table and schedule surveys
+		
+		
+		//for now, let's try scheduling a survey every minute?
+		//TODO: figure out proper flag!!!
+		AlarmManager alarmManager 	= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		Intent surveyIntent			= new Intent(this, Peoples.class);
+		
+		PendingIntent pendingSurvey = PendingIntent.getActivity(this, 0, surveyIntent,
+															PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+							SystemClock.elapsedRealtime(), 60*1000, pendingSurvey);
 		
 		
 	}
