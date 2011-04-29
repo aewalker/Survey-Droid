@@ -16,19 +16,20 @@
 				android:theme="@style/CustomTheme"
 				android:screenOrientation="portrait"
 				android:configChanges="keyboardHidden|orientation">
+				
 		<receiver android:name="BootIntentReceiver" android:label="BootIntentReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
 
-		<service android:name="services.BootService">
+		<service android:name=".services.BootService">
 			<intent-filter>
 				<action android:name=".BootService" />
 			</intent-filter>
 		</service>
 		
-		<service android:name="services.CallLogService">
+		<service android:name=".services.CallLogService">
             <intent-filter>
                 <action android:name=".CallLogService" />
             </intent-filter>

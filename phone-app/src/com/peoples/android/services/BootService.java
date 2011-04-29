@@ -2,14 +2,17 @@ package com.peoples.android.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 
 /**
  * 
- * Will run on phone boot and it will:
+ * TODO:
  * 
- * 1. check on survey run times and schedule their display
+ * Will run on phone boot and:
+ * 
+ * 1. needs to schedule master service
  * 2. 
  * 
  * 
@@ -18,6 +21,9 @@ import android.widget.Toast;
  *
  */
 public class BootService extends IntentService {
+	
+	protected static final String TAG = "BootService";
+	protected static final boolean D = true;
 
     public BootService() {
         super(BootService.class.getName());
@@ -26,8 +32,11 @@ public class BootService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+    	
+    	if(D) Log.e(TAG, "oh hi in bootService");
+    	
         // TODO Auto-generated method stub
-        //Toast.makeText(this, "BootService Started", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "BootService Started", Toast.LENGTH_LONG).show();
         
         long endTime = System.currentTimeMillis() + 30*1000;
         while (System.currentTimeMillis() < endTime) {
