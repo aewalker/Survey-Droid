@@ -2,8 +2,7 @@
 /*****************************************************************************
  * controllers/datas_controller.php                                          *
  *                                                                           *
- * Controlls user-related functions: login, logout, registration, password   *
- * change, etc.                                                              *
+ * Controlls data view and export.                                           *
  *****************************************************************************/
 class DatasController extends AppController
 {
@@ -42,13 +41,26 @@ class DatasController extends AppController
     {
     	//$this->layout = 'ajax';
 
-    	$this->set('results', $this->Answer->find('all', array
+    	$results = $this->Answer->find('all', array
 		(
 			'conditions' => array('Answer.question_id' => $questionid),
-			'fields' => array('Answer.id', 'Answer.choice_id', 'Choice.choice_text', 
+			'fields' => array('Answer.choice_id', 'Choice.choice_text', 
 					'Answer.ans_text','Answer.created', 'Answer.subject_id'),
 			'order' => array('Answer.id')
-		)));
+		));
+		
+		//check that the question is multiple choice in order to know what fields
+		//to display in the view
+		$multipleChoice = true; //assume multiple choice by default because it's more common
+		foreach ($results as $result)
+		{
+			if (!$result['Answer']['choice_id'])
+			{
+				$multipleChoice = false;
+			}
+		}
+		$this->set('multipleChoice', $multipleChoice);
+		$this->set('results', $results);
 		
 		$qs = $this->Question->find('all', array
 		(

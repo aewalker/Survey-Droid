@@ -14,14 +14,28 @@ $_SESSION['exportColumnNames'] =  array(
 $_SESSION['info'] = "";
 $_SESSION['pagename'] = $pagename;
 
+echo "<h2>$pagename</h2>";
 //show the results
-echo $tablefordata->startTable('Answer', array(
-					'Id', 'Choice Id', 'Answer Text', 'Time', 'Subject Id', 'Choice Text'
-					));
-echo $tablefordata->tableBody($results, array(),
-            array(
-            	'id', 'choice_id', 'ans_text', 'created', 'subject_id', 'choice_text'
+if ($multipleChoice)
+{ //adapt the results table based on the kind of quetion: don't show text for multiple choice...
+	echo $tablefordata->startTable('Answer', array(
+						'Choice Id', 'Time', 'Subject Id', 'Choice Text'
+						));
+	echo $tablefordata->tableBody($results, array(),
+	            array(
+	            	'choice_id', 'created', 'subject_id', 'choice_text'
             ));
+}
+else
+{ //...and don't show choices for free response
+	echo $tablefordata->startTable('Answer', array(
+						'Answer Text', 'Time', 'Subject Id'
+						));
+	echo $tablefordata->tableBody($results, array(),
+	            array(
+	            	'ans_text', 'created', 'subject_id'
+            ));
+}
 
 echo $tablefordata->endTable(array('Export as xls file' => array('command' => "../datas/export_xls", 'arg' =>"", 
 					'type' => 'link')));

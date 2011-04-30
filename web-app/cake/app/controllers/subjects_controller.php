@@ -23,7 +23,9 @@ class SubjectsController extends AppController
 			'conditions' => array
 			(
 				'first_name LIKE' => '%'.$this->data['Subject']['first_name'].'%',
-				'last_name LIKE' => '%'.$this->data['Subject']['last_name'].'%'
+				'last_name LIKE' => '%'.$this->data['Subject']['last_name'].'%',
+				'phone_num LIKE' => '%'.$this->data['Subject']['phone_num'].'%',
+				'device_id LIKE' => '%'.$this->data['Subject']['device_id'].'%'
 			),
 			'fields' => array('id', 'first_name', 'last_name', 'phone_num', 'device_id'),
 			'order' => array('last_name', 'first_name')
