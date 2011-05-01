@@ -1,6 +1,8 @@
 package com.peoples.android.services;
 
 import com.peoples.android.Peoples;
+import com.peoples.android.server.Pull;
+import com.peoples.android.server.Push;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -32,18 +34,23 @@ public class CoordinatorService extends IntentService {
 		
 		
 		//TODO: upload data
-		
+		Log.d(TAG, "Pushing all data");
+		Push.pushAll(this);
 		
 		
 		
 		
 		//TODO: download data
+		Log.d(TAG, "Fetching surveys");
+        Pull.syncWithWeb(this);
 		
 		
 		
 				
 		
 		//TODO: iterate through survey table and schedule surveys
+        //need to somehow find row of unanswered survey
+        
 		
 		
 		//for now, let's try scheduling a survey every minute?

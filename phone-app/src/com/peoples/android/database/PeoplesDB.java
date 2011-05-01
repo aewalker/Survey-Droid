@@ -37,12 +37,12 @@ public class PeoplesDB extends SQLiteOpenHelper {
 
         private static String createSql() {
         	return "CREATE TABLE " + GPS_TABLE_NAME + " (" 
-        	+ GPSTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
-            + GPSTable.LONGITUDE + " DOUBLE,"
-            + GPSTable.LATITUDE + " DOUBLE," 
-            + GPSTable.TIME + " INTEGER,"
-            +"uploaded INT UNSIGNED DEFAULT 0,"
-            + " );";
+        	+ GPSTable._ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT," 
+            + GPSTable.LONGITUDE	+ " DOUBLE,"
+            + GPSTable.LATITUDE		+ " DOUBLE," 
+            + GPSTable.TIME			+ " INTEGER,"
+            + GPSTable.UPLOADED 	+ " INT UNSIGNED DEFAULT 0"
+            						+ " );";
         }
     }
     public static final class CallLogTable implements BaseColumns {

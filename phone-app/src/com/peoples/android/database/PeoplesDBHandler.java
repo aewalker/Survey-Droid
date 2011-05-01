@@ -13,7 +13,7 @@ import android.util.Log;
  * keep track of the version of the DB, creating the DB, updating
  * the DB, and other versioning manipulations.
  * 
- * @author diego
+ * @author Diego
  *
  */
 public class PeoplesDBHandler {
