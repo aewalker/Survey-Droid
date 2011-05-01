@@ -11,7 +11,6 @@ public class CallLogService extends IntentService {
 
     public CallLogService() {
         super(CallLogService.class.getName());
-        // TODO Auto-generated constructor stub
     }
 
     @Override
