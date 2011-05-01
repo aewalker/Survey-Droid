@@ -10,6 +10,8 @@ echo $this->Session->flash();
 echo $form->create('Subject', array('action' => 'index'));
 echo $form->input('first_name');
 echo $form->input('last_name');
+echo $form->input('phone_num');
+echo $form->input('device_id', array('type' => 'text'));
 echo $form->end('Search');
 
 //show the results
