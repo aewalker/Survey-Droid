@@ -16,6 +16,8 @@ public class CoordinatorService extends IntentService {
 	
 	private static final String TAG = "CoordinatorService";
     private static final boolean D = true;
+    
+    
 
 	public CoordinatorService() {
 		super(CoordinatorService.class.getName());
@@ -30,31 +32,24 @@ public class CoordinatorService extends IntentService {
 		
 		if(D) Log.e(TAG, "onHandleIntent");
 		
-		
-		
-		
 		//TODO: upload data
 		Log.d(TAG, "Pushing all data");
 		Push.pushAll(this);
-		
-		
-		
 		
 		//TODO: download data
 		Log.d(TAG, "Fetching surveys");
         Pull.syncWithWeb(this);
 		
-		
-		
-				
-		
 		//TODO: iterate through survey table and schedule surveys
         //need to somehow find row of unanswered survey
         
 		
-		
 		//for now, let's try scheduling a survey every minute?
 		//TODO: figure out proper flag!!!
+        
+        //TODO: have alarmManager run SurveyScheduler at specified
+        //interval
+        
 		AlarmManager alarmManager 	= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent surveyIntent			= new Intent(this, Peoples.class);
 		
@@ -66,5 +61,6 @@ public class CoordinatorService extends IntentService {
 		
 		
 	}
+
 
 }

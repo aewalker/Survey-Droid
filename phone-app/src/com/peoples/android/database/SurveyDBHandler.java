@@ -257,6 +257,4 @@ public class SurveyDBHandler extends PeoplesDBHandler
 		return true;
 	}
 	
-	
-	public boolean int nextSurveyI
 }
