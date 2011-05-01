@@ -37,12 +37,12 @@ public class PeoplesDB extends SQLiteOpenHelper {
 
         private static String createSql() {
         	return "CREATE TABLE " + GPS_TABLE_NAME + " (" 
-        	+ GPSTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
-            + GPSTable.LONGITUDE + " DOUBLE,"
-            + GPSTable.LATITUDE + " DOUBLE," 
-            + GPSTable.TIME + " INTEGER,"
-            +"uploaded INT UNSIGNED DEFAULT 0,"
-            + " );";
+        	+ GPSTable._ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT," 
+            + GPSTable.LONGITUDE	+ " DOUBLE,"
+            + GPSTable.LATITUDE		+ " DOUBLE," 
+            + GPSTable.TIME			+ " INTEGER,"
+            + GPSTable.UPLOADED 	+ " INT UNSIGNED DEFAULT 0"
+            						+ " );";
         }
     }
     public static final class CallLogTable implements BaseColumns {
@@ -162,6 +162,23 @@ public class PeoplesDB extends SQLiteOpenHelper {
     				"su VARCHAR(255));";
     	}
     }
+    public static final class ScheduledSurveys implements BaseColumns {
+    	public static final String SS_TABLE_NAME	 = "scheduled_surveys"; 
+    	public static final String SURVEY_ID	 = "survey_id";
+    	public static final String ORIGINAL_TIME = "original_time";
+    	public static final String SKIPPED		 = "survey_skipped";
+    	
+    	private static String createSql() {
+    		
+    		return "CREATE TABLE " + SS_TABLE_NAME + " (" +
+    				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    				SURVEY_ID + " INT UNSIGNED NOT NULL, " +
+    				ORIGINAL_TIME + " INT UNSIGNED NOT NULL, " +
+    				SKIPPED	+ " BOOLEAN NOT NULL);";
+    		
+    	}
+    }
+    
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -179,6 +196,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
             db.execSQL(ConditionTable.createSql());
             db.execSQL(QuestionTable.createSql());
             db.execSQL(SurveyTable.createSql());
+            db.execSQL(ScheduledSurveys.createSql());
 
             buildInitialCallLog(db);
 

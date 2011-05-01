@@ -505,6 +505,9 @@ public class Survey
 			}
 		}
 		
+		//write record of original scheduled time,
+		//vs actual time of completion
+		
 		if (!Push.pushAnswers(ctxt))
 		    worked = false;
 		

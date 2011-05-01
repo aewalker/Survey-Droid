@@ -46,7 +46,13 @@ public class BootService extends IntentService {
         
         
         //TODO: schedule master service
+        
+        
+        
         //TODO: begin GPS collection
+        
+        
+        
         //TODO: begin call log collection
         
         
