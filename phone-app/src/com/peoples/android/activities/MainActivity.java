@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
@@ -39,23 +41,34 @@ public class MainActivity extends Activity {
         Log.d(TAG, "Fetching surveys");
         Pull.syncWithWeb(this);
 
-
+        final TextView q = (TextView) this.findViewById(R.id.msg);
+        q.setText("You have a new survey awaiting");
+        
         Button sample = (Button) findViewById(R.id.Enter);
-        sample.setText("Take a sample survey");
+        sample.setText("Click here to take the survey now");
         sample.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent myIntent = new Intent(view.getContext(), Peoples.class);
                 startActivityForResult(myIntent, 0);
+                finish();
             }
 
         });
 
-        Button gps = (Button) findViewById(R.id.GPS);
-        gps.setText("Tell me my location every 15 seconds!");
-        gps.setOnClickListener(new View.OnClickListener() {
+        Button postpone = (Button) findViewById(R.id.postpone);
+        postpone.setText("Postpone the survey for an hour");
+        postpone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
-                startActivityForResult(myIntent, 0);
+                //Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
+                //startActivityForResult(myIntent, 0);
+            	
+            	//##########################//
+            	//here's where you would call the service to postpone the survey//
+            	//##########################//
+            	Toast.makeText(getApplicationContext(), "Implement me in your service yo!",
+                        Toast.LENGTH_SHORT).show();
+            	finish();
+            	
             }
         });
         

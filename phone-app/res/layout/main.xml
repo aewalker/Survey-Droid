@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical"
-    android:background="@drawable/around_world">
+    android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
     android:text="Welcome to PEOPLES!"
-    android:id="@+id/confirm"
+    android:id="@+id/msg"
     />
    
 <Button
@@ -18,7 +17,7 @@
 	android:layout_margin="5dip"/>
 <Button android:text="panda" 
 android:layout_width="fill_parent" 
-android:id="@+id/GPS" 
+android:id="@+id/postpone" 
 android:layout_height="wrap_content" 
 android:background="@drawable/custom_button"
     android:layout_margin="5dip"></Button>
