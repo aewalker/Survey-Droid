@@ -32,7 +32,11 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 	 * 
 	 * Every survey that is scheduled gets a row in the ScheduledSurveys table.
 	 * Once the survey is administered the corresponding entry is removed from 
-	 * the database. Two columns of the cursor are important:
+	 * the database. The columns of the cursor, in order, are:
+	 * 
+	 * ID : in the scheduled surveys table
+	 * 
+	 * survey ID: in the surveys table
 	 * 
 	 * original time: the time at which this survey was scheduled and its entry
 	 * added to the scheduled survey table.
@@ -76,7 +80,10 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 	
 	/**
 	 * 
-	 * Get surveys that have not been scheduled for today.
+	 * Get surveys that have not been scheduled for today. The cursor has only
+	 * one column:
+	 * 
+	 * day: the time at which this schedule should run today
 	 * 
 	 * @param day
 	 * @return
@@ -102,7 +109,9 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 							" SELECT * FROM "+su+
 							" WHERE "+
 							ss+"."+PeoplesDB.ScheduledSurveys.SURVEY_ID+" = "+
-						  	su+"."+PeoplesDB.SurveyTable._ID);
+						  	su+"."+PeoplesDB.SurveyTable._ID+" )";
+		
+		return db.rawQuery(query, null);
 		
 	}
 	

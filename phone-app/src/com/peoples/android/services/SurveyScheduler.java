@@ -22,6 +22,11 @@ import android.util.Log;
  *
  */
 public class SurveyScheduler extends IntentService {
+	
+	//for writing to the log
+	private static final String TAG = "SurveyScheduler";
+	private static final boolean D = true;
+	
 
 	/**
 	 * If the next survey is within THRESHHOLD time of the last
@@ -53,6 +58,9 @@ public class SurveyScheduler extends IntentService {
 		//scheduled database and only keep the new one.
 		
 		//TODO: iterate over scheduled surveys table
+		//TODO: iterate over surveys
+		//note: currently testing iterating over survey tables below
+		
 		
 		//TODO: seems useful to warrant moving into scheduled survey DB handler 
 		String today = null;
@@ -86,49 +94,48 @@ public class SurveyScheduler extends IntentService {
 		
 		//get previously scheduled surveys
 		Cursor scheduledCursor = ssHandler.getScheduledSurveys(today);
-		if(scheduledCursor != null){
-			boolean next = true;
-			while(scheduledCursor.isAfterLast() == false && next){
-				
-				
-				
-				
-				
-				
+		
+		//testing
+		int id, survid;
+		String origTime, time;
+		String prevSurv = "";
+		
+		while(scheduledCursor.moveToNext()){
+			Log.d(TAG, "Previously scheduled surveys:");
 			
-				
-			}
-			scheduledCursor.close();
+			prevSurv = "";
+			
+			id 			= scheduledCursor.getInt(0);
+			survid 		= scheduledCursor.getInt(1);
+			origTime	= scheduledCursor.getString(2);
+			time		= scheduledCursor.getString(3);
+			
+			prevSurv = 	"id: "+id+" survID "+survid+" origTime "+origTime+
+						" time "+time;
+			
+			Log.d(TAG, prevSurv);
 		}
+		//close the cursor
+		scheduledCursor.close();
 		
 		
 		//get surveys that were skipped or have not been scheduled
 		Cursor unscheduledCursor = ssHandler.getUnScheduledSurveys(today);
 		
+		String survDay = "";
 		
 		
-		
-		
+		while(unscheduledCursor.moveToNext()){
+			Log.d(TAG, "unscheduled surveys:");
+			survDay = unscheduledCursor.getString(0);			
+			Log.d(TAG, survDay);
+			
+		}
+		//close the cursor
+		unscheduledCursor.close();
 		
 		//close handler
 		ssHandler.close();
-		
-		
-		
-		
-		
-		
-		//TODO: iterate over surveys 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
 	}
 
 }
