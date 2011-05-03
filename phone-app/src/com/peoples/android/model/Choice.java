@@ -6,10 +6,6 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-import android.content.Context;
-import android.database.Cursor;
-
-import com.peoples.android.database.SurveyDBHandler;
 import com.peoples.android.database.PeoplesDB;
 
 /**
@@ -34,9 +30,6 @@ public class Choice
 	//in the database
 	private final int id;
 	
-	//context, needed for the same reason as above
-	private final Context ctxt;
-	
 	/*-----------------------------------------------------------------------*/
 	
 	/**
@@ -45,11 +38,10 @@ public class Choice
 	 * @param text - the text the Choice should contain
 	 * @param id - choice_id as in the database
 	 */
-	public Choice(String text, int id, Context c)
+	public Choice(String text, int id)
 	{
 		choice_text = text;
 		this.id = id;
-		ctxt = c;
 	}
 	
 	/**
@@ -72,7 +64,7 @@ public class Choice
 	 */
 	public Answer answer(Question q, int q_id)
 	{
-		return new Answer(q, q_id, this, id, null, ctxt);
+		return new Answer(q, q_id, this, id, null);
 	}
 	
 	/*-----------------------------------------------------------------------*/
@@ -80,30 +72,26 @@ public class Choice
 	/**
 	 * Checks whether this Choice has ever been used to answer a Question
 	 * 
-	 * @param id - the Question id to look for
+	 * @param q_id - the Question id to look for
 	 * 
 	 * @return true or false
-	 * 
-	 * @throws IllegalArgumentException if any of the required columns do not
-	 * exist in the database or can't be found in the results set
 	 */
 	public boolean hasEverBeen(int id)
 	{
-		SurveyDBHandler db = new SurveyDBHandler(ctxt);
-		db.openRead();
-		Cursor c = db.getQuestionHistory(id);
-		db.close();
-		c.moveToFirst();
-		while (!c.isAfterLast())
-		{
-			if (c.getInt(c.getColumnIndexOrThrow(
-					PeoplesDB.AnswerTable.CHOICE_ID)) == this.id)
-			{
-				c.close();
-				return true;
-			}
-		}
-		c.close();
 		return false;
+		//TODO database stuff
+	}
+	
+	/**
+	 * Checks that this Choice has never been used to answer a Question
+	 * 
+	 * @param q_id - the Question id to look for
+	 * 
+	 * @return true or false
+	 */
+	public boolean hasNeverBeen(int id)
+	{
+		return false;
+		//TODO database stuff
 	}
 }

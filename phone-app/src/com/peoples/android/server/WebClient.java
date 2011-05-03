@@ -8,19 +8,19 @@ package com.peoples.android.server;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
+//import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
+//import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
@@ -30,7 +30,8 @@ import android.util.Log;
  * SOC Online API. 
  */
 public class WebClient {
-    private static final String TAG = "WebClient";
+    @SuppressWarnings("unused") //want this around for future use
+	private static final String TAG = "WebClient";
     private static final int HTTP_STATUS_OK = 200;
     /**
      * Thrown when there were problems contacting the remote API server, either
@@ -58,7 +59,9 @@ public class WebClient {
      */
     protected static synchronized String getUrlContent(String url) throws ApiException {
         
-        byte[] sBuffer = new byte[512];
+    	//FIXEME what is this for?
+        @SuppressWarnings("unused")
+		byte[] sBuffer = new byte[512];
         
         // Create client and set our specific user-agent string
         HttpClient client = new DefaultHttpClient();
