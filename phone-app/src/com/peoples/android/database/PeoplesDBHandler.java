@@ -114,7 +114,8 @@ public class PeoplesDBHandler {
 	
 
 	/**
-	 * 
+	 * Close the database; should be called after ever getReadable or
+	 * getWritable.
 	 */
 	public void close() {
 		if(D) Log.d(TAG, "in close()");

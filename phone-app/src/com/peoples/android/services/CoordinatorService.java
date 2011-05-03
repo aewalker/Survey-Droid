@@ -1,6 +1,6 @@
 package com.peoples.android.services;
 
-import com.peoples.android.Peoples;
+//import com.peoples.android.Peoples;
 import com.peoples.android.server.Pull;
 import com.peoples.android.server.Push;
 

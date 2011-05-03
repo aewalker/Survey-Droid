@@ -1,8 +1,9 @@
+/*---------------------------------------------------------------------------*
+ * CallAction.java                                                           *
+ *                                                                           *
+ * Currently unused; left in for future work.                                *
+ *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
-
-
-
-
 
 /**
  *
@@ -19,6 +20,8 @@ package com.peoples.android.model;
  * @author diego
  *
  */
+//FIXME remove this when the class is used
+@SuppressWarnings("unused")
 public class CallAction {
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

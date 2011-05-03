@@ -22,10 +22,6 @@ import com.peoples.android.database.PeoplesDB;
 import com.peoples.android.database.SurveyDBHandler;
 import com.peoples.android.server.Push;
 
-
-//import org.json.JSONArray;
-//import org.json.JSONObject;
-
 /**
  * The highest-level survey-related class.  A survey object contains everything
  * needed to administer a given survey to subjects.  For a summary of how to
@@ -50,10 +46,6 @@ public class Survey
 	
 	//the first question in the survey
 	private final Question firstQ;
-	
-	//TODO I think this should be handled somewhere else
-	//field for each day; holds times in 24 hour format separated by commas
-	//private String mo, tu, we, th, fr, sa, su;
 	
 	//the current Question object
 	private Question currentQ;
@@ -505,9 +497,10 @@ public class Survey
 			}
 		}
 		
+		//TODO this should be done by the master service
+		//try to upload answers to the server
 		//write record of original scheduled time,
 		//vs actual time of completion
-		
 		if (!Push.pushAnswers(ctxt))
 		    worked = false;
 		
@@ -519,17 +512,4 @@ public class Survey
 		
 		return worked;
 	}
-	
-	
-	//TODO I think this should be handled in the communication manager
-	/*
-	public JSONArray getAnswersAsJson()
-	{
-	    JSONArray answers = new JSONArray();
-	    for (Question q : getQuestions())
-	    {
-	        answers.put(q.answer.getAsJson());
-	    }
-	    return answers;
-	}*/
 }

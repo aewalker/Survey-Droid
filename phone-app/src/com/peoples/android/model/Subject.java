@@ -1,5 +1,12 @@
+/*---------------------------------------------------------------------------*
+ * Subject.java                                                              *
+ *                                                                           *
+ * Represents a phone's user.  Currently unused; left in for future work.    *
+ *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+//FIXME remove this when the class is used
+@SuppressWarnings("unused")
 public class Subject {
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
