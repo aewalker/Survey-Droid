@@ -35,7 +35,7 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 	 * the database. Two columns of the cursor are important:
 	 * 
 	 * original time: the time at which this survey was scheduled and its entry
-	 * entered to the scheduled survey table.
+	 * added to the scheduled survey table.
 	 * 
 	 * day: the time at which this schedule should run today
 	 * 
@@ -73,6 +73,39 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 							group, having, orderBy);
 		
 	}
+	
+	/**
+	 * 
+	 * Get surveys that have not been scheduled for today.
+	 * 
+	 * @param day
+	 * @return
+	 */
+	public Cursor getUnScheduledSurveys(String day) {
+		
+		if(D) Log.d(TAG, "getting previously unscheduled surveys");
+		
+		String ss = PeoplesDB.SS_TABLE_NAME;
+		String su = PeoplesDB.SURVEY_TABLE_NAME;
+		
+		String query =	" SELECT "	+ su +"."+day+	" "+     
+						" FROM "	+ ss +			" "+
+						" WHERE "	+	
+						PeoplesDB.ScheduledSurveys.SKIPPED + " = true "+
+				
+						" UNION "	+
+						
+						" SELECT "	+ su +"."+day+	" "+     
+						" FROM "	+ su +			" "+
+						" WHERE "	+				" "+
+						" NOT EXISTS ( "	+
+							" SELECT * FROM "+su+
+							" WHERE "+
+							ss+"."+PeoplesDB.ScheduledSurveys.SURVEY_ID+" = "+
+						  	su+"."+PeoplesDB.SurveyTable._ID);
+		
+	}
+	
 	
 
 }

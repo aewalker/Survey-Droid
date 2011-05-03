@@ -81,13 +81,18 @@ public class SurveyScheduler extends IntentService {
 		SurveyDBHandler		   survHandler = new SurveyDBHandler(this);
 		
 		
-		//open
+		//open handler
 		ssHandler.openRead();
-		Cursor scheduledCursor = ssHandler.getScheduledSurveys(today);
 		
+		//get previously scheduled surveys
+		Cursor scheduledCursor = ssHandler.getScheduledSurveys(today);
 		if(scheduledCursor != null){
 			boolean next = true;
 			while(scheduledCursor.isAfterLast() == false && next){
+				
+				
+				
+				
 				
 				
 			
@@ -95,7 +100,17 @@ public class SurveyScheduler extends IntentService {
 			}
 			scheduledCursor.close();
 		}
-		//close
+		
+		
+		//get surveys that were skipped or have not been scheduled
+		Cursor unscheduledCursor = ssHandler.getUnScheduledSurveys(today);
+		
+		
+		
+		
+		
+		
+		//close handler
 		ssHandler.close();
 		
 		
