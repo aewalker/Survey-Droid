@@ -43,8 +43,6 @@ public class SurveyScheduler extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		
-		
-		
 		//TODO: Surveys that need scheduling come from two places:
 		//1. previously scheduled surveys table
 		//2. surveys table
@@ -54,10 +52,9 @@ public class SurveyScheduler extends IntentService {
 		//reschedule the first, otherwise simply keep its entry in the prev.
 		//scheduled database and only keep the new one.
 		
-		
-		
 		//TODO: iterate over scheduled surveys table
 		
+		//TODO: seems useful to warrant moving into scheduled survey DB handler 
 		String today = null;
 		int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 		switch (day) {
@@ -91,9 +88,9 @@ public class SurveyScheduler extends IntentService {
 		if(scheduledCursor != null){
 			boolean next = true;
 			while(scheduledCursor.isAfterLast() == false && next){
+				
+				
 			
-				
-				
 				
 			}
 			scheduledCursor.close();

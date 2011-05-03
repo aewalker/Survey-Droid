@@ -32,7 +32,12 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 	 * 
 	 * Every survey that is scheduled gets a row in the ScheduledSurveys table.
 	 * Once the survey is administered the corresponding entry is removed from 
-	 * the database.
+	 * the database. Two columns of the cursor are important:
+	 * 
+	 * original time: the time at which this survey was scheduled and its entry
+	 * entered to the scheduled survey table.
+	 * 
+	 * day: the time at which this schedule should run today
 	 * 
 	 * @param day Day of the week, as given by PeoplesDB.SurveyTable.(day)
 	 * 
