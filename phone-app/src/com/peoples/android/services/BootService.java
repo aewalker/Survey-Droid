@@ -61,7 +61,7 @@ public class BootService extends IntentService {
     	AlarmManager alarmManager			= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
     	Intent coordinatorIntent			= new Intent(this, CoordinatorService.class);
         //TODO: write a more proper Action, or use provided ones
-    	coordinatorIntent.setAction(BootService.class.getName());
+    	coordinatorIntent.setAction(CoordinatorService.class.getName());
     	PendingIntent pendingCoordinator	= PendingIntent.getService(getApplicationContext(), 0,
     											coordinatorIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     	

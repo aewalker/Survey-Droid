@@ -39,6 +39,14 @@
         		<action android:name=".services.CoordinatorService"/>
         	</intent-filter>
         </service>
+        
+        <service android:name=".services.SurveyScheduler">
+        	<intent-filter>
+        		<action android:name=".services.SurveyScheduler"/>
+        	</intent-filter>
+        </service>
+        
+        
 
 		<activity android:name=".activities.MainActivity" android:label="@string/app_name"
 		android:theme="@android:style/Theme.Dialog">

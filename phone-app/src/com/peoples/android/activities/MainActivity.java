@@ -1,8 +1,9 @@
 package com.peoples.android.activities;
 
-import java.util.List;
+//import java.util.List;
 
 import android.app.Activity;
+//import android.content.Context;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +15,13 @@ import android.widget.Toast;
 
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
+//import com.peoples.android.model.Survey;
+//import com.peoples.android.processTest.LocationTestActivity;
+//import com.peoples.android.server.Pull;
+//import com.peoples.android.services.BootService;
 import com.peoples.android.model.Survey;
-import com.peoples.android.processTest.LocationTestActivity;
-import com.peoples.android.server.Pull;
-import com.peoples.android.services.GPSLocationService;
+import com.peoples.android.services.CoordinatorService;
+//import com.peoples.android.services.GPSLocationService;
 
 
 
@@ -40,8 +44,18 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.main);
 
-        Log.d(TAG, "Fetching surveys");
-        Pull.syncWithWeb(this);
+        
+        //NEW: let the coordinator service take care of sync stuff
+        Intent coordinatorIntent			= new Intent(this, CoordinatorService.class);
+        //TODO: write a more proper Action, or use provided ones
+    	coordinatorIntent.setAction(MainActivity.class.getName());
+        startService(coordinatorIntent);
+        
+//        Next call is done by process, though for now unsure that this class
+//        will see changes immediately
+        
+//        Log.d(TAG, "Fetching surveys");
+//        Pull.syncWithWeb(this);
 
         final TextView q = (TextView) this.findViewById(R.id.msg);
         q.setText("You have a new survey awaiting");

@@ -256,5 +256,4 @@ public class SurveyDBHandler extends PeoplesDBHandler
 			return false;
 		return true;
 	}
-	
 }

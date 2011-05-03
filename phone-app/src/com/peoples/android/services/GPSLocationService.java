@@ -83,6 +83,8 @@ public class GPSLocationService extends IntentService {
 				while(cur.isAfterLast() == false && next){
 				
 					String[] columnNames = cur.getColumnNames();
+					//FIXME remove when used
+					@SuppressWarnings("unused")
 					int		 numColumns	 = cur.getColumnCount();
 					
 					String locString = "LOCATION: \n";
@@ -212,7 +214,8 @@ public class GPSLocationService extends IntentService {
 	}
 	
 	
-	
+	/** @deprecated */
+	@SuppressWarnings("unused") //see below comments
 	private void initializeGPS(LocationManager locManager, PendingIntent pendingGPS) {
 		/*private void doTheRest(final TextView tv) {*/
 		

@@ -11,7 +11,7 @@ import android.util.Log;
 
 
 import com.peoples.android.database.PeoplesDB;
-import com.peoples.android.database.SurveyDBHandler;
+//import com.peoples.android.database.SurveyDBHandler;
 
 import static com.peoples.android.database.PeoplesDB.*;
 

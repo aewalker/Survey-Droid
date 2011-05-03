@@ -114,6 +114,8 @@ public class LocationTestActivity extends Activity {
 		//iterate over results if any
 		if(cur != null){
 			boolean next = cur.moveToFirst();
+			//FIXME remove when used
+			@SuppressWarnings("unused")
 			String[] columnNames = cur.getColumnNames();
 			int nameIndex		 = cur.getColumnIndex("name");
 			String locString = "LOCATION: \n";
@@ -133,6 +135,8 @@ public class LocationTestActivity extends Activity {
 		//iterate over results if any
 		if(cur != null){
 			boolean next = cur.moveToFirst();
+			//FIXME remove when used
+			@SuppressWarnings("unused")
 			String[] columnNames = cur.getColumnNames();
 			int nameIndex		 = cur.getColumnIndex("sql");
 			String locString = "LOCATION: \n";
@@ -264,6 +268,8 @@ public class LocationTestActivity extends Activity {
 			//iterate over results if any
 			if(cur != null){
 				String[] columnNames = cur.getColumnNames();
+				//FIXEME remove when used
+				@SuppressWarnings("unused")
 				int		 numColumns	 = cur.getColumnCount();
 				boolean next = cur.moveToFirst();
 				String locString = "";

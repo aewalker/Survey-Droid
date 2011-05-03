@@ -1,3 +1,10 @@
+/*---------------------------------------------------------------------------*
+ * StatusChange.java                                                         *
+ *                                                                           *
+ * Represents a change in the phone's status such as: being turned off or    *
+ * on, or the application being partially or completely disabled.  Currently *
+ * unused; left in for future work.                                          *
+ *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
 /**
@@ -10,6 +17,8 @@ package com.peoples.android.model;
  * @author diego
  *
  */
+//FIXME remove this when the class is used
+@SuppressWarnings("unused")
 public class StatusChange {
 	
 	private static final int GPS = 0;

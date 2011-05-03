@@ -16,7 +16,9 @@ public class CallLogService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         PeoplesDB pdb = new PeoplesDB(this);
-        SQLiteDatabase db = pdb.getWritableDatabase();
+        //FIXME remove when used
+        @SuppressWarnings("unused")
+		SQLiteDatabase db = pdb.getWritableDatabase();
         /*
         Cursor d = this.getContentResolver().query(android.provider.CallLog.Calls.CONTENT_URI,
                 null, null, null,

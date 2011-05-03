@@ -1,6 +1,6 @@
 package com.peoples.android.services;
 
-import com.peoples.android.Peoples;
+//import com.peoples.android.Peoples;
 import com.peoples.android.server.Pull;
 import com.peoples.android.server.Push;
 
@@ -40,6 +40,11 @@ public class CoordinatorService extends IntentService {
 		Log.d(TAG, "Fetching surveys");
         Pull.syncWithWeb(this);
 		
+        //will need one of these to schedule services
+        AlarmManager alarmManager =
+        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        
+        
 		//TODO: iterate through survey table and schedule surveys
         //need to somehow find row of unanswered survey
         
@@ -47,17 +52,14 @@ public class CoordinatorService extends IntentService {
 		//for now, let's try scheduling a survey every minute?
 		//TODO: figure out proper flag!!!
         
-        //TODO: have alarmManager run SurveyScheduler at specified
-        //interval
-        
-		AlarmManager alarmManager 	= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Intent surveyIntent			= new Intent(this, Peoples.class);
-		
-		PendingIntent pendingSurvey = PendingIntent.getActivity(this, 0, surveyIntent,
-															PendingIntent.FLAG_UPDATE_CURRENT);
-		
-		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-							SystemClock.elapsedRealtime(), 60*1000, pendingSurvey);
+        //TODO: have alarmManager run SurveyScheduler at specified interval
+        Intent surveySchedulerIntent = new Intent(this, SurveyScheduler.class);
+        PendingIntent pendingScheduler = PendingIntent.getService(this, 0,
+        		surveySchedulerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setRepeating(
+        					AlarmManager.ELAPSED_REALTIME_WAKEUP,
+        					SystemClock.elapsedRealtime(),
+        					60*1000, pendingScheduler);
 		
 		
 	}

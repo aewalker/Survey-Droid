@@ -1,8 +1,9 @@
+/*---------------------------------------------------------------------------*
+ * Call.java                                                                 *
+ *                                                                           *
+ * Represents a phone call.  Currently unused; left in for future work.      *
+ *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
-
-
-
-
 
 /**
  *
@@ -18,8 +19,9 @@ package com.peoples.android.model;
  * @author diego
  *
  */
+//FIXME remove this when the class is used
+@SuppressWarnings("unused")
 public class Call {
-	
 	private static final int OUTGOING_CALL = 0;
 	private static final int INCOMING_CALL = 1;
 	private static final int OUTGOING_TEXT = 2;
@@ -38,7 +40,7 @@ public class Call {
 	//created DATETIME NOT NULL,
 	private String creationTime;
 	
-	//outgoing call, incoming call, outoing text, incoming text, or missed call
+	//outgoing call, incoming call, outgoing text, incoming text, missed call
 	private int tpye;
 	
 	//duration SMALLINT UNSIGNED

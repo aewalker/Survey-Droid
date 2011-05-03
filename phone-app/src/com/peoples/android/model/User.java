@@ -1,6 +1,9 @@
-/**
- * 
- */
+/*---------------------------------------------------------------------------*
+ * User.java                                                                 *
+ *                                                                           *
+ * Represents one of the web-end users.  Currently unused; left in for       *
+ * future work, though this class is likely to be removed.                   *
+ *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
 /**
@@ -9,6 +12,8 @@ package com.peoples.android.model;
  * Following the database creator
  *
  */
+//FIXME remove this when the class is used
+@SuppressWarnings("unused")
 public class User {
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
