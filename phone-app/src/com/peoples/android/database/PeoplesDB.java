@@ -22,6 +22,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     public static final String CONDITION_TABLE_NAME = "conditions";
     public static final String QUESTION_TABLE_NAME = "questions";
     public static final String SURVEY_TABLE_NAME = "surveys";
+    public static final String SS_TABLE_NAME	 = "scheduled_surveys";
 
     private Context context;
 
@@ -163,7 +164,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     	}
     }
     public static final class ScheduledSurveys implements BaseColumns {
-    	public static final String SS_TABLE_NAME	 = "scheduled_surveys"; 
+    	 
     	public static final String SURVEY_ID	 = "survey_id";
     	public static final String ORIGINAL_TIME = "original_time";
     	public static final String SKIPPED		 = "survey_skipped";
@@ -223,6 +224,8 @@ public class PeoplesDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + CONDITION_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + QUESTION_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SURVEY_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SS_TABLE_NAME);
+        
         onCreate(db);
     }
 

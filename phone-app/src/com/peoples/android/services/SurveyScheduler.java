@@ -48,7 +48,22 @@ public class SurveyScheduler extends IntentService {
 		
 		
 		
-		//TODO: iterate over database tables, schedule surveys
+		//TODO: iterate over scheduled surveys table
+		
+		
+		
+		
+		
+		
+		
+		//TODO: iterate over surveys 
+		
+		
+		
+		
+		
+		
+		
 		
 		
 
