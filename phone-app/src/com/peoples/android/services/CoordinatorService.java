@@ -60,16 +60,6 @@ public class CoordinatorService extends IntentService {
         					AlarmManager.ELAPSED_REALTIME_WAKEUP,
         					SystemClock.elapsedRealtime(),
         					60*1000, pendingScheduler);
-        
-        //this is setting a recurring survey
-		
-		Intent surveyIntent			= new Intent(this, Peoples.class);
-		
-		PendingIntent pendingSurvey = PendingIntent.getActivity(this, 0, surveyIntent,
-															PendingIntent.FLAG_UPDATE_CURRENT);
-		
-		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-							SystemClock.elapsedRealtime(), 60*1000, pendingSurvey);
 		
 		
 	}

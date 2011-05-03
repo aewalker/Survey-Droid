@@ -58,9 +58,9 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 		
 		String table = PeoplesDB.SS_TABLE_NAME+", "+PeoplesDB.SURVEY_TABLE_NAME;
 		
-		String[] columns 	= {PeoplesDB.ScheduledSurveys._ID,
-								PeoplesDB.ScheduledSurveys.SURVEY_ID,
-								PeoplesDB.ScheduledSurveys.ORIGINAL_TIME,
+		String[] columns 	= { ss+"."+PeoplesDB.ScheduledSurveys._ID,
+								ss+"."+PeoplesDB.ScheduledSurveys.SURVEY_ID,
+								ss+"."+PeoplesDB.ScheduledSurveys.ORIGINAL_TIME,
 								su+"."+day};
 		
 		String selection 	= PeoplesDB.ScheduledSurveys.SKIPPED + " = ? AND " +
@@ -95,9 +95,9 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 		String ss = PeoplesDB.SS_TABLE_NAME;
 		String su = PeoplesDB.SURVEY_TABLE_NAME;
 		
-		String query =	" SELECT "	+ su +"."+day+	" "+     
-						" FROM "	+ ss +			" "+
-						" WHERE "	+	
+		String query =	" SELECT "	+ su +"."+day+	" "	+     
+						" FROM "	+ su +" , "+ ss		+
+						" WHERE "	+
 						PeoplesDB.ScheduledSurveys.SKIPPED + " = true "+
 				
 						" UNION "	+

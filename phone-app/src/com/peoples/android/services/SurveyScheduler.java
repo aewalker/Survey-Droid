@@ -2,13 +2,18 @@ package com.peoples.android.services;
 
 import java.util.Calendar;
 
+import com.peoples.android.Peoples;
 import com.peoples.android.database.PeoplesDB;
 import com.peoples.android.database.ScheduledSurveyDBHandler;
 import com.peoples.android.database.SurveyDBHandler;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.SystemClock;
 import android.util.Log;
 
 
@@ -124,7 +129,6 @@ public class SurveyScheduler extends IntentService {
 		
 		String survDay = "";
 		
-		
 		while(unscheduledCursor.moveToNext()){
 			Log.d(TAG, "unscheduled surveys:");
 			survDay = unscheduledCursor.getString(0);			
@@ -136,6 +140,21 @@ public class SurveyScheduler extends IntentService {
 		
 		//close handler
 		ssHandler.close();
+		
+		//this is setting a recurring survey (should do within survey scheduler)
+		//will need one of these to schedule services
+//        AlarmManager alarmManager =
+//        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//		
+//		Intent surveyIntent			= new Intent(this, Peoples.class);
+//		
+//		PendingIntent pendingSurvey = PendingIntent.getActivity(this, 0, surveyIntent,
+//															PendingIntent.FLAG_UPDATE_CURRENT);
+//		
+//		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//							SystemClock.elapsedRealtime(), 60*1000, pendingSurvey);
+//		
+		
 	}
 
 }
