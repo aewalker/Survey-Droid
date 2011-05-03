@@ -7,6 +7,10 @@
 package com.peoples.android.model;
 
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -35,8 +39,12 @@ import com.peoples.android.server.Push;
  * @author Tony Xiao
  * @author Austin Walker
  */
-public class Survey
+public class Survey implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//the database helper instance and Context
 	private final SurveyDBHandler db;
 	private final Context ctxt;
@@ -519,6 +527,34 @@ public class Survey
 		
 		return worked;
 	}
+	
+	/**
+	   * Always treat de-serialization as a full-blown constructor, by
+	   * validating the final state of the de-serialized object.
+	   */
+	   private void readObject(
+	     ObjectInputStream aInputStream
+	   ) throws ClassNotFoundException, IOException {
+	     //always perform the default de-serialization first
+	     aInputStream.defaultReadObject();
+
+	     //make defensive copy of the mutable Date field
+	     //fDateOpened = new Date( fDateOpened.getTime() );
+
+	     //ensure that object state has not been corrupted or tampered with maliciously
+	     //validateState();
+	  }
+
+	    /**
+	    * This is the default implementation of writeObject.
+	    * Customise if necessary.
+	    */
+	    private void writeObject(
+	      ObjectOutputStream aOutputStream
+	    ) throws IOException {
+	      //perform the default serialization for all non-transient, non-static fields
+	      aOutputStream.defaultWriteObject();
+	    }
 	
 	
 	//TODO I think this should be handled in the communication manager

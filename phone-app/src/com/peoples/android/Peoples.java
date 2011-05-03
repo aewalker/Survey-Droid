@@ -54,14 +54,14 @@ public class Peoples extends ListActivity {
  		//Intent myIntent = new Intent(this, Peoples.class);
         //myIntent.putExtras(bundle);
     	//startActivityForResult(myIntent, 0);
-    	
-    	
-    	
-    	
+
     	//here's where i get the survey id from the bundle
     	//Bundle extras = getIntent().getExtras(); 
     	//int survey_id = extras.getInt("survey_id");
     	//survey = new Survey(survey_id, panda);
+
+    	//Bundle extras = getIntent().getExtras(); 
+    	//survey = (Survey) extras.getSerializable("survey");
     	
         survey = new Survey(3, panda);
         
