@@ -1,7 +1,15 @@
 package com.peoples.android.services;
 
+import java.util.Calendar;
+
+import com.peoples.android.database.PeoplesDB;
+import com.peoples.android.database.ScheduledSurveyDBHandler;
+import com.peoples.android.database.SurveyDBHandler;
+
 import android.app.IntentService;
 import android.content.Intent;
+import android.database.Cursor;
+import android.util.Log;
 
 
 /**
@@ -50,6 +58,48 @@ public class SurveyScheduler extends IntentService {
 		
 		//TODO: iterate over scheduled surveys table
 		
+		String today = null;
+		int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+		switch (day) {
+		case Calendar.SUNDAY:
+			today = PeoplesDB.SurveyTable.SU; break;
+		case Calendar.MONDAY:
+			today = PeoplesDB.SurveyTable.MO; break;
+		case Calendar.TUESDAY:
+			today = PeoplesDB.SurveyTable.TU; break;
+		case Calendar.WEDNESDAY:
+			today = PeoplesDB.SurveyTable.WE; break;
+		case Calendar.THURSDAY:
+			today = PeoplesDB.SurveyTable.TH; break;
+		case Calendar.FRIDAY:
+			today = PeoplesDB.SurveyTable.FR; break;
+		case Calendar.SATURDAY:
+			today = PeoplesDB.SurveyTable.SA; break;
+		default:
+			break;
+		}
+		
+		//TODO: can make better by combining the handlers
+		ScheduledSurveyDBHandler ssHandler = new ScheduledSurveyDBHandler(this);
+		SurveyDBHandler		   survHandler = new SurveyDBHandler(this);
+		
+		
+		//open
+		ssHandler.openRead();
+		Cursor scheduledCursor = ssHandler.getScheduledSurveys(today);
+		
+		if(scheduledCursor != null){
+			boolean next = true;
+			while(scheduledCursor.isAfterLast() == false && next){
+			
+				
+				
+				
+			}
+			scheduledCursor.close();
+		}
+		//close
+		ssHandler.close();
 		
 		
 		

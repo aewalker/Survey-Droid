@@ -34,20 +34,29 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 	 * Once the survey is administered the corresponding entry is removed from 
 	 * the database.
 	 * 
+	 * @param day Day of the week, as given by PeoplesDB.SurveyTable.(day)
+	 * 
 	 * @return returns a cursor which points to rows of previously scheduled
 	 * 			surveys
 	 */
-	public Cursor getScheduledSurveys() {
+	public Cursor getScheduledSurveys(String day) {
 		
 		if(D) Log.d(TAG, "getting previously scheduled surveys");
 		
-		String table = PeoplesDB.SS_TABLE_NAME;
+		String ss = PeoplesDB.SS_TABLE_NAME;
+		String su = PeoplesDB.SURVEY_TABLE_NAME;
+		
+		
+		String table = PeoplesDB.SS_TABLE_NAME+", "+PeoplesDB.SURVEY_TABLE_NAME;
 		
 		String[] columns 	= {PeoplesDB.ScheduledSurveys._ID,
 								PeoplesDB.ScheduledSurveys.SURVEY_ID,
-								PeoplesDB.ScheduledSurveys.ORIGINAL_TIME};
+								PeoplesDB.ScheduledSurveys.ORIGINAL_TIME,
+								su+"."+day};
 		
-		String selection 	= PeoplesDB.ScheduledSurveys.SKIPPED + " = ?";
+		String selection 	= PeoplesDB.ScheduledSurveys.SKIPPED + " = ? AND " +
+							  ss+"."+PeoplesDB.ScheduledSurveys.SURVEY_ID+" = "+
+							  su+"."+PeoplesDB.SurveyTable._ID;
 		
 		String[] selArgs 	= {Boolean.toString(false)};
 		
