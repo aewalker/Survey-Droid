@@ -6,6 +6,7 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -32,6 +33,9 @@ import com.peoples.android.server.Push;
  */
 public class Survey implements Serializable
 {
+	//to be serializable, must have this
+	private static final long serialVersionUID = 1L;
+	
 	//the database helper instance and Context
 	private final SurveyDBHandler db;
 	private final Context ctxt;
@@ -193,7 +197,7 @@ public class Survey implements Serializable
 		ch.close();
 		Log.d("Survey", "Building new question");
 		//finally, create the new Question
-		Question newQ = new Question(text, id, branches, choices);
+		Question newQ = new Question(text, id, branches, choices, ctxt);
 		qMap.put(id, newQ);
 		return newQ;
 	}
@@ -245,8 +249,6 @@ public class Survey implements Serializable
 
 	/**
 	 * A simple constructor to put together a sample survey.
-	 * 
-	 * @deprecated
 	 */
 	public Survey(Context ctxt)
 	{
@@ -292,7 +294,7 @@ public class Survey implements Serializable
 				b.setQuestion(qMap);
 				branches.add(b);
 			}
-			prevQ = new Question(questionTexts[i], i, branches, choicesList);
+			prevQ = new Question(questionTexts[i], i, branches, choicesList, ctxt);
 		}
 		firstQ = prevQ;
 		currentQ = prevQ;
@@ -495,9 +497,6 @@ public class Survey implements Serializable
 			}
 		}
 		
-		//TODO: after fix2, is this still current? (Diego)
-
-
 		//TODO this should be done by the master service
 		//try to upload answers to the server
 		//write record of original scheduled time,
@@ -514,45 +513,33 @@ public class Survey implements Serializable
 
 		return worked;
 	}
-
-	/**
-	   * Always treat de-serialization as a full-blown constructor, by
-	   * validating the final state of the de-serialized object.
-	   */
-	   private void readObject(
-	     ObjectInputStream aInputStream
-	   ) throws ClassNotFoundException, IOException {
-	     //always perform the default de-serialization first
-	     aInputStream.defaultReadObject();
-
-	     //make defensive copy of the mutable Date field
-	     //fDateOpened = new Date( fDateOpened.getTime() );
-
-	     //ensure that object state has not been corrupted or tampered with maliciously
-	     //validateState();
-	  }
-
-	    /**
-	    * This is the default implementation of writeObject.
-	    * Customise if necessary.
-	    */
-	    private void writeObject(
-	      ObjectOutputStream aOutputStream
-	    ) throws IOException {
-	      //perform the default serialization for all non-transient, non-static fields
-	      aOutputStream.defaultWriteObject();
-	    }
-
-
-	//TODO I think this should be handled in the communication manager
-	/*
-	public JSONArray getAnswersAsJson()
-	{
-	    JSONArray answers = new JSONArray();
-	    for (Question q : getQuestions())
-	    {
-	        answers.put(q.answer.getAsJson());
-	    }
-	    return answers;
-	}*/
+	
+	//TODO why not just leave the default stuff?  Not worried about validation here
+//	/**
+//	   * Always treat de-serialization as a full-blown constructor, by
+//	   * validating the final state of the de-serialized object.
+//	   */
+//	   private void readObject(
+//	     ObjectInputStream aInputStream
+//	   ) throws ClassNotFoundException, IOException {
+//	     //always perform the default de-serialization first
+//	     aInputStream.defaultReadObject();
+//
+//	     //make defensive copy of the mutable Date field
+//	     //fDateOpened = new Date( fDateOpened.getTime() );
+//
+//	     //ensure that object state has not been corrupted or tampered with maliciously
+//	     //validateState();
+//	  }
+//
+//	    /**
+//	    * This is the default implementation of writeObject.
+//	    * Customize if necessary.
+//	    */
+//	    private void writeObject(
+//	      ObjectOutputStream aOutputStream
+//	    ) throws IOException {
+//	      //perform the default serialization for all non-transient, non-static fields
+//	      aOutputStream.defaultWriteObject();
+//	    }
 }

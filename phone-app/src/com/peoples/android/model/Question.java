@@ -6,6 +6,7 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Stack;
 import android.content.Context;
@@ -21,11 +22,12 @@ import android.content.Context;
  * @author Diego Vargas
  * @author Austin Walker
  */
-public class Question
+public class Question implements Serializable
 {
-	//have to keep the Question id to look up history in the DB
-
+	//have to keep the Question id to look up history in the DB\
 	private final int id;
+	
+	private static final long serialVersionUID = 1L;
 	
 	//question text
 	private final String q_text;
@@ -222,10 +224,5 @@ public class Question
 	public void prime()
 	{
 		answered = false;
-	}
-
-	public void prime() {
-		// TODO Auto-generated method stub
-		
 	}
 }
