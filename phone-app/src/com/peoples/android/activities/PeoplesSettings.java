@@ -84,11 +84,11 @@ public class PeoplesSettings extends Activity {
             	info.append("Surveys are ");
             	if (three.isChecked()) {
             		//enable Surveys
-            		info.append("enabled.\n");
+            		info.append("enabled.");
             	}
             	else {
             		//disable Surveys
-            		info.append("disabled.\n");
+            		info.append("disabled.");
             	}
             	
             	Toast.makeText(getApplicationContext(), info.toString(),
