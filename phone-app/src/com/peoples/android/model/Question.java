@@ -23,30 +23,30 @@ public class Question
 {
 	//have to keep the Question id to look up history in the DB
 	private int id;
-	
+
 	//question text
 	private String q_text;
-	
+
 	//the answers that have been given for this question
 	//(starts empty => no answer has been given)
 	private Stack<Answer> answers = new Stack<Answer>();
-	
+
 	/* Note: the reason that we have to use a Stack of Answers instead of just
 	 * keeping the most recent one is looping.  A Survey could loop back to the
 	 * same Question multiple times, so we have to keep track of that.
 	 */
-	
+
 	//has the current Question been answered?
 	private boolean answered = false;
-	
+
 	//set of branches
 	private Collection<Branch> branches;
-	
+
 	//set of choices
 	private Collection<Choice> choices;
-	
+
 	/*-----------------------------------------------------------------------*/
-	
+
 	/**
 	 * Create a new Question
 	 * 
@@ -62,9 +62,9 @@ public class Question
 		choices = c;
 		this.id = id;
 	}
-	
+
 	/*-----------------------------------------------------------------------*/
-	
+
 	/**
 	 * Get all this Question's Choices as an array
 	 * 
@@ -76,7 +76,7 @@ public class Question
 		Choice[] cArray = new Choice[0];
 		return choices.toArray(cArray);
 	}
-	
+
 	/**
 	 * Get this Question's text
 	 * 
@@ -86,7 +86,7 @@ public class Question
 	{
 		return q_text;
 	}
-	
+
 	/**
 	 * Answer this Question.  This should (and can) only be used to provide
 	 * an answer if this is a free response question (ie has no Choices).
@@ -103,7 +103,7 @@ public class Question
 	{
 		if (answered) throw new RuntimeException(
 				"atempt to answer the same Question multiple times");
-		
+
 		if (choices.size() != 0)
 		{
 			throw new RuntimeException(
@@ -111,13 +111,13 @@ public class Question
 		}
 		else
 		{
-			Answer newAnswer = new Answer(this, id, null, 0, text);
+			Answer newAnswer = new Answer(this, id, null, 0, text, null);
 			answers.push(newAnswer);
 			answered = true;
 			return newAnswer;
 		}
 	}
-	
+
 	/**
 	 * Answer this Question.  This should (and can) only be used to provide
 	 * an answer if this is a multiple choice question.
@@ -135,7 +135,7 @@ public class Question
 	{
 		if (answered) throw new RuntimeException(
 				"atempt to answer the same Question multiple times");
-		
+
 		if (choices.size() == 0)
 		{
 			throw new RuntimeException(
@@ -156,7 +156,7 @@ public class Question
 			}
 		}
 	}
-	
+
 	/**
 	 * Evaluate Branches to find the next Question.
 	 * 
@@ -174,9 +174,9 @@ public class Question
 		}
 		return null;
 	}
-	
+
 	/*-----------------------------------------------------------------------*/
-	
+
 	/**
 	 * Checks whether the question has ever been answered with a particular
 	 * Choice.
@@ -189,7 +189,7 @@ public class Question
 	{
 		return c.hasEverBeen(id);
 	}
-	
+
 	/**
 	 * Checks that the question has never been answered with a particular
 	 * Choice.
@@ -200,9 +200,9 @@ public class Question
 	 */
 	public boolean hasNeverBeen(Choice c)
 	{
-		return c.hasNeverBeen(id);
+		return c.hasEverBeen(id);
 	}
-	
+
 	/**
 	 * Remove the most recent Answer from the stack.
 	 * 
@@ -212,6 +212,9 @@ public class Question
 	{
 		return answers.pop();
 	}
-}
-	
 
+	public void prime() {
+		// TODO Auto-generated method stub
+		
+	}
+}
