@@ -89,7 +89,6 @@ public class MainActivity extends Activity {
             	Toast.makeText(getApplicationContext(), "Implement me in your service yo!",
                         Toast.LENGTH_SHORT).show();
             	finish();
-            	
             }
         });
         

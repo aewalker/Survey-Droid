@@ -18,6 +18,12 @@ public class CoordinatorService extends IntentService {
     private static final boolean D = true;
     
     
+    /**
+     * Run scheduler this often
+     */
+    private static long SCHEDULER_PERIOD = 3*60*1000;
+    
+    
 
 	public CoordinatorService() {
 		super(CoordinatorService.class.getName());
@@ -59,7 +65,7 @@ public class CoordinatorService extends IntentService {
         alarmManager.setRepeating(
         					AlarmManager.ELAPSED_REALTIME_WAKEUP,
         					SystemClock.elapsedRealtime(),
-        					60*1000, pendingScheduler);
+        					SCHEDULER_PERIOD, pendingScheduler);
 		
 		
 	}
