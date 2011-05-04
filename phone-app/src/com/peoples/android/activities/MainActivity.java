@@ -1,8 +1,9 @@
 package com.peoples.android.activities;
 
-import java.util.List;
+//import java.util.List;
 
 import android.app.Activity;
+//import android.content.Context;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +15,13 @@ import android.widget.Toast;
 
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
+//import com.peoples.android.model.Survey;
+//import com.peoples.android.processTest.LocationTestActivity;
+//import com.peoples.android.server.Pull;
+//import com.peoples.android.services.BootService;
 import com.peoples.android.model.Survey;
-import com.peoples.android.processTest.LocationTestActivity;
-import com.peoples.android.server.Pull;
-import com.peoples.android.services.BootService;
 import com.peoples.android.services.CoordinatorService;
-import com.peoples.android.services.GPSLocationService;
+//import com.peoples.android.services.GPSLocationService;
 
 
 
@@ -30,11 +32,13 @@ public class MainActivity extends Activity {
 	// TEST
     private static final String TAG = "MainActivity";
     private static final boolean D = true;
+    private Survey survey;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Context panda = this;
 
         if(D) Log.d(TAG, "+++ ON CREATE main activity +++");
 
@@ -60,7 +64,12 @@ public class MainActivity extends Activity {
         sample.setText("Click here to take the survey now");
         sample.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                //survey = new Survey(3, panda);
+                //Bundle bundle = new Bundle();
+                //bundle.putSerializable("survey", survey);
+                
                 Intent myIntent = new Intent(view.getContext(), Peoples.class);
+                //myIntent.putExtras(bundle);
                 startActivityForResult(myIntent, 0);
                 finish();
             }
@@ -74,9 +83,9 @@ public class MainActivity extends Activity {
                 //Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
                 //startActivityForResult(myIntent, 0);
             	
-            	//##########################//
+            	//##############################################################//
             	//here's where you would call the service to postpone the survey//
-            	//##########################//
+            	//##############################################################//
             	Toast.makeText(getApplicationContext(), "Implement me in your service yo!",
                         Toast.LENGTH_SHORT).show();
             	finish();

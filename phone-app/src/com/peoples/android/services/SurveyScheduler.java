@@ -2,18 +2,18 @@ package com.peoples.android.services;
 
 import java.util.Calendar;
 
-import com.peoples.android.Peoples;
+//import com.peoples.android.Peoples;
 import com.peoples.android.database.PeoplesDB;
 import com.peoples.android.database.ScheduledSurveyDBHandler;
 import com.peoples.android.database.SurveyDBHandler;
 
-import android.app.AlarmManager;
+//import android.app.AlarmManager;
 import android.app.IntentService;
-import android.app.PendingIntent;
-import android.content.Context;
+//import android.app.PendingIntent;
+//import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.SystemClock;
+//import android.os.SystemClock;
 import android.util.Log;
 
 
@@ -30,6 +30,7 @@ public class SurveyScheduler extends IntentService {
 	
 	//for writing to the log
 	private static final String TAG = "SurveyScheduler";
+	@SuppressWarnings("unused") //want this around for future use
 	private static final boolean D = true;
 	
 
@@ -37,6 +38,8 @@ public class SurveyScheduler extends IntentService {
 	 * If the next survey is within THRESHHOLD time of the last
 	 * skipped survey, then the last survey will be skipped
 	 */
+	//FIXME remove when used
+	@SuppressWarnings("unused")
 	private static long THRESHOLD = 3*60*1000;
 	
 	/**
@@ -44,6 +47,8 @@ public class SurveyScheduler extends IntentService {
 	 * Surveys will not be administered if they are more than
 	 * this much time late
 	 */
+	//FIXME remove when used
+	@SuppressWarnings("unused")
 	private static long EXPIRES = 3*60*1000;
 	
 	public SurveyScheduler() {
@@ -58,7 +63,7 @@ public class SurveyScheduler extends IntentService {
 		//2. surveys table
 		//
 		//When surveys belong to both 1 and 2, then one will be deleted.
-		//if a certain threshhold time has not been reached then
+		//if a certain threshold time has not been reached then
 		//reschedule the first, otherwise simply keep its entry in the prev.
 		//scheduled database and only keep the new one.
 		
@@ -91,6 +96,8 @@ public class SurveyScheduler extends IntentService {
 		
 		//TODO: can make better by combining the handlers
 		ScheduledSurveyDBHandler ssHandler = new ScheduledSurveyDBHandler(this);
+		//FIXME remove when used
+		@SuppressWarnings("unused")
 		SurveyDBHandler		   survHandler = new SurveyDBHandler(this);
 		
 		

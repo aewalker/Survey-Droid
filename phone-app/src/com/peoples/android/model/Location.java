@@ -1,3 +1,9 @@
+/*---------------------------------------------------------------------------*
+ * Location.java                                                             *
+ *                                                                           *
+ * Represents a GPS location reading.  Currently unused; left in for future  *
+ * work.                                                                     *
+ *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
 
@@ -12,6 +18,8 @@ package com.peoples.android.model;
  * @author Diego
  *
  */
+//FIXME remove this when the class is used
+@SuppressWarnings("unused")
 public class Location {
 	
 	//id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

@@ -1,6 +1,6 @@
 package com.peoples.android.server;
 
-import java.util.List;
+//import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,7 +55,9 @@ public class Pull extends WebClient {
 	    		values.put(SurveyTable.FR, survey.getString("fr"));
 	    		values.put(SurveyTable.SA, survey.getString("sa"));
 	    		values.put(SurveyTable.SU, survey.getString("su"));
-	    		long l = db.replace(SURVEY_TABLE_NAME, null, values);
+	    		//FIXME should use l to check if it worked
+	    		@SuppressWarnings("unused")
+				long l = db.replace(SURVEY_TABLE_NAME, null, values);
 	    	}
     	} catch (JSONException e) {
 			Log.e("PUll", e.getMessage());
@@ -70,6 +72,8 @@ public class Pull extends WebClient {
 	    		values.put(QuestionTable._ID, survey.getInt("id"));
 	    		values.put(QuestionTable.SURVEY_ID, survey.getInt("survey_id"));
 	    		values.put(QuestionTable.Q_TEXT, survey.getString("q_text"));
+	    		//FIXME should use l to check if it worked
+	    		@SuppressWarnings("unused")
 	    		long l = db.replace(QUESTION_TABLE_NAME, null, values);
 	    	}
     	} catch (JSONException e) {
@@ -87,6 +91,8 @@ public class Pull extends WebClient {
 	    		values.put(ConditionTable.QUESTION_ID, survey.getInt("question_id"));
 	    		values.put(ConditionTable.CHOICE_ID, survey.getInt("choice_id"));
 	    		values.put(ConditionTable.TYPE, survey.getInt("type"));
+	    		//FIXME should use l to check if it worked
+	    		@SuppressWarnings("unused")
 	    		long l = db.replace(CONDITION_TABLE_NAME, null, values);
 	    	}
     	} catch (JSONException e) {
@@ -102,6 +108,8 @@ public class Pull extends WebClient {
 	    		values.put(BranchTable._ID, survey.getInt("id"));
 	    		values.put(BranchTable.QUESTION_ID, survey.getInt("question_id"));
 	    		values.put(BranchTable.NEXT_Q, survey.getInt("next_q"));
+	    		//FIXME should use l to check if it worked
+	    		@SuppressWarnings("unused")
 	    		long l = db.replace(BRANCH_TABLE_NAME, null, values);
 	    	}
     	} catch (JSONException e) {
@@ -117,6 +125,8 @@ public class Pull extends WebClient {
 	    		values.put(ChoiceTable._ID, survey.getInt("id"));
 	    		values.put(ChoiceTable.QUESTION_ID, survey.getInt("question_id"));
 	    		values.put(ChoiceTable.CHOICE_TEXT, survey.getString("choice_text"));
+	    		//FIXME should use l to check if it worked
+	    		@SuppressWarnings("unused")
 	    		long l = db.replace(CHOICE_TABLE_NAME, null, values);
 	    	}
     	} catch (JSONException e) {

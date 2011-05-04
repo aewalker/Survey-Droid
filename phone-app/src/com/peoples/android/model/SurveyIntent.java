@@ -1,5 +1,6 @@
 package com.peoples.android.model;
 
+import com.peoples.android.Peoples;
 import android.content.Context;
 import android.content.Intent;
 
@@ -13,8 +14,6 @@ import android.content.Intent;
  *
  */
 public class SurveyIntent extends Intent {
-	
-	//TODO: take care of generic type
 	/**
 	 * 
 	 * Specifies the default activity that displays a survey to
@@ -23,7 +22,7 @@ public class SurveyIntent extends Intent {
 	 * May be set using setSurveyActivity 
 	 * 
 	 */
-	private static Class SURVEY_ACTIVITY = com.peoples.android.Peoples.class;
+	private static Class<Peoples> SURVEY_ACTIVITY = com.peoples.android.Peoples.class;
 	
 	public static String SURVEY_ID = "SURVEY_ID";
 	public static String SURVEY_TIME= "SURVEY_TIME";

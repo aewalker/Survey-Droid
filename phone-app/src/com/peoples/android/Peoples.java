@@ -3,7 +3,7 @@ package com.peoples.android;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
+//import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,8 +37,7 @@ public class Peoples extends ListActivity {
     
     
     /** Called when the activity is first created. */
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
@@ -54,14 +53,14 @@ public class Peoples extends ListActivity {
  		//Intent myIntent = new Intent(this, Peoples.class);
         //myIntent.putExtras(bundle);
     	//startActivityForResult(myIntent, 0);
-    	
-    	
-    	
-    	
+
     	//here's where i get the survey id from the bundle
     	//Bundle extras = getIntent().getExtras(); 
     	//int survey_id = extras.getInt("survey_id");
     	//survey = new Survey(survey_id, panda);
+
+    	//Bundle extras = getIntent().getExtras(); 
+    	//survey = (Survey) extras.getSerializable("survey");
     	
         survey = new Survey(3, panda);
         
