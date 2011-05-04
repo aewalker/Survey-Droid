@@ -194,12 +194,12 @@ public class Peoples extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==1){
-            Toast.makeText(this, "Pass", Toast.LENGTH_LONG).show();
-            if(survey.submit()) Log.e(TAG, "it works!");
+            Toast.makeText(this, "Thank you for taking our survey", Toast.LENGTH_LONG).show();
+            if(!survey.submit()) Log.e(TAG, "Something went wrong and the survey didn't submit");
             finish();
         }
         else{
-            Toast.makeText(this, "Fail", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Fail", Toast.LENGTH_LONG).show();
             //go to the previous question and start over?
             survey.prevQuestion();
         }

@@ -69,7 +69,7 @@ public class Menu extends Activity {
                 //Bundle bundle = new Bundle();
                 //bundle.putSerializable("survey", survey);
                 
-                Intent myIntent = new Intent(view.getContext(), Peoples.class);
+                Intent myIntent = new Intent(view.getContext(), MainActivity.class);
                 //myIntent.putExtras(bundle);
                 startActivityForResult(myIntent, 0);
                 
@@ -108,7 +108,7 @@ public class Menu extends Activity {
         });
         
         Button quit = (Button) findViewById(R.id.quit);
-        quit.setText("Exit Peoples");
+        quit.setText("Exit PEOPLES");
         quit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	finish();
