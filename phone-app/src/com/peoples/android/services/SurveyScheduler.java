@@ -138,7 +138,8 @@ public class SurveyScheduler extends IntentService {
 		
 		while(unscheduledCursor.moveToNext()){
 			Log.d(TAG, "unscheduled surveys:");
-			survDay = unscheduledCursor.getString(0);			
+			survDay = "day: " +	unscheduledCursor.getString(0);
+			survDay += "id: " +	unscheduledCursor.getInt(1);
 			Log.d(TAG, survDay);
 		}
 		//close the cursor

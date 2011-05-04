@@ -45,11 +45,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.remind);
 
         
-        //NEW: let the coordinator service take care of sync stuff
-        Intent coordinatorIntent			= new Intent(this, CoordinatorService.class);
-        //TODO: write a more proper Action, or use provided ones
-    	coordinatorIntent.setAction(MainActivity.class.getName());
-        startService(coordinatorIntent);
         
 //        Next call is done by process, though for now unsure that this class
 //        will see changes immediately
