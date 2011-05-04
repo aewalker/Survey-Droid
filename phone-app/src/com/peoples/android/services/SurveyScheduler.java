@@ -1,8 +1,10 @@
 package com.peoples.android.services;
 
-import java.util.Calendar;
+
 
 //import com.peoples.android.Peoples;
+import java.util.Calendar;
+
 import com.peoples.android.database.PeoplesDB;
 import com.peoples.android.database.ScheduledSurveyDBHandler;
 import com.peoples.android.database.SurveyDBHandler;
@@ -30,7 +32,7 @@ public class SurveyScheduler extends IntentService {
 	
 	//for writing to the log
 	private static final String TAG = "SurveyScheduler";
-	@SuppressWarnings("unused") //want this around for future use
+	//want this around for future use
 	private static final boolean D = true;
 	
 
@@ -39,7 +41,6 @@ public class SurveyScheduler extends IntentService {
 	 * skipped survey, then the last survey will be skipped
 	 */
 	//FIXME remove when used
-	@SuppressWarnings("unused")
 	private static long THRESHOLD = 3*60*1000;
 	
 	/**
@@ -48,7 +49,6 @@ public class SurveyScheduler extends IntentService {
 	 * this much time late
 	 */
 	//FIXME remove when used
-	@SuppressWarnings("unused")
 	private static long EXPIRES = 3*60*1000;
 	
 	public SurveyScheduler() {
@@ -96,8 +96,8 @@ public class SurveyScheduler extends IntentService {
 		
 		//TODO: can make better by combining the handlers
 		ScheduledSurveyDBHandler ssHandler = new ScheduledSurveyDBHandler(this);
+		
 		//FIXME remove when used
-		@SuppressWarnings("unused")
 		SurveyDBHandler		   survHandler = new SurveyDBHandler(this);
 		
 		
@@ -140,7 +140,6 @@ public class SurveyScheduler extends IntentService {
 			Log.d(TAG, "unscheduled surveys:");
 			survDay = unscheduledCursor.getString(0);			
 			Log.d(TAG, survDay);
-			
 		}
 		//close the cursor
 		unscheduledCursor.close();

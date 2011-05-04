@@ -1,0 +1,16 @@
+----------------------------------
+PEOPLES Project Installation Guide
+----------------------------------
+
+PEOPLES has two parts: a web server and a set of Android smartphones.  Each
+side of the system requires some setup.
+
+To see the installation procedure for the web server software, see
+doc/website-guide/install.html.  In particular, note that PEOPLES uses the
+CakePHP framework.  If the web server on which you intend to install PEOPLES
+already has other CakePHP applications running, see the section in the
+installation guide about this for instructions on what parts of PEOPLES (which
+is distributed with CakePHP) you need to install.
+
+To see the installation procedure for the Android phones, see
+doc/phone-guide/install.html. 
