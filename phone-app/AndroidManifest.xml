@@ -48,10 +48,7 @@
         
         
 
-		<activity android:name=".activities.MainActivity" android:label="@string/app_name"
-		android:theme="@android:style/Theme.Dialog">
-		<!-- <activity android:name=".Peoples" android:label="@string/app_name"> -->
-
+		<activity android:name=".activities.Menu" android:label="@string/app_name" android:theme="@style/CustomTheme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -63,8 +60,10 @@
 			android:configChanges="keyboardHidden|orientation"
 			android:screenOrientation="portrait">
 		</activity>
-		
+		<activity android:name=".activities.MainActivity" android:label="@string/app_name"
+		android:theme="@android:style/Theme.Dialog"></activity>
 		<activity android:name=".activities.ConfirmSubmissionSurvey" android:theme="@style/CustomTheme"></activity>
+		<activity android:name=".activities.PeoplesSettings" android:theme="@style/CustomTheme"></activity>
 		<activity android:name=".processTest.LocationTestActivity"></activity>
 
 		

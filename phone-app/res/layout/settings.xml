@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout 
+  xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:stretchColumns="1"
+    android:background="@drawable/around_world">
+   	<TableRow>
+   		<LinearLayout android:orientation="horizontal" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/linearLayout1">
+   			<TextView android:text="Enable GPS Tracking" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/gps" android:layout_margin="10dip" android:layout_width="0dip"></TextView>
+   			<ToggleButton android:id="@+id/toggleButton1" android:layout_height="wrap_content" android:text="ToggleButton" android:layout_weight="1" android:layout_margin="10dip" android:layout_width="0dip"></ToggleButton>
+   		</LinearLayout>
+</TableRow>
+   	<TableRow>
+   		<LinearLayout android:orientation="horizontal" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/linearLayout2">
+   			<TextView android:text="Enable Call Log Tracking" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/call" android:layout_margin="10dip" android:layout_width="0dip"></TextView>
+   			<ToggleButton android:id="@+id/toggleButton2" android:layout_height="wrap_content" android:text="ToggleButton" android:layout_weight="1" android:layout_margin="10dip" android:layout_width="0dip"></ToggleButton>
+   		</LinearLayout>
+</TableRow>
+   	<TableRow>
+   		<LinearLayout android:orientation="horizontal" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/linearLayout3">
+   			<TextView android:text="Enable Surveys" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/survey" android:layout_margin="10dip" android:layout_width="0dip"></TextView>
+   			<ToggleButton android:id="@+id/toggleButton3" android:layout_height="wrap_content" android:text="ToggleButton" android:layout_weight="1" android:layout_margin="10dip" android:layout_width="0dip"></ToggleButton>
+   		</LinearLayout>
+</TableRow>
+<TableRow>
+<LinearLayout android:orientation="horizontal" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/linearLayout3">
+   			    	 <Button 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/back" 
+	android:layout_height="wrap_content"
+	android:text="Return to Menu"
+	android:layout_weight="1" android:layout_width="0dip"
+	android:background="@drawable/custom_button"
+	android:layout_margin="10dip">
+	</Button>
+   			    
+   			    <Button 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/save" 
+	android:layout_height="wrap_content"
+	android:text="Save Changes"
+	android:layout_weight="1" android:layout_width="0dip"
+	android:background="@drawable/custom_button"
+	android:layout_margin="10dip">
+	</Button>
+
+   		</LinearLayout>
+</TableRow>
+</TableLayout>
+
+
+  
+  
+  
+
