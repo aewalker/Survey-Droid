@@ -21,6 +21,7 @@ import com.peoples.android.R;
 //import com.peoples.android.server.Pull;
 //import com.peoples.android.services.BootService;
 import com.peoples.android.model.Survey;
+import com.peoples.android.model.SurveyIntent;
 import com.peoples.android.services.CoordinatorService;
 //import com.peoples.android.services.GPSLocationService;
 
@@ -65,16 +66,9 @@ public class Menu extends Activity {
         sample.setText("Click here to take a sample survey");
         sample.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                //survey = new Survey(3, panda);
-                //Bundle bundle = new Bundle();
-                //bundle.putSerializable("survey", survey);
-                
-                Intent myIntent = new Intent(view.getContext(), MainActivity.class);
-                //myIntent.putExtras(bundle);
+                SurveyIntent myIntent = new SurveyIntent(view.getContext(), 4, 1104, MainActivity.class);
                 startActivityForResult(myIntent, 0);
-                
             }
-
         });
         
         Button settings = (Button) findViewById(R.id.settings);

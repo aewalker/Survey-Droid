@@ -20,6 +20,7 @@ import com.peoples.android.R;
 //import com.peoples.android.server.Pull;
 //import com.peoples.android.services.BootService;
 import com.peoples.android.model.Survey;
+import com.peoples.android.model.SurveyIntent;
 import com.peoples.android.services.CoordinatorService;
 //import com.peoples.android.services.GPSLocationService;
 
@@ -64,12 +65,9 @@ public class MainActivity extends Activity {
         sample.setText("Click here to take the survey now");
         sample.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                //survey = new Survey(3, panda);
-                //Bundle bundle = new Bundle();
-                //bundle.putSerializable("survey", survey);
-                
-                Intent myIntent = new Intent(view.getContext(), Peoples.class);
-                //myIntent.putExtras(bundle);
+            	Bundle extras = getIntent().getExtras(); 
+                SurveyIntent myIntent = new SurveyIntent(view.getContext(), extras.getInt("SURVEY_ID"),
+                		extras.getLong("SURVEY_TIME"), Peoples.class);
                 startActivityForResult(myIntent, 0);
                 finish();
             }

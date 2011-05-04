@@ -56,15 +56,22 @@ public class Peoples extends ListActivity {
     	//startActivityForResult(myIntent, 0);
 
     	//here's where i get the survey id from the bundle
-    	//Bundle extras = getIntent().getExtras(); 
-    	//int survey_id = extras.getInt("survey_id");
+    	Bundle extras = getIntent().getExtras(); 
+    	int survey_id = extras.getInt("SURVEY_ID");
+    	
+    	if (survey_id == 0)
+    	{
+    		survey = new Survey(panda);
+    	}
+    	else 
+    	{
+            survey = new Survey(survey_id, panda);
+    	}
     	//survey = new Survey(survey_id, panda);
 
     	//Bundle extras = getIntent().getExtras(); 
     	//survey = (Survey) extras.getSerializable("survey");
     	
-        survey = new Survey(3, panda);
-        
         Log.d(TAG, "Finished creating survey");
 
         if (survey.done()) throw new RuntimeException("Survey has no questions!");
