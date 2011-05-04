@@ -45,6 +45,7 @@ public class Peoples extends ListActivity {
         Pull.syncWithWeb(this);
       
         setContentView(R.layout.survey_list_view);
+
     	final Context panda = this;
     	
     	//code you need to put into your file to run my GUI using your survey id
@@ -130,6 +131,7 @@ public class Peoples extends ListActivity {
 	            	  else //free response
 	            	  {
 	            		  EditText edit = (EditText)findViewById(R.id.editText1);
+
 	            		  //Log.e(TAG, edit.getText().toString());
 
 	            		  survey.answer(edit.getText().toString());
@@ -217,6 +219,7 @@ public class Peoples extends ListActivity {
 		                  });*/
 	                	  //if (survey.submit())
 	                		  //Log.e(TAG, "YAY");
+
 	                  }
 	                  else //there are still more Questions
 	                  {
@@ -233,10 +236,12 @@ public class Peoples extends ListActivity {
 			            		  hi.setItemChecked(survey.getAnswerChoice(), true);
 			            		  Log.d(TAG, "panda");
 			            	  }
+
 	                	  }
 	                	  else //if free response
 	                	  {
 	                		  String[] test = {"Enter your response here"};
+
 	                		  setListAdapter(new ArrayAdapter<String>(panda, R.layout.list_item, test));
 			              	  q.setText(survey.getText());
 			              	  
@@ -245,6 +250,7 @@ public class Peoples extends ListActivity {
 			              		  EditText e = (EditText) findViewById(R.id.editText1);
 			              		  e.setText(survey.getAnswerText());
 			              	  }
+
 	                	  }
 	                  }
           	  }
