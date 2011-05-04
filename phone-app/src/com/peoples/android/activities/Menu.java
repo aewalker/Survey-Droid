@@ -33,7 +33,7 @@ public class Menu extends Activity {
 	//TEST
     private static final String TAG = "Menu";
     private static final boolean D = true;
-    //private Survey survey;
+    private Survey survey;
 
     /** Called when the activity is first created. */
     @Override
@@ -82,8 +82,7 @@ public class Menu extends Activity {
         settings.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                //should be generated dynamically attn:Austin
-                //perhaps we need a database call to determine this?
+                //should be generated dynamically
                 bundle.putBoolean("one", true);
                 bundle.putBoolean("two", true);
                 bundle.putBoolean("three", false);
@@ -99,12 +98,11 @@ public class Menu extends Activity {
         phoneID.setText("Find this phone's unique ID");
         phoneID.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	//panda.getSystemService(Context.TELEPHONY_SERVICE);
             	TelephonyManager tManager = (TelephonyManager)panda.getSystemService(Context.TELEPHONY_SERVICE);
             	String uid = tManager.getDeviceId();
             	
             	Toast.makeText(getApplicationContext(), uid,
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
 
             }
         });
@@ -113,14 +111,6 @@ public class Menu extends Activity {
         quit.setText("Exit Peoples");
         quit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	//panda.getSystemService(Context.TELEPHONY_SERVICE);
-            	/*TelephonyManager tManager = (TelephonyManager)panda.getSystemService(Context.TELEPHONY_SERVICE);
-            	String uid = tManager.getDeviceId();
-            	
-            	Toast.makeText(getApplicationContext(), uid,
-                        Toast.LENGTH_SHORT).show();*/
-            	Toast.makeText(getApplicationContext(), "Thank you for shopping at Wal-mart",
-                        Toast.LENGTH_SHORT).show();
             	finish();
             }
         });

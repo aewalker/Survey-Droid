@@ -6,6 +6,8 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+import java.io.Serializable;
+
 import android.content.Context;
 
 import com.peoples.android.database.SurveyDBHandler;
@@ -29,9 +31,11 @@ import com.peoples.android.database.SurveyDBHandler;
  * @author Diego Vargas
  * @author Austin Walker
  */
-public class Answer
+public class Answer implements Serializable
 {
-    //the Question being answered
+	private static final long serialVersionUID = 1L;
+	
+	//the Question being answered
     private final Question question;
     private final int questionID;
 
