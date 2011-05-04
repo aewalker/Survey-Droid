@@ -6,11 +6,6 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -37,10 +32,6 @@ import com.peoples.android.server.Push;
  */
 public class Survey implements Serializable
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	//the database helper instance and Context
 	private final SurveyDBHandler db;
 	private final Context ctxt;
@@ -68,8 +59,6 @@ public class Survey implements Serializable
 	private final Stack<Question> history = new Stack<Question>();
 
 	/*-----------------------------------------------------------------------*/
-
-
 	/**
 	 * Create a new survey by fetching the needed information from the
 	 * database and initializing the child objects.
@@ -360,6 +349,7 @@ public class Survey implements Serializable
 	{
 		Choice[] choices = currentQ.getChoices();
 		String[] choiceTexts = new String[choices.length];
+
 		for (int i = 0; i < choices.length; i++)
 		{
 			choiceTexts[i] = choices[i].getText();
@@ -504,11 +494,15 @@ public class Survey implements Serializable
 				worked = false;
 			}
 		}
+		
+		//TODO: after fix2, is this still current? (Diego)
+
 
 		//TODO this should be done by the master service
 		//try to upload answers to the server
 		//write record of original scheduled time,
 		//vs actual time of completion
+
 		if (!Push.pushAnswers(ctxt))
 		    worked = false;
 

@@ -6,11 +6,9 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-
 import android.content.Context;
 
 import com.peoples.android.database.SurveyDBHandler;
-
 
 //import org.json.JSONException;
 //import org.json.JSONObject;
@@ -49,6 +47,7 @@ public class Answer
     
     //Android Context for database call
     private final Context ctxt;
+
 	
     /*-----------------------------------------------------------------------*/
     

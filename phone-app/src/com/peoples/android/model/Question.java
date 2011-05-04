@@ -8,6 +8,8 @@ package com.peoples.android.model;
 
 import java.util.Collection;
 import java.util.Stack;
+import android.content.Context;
+
 
 /**
  * Model for a survey Question.  Based on the SQL:
@@ -22,15 +24,16 @@ import java.util.Stack;
 public class Question
 {
 	//have to keep the Question id to look up history in the DB
-	private int id;
 
+	private final int id;
+	
 	//question text
-	private String q_text;
-
+	private final String q_text;
+	
 	//the answers that have been given for this question
 	//(starts empty => no answer has been given)
-	private Stack<Answer> answers = new Stack<Answer>();
-
+	private final Stack<Answer> answers = new Stack<Answer>();
+	
 	/* Note: the reason that we have to use a Stack of Answers instead of just
 	 * keeping the most recent one is looping.  A Survey could loop back to the
 	 * same Question multiple times, so we have to keep track of that.
@@ -40,11 +43,15 @@ public class Question
 	private boolean answered = false;
 
 	//set of branches
-	private Collection<Branch> branches;
 
+	private final Collection<Branch> branches;
+	
 	//set of choices
-	private Collection<Choice> choices;
-
+	private final Collection<Choice> choices;
+	
+	//have to have this around to make Answers
+	private final Context ctxt;
+	
 	/*-----------------------------------------------------------------------*/
 
 	/**
@@ -55,12 +62,15 @@ public class Question
 	 * @param b - a Collection of Branches for this Question
 	 * @param c - a Collection of Choices for this Question
 	 */
-	public Question(String text, int id, Collection<Branch> b, Collection<Choice> c)
+
+	public Question(String text, int id, Collection<Branch> b,
+			Collection<Choice> c, Context ctxt)
 	{
 		q_text = text;
 		branches = b;
 		choices = c;
 		this.id = id;
+		this.ctxt = ctxt;
 	}
 
 	/*-----------------------------------------------------------------------*/
@@ -111,7 +121,8 @@ public class Question
 		}
 		else
 		{
-			Answer newAnswer = new Answer(this, id, null, 0, text, null);
+			Answer newAnswer = new Answer(this, id, null, 0, text, ctxt);
+
 			answers.push(newAnswer);
 			answered = true;
 			return newAnswer;
@@ -128,14 +139,14 @@ public class Question
 	 * 
 	 * @throws RuntimeException if called when there are no Choices
 	 * @throws RuntimeException if given an invalid Choice
-	 * @throws RuntimeException if the current Question has already been
-	 * answered.
 	 */
 	public Answer answer(Choice c)
 	{
 		if (answered) throw new RuntimeException(
-				"atempt to answer the same Question multiple times");
-
+				"attempt to answer the same Question multiple times");
+		
+		if (answered) answers.pop();
+		
 		if (choices.size() == 0)
 		{
 			throw new RuntimeException(
@@ -191,26 +202,26 @@ public class Question
 	}
 
 	/**
-	 * Checks that the question has never been answered with a particular
-	 * Choice.
-	 * 
-	 * @param c - the Choice to have been
-	 * 
-	 * @return true or false
-	 */
-	public boolean hasNeverBeen(Choice c)
-	{
-		return c.hasEverBeen(id);
-	}
-
-	/**
 	 * Remove the most recent Answer from the stack.
 	 * 
 	 * @return the most recent Answer
 	 */
 	public Answer popAns()
 	{
-		return answers.pop();
+		answered = false;
+		if (!answers.isEmpty())
+		{
+			return answers.pop();
+		}
+		return null;
+	}
+
+	/**
+	 * Set this Question to be unanswered.
+	 */
+	public void prime()
+	{
+		answered = false;
 	}
 
 	public void prime() {
