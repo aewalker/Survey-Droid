@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
 
 	// Debugging
 	// TEST
-	//TEST
+	// TEST
     private static final String TAG = "MainActivity";
     private static final boolean D = true;
 
