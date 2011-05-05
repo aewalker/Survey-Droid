@@ -72,7 +72,7 @@ public class PeoplesSettings extends Activity {
             	info.append("Call Logs are " + (callLogCheckbox.isChecked() ? "enabled\n" : "disabled\n"));
 
             	settings.setSurveyService(surveyCheckbox.isChecked());
-            	info.append("Surveys are " + (surveyCheckbox.isChecked() ? "enabled\n" : "disabled\n"));
+            	info.append("Surveys are " + (surveyCheckbox.isChecked() ? "enabled" : "disabled"));
 
             	Toast.makeText(getApplicationContext(), info.toString(),
                         Toast.LENGTH_SHORT).show();

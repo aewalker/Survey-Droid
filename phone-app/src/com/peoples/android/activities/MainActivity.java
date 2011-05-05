@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
             	//##############################################################//
             	//here's where you would call the service to postpone the survey//
             	//##############################################################//
-            	Toast.makeText(getApplicationContext(), "Implement me in your service yo!",
+            	Toast.makeText(getApplicationContext(), "The survey has been postponed one hour",
                         Toast.LENGTH_SHORT).show();
             	finish();
             }
