@@ -45,14 +45,6 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.remind);
 
-        
-        
-//        Next call is done by process, though for now unsure that this class
-//        will see changes immediately
-        
-//        Log.d(TAG, "Fetching surveys");
-//        Pull.syncWithWeb(this);
-
         final TextView q = (TextView) this.findViewById(R.id.msg);
         q.setText("You have a new survey awaiting");
         

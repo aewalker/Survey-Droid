@@ -11,10 +11,13 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import com.peoples.android.Peoples;
+import com.peoples.android.activities.MainActivity;
 import com.peoples.android.database.PeoplesDB;
 import com.peoples.android.database.ScheduledSurveyDBHandler;
 import com.peoples.android.database.SurveyDBHandler;
 import com.peoples.android.model.SurveyIntent;
+import com.peoples.android.server.Pull;
+import com.peoples.android.server.Push;
 
 //import android.app.AlarmManager;
 import android.app.AlarmManager;
@@ -70,7 +73,15 @@ public class SurveyScheduler extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		
-		//TODO: Surveys that need scheduling come from two places:
+		//upload data
+		Log.d(TAG, "Pushing all data");
+		Push.pushAll(this);
+		
+		//download data
+		Log.d(TAG, "Fetching surveys");
+        Pull.syncWithWeb(this);
+		
+		//Surveys that need scheduling come from two places:
 		//1. previously scheduled surveys table
 		//2. surveys table
 		//
@@ -201,10 +212,11 @@ public class SurveyScheduler extends IntentService {
 						new SurveyIntent(getApplicationContext(),
 								survid,
 								survTriggerTime,
-								Peoples.class);
+								MainActivity.class);
 
 					PendingIntent pendingSurvey =
-						PendingIntent.getActivity(this, 0, surveyIntent,
+						PendingIntent.getActivity(getApplicationContext(), 0,
+								surveyIntent,
 								PendingIntent.FLAG_UPDATE_CURRENT);
 
 					alarmManager.set(AlarmManager.RTC_WAKEUP,
