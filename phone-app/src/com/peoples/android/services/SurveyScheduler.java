@@ -178,8 +178,6 @@ public class SurveyScheduler extends IntentService {
 			
 			Log.d(TAG, survDay+" "+survid);
 			
-			 
-			
 			//gotta make sure we're not retrieving null day
 			if( survDay == null ||
 					survDay.equals("null") ||

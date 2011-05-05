@@ -3,6 +3,8 @@ package com.peoples.android.activities;
 //import java.util.List;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 //import android.content.Context;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +41,9 @@ public class MainActivity extends Activity {
     
     //time to vibrate to warn user, in milliseconds
     private static final long VIBRATION_TIME = 1*1000;
+    
+    //Time to delay the survey for if user chooses to
+    private static final long DELAY = 120*1000;
 
     /** Called when the activity is first created. */
     @Override
@@ -85,7 +90,21 @@ public class MainActivity extends Activity {
             	//##############################################################//
             	//here's where you would call the service to postpone the survey//
             	//##############################################################//
-            	Toast.makeText(getApplicationContext(), "The survey has been postponed one hour",
+            	
+            	//will need one of these to schedule services
+                AlarmManager alarmManager =
+                	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                
+				PendingIntent pendingSurvey =
+					PendingIntent.getActivity(getApplicationContext(), 0,
+							getIntent(),
+							PendingIntent.FLAG_UPDATE_CURRENT);
+
+				alarmManager.set(AlarmManager.RTC_WAKEUP,
+									System.currentTimeMillis()+DELAY,
+									pendingSurvey);
+            	
+            	Toast.makeText(getApplicationContext(), "The survey has been postponed for 1.5 minutes",
                         Toast.LENGTH_SHORT).show();
             	finish();
             }
