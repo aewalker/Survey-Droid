@@ -56,15 +56,22 @@ public class Peoples extends ListActivity {
     	//startActivityForResult(myIntent, 0);
 
     	//here's where i get the survey id from the bundle
-    	//Bundle extras = getIntent().getExtras(); 
-    	//int survey_id = extras.getInt("survey_id");
+    	Bundle extras = getIntent().getExtras(); 
+    	int survey_id = extras.getInt("SURVEY_ID");
+    	
+    	if (survey_id == 0)
+    	{
+    		survey = new Survey(panda);
+    	}
+    	else 
+    	{
+            survey = new Survey(survey_id, panda);
+    	}
     	//survey = new Survey(survey_id, panda);
 
     	//Bundle extras = getIntent().getExtras(); 
     	//survey = (Survey) extras.getSerializable("survey");
     	
-        survey = new Survey(3, panda);
-        
         Log.d(TAG, "Finished creating survey");
 
         if (survey.done()) throw new RuntimeException("Survey has no questions!");
@@ -93,15 +100,14 @@ public class Peoples extends ListActivity {
 	            	  else //if free response
 	            	  {
 	            		  String[] test = {"Enter your response here"};
+	            		  if (!survey.getAnswerText().equals(""))
+	            		  {
+	            			  test[0] = survey.getAnswerText();
+	            		  }
 	            		  setListAdapter(new ArrayAdapter<String>(panda, 
 		                		  R.layout.list_item, test));
 		              	  q.setText(survey.getText());
-		              	  
-		              	  if (!survey.getAnswerText().equals(""))
-		              	  {
-		              		  EditText e = (EditText) findViewById(R.id.editText1);
-		              		  e.setText(survey.getAnswerText());
-		              	  }
+
 	            	  }
           	  }
           	  else Toast.makeText(getApplicationContext(), "You can't go back it's the first question yo!",
@@ -165,16 +171,14 @@ public class Peoples extends ListActivity {
 	                	  }
 	                	  else //if free response
 	                	  {
-	                		  String[] test = {"Enter your response here"};
-
-	                		  setListAdapter(new ArrayAdapter<String>(panda, R.layout.list_item, test));
+		            		  String[] test = {"Enter your response here"};
+		            		  if (!survey.getAnswerText().equals(""))
+		            		  {
+		            			  test[0] = survey.getAnswerText();
+		            		  }
+		            		  setListAdapter(new ArrayAdapter<String>(panda, 
+			                		  R.layout.list_item, test));
 			              	  q.setText(survey.getText());
-			              	  
-			              	  if (!survey.getAnswerText().equals(""))
-			              	  {
-			              		  EditText e = (EditText) findViewById(R.id.editText1);
-			              		  e.setText(survey.getAnswerText());
-			              	  }
 
 	                	  }
 	                  }

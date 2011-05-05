@@ -22,7 +22,7 @@ public class SurveyIntent extends Intent {
 	 * May be set using setSurveyActivity 
 	 * 
 	 */
-	private static Class<Peoples> SURVEY_ACTIVITY = com.peoples.android.Peoples.class;
+	//private static Class<Peoples> SURVEY_ACTIVITY = com.peoples.android.Peoples.class;
 	
 	public static String SURVEY_ID = "SURVEY_ID";
 	public static String SURVEY_TIME= "SURVEY_TIME";
@@ -34,7 +34,7 @@ public class SurveyIntent extends Intent {
 	 * @param surveyID Survey id of survey to be triggered
 	 * @param surveyTime time at which to display the survey
 	 */
-	public SurveyIntent(Context context, int surveyID, long surveyTime) {
+	public SurveyIntent(Context context, int surveyID, long surveyTime, Class<?> SURVEY_ACTIVITY) {
 		// TODO Auto-generated constructor stub
 		super(context, SURVEY_ACTIVITY);
 		
