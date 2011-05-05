@@ -206,7 +206,10 @@ public class SurveyScheduler extends IntentService {
 					long survTriggerTime = survDate.getTime();
 
 					//this is setting a recurring survey
-
+					Log.d(TAG, "Scheduling survey with id: "+ survid);
+					Log.d(TAG, "at time: "+ survTime);
+					Log.d(TAG, "");
+					
 					//survey intent has valuable intel
 					SurveyIntent surveyIntent =
 						new SurveyIntent(getApplicationContext(),

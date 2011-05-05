@@ -21,7 +21,7 @@ public class CoordinatorService extends IntentService {
     /**
      * Run scheduler this often
      */
-    private static long SCHEDULER_PERIOD = 3*60*1000;
+    private static long SCHEDULER_PERIOD = 30*1000;
     
     
 
