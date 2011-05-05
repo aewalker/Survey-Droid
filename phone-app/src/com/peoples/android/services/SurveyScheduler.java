@@ -167,52 +167,56 @@ public class SurveyScheduler extends IntentService {
 			
 			Log.d(TAG, survDay+" "+survid);
 			
-			String[] dates = survDay.split(","); 
+			 
+			
+			//gotta make sure we're not retrieving null day
+			if( survDay == null ||
+					survDay.equals("null") ||
+					survDay.length() == 0 )
+				continue;
+				
+			String[] dates = survDay.split(",");
 			
 			for(String survTime : dates){
-				
+
 				//TODO: do real error handling
 				try {
-					
 					//make calendar for current time
 					GregorianCalendar now =
 						new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-					
+
 					//set the year, day, month using the current calendar
 					sdf.setCalendar(now);
-					
+
 					//get a date object, with the survey time
 					survDate = sdf.parse(survTime);
-					
+
 					//gets today in milliseconds from epoch
 					long survTriggerTime = survDate.getTime();
-					
+
 					//this is setting a recurring survey
-					
+
 					//survey intent has valuable intel
 					SurveyIntent surveyIntent =
 						new SurveyIntent(getApplicationContext(),
-											survid, survTriggerTime);
-							
+								survid,
+								survTriggerTime,
+								Peoples.class);
+
 					PendingIntent pendingSurvey =
 						PendingIntent.getActivity(this, 0, surveyIntent,
-											PendingIntent.FLAG_UPDATE_CURRENT);
-					
+								PendingIntent.FLAG_UPDATE_CURRENT);
+
 					alarmManager.set(AlarmManager.RTC_WAKEUP,
-										survTriggerTime, pendingSurvey);
-					
+							survTriggerTime, pendingSurvey);
+
 					//TODO: write scheduled surveys to scheduled database
-					
-					
-					
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					Log.e(TAG, "DATE PARSE ERROR", e);
+
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						Log.e(TAG, "DATE PARSE ERROR", e);
+					}
 				}
-				
-				
-				
-			}
 			
 			
 			

@@ -57,7 +57,7 @@ public class CoordinatorService extends IntentService {
 		
 		//for now, let's try scheduling a survey every minute?
 		//TODO: figure out proper flag!!!
-        
+        	
         //TODO: have alarmManager run SurveyScheduler at specified interval
         Intent surveySchedulerIntent = new Intent(this, SurveyScheduler.class);
         PendingIntent pendingScheduler = PendingIntent.getService(this, 0,
