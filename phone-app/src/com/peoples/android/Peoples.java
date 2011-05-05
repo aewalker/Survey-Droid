@@ -100,15 +100,14 @@ public class Peoples extends ListActivity {
 	            	  else //if free response
 	            	  {
 	            		  String[] test = {"Enter your response here"};
+	            		  if (!survey.getAnswerText().equals(""))
+	            		  {
+	            			  test[0] = survey.getAnswerText();
+	            		  }
 	            		  setListAdapter(new ArrayAdapter<String>(panda, 
 		                		  R.layout.list_item, test));
 		              	  q.setText(survey.getText());
-		              	  
-		              	  if (!survey.getAnswerText().equals(""))
-		              	  {
-		              		  EditText e = (EditText) findViewById(R.id.editText1);
-		              		  e.setText(survey.getAnswerText());
-		              	  }
+
 	            	  }
           	  }
           	  else Toast.makeText(getApplicationContext(), "You can't go back it's the first question yo!",
@@ -172,16 +171,14 @@ public class Peoples extends ListActivity {
 	                	  }
 	                	  else //if free response
 	                	  {
-	                		  String[] test = {"Enter your response here"};
-
-	                		  setListAdapter(new ArrayAdapter<String>(panda, R.layout.list_item, test));
+		            		  String[] test = {"Enter your response here"};
+		            		  if (!survey.getAnswerText().equals(""))
+		            		  {
+		            			  test[0] = survey.getAnswerText();
+		            		  }
+		            		  setListAdapter(new ArrayAdapter<String>(panda, 
+			                		  R.layout.list_item, test));
 			              	  q.setText(survey.getText());
-			              	  
-			              	  if (!survey.getAnswerText().equals(""))
-			              	  {
-			              		  EditText e = (EditText) findViewById(R.id.editText1);
-			              		  e.setText(survey.getAnswerText());
-			              	  }
 
 	                	  }
 	                  }
