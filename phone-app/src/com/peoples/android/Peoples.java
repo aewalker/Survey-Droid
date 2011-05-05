@@ -101,7 +101,7 @@ public class Peoples extends ListActivity {
 	            	  }
 	            	  else //if free response
 	            	  {
-	            		  String[] test = {"Enter your response here"};
+	            		  String[] test = {""};
 	            		  if (!survey.getAnswerText().equals(""))
 	            		  {
 	            			  test[0] = survey.getAnswerText();
@@ -112,7 +112,7 @@ public class Peoples extends ListActivity {
 
 	            	  }
           	  }
-          	  else Toast.makeText(getApplicationContext(), "You can't go back it's the first question yo!",
+          	  else Toast.makeText(getApplicationContext(), "You can't go back on the first question",
                         Toast.LENGTH_SHORT).show();
       	  }
         };
@@ -173,7 +173,7 @@ public class Peoples extends ListActivity {
 	                	  }
 	                	  else //if free response
 	                	  {
-		            		  String[] test = {"Enter your response here"};
+		            		  String[] test = {""};
 		            		  if (!survey.getAnswerText().equals(""))
 		            		  {
 		            			  test[0] = survey.getAnswerText();

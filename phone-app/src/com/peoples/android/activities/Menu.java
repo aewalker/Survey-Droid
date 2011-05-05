@@ -80,19 +80,7 @@ public class Menu extends Activity {
         settings.setText("Settings");
         settings.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	
-            	/*//settings.setCallLocService(true);
-            	//settings.setLocationService(true);
-            	//settings.setSurveyService(true);
-            	
-                Bundle bundle = new Bundle();
-                //should be generated dynamically
-                bundle.putBoolean("one", settings.isLocationEnabled());
-                bundle.putBoolean("two", settings.isCallLogEnabled());
-                bundle.putBoolean("three", settings.isSurveyEnabled());*/
-                
                 Intent myIntent = new Intent(view.getContext(), PeoplesSettings.class);
-                //myIntent.putExtras(bundle);
                 startActivityForResult(myIntent, 0);
             	
             }
