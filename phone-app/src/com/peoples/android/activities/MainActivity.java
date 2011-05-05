@@ -55,6 +55,9 @@ public class MainActivity extends Activity {
         	Log.d(TAG, "+++ ON CREATE main activity +++");
         	Bundle extras = getIntent().getExtras();
             Log.d(TAG, "Deploying survey_id: "+extras.getInt("SURVEY_ID", -1));
+            Log.d(TAG, "Original time: "+ extras.getLong("SURVEY_TIME"));
+            Log.d(TAG, "Current  time: "+ System.currentTimeMillis());
+            
         }
         
         

@@ -212,8 +212,9 @@ public class SurveyScheduler extends IntentService {
 
 					//this is setting a recurring survey
 					Log.d(TAG, "Scheduling survey with id: "+ survid);
-					Log.d(TAG, "at time: "+ survTime);
-					Log.d(TAG, "");
+					Log.d(TAG, "current time: "+ now.getTime().getTime()); 
+					Log.d(TAG, "scheduled time: "+survTriggerTime);
+					Log.d(TAG, " ");
 					
 					//survey intent has valuable intel
 					SurveyIntent surveyIntent =
@@ -236,11 +237,7 @@ public class SurveyScheduler extends IntentService {
 						// TODO Auto-generated catch block
 						Log.e(TAG, "DATE PARSE ERROR", e);
 					}
-				}
-			
-			
-			
-			
+				}			
 		}
 		//close the cursor
 		unscheduledCursor.close();
