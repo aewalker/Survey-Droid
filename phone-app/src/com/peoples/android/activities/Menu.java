@@ -30,9 +30,7 @@ import com.peoples.android.services.CoordinatorService;
 
 public class Menu extends Activity {
 
-	// Debugging
 	// TEST
-	//TEST
     private static final String TAG = "Menu";
     private static final boolean D = true;
     private Survey survey;
@@ -44,10 +42,16 @@ public class Menu extends Activity {
         final Context panda = this;
 
         if(D) Log.e(TAG, "+++ ON CREATE menu activity +++");
+        
+        
+        //TODO: write a more proper Action, or use provided ones
+        //let the coordinator service take care of sync stuff
+        Intent coordinatorIntent			= new Intent(this, CoordinatorService.class);
+    	coordinatorIntent.setAction(MainActivity.class.getName());
+        startService(coordinatorIntent);
+        
 
         setContentView(R.layout.main);
-
-        
         //NEW: let the coordinator service take care of sync stuff
         //Intent coordinatorIntent			= new Intent(this, CoordinatorService.class);
         //TODO: write a more proper Action, or use provided ones

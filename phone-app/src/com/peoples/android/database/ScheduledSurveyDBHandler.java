@@ -95,14 +95,16 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 		String ss = PeoplesDB.SS_TABLE_NAME;
 		String su = PeoplesDB.SURVEY_TABLE_NAME;
 		
-		String query =	" SELECT "	+ su +"."+day+	" "	+     
+		String query =	" SELECT "	+ su +"."+day+	","+ss+"."+PeoplesDB.ScheduledSurveys.SURVEY_ID+     
 						" FROM "	+ su +" , "+ ss		+
 						" WHERE "	+
-						PeoplesDB.ScheduledSurveys.SKIPPED + " = \'TRUE\' "+
-				
+						PeoplesDB.ScheduledSurveys.SKIPPED + " = \'TRUE\' "+" AND "+
+						ss+"."+PeoplesDB.ScheduledSurveys.SURVEY_ID+" = "+
+						su+"."+PeoplesDB.SurveyTable._ID+
+						
 						" UNION "	+
 						
-						" SELECT "	+ su +"."+day+	" "+     
+						" SELECT "	+ su +"."+day+	","+su+"."+PeoplesDB.SurveyTable._ID+     
 						" FROM "	+ su +			" "+
 						" WHERE "	+				" "+
 						" NOT EXISTS ( "	+

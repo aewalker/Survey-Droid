@@ -41,22 +41,16 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         final Context panda = this;
 
-        if(D) Log.d(TAG, "+++ ON CREATE main activity +++");
+        if(D){
+        	Log.d(TAG, "+++ ON CREATE main activity +++");
+        	Bundle extras = getIntent().getExtras();
+            Log.d(TAG, "Deploying survey_id: "+extras.getInt("SURVEY_ID", -1));
+        }
+        
+        
+        
 
         setContentView(R.layout.remind);
-
-        
-        //NEW: let the coordinator service take care of sync stuff
-        Intent coordinatorIntent			= new Intent(this, CoordinatorService.class);
-        //TODO: write a more proper Action, or use provided ones
-    	coordinatorIntent.setAction(MainActivity.class.getName());
-        startService(coordinatorIntent);
-        
-//        Next call is done by process, though for now unsure that this class
-//        will see changes immediately
-        
-//        Log.d(TAG, "Fetching surveys");
-//        Pull.syncWithWeb(this);
 
         final TextView q = (TextView) this.findViewById(R.id.msg);
         q.setText("You have a new survey awaiting");

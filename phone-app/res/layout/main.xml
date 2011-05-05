@@ -38,8 +38,6 @@ android:id="@+id/quit"
 android:layout_height="wrap_content" 
 android:background="@drawable/custom_button"
     android:layout_margin="5dip"></Button>
-    
-
 
 
 </LinearLayout>
