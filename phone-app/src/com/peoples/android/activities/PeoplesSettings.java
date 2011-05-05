@@ -51,12 +51,12 @@ public class PeoplesSettings extends Activity {
         
         
         Bundle extras = getIntent().getExtras(); 
-        final ToggleButton one = (ToggleButton) findViewById(R.id.toggleButton1);
-        one.setChecked(settings.isLocationEnabled());
-        final ToggleButton two = (ToggleButton) findViewById(R.id.toggleButton2);
-        two.setChecked(settings.isCallLogEnabled());
-        final ToggleButton three = (ToggleButton) findViewById(R.id.toggleButton3);
-        three.setChecked(settings.isSurveyEnabled());
+        final ToggleButton gpsCheckbox = (ToggleButton) findViewById(R.id.toggleButton1);
+        gpsCheckbox.setChecked(settings.isLocationEnabled());
+        final ToggleButton callLogCheckbox = (ToggleButton) findViewById(R.id.toggleButton2);
+        callLogCheckbox.setChecked(settings.isCallLogEnabled());
+        final ToggleButton surveyCheckbox = (ToggleButton) findViewById(R.id.toggleButton3);
+        surveyCheckbox.setChecked(settings.isSurveyEnabled());
         
         Button save = (Button) findViewById(R.id.save);
         save.setText("Save Changes");
@@ -65,42 +65,15 @@ public class PeoplesSettings extends Activity {
             	//for now, toast prints what needs to be done attn:Tony
             	StringBuilder info = new StringBuilder();
             	
-            	info.append("GPS is ");
-            	if (one.isChecked()) {
-            		//enable GPS!
-            		info.append("enabled.\n");
-            		settings.setLocationService(true);
-            	}
-            	else {
-            		//disable GPS!
-            		info.append("disabled.\n");
-            		settings.setLocationService(false);
-            	}
-            	
-            	info.append("Call Logs are ");
-            	if (two.isChecked()) {
-            		//enable Call Logs!
-            		info.append("enabled.\n");
-            		settings.setCallLogService(true);
-            	}
-            	else {
-            		//disable Call Logs!
-            		info.append("disabled.\n");
-            		settings.setCallLogService(false);
-            	}
-            	
-            	info.append("Surveys are ");
-            	if (three.isChecked()) {
-            		//enable Surveys
-            		info.append("enabled.");
-            		settings.setSurveyService(true);
-            	}
-            	else {
-            		//disable Surveys
-            		info.append("disabled.");
-            		settings.setSurveyService(false);
-            	}
-            	
+            	settings.setLocationService(gpsCheckbox.isChecked());
+            	info.append("GPS is " + (gpsCheckbox.isChecked() ? "enabled\n" : "disabled\n"));
+
+            	settings.setCallLogService(callLogCheckbox.isChecked());
+            	info.append("Call Logs are " + (callLogCheckbox.isChecked() ? "enabled\n" : "disabled\n"));
+
+            	settings.setSurveyService(surveyCheckbox.isChecked());
+            	info.append("Surveys are " + (surveyCheckbox.isChecked() ? "enabled\n" : "disabled\n"));
+
             	Toast.makeText(getApplicationContext(), info.toString(),
                         Toast.LENGTH_SHORT).show();
             	finish();
