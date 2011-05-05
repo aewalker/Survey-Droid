@@ -141,8 +141,9 @@ class TableHelper extends Helper
 			'").click(function(event) { var tr = $(this).closest("tr"), id = tr.children().first().text(), '.
 			'type = $(this).text().toLowerCase(), target = '.
 			'$('.$this->commandStmts.'); '. //output of this is halarious, but it works...
-			'if (!target.is(":empty")) { target.empty(); event.stopImmediatePropagation(); } '.
-			'$(this).toggleClass("opened"); return false; });', true);
+			'if (!target.is(":empty")) { target.empty(); $(this).removeClass("opened"); '.
+			'event.stopImmediatePropagation(); } else { $(this).addClass("opened"); } return false; });',
+			true);
 		}
 		return $s;
 	}

@@ -6,10 +6,6 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -37,39 +33,36 @@ import com.peoples.android.server.Push;
  */
 public class Survey implements Serializable
 {
-	/**
-	 * 
-	 */
+	//to be serializable, must have this
 	private static final long serialVersionUID = 1L;
+	
 	//the database helper instance and Context
 	private final SurveyDBHandler db;
 	private final Context ctxt;
-	
+
 	//Android log stuff
 	private final boolean D = true;
 	private final String TAG = "SURVEY";
-	
+
 	//the survey name
 	private final String name;
-	
+
 	//the first question in the survey
 	private final Question firstQ;
-	
+
 	//the current Question object
 	private Question currentQ;
-	
+
 	//the current Question's previously given Answer;
 	private Answer currentAns;
-	
+
 	//a registry of live Answers for Conditions to look at
 	private final Stack<Answer> registry = new Stack<Answer>();
-	
+
 	//the Question history via a stack
 	private final Stack<Question> history = new Stack<Question>();
-	
-	/*-----------------------------------------------------------------------*/
-	
 
+	/*-----------------------------------------------------------------------*/
 	/**
 	 * Create a new survey by fetching the needed information from the
 	 * database and initializing the child objects.
@@ -96,12 +89,12 @@ public class Survey implements Serializable
 		 * time to take the survey.  At that point, all operations are constant
 		 * time, so the subject gets a very responsive UI.
 		 */
-		
+
 		//open up a database helper
 		this.ctxt = ctxt;
 		db = new SurveyDBHandler(ctxt);
 		db.openRead();
-		
+
 		//start out by getting the survey level stuff done
 		Cursor s = db.getSurvey(id);
 		if (!s.moveToFirst())
@@ -111,7 +104,7 @@ public class Survey implements Serializable
 		int firstQID = s.getInt(
 				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.QUESTION_ID));
 		s.close();
-		
+
 		//set up a bunch of data structures to help out
 		Map<Integer, Question> qMap = new HashMap<Integer, Question>();
 		Map<Integer, Choice> cMap = new HashMap<Integer, Choice>();
@@ -119,7 +112,7 @@ public class Survey implements Serializable
 		Queue<Integer> toDo = new LinkedList<Integer>();
 		Collection<Branch> bList = new LinkedList<Branch>();
 		Collection<Condition> cList = new LinkedList<Condition>();
-		
+
 		//set up the first question, then iterate until done
 		firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
 		Log.d("Survey", "First question Setup");
@@ -131,7 +124,7 @@ public class Survey implements Serializable
 					qMap, cMap, seen, bList, cList, toDo);
 		}
 		db.close();
-		
+
 		//now that we have a complete Question mapping, go back and set
 		//all the Branches and Conditions
 		for (Branch branch : bList)
@@ -144,9 +137,9 @@ public class Survey implements Serializable
 			condition.setQuestion(qMap);
 		}
 		Log.d("Survey", "condition Setup");
-		
+
 	}
-	
+
 	//set up the Question object with id
 	private Question setUpQuestion(
 			int id,
@@ -162,7 +155,7 @@ public class Survey implements Serializable
 		String text = q.getString(
 				q.getColumnIndexOrThrow(PeoplesDB.QuestionTable.Q_TEXT));
 		q.close();
-		
+
 		//set up Branches
 		Cursor b = db.getBranches(id);
 		b.moveToFirst();
@@ -188,7 +181,7 @@ public class Survey implements Serializable
 			bList.add(branch);
 		}
 		b.close();
-		
+
 		//set up Choices
 		Cursor ch = db.getChoices(id);
 		ch.moveToFirst();
@@ -208,7 +201,7 @@ public class Survey implements Serializable
 		qMap.put(id, newQ);
 		return newQ;
 	}
-	
+
 	//gets a Branch's Conditions by branch_id
 	private Collection<Condition> getConditions(
 			int id,
@@ -236,7 +229,7 @@ public class Survey implements Serializable
 		c.close();
 		return conditions;
 	}
-	
+
 	//get the Choice corresponding to id
 	private Choice getChoice(int id, Map<Integer, Choice> cMap)
 	{
@@ -253,17 +246,15 @@ public class Survey implements Serializable
 		c.close();
 		return newC;
 	}
-	
+
 	/**
 	 * A simple constructor to put together a sample survey.
-	 * 
-	 * @deprecated
 	 */
 	public Survey(Context ctxt)
 	{
 		this.ctxt = ctxt;
 		db = null;
-		
+
 		String[] questionTexts =
 		{
 			"Who is your favorite actress?",
@@ -272,7 +263,7 @@ public class Survey implements Serializable
 			"How old are you?",
 			"What country are you from?"
 		};
-		
+
 		String[][] choices =
 		{
 			{"Keira Knightley", "Natalie Portman", "Emmanuelle Chiriqui"},
@@ -281,11 +272,11 @@ public class Survey implements Serializable
 			{"10", "24", "33"},
 			{"United States", "Canada", "Turkey"}
 		};
-		
+
 		//new Question(String text, int id, Collection<Branch> b, Collection<Choice> c)
 		//new Branch(Question q, Collection<Condition> c)
 		//new Choice(String text, int id)
-		
+
 		Question prevQ = null;
 		for (int i = questionTexts.length - 1; i >= 0; i--)
 		{
@@ -311,9 +302,9 @@ public class Survey implements Serializable
 		if (firstQ == null) throw new RuntimeException("null question");
 		if (firstQ.getChoices().length == 0) throw new RuntimeException("no choices");
 	}
-	
+
 	/*-----------------------------------------------------------------------*/
-	
+
 	/**
 	 * Is the Survey over?
 	 * 
@@ -325,7 +316,7 @@ public class Survey implements Serializable
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Get this Survey's name/title
 	 * 
@@ -335,7 +326,7 @@ public class Survey implements Serializable
 	{
 		return name;
 	}
-	
+
 	/**
 	 * Get the current Question's Choices.
 	 * 
@@ -349,7 +340,7 @@ public class Survey implements Serializable
 		}
 		return new Choice[0];
 	}
-	
+
 	/**
 	 * Get an array of Strings corresponding to the text of the Choices for the
 	 * current Question.
@@ -360,13 +351,14 @@ public class Survey implements Serializable
 	{
 		Choice[] choices = currentQ.getChoices();
 		String[] choiceTexts = new String[choices.length];
+
 		for (int i = 0; i < choices.length; i++)
 		{
 			choiceTexts[i] = choices[i].getText();
 		}
 		return choiceTexts;
 	}
-	
+
 	/**
 	 * Get the current Question's text
 	 * 
@@ -376,7 +368,7 @@ public class Survey implements Serializable
 	{
 		return currentQ.getText();
 	}
-	
+
 	/**
 	 * Get the current Question's current Answer's Choice's index
 	 * 
@@ -410,7 +402,7 @@ public class Survey implements Serializable
 		}
 		else return -1;
 	}
-	
+
 	/**
 	 * Get the current Question's current Answer's text
 	 * 
@@ -425,7 +417,7 @@ public class Survey implements Serializable
 		}
 		return currentAns.getText();
 	}
-	
+
 	/**
 	 * Move the Survey to the next Question.
 	 */
@@ -439,7 +431,7 @@ public class Survey implements Serializable
 			currentQ.prime();
 		}
 	}
-	
+
 	/**
 	 * Move the Survey back one Question.
 	 * 
@@ -452,7 +444,7 @@ public class Survey implements Serializable
 		currentAns = registry.pop();
 		currentQ.popAns();
 	}
-	
+
 	/**
 	 * Is the Survey on the first Question?  Useful when choosing to whether or
 	 * not to display a back button.
@@ -464,7 +456,7 @@ public class Survey implements Serializable
 		if (currentQ == null) return false;
 		return (currentQ.equals(firstQ));
 	}
-	
+
 	/**
 	 * Answer a  multiple choice Question.
 	 * 
@@ -474,7 +466,7 @@ public class Survey implements Serializable
 	{
 		registry.push(currentQ.answer(c));
 	}
-	
+
 	/**
 	 * Answer a free response Question.
 	 * 
@@ -484,7 +476,7 @@ public class Survey implements Serializable
 	{
 		registry.push(currentQ.answer(text));
 	}
-	
+
 	/**
 	 * Finalize the Answers to this Survey and enter them in the database. Also
 	 * deletes all given answers after they are written to the database, leaving
@@ -495,7 +487,7 @@ public class Survey implements Serializable
 	public boolean submit()
 	{
 		boolean worked = true;
-		
+
 		//save all the live Answers
 		while (!registry.empty())
 		{
@@ -509,56 +501,45 @@ public class Survey implements Serializable
 		//try to upload answers to the server
 		//write record of original scheduled time,
 		//vs actual time of completion
+
 		if (!Push.pushAnswers(ctxt))
 		    worked = false;
-		
+
 		//wipe the Question history
 		while (!history.empty())
 		{
 			history.pop().popAns();
 		}
-		
+
 		return worked;
 	}
 	
-	/**
-	   * Always treat de-serialization as a full-blown constructor, by
-	   * validating the final state of the de-serialized object.
-	   */
-	   private void readObject(
-	     ObjectInputStream aInputStream
-	   ) throws ClassNotFoundException, IOException {
-	     //always perform the default de-serialization first
-	     aInputStream.defaultReadObject();
-
-	     //make defensive copy of the mutable Date field
-	     //fDateOpened = new Date( fDateOpened.getTime() );
-
-	     //ensure that object state has not been corrupted or tampered with maliciously
-	     //validateState();
-	  }
-
-	    /**
-	    * This is the default implementation of writeObject.
-	    * Customise if necessary.
-	    */
-	    private void writeObject(
-	      ObjectOutputStream aOutputStream
-	    ) throws IOException {
-	      //perform the default serialization for all non-transient, non-static fields
-	      aOutputStream.defaultWriteObject();
-	    }
-	
-	
-	//TODO I think this should be handled in the communication manager
-	/*
-	public JSONArray getAnswersAsJson()
-	{
-	    JSONArray answers = new JSONArray();
-	    for (Question q : getQuestions())
-	    {
-	        answers.put(q.answer.getAsJson());
-	    }
-	    return answers;
-	}*/
+	//TODO why not just leave the default stuff?  Not worried about validation here
+//	/**
+//	   * Always treat de-serialization as a full-blown constructor, by
+//	   * validating the final state of the de-serialized object.
+//	   */
+//	   private void readObject(
+//	     ObjectInputStream aInputStream
+//	   ) throws ClassNotFoundException, IOException {
+//	     //always perform the default de-serialization first
+//	     aInputStream.defaultReadObject();
+//
+//	     //make defensive copy of the mutable Date field
+//	     //fDateOpened = new Date( fDateOpened.getTime() );
+//
+//	     //ensure that object state has not been corrupted or tampered with maliciously
+//	     //validateState();
+//	  }
+//
+//	    /**
+//	    * This is the default implementation of writeObject.
+//	    * Customize if necessary.
+//	    */
+//	    private void writeObject(
+//	      ObjectOutputStream aOutputStream
+//	    ) throws IOException {
+//	      //perform the default serialization for all non-transient, non-static fields
+//	      aOutputStream.defaultWriteObject();
+//	    }
 }

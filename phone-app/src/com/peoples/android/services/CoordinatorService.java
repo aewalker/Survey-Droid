@@ -21,7 +21,7 @@ public class CoordinatorService extends IntentService {
     /**
      * Run scheduler this often
      */
-    private static long SCHEDULER_PERIOD = 3*60*1000;
+    private static long SCHEDULER_PERIOD = 30*1000;
     
     
 
@@ -38,27 +38,16 @@ public class CoordinatorService extends IntentService {
 		
 		if(D) Log.e(TAG, "onHandleIntent");
 		
-		//TODO: upload data
-		Log.d(TAG, "Pushing all data");
-		Push.pushAll(this);
-		
-		//TODO: download data
-		Log.d(TAG, "Fetching surveys");
-        Pull.syncWithWeb(this);
-		
         //will need one of these to schedule services
         AlarmManager alarmManager =
         	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
         
-        
-		//TODO: iterate through survey table and schedule surveys
-        //need to somehow find row of unanswered survey
-        
-		
 		//for now, let's try scheduling a survey every minute?
 		//TODO: figure out proper flag!!!
-        
+        	
         //TODO: have alarmManager run SurveyScheduler at specified interval
+        
+        //schedule SurveyScheduler to run periodically
         Intent surveySchedulerIntent = new Intent(this, SurveyScheduler.class);
         PendingIntent pendingScheduler = PendingIntent.getService(this, 0,
         		surveySchedulerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -66,8 +55,6 @@ public class CoordinatorService extends IntentService {
         					AlarmManager.ELAPSED_REALTIME_WAKEUP,
         					SystemClock.elapsedRealtime(),
         					SCHEDULER_PERIOD, pendingScheduler);
-		
-		
 	}
 
 

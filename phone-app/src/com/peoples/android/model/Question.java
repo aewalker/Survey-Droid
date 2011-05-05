@@ -6,8 +6,11 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Stack;
+import android.content.Context;
+
 
 /**
  * Model for a survey Question.  Based on the SQL:
@@ -19,34 +22,40 @@ import java.util.Stack;
  * @author Diego Vargas
  * @author Austin Walker
  */
-public class Question
+public class Question implements Serializable
 {
-	//have to keep the Question id to look up history in the DB
-	private int id;
+	//have to keep the Question id to look up history in the DB\
+	private final int id;
+	
+	private static final long serialVersionUID = 1L;
 	
 	//question text
-	private String q_text;
+	private final String q_text;
 	
 	//the answers that have been given for this question
 	//(starts empty => no answer has been given)
-	private Stack<Answer> answers = new Stack<Answer>();
+	private final Stack<Answer> answers = new Stack<Answer>();
 	
 	/* Note: the reason that we have to use a Stack of Answers instead of just
 	 * keeping the most recent one is looping.  A Survey could loop back to the
 	 * same Question multiple times, so we have to keep track of that.
 	 */
-	
+
 	//has the current Question been answered?
 	private boolean answered = false;
-	
+
 	//set of branches
-	private Collection<Branch> branches;
+
+	private final Collection<Branch> branches;
 	
 	//set of choices
-	private Collection<Choice> choices;
+	private final Collection<Choice> choices;
+	
+	//have to have this around to make Answers
+	private final Context ctxt;
 	
 	/*-----------------------------------------------------------------------*/
-	
+
 	/**
 	 * Create a new Question
 	 * 
@@ -55,16 +64,19 @@ public class Question
 	 * @param b - a Collection of Branches for this Question
 	 * @param c - a Collection of Choices for this Question
 	 */
-	public Question(String text, int id, Collection<Branch> b, Collection<Choice> c)
+
+	public Question(String text, int id, Collection<Branch> b,
+			Collection<Choice> c, Context ctxt)
 	{
 		q_text = text;
 		branches = b;
 		choices = c;
 		this.id = id;
+		this.ctxt = ctxt;
 	}
-	
+
 	/*-----------------------------------------------------------------------*/
-	
+
 	/**
 	 * Get all this Question's Choices as an array
 	 * 
@@ -76,7 +88,7 @@ public class Question
 		Choice[] cArray = new Choice[0];
 		return choices.toArray(cArray);
 	}
-	
+
 	/**
 	 * Get this Question's text
 	 * 
@@ -86,7 +98,7 @@ public class Question
 	{
 		return q_text;
 	}
-	
+
 	/**
 	 * Answer this Question.  This should (and can) only be used to provide
 	 * an answer if this is a free response question (ie has no Choices).
@@ -103,7 +115,7 @@ public class Question
 	{
 		if (answered) throw new RuntimeException(
 				"atempt to answer the same Question multiple times");
-		
+
 		if (choices.size() != 0)
 		{
 			throw new RuntimeException(
@@ -111,13 +123,14 @@ public class Question
 		}
 		else
 		{
-			Answer newAnswer = new Answer(this, id, null, 0, text);
+			Answer newAnswer = new Answer(this, id, null, 0, text, ctxt);
+
 			answers.push(newAnswer);
 			answered = true;
 			return newAnswer;
 		}
 	}
-	
+
 	/**
 	 * Answer this Question.  This should (and can) only be used to provide
 	 * an answer if this is a multiple choice question.
@@ -128,13 +141,13 @@ public class Question
 	 * 
 	 * @throws RuntimeException if called when there are no Choices
 	 * @throws RuntimeException if given an invalid Choice
-	 * @throws RuntimeException if the current Question has already been
-	 * answered.
 	 */
 	public Answer answer(Choice c)
 	{
 		if (answered) throw new RuntimeException(
-				"atempt to answer the same Question multiple times");
+				"attempt to answer the same Question multiple times");
+		
+		if (answered) answers.pop();
 		
 		if (choices.size() == 0)
 		{
@@ -156,7 +169,7 @@ public class Question
 			}
 		}
 	}
-	
+
 	/**
 	 * Evaluate Branches to find the next Question.
 	 * 
@@ -174,9 +187,9 @@ public class Question
 		}
 		return null;
 	}
-	
+
 	/*-----------------------------------------------------------------------*/
-	
+
 	/**
 	 * Checks whether the question has ever been answered with a particular
 	 * Choice.
@@ -189,20 +202,7 @@ public class Question
 	{
 		return c.hasEverBeen(id);
 	}
-	
-	/**
-	 * Checks that the question has never been answered with a particular
-	 * Choice.
-	 * 
-	 * @param c - the Choice to have been
-	 * 
-	 * @return true or false
-	 */
-	public boolean hasNeverBeen(Choice c)
-	{
-		return c.hasNeverBeen(id);
-	}
-	
+
 	/**
 	 * Remove the most recent Answer from the stack.
 	 * 
@@ -210,8 +210,19 @@ public class Question
 	 */
 	public Answer popAns()
 	{
-		return answers.pop();
+		answered = false;
+		if (!answers.isEmpty())
+		{
+			return answers.pop();
+		}
+		return null;
+	}
+
+	/**
+	 * Set this Question to be unanswered.
+	 */
+	public void prime()
+	{
+		answered = false;
 	}
 }
-	
-

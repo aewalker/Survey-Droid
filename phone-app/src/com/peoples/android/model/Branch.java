@@ -6,6 +6,7 @@
  *---------------------------------------------------------------------------*/
 package com.peoples.android.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -20,8 +21,10 @@ import java.util.Map;
  * @author Diego Vargas
  * @author Austin Walker
  **/
-public class Branch
+public class Branch implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	//The next question to go to if this branch is true
 	private final int q_id;
 	private Question next_q;
