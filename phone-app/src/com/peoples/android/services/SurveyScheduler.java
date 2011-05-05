@@ -131,7 +131,7 @@ public class SurveyScheduler extends IntentService {
 		Cursor scheduledCursor = ssHandler.getScheduledSurveys(today);
 		
 		//testing
-		int id, survid;
+		Integer id, survid;
 		String origTime, time;
 		String prevSurv = "";
 		
@@ -216,7 +216,7 @@ public class SurveyScheduler extends IntentService {
 								survid,
 								survTriggerTime,
 								MainActivity.class);
-
+					
 					PendingIntent pendingSurvey =
 						PendingIntent.getActivity(getApplicationContext(), 0,
 								surveyIntent,

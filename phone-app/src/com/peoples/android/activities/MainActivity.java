@@ -41,7 +41,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         final Context panda = this;
 
-        if(D) Log.d(TAG, "+++ ON CREATE main activity +++");
+        if(D){
+        	Log.d(TAG, "+++ ON CREATE main activity +++");
+        	Bundle extras = getIntent().getExtras();
+            Log.d(TAG, "Deploying survey_id: "+extras.getInt("SURVEY_ID", -1));
+        }
+        
+        
+        
 
         setContentView(R.layout.remind);
 
