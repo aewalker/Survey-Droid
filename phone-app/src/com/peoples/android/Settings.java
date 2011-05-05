@@ -30,7 +30,7 @@ public class Settings {
      * 
      * @param enabled - true to enable call log service
      */
-    public void setCallLocService(boolean enabled) {
+    public void setCallLogService(boolean enabled) {
         putBoolean("callLogOn", enabled);
     }
     

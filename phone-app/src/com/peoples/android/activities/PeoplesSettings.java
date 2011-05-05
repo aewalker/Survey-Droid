@@ -17,6 +17,7 @@ import android.widget.ToggleButton;
 
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
+import com.peoples.android.Settings;
 //import com.peoples.android.model.Survey;
 //import com.peoples.android.processTest.LocationTestActivity;
 //import com.peoples.android.server.Pull;
@@ -46,13 +47,16 @@ public class PeoplesSettings extends Activity {
 
         setContentView(R.layout.settings);
 
+        final Settings settings = new Settings(panda);
+        
+        
         Bundle extras = getIntent().getExtras(); 
         final ToggleButton one = (ToggleButton) findViewById(R.id.toggleButton1);
-        one.setChecked(extras.getBoolean("one"));
+        one.setChecked(settings.isLocationEnabled());
         final ToggleButton two = (ToggleButton) findViewById(R.id.toggleButton2);
-        two.setChecked(extras.getBoolean("two"));
+        two.setChecked(settings.isCallLogEnabled());
         final ToggleButton three = (ToggleButton) findViewById(R.id.toggleButton3);
-        three.setChecked(extras.getBoolean("three"));
+        three.setChecked(settings.isSurveyEnabled());
         
         Button save = (Button) findViewById(R.id.save);
         save.setText("Save Changes");
@@ -65,30 +69,36 @@ public class PeoplesSettings extends Activity {
             	if (one.isChecked()) {
             		//enable GPS!
             		info.append("enabled.\n");
+            		settings.setLocationService(true);
             	}
             	else {
             		//disable GPS!
             		info.append("disabled.\n");
+            		settings.setLocationService(false);
             	}
             	
             	info.append("Call Logs are ");
             	if (two.isChecked()) {
             		//enable Call Logs!
             		info.append("enabled.\n");
+            		settings.setCallLogService(true);
             	}
             	else {
             		//disable Call Logs!
             		info.append("disabled.\n");
+            		settings.setCallLogService(false);
             	}
             	
             	info.append("Surveys are ");
             	if (three.isChecked()) {
             		//enable Surveys
             		info.append("enabled.");
+            		settings.setSurveyService(true);
             	}
             	else {
             		//disable Surveys
             		info.append("disabled.");
+            		settings.setSurveyService(false);
             	}
             	
             	Toast.makeText(getApplicationContext(), info.toString(),

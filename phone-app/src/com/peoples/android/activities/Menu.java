@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
+import com.peoples.android.Settings;
 //import com.peoples.android.model.Survey;
 //import com.peoples.android.processTest.LocationTestActivity;
 //import com.peoples.android.server.Pull;
@@ -53,7 +54,7 @@ public class Menu extends Activity {
     	//coordinatorIntent.setAction(MainActivity.class.getName());
         //startService(coordinatorIntent);
         
-//        Next call is done by process, though for now unsure that this class
+//        Next call is done by process, though for now unsure that this classhj
 //        will see changes immediately
         
 //        Log.d(TAG, "Fetching surveys");
@@ -75,14 +76,19 @@ public class Menu extends Activity {
         settings.setText("Settings");
         settings.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+            	
+            	/*//settings.setCallLocService(true);
+            	//settings.setLocationService(true);
+            	//settings.setSurveyService(true);
+            	
                 Bundle bundle = new Bundle();
                 //should be generated dynamically
-                bundle.putBoolean("one", true);
-                bundle.putBoolean("two", true);
-                bundle.putBoolean("three", false);
+                bundle.putBoolean("one", settings.isLocationEnabled());
+                bundle.putBoolean("two", settings.isCallLogEnabled());
+                bundle.putBoolean("three", settings.isSurveyEnabled());*/
                 
                 Intent myIntent = new Intent(view.getContext(), PeoplesSettings.class);
-                myIntent.putExtras(bundle);
+                //myIntent.putExtras(bundle);
                 startActivityForResult(myIntent, 0);
             	
             }
