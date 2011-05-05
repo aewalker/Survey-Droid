@@ -3,19 +3,31 @@ package com.peoples.android.services;
 
 
 //import com.peoples.android.Peoples;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
+import com.peoples.android.Peoples;
 import com.peoples.android.database.PeoplesDB;
 import com.peoples.android.database.ScheduledSurveyDBHandler;
 import com.peoples.android.database.SurveyDBHandler;
+import com.peoples.android.model.SurveyIntent;
 
 //import android.app.AlarmManager;
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 //import android.app.PendingIntent;
 //import android.content.Context;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 //import android.os.SystemClock;
+import android.os.SystemClock;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 
@@ -136,11 +148,75 @@ public class SurveyScheduler extends IntentService {
 		
 		String survDay = "";
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Date survDate;
+		
+		Calendar calendar;
+		
+		
+		//will need one of these to schedule services
+        AlarmManager alarmManager =
+        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		
 		while(unscheduledCursor.moveToNext()){
 			Log.d(TAG, "unscheduled surveys:");
-			survDay = "day: " +	unscheduledCursor.getString(0);
-			survDay += "id: " +	unscheduledCursor.getInt(1);
-			Log.d(TAG, survDay);
+			
+			survDay	= unscheduledCursor.getString(0);
+			survid  = unscheduledCursor.getInt(1);
+			
+			Log.d(TAG, survDay+" "+survid);
+			
+			String[] dates = survDay.split(","); 
+			
+			for(String survTime : dates){
+				
+				//TODO: do real error handling
+				try {
+					
+					//make calendar for current time
+					GregorianCalendar now =
+						new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+					
+					//set the year, day, month using the current calendar
+					sdf.setCalendar(now);
+					
+					//get a date object, with the survey time
+					survDate = sdf.parse(survTime);
+					
+					//gets today in milliseconds from epoch
+					long survTriggerTime = survDate.getTime();
+					
+					//this is setting a recurring survey
+					
+					//survey intent has valuable intel
+					SurveyIntent surveyIntent =
+						new SurveyIntent(getApplicationContext(),
+											survid, survTriggerTime);
+							
+					PendingIntent pendingSurvey =
+						PendingIntent.getActivity(this, 0, surveyIntent,
+											PendingIntent.FLAG_UPDATE_CURRENT);
+					
+					alarmManager.set(AlarmManager.RTC_WAKEUP,
+										survTriggerTime, pendingSurvey);
+					
+					//TODO: write scheduled surveys to scheduled database
+					
+					
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					Log.e(TAG, "DATE PARSE ERROR", e);
+				}
+				
+				
+				
+			}
+			
+			
+			
+			
 		}
 		//close the cursor
 		unscheduledCursor.close();
@@ -148,19 +224,8 @@ public class SurveyScheduler extends IntentService {
 		//close handler
 		ssHandler.close();
 		
-		//this is setting a recurring survey (should do within survey scheduler)
-		//will need one of these to schedule services
-//        AlarmManager alarmManager =
-//        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//		
-//		Intent surveyIntent			= new Intent(this, Peoples.class);
-//		
-//		PendingIntent pendingSurvey = PendingIntent.getActivity(this, 0, surveyIntent,
-//															PendingIntent.FLAG_UPDATE_CURRENT);
-//		
-//		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//							SystemClock.elapsedRealtime(), 60*1000, pendingSurvey);
-//		
+		
+		
 		
 	}
 
