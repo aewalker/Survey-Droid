@@ -204,6 +204,13 @@ public class SurveyScheduler extends IntentService {
 
 					//gets today in milliseconds from epoch
 					long survTriggerTime = survDate.getTime();
+					
+					//*****************************************
+					//TODO: THIS IS FOR PRESENTATION, FIX AFTER
+					//*****************************************
+					if( now.getTime().getTime() > survTriggerTime )
+						continue;
+					
 
 					//this is setting a recurring survey
 					Log.d(TAG, "Scheduling survey with id: "+ survid);

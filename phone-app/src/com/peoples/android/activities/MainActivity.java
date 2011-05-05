@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +35,10 @@ public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
     private static final boolean D = true;
     private Survey survey;
+    
+    
+    //time to vibrate to warn user, in milliseconds
+    private static final long VIBRATION_TIME = 1*1000;
 
     /** Called when the activity is first created. */
     @Override
@@ -48,8 +53,10 @@ public class MainActivity extends Activity {
         }
         
         
+        //TADA!
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(1*1000);
         
-
         setContentView(R.layout.remind);
 
         final TextView q = (TextView) this.findViewById(R.id.msg);
