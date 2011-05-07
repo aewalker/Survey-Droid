@@ -1,10 +1,17 @@
 <?php 
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * controllers/choices_controller.php                                        *
  *                                                                           *
  * Controlls all web-end survey functions at the choice level.  All          *
  * functions are ment to be AJAX.                                            *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Controls the Choices level of surveys.  See {@link SurveysController} for
+ * more information.
+ * 
+ * @author Austin Walker
+ * @author Sema Berkiten
+ */
 class ChoicesController extends AppController
 {
 	//for php4
@@ -15,7 +22,11 @@ class ChoicesController extends AppController
     
     var $layout = 'ajax';
     
-    //show all choices related to a particular question
+    /**
+     * Show all choices related to a particular question.
+     * 
+     * @param questionid - id of the Question whose choices are to be shown
+     */
     function showchoices($questionid = NULL)
     {
     	$this->set('results', $this->Choice->find('all', array
@@ -27,7 +38,11 @@ class ChoicesController extends AppController
 		$this->set('questionid', $questionid);
     }
     
-    //add a new choice to the current question
+    /**
+     * Add a new choice to a question.
+     * 
+     * @param questionid - id of the Question to which a choice should be added
+     */
     function addchoice($questionid)
     {
     	$this->set('questionid', $questionid);
@@ -47,7 +62,11 @@ class ChoicesController extends AppController
     	}
     }
     
-    //edit a particular choice
+    /**
+     * Edit the text of a particular choice.
+     * 
+     * @param choiceid - the id of the choice to edit
+     */
     function editchoice($choiceid)
     {
     	$result = $this->Choice->find('first', array
@@ -88,7 +107,11 @@ class ChoicesController extends AppController
 		}
     }
     
-	//delete a particular choice
+	/**
+	 * Delete a particular choice.
+	 * 
+	 * @param choiceid - id of the choice to delete
+	 */
     function deletechoice($choiceid)
     {
     	if ($choiceid == NULL) return;

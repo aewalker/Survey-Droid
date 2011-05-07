@@ -1,10 +1,17 @@
 <?php 
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * controllers/conditions_controller.php                                     *
  *                                                                           *
  * Controlls all web-end survey functions at the ccondition level.  All      *
  * functions are ment to be AJAX.                                            *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Controls the Conditions level of surveys.  See {@link SurveysController} for
+ * more information.
+ * 
+ * @author Austin Walker
+ * @author Sema Berkiten
+ */
 class ConditionsController extends AppController
 {
 	//for php4
@@ -15,7 +22,11 @@ class ConditionsController extends AppController
     
     var $layout = 'ajax';
     
-    //show all conditions related to a particular branch
+    /**
+     * Show all conditions related to a particular branch.
+     * 
+     * @param branchid - id of the branch whose contidions are to be shown
+     */
     function showconditions($branchid)
     {
     	$this->set('results',$this->Condition->find('all', array
@@ -27,7 +38,11 @@ class ConditionsController extends AppController
 		$this->set('branchid', $branchid);
     }
     
-    //add a new condition to the current branch
+    /**
+     * Add a new condition to a branch.
+     * 
+     * @param branchid - id of the branch to which a condition should be added
+     */
     function addcondition($branchid)
     {
     	$this->set('branchid', $branchid);
@@ -47,7 +62,11 @@ class ConditionsController extends AppController
     	}
     }
     
-    //edit a particular condition
+    /**
+     * Edit the choice/question/type a particular condition checks.
+     * 
+     * @param conditionid - the id of the branch to edit
+     */
     function editcondition($conditionid)
     {
     	$result = $this->Condition->find('first', array
@@ -90,7 +109,11 @@ class ConditionsController extends AppController
 		}
     }
     
-	//delete a particular condition
+	/**
+	 * Delete a particular condition.
+	 * 
+	 * @param conditionid - id of the condition to delete
+	 */
     function deletecondition($conditionid)
     {
     	if ($conditionid == NULL) return;

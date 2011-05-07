@@ -1,3 +1,11 @@
+<?php
+/*---------------------------------------------------------------------------*
+ * views/layouts/default.ctp                                                 *
+ *                                                                           *
+ * The default layout for normal pages.  Has a menu bar at the top, a login  *
+ * bar at th bottom, and content in between.                                 *
+ *---------------------------------------------------------------------------*/
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -15,9 +23,9 @@
 
 
 <div id="header">
-	<h3>
-	<a href="/"><?php echo $html->image('/img/peoples.ico');?>PEOPLES</a>
-	</h3> 
+	<?php
+	echo $html->image('/img/peoples.ico').'<h3>';
+	echo $html->link('PEOPLES', array('controller' => 'pages', 'action' => 'home')).'</h3>'; ?>
 	<div id="menubar">
 		<?php
 		if (($user = $session->read('Auth.User')) != NULL)

@@ -1,10 +1,17 @@
 <?php 
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * controllers/branches_controller.php                                       *
  *                                                                           *
  * Controlls all web-end survey functions at the branch level.  All          *
  * functions are ment to be AJAX.                                            *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Controls the Branches level of surveys.  See {@link SurveysController} for
+ * more information.
+ * 
+ * @author Austin Walker
+ * @author Sema Berkiten
+ */
 class BranchesController extends AppController
 {
 	//for php4
@@ -15,7 +22,11 @@ class BranchesController extends AppController
     
     var $layout = 'ajax';
     
-    //show all branches related to a particular question
+    /**
+     * Show all branches related to a particular question.
+     * 
+     * @param questionid - id of the Question whose branches are to be shown
+     */
     function showbranches($questionid)
     {
     	$this->set('results', $this->Branch->find('all', array
@@ -27,7 +38,11 @@ class BranchesController extends AppController
 		$this->set('questionid', $questionid);
     }
     
-    //add a new branch to the current question
+    /**
+     * Add a new branch to a question.
+     * 
+     * @param questionid - id of the Question to which a branch should be added
+     */
     function addbranch($questionid)
     {
     	$this->set('questionid', $questionid);
@@ -47,7 +62,11 @@ class BranchesController extends AppController
     	}
     }
     
-    //edit a particular branch
+    /**
+     * Edit the question a particular branch points to.
+     * 
+     * @param branchid - the id of the branch to edit
+     */
     function editbranch($branchid)
     {
     	$result = $this->Branch->find('first', array
@@ -88,7 +107,11 @@ class BranchesController extends AppController
 		}
     }
     
-	//delete a particular branch
+	/**
+	 * Delete a particular branch.
+	 * 
+	 * @param branchid - id of the branch to delete
+	 */
     function deletebranch($branchid)
     {
     	if ($branchid == NULL) return;

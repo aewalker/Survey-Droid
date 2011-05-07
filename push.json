@@ -1,3 +1,10 @@
+/*---------------------------------------------------------------------------*
+ * push.json                                                                 *
+ *                                                                           *
+ * A mock JSON file showing the format of a push request from a phone.  For  *
+ * reference only.                                                           *
+ *---------------------------------------------------------------------------*/
+
 {
     "deviceId" : "", // phone's serial number or something that would allow the subject to be uniquely identified.
     "answers": [
