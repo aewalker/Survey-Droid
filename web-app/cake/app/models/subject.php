@@ -1,32 +1,33 @@
 <?php
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * models/subject.php                                                        *
  *                                                                           *
  * Model for the subjects table; contains name, phone number, etc.           *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Model for a phone user, aka. a subject.
+ * 
+ * @author Austin Walker
+ */
 class Subject extends AppModel
 {
 	//for php4
 	var $name = 'Subject';
 	
-	//enables look up all the answers a subject has given from within the subjects controller
+	//enables look up all the answers a subject has given from within the
+	//subjects controller
 	var $hasMany = 'Answer';
 	
 	var $validate = array
 	(
-		'phone_num' => array
-		(
-			//change from 'us' if you want to use international phone numbers
-			'rule' => array('phone', null, 'us'),
-			'message' => 'Please provide a valid US phone number'
-		),
+//		'phone_num' => array
+//		(
+//			//change from 'us' if you want to use international phone numbers
+//			'rule' => array('phone', null, 'us'),
+//			'message' => 'Please provide a valid US phone number'
+//		),
 		'first_name' => array
 		(
-			'minLength' => array
-			(
-				'rule' => array('minLength', 1),
-				'message' => 'Please provide a first name'
-			),
 			'maxLength' => array
 			(
 				'rule' => array('maxLength', 320),
@@ -35,11 +36,6 @@ class Subject extends AppModel
 		),
 		'last_name' => array
 		(
-			'minLength' => array
-			(
-				'rule' => array('minLength', 1),
-				'message' => 'Please provide a last name'
-			),
 			'maxLength' => array
 			(
 				'rule' => array('maxLength', 320),

@@ -1,13 +1,14 @@
 <?php
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * views/questions/index.ctp                                                 *
  *                                                                           *
  * Questions of a specific survey.                                           *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
 echo $this->Session->flash();
 
 //show the results
-echo $table->startTable('Question',  array('class' => array('table' => 'questions')));
+echo $table->startTable('Question',
+	array('class' => array('table' => 'questions')));
 echo $table->tableBody($results, array(
             'Edit' => array(
                   'command' => '/questions/editquestion',
@@ -29,7 +30,9 @@ echo $table->tableBody($results, array(
                    'arg' => 'id',
                    'update'=>'#question_branches_',
                    'type' => 'ajax')
-            ), array(), array('choices', 'choices_space', 'branches', 'branches_space'));
+            ),
+            array(),
+            array('choices', 'choices_space', 'branches', 'branches_space'));
 		
 echo $table->endTable(array('Add Question' => array
 (

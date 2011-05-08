@@ -1,6 +1,6 @@
-/*****************************************
+/*---------------------------------------*
  * peoples.css - default CSS for PEOPLES *
- *****************************************/
+ *---------------------------------------*/
 body
 {
 	padding: 0;
@@ -213,7 +213,7 @@ td a:hover
 	color: darkred;
 }
 
-/***** Survey table stuff *****/
+/*---- Survey table stuff ----*/
 .choices th
 {
 	background-color: #0000A3;
@@ -263,7 +263,7 @@ td a:hover
 	margin: 0 0 0 200px;
 }
 
-/*************************/
+/*----------------------------*/
 
 #main table td a.opened
 {

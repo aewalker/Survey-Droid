@@ -1,12 +1,11 @@
 <?php
-/*****************************************************************************
- * views/data/calls.ctp                                            *
+/*---------------------------------------------------------------------------*
+ * views/datas/calls.ctp                                                     *
  *                                                                           *
- * Show subject list.                                                       *
- *****************************************************************************/
+ * Show subject list with links to call data for each one.                   *
+ *---------------------------------------------------------------------------*/
 echo $this->Session->flash();
 
-//show the results
 //show the results
 echo $table->startTable('Subject');
 echo $table->tableBody($results, array(

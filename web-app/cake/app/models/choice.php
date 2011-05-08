@@ -1,9 +1,14 @@
 <?php
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * models/choice.php                                                         *
  *                                                                           *
  * Model for survey answer choices in multiple choice.                       *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Model for a choice that a subject has when answering a survey question.
+ * 
+ * @author Austin Walker
+ */
 class Choice extends AppModel
 {
 	//for php4
