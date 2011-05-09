@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
 									System.currentTimeMillis()+DELAY,
 									pendingSurvey);*/
             	
-            	Toast.makeText(getApplicationContext(), "The survey has been postponed for an hour",
+            	Toast.makeText(getApplicationContext(), "The survey has been postponed for one hour",
                         Toast.LENGTH_SHORT).show();
             	finish();
             }
