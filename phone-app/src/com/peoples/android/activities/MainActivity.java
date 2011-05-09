@@ -7,9 +7,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 //import android.content.Context;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +22,6 @@ import com.peoples.android.R;
 //import com.peoples.android.services.BootService;
 import com.peoples.android.model.Survey;
 import com.peoples.android.model.SurveyIntent;
-import com.peoples.android.services.CoordinatorService;
-//import com.peoples.android.services.GPSLocationService;
 
 
 
@@ -59,8 +55,8 @@ public class MainActivity extends Activity {
         
         
         //TADA!
-        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(1*1000);
+//        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+//        vibrator.vibrate(1*1000);
         
         setContentView(R.layout.remind);
 

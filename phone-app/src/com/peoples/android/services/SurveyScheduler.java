@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import com.peoples.android.Peoples;
 import com.peoples.android.activities.MainActivity;
 import com.peoples.android.database.PeoplesDB;
 import com.peoples.android.database.ScheduledSurveyDBHandler;
@@ -28,9 +27,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-//import android.os.SystemClock;
-import android.os.SystemClock;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 
@@ -191,35 +187,38 @@ public class SurveyScheduler extends IntentService {
 				//TODO: do real error handling
 				try {
 					//make calendar for current time
-					GregorianCalendar now =
-						new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-
-					//set the year, day, month using the current calendar
-					sdf.setCalendar(now);
-
-					//get a date object, with the survey time
-					survDate = sdf.parse(survTime);
-
-					//gets today in milliseconds from epoch
-					long survTriggerTime = survDate.getTime();
+					Log.d(TAG, "-------------------");
 					
+					//Parse the time found in the database
+					sdf.parse(survTime);
+					
+					//get a calendar with the current day/time, and 
+					//change only the time to match what was parsed from DB
+					Calendar surveyTime = Calendar.getInstance();
+					surveyTime.set(Calendar.HOUR_OF_DAY, sdf.getCalendar().get(Calendar.HOUR_OF_DAY));
+					surveyTime.set(Calendar.MINUTE, sdf.getCalendar().get(Calendar.MINUTE));
+
 					//*****************************************
-					//TODO: THIS IS FOR PRESENTATION, FIX AFTER
+					//TODO: NEEDS TO BE TUNED
 					//*****************************************
-					if( now.getTime().getTime() > survTriggerTime )
+					// Currently does not schedule if original time is in past
+					if( System.currentTimeMillis() > surveyTime.getTimeInMillis() )
 						continue;
 					
 
-					//this is setting a recurring survey
-					Log.d(TAG, "Scheduling survey with id: "+ survid);
-					Log.d(TAG, "at time: "+ survTime);
-					Log.d(TAG, "");
+					//Debug reporting
+					if(D){
+						Log.d(TAG, "Scheduling survey with id: "+ survid);
+						Log.d(TAG, "Current time: "+ System.currentTimeMillis());
+						Log.d(TAG, "Scheduling for: "+ surveyTime.getTimeInMillis());
+					}
+					
 					
 					//survey intent has valuable intel
 					SurveyIntent surveyIntent =
 						new SurveyIntent(getApplicationContext(),
 								survid,
-								survTriggerTime,
+								surveyTime.getTimeInMillis(),
 								MainActivity.class);
 					
 					PendingIntent pendingSurvey =
@@ -228,7 +227,7 @@ public class SurveyScheduler extends IntentService {
 								PendingIntent.FLAG_UPDATE_CURRENT);
 
 					alarmManager.set(AlarmManager.RTC_WAKEUP,
-							survTriggerTime, pendingSurvey);
+							surveyTime.getTimeInMillis(), pendingSurvey);
 
 					//TODO: write scheduled surveys to scheduled database
 
