@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 
@@ -76,7 +77,11 @@ public class Push extends WebClient {
             
             // now send to actual server
             JSONObject data = new JSONObject();
-            data.put("deviceId", "testingId");
+            
+            TelephonyManager tManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        	String uid = tManager.getDeviceId();
+            
+            data.put("deviceId", uid);
             data.put("answers", answers);
             Log.d("Push", data.toString());
             boolean success = postJsonToUrl(PUSH_URL, data.toString());
@@ -151,7 +156,11 @@ public class Push extends WebClient {
             
             // now send to actual server
             JSONObject data = new JSONObject();
-            data.put("deviceId", "testingId");
+            
+            TelephonyManager tManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        	String uid = tManager.getDeviceId();
+            data.put("deviceId", uid);
+            
             data.put("locations", locations);
             Log.d("Push", data.toString());
             boolean success = postJsonToUrl(PUSH_URL, data.toString());
@@ -231,7 +240,11 @@ public class Push extends WebClient {
             
             // now send to actual server
             JSONObject data = new JSONObject();
-            data.put("deviceId", "testingId");
+            
+            TelephonyManager tManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        	String uid = tManager.getDeviceId();
+            data.put("deviceId", uid);
+            
             data.put("calls", callLogs);
             Log.e("Push", data.toString());
             boolean success = postJsonToUrl(PUSH_URL, data.toString());

@@ -1,13 +1,13 @@
 <?php
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * views/questions/addquestion.ctp                                           *
  *                                                                           *
  * add a new question.                                                       *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
 
 echo $this->Session->flash();
 
-if (isset($result))
+if (isset($result)) //if result is set, then the user has already submitted
 {
 	if ($result == true)
 	{
@@ -21,15 +21,27 @@ if (isset($result))
 	}
 	echo '<h3>There were errors</h3>';
 }
-echo $form->create('Question', array('action' => "addquestion/$surveyid", 'default' => false));
+
+//main form
+echo $form->create('Question', array(
+	'action' => "addquestion/$surveyid",
+	'default' => false));
 echo $form->input('q_text');
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
-echo $form->input('survey_id', array('type' => 'hidden', 'value' => $surveyid));
-echo $this->Js->submit('Add', array('action' => "addquestion/$surveyid", 'update' => '#questions_space'));
+echo $form->input('survey_id', array(
+	'type' => 'hidden',
+	'value' => $surveyid));
+echo $this->Js->submit('Add', array(
+	'action' => "addquestion/$surveyid",
+	'update' => '#questions_space'));
 echo $form->end();
+
+//cancel button
 echo $form->create('Question', array('default' => false));
 echo $form->input('cancel', array('type' => 'hidden', 'value' => true));
-echo $this->Js->submit('Cancel', array('action' => "addquestion/$surveyid", 'update' => '#questions_space'));
+echo $this->Js->submit('Cancel', array(
+	'action' => "addquestion/$surveyid",
+	'update' => '#questions_space'));
 echo $form->end();
 
 echo $this->Js->writeBuffer();

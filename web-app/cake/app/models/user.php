@@ -1,11 +1,17 @@
 <?php
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * models/users.php                                                          *
  *                                                                           *
  * Model for the users table; contains username, password, email, name, etc. *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Model for web users.
+ * 
+ * @author Austin Walker
+ */
 class User extends AppModel
 {
+	//TODO I still can't figure out if this is needed...
 	public $_schema = array
 	(
 		'id' => array
@@ -49,7 +55,7 @@ class User extends AppModel
 			(
 				'rule' => 'alphaNumeric',
 				'required' => true,
-				'message' => 'Usernames must be contain only letters and numbers'
+				'message' => 'Username must be contain only alphanumerics'
 			),
 			'minLength' => array
 			(
@@ -71,7 +77,8 @@ class User extends AppModel
 			)
 		),
 		'password_copy' => array
-		( //Passwords must be between 8 and 20 characters and must match confirm_pass at registration
+		( //Passwords must be between 8 and 20 characters and must match
+		  //confirm_pass at registration
 			'minLength' => array
 			(
 				'rule' => array('minLength', 8),
@@ -88,27 +95,7 @@ class User extends AppModel
 				'message' => 'Passwords must match'
 			)
 			
-		),
-	/*	'password_confirm' => array
-		(
-		)*/
+		)
 	);
-	
-	//checks that two fields are equal
-	//code by aranworld: http://bakery.cakephp.org/articles/aranworld/2008/01/14/using-equalto-validation-to-compare-two-form-fields
-	function identicalFieldValues( $field=array(), $compare_field=null ) 
-    {
-        foreach( $field as $key => $value ){
-            $v1 = $value;
-            $v2 = $this->data[$this->name][ $compare_field ];                 
-            if($v1 !== $v2) {
-                return FALSE;
-            } else {
-                continue;
-            }
-        }
-        return TRUE;
-    } 
-    
 }
 ?> 
