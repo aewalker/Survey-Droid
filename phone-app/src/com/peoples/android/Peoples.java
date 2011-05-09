@@ -42,16 +42,6 @@ public class Peoples extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
-        
-        //Why is this here? (Diego asks...)
-//        Log.d(TAG, "Fetching surveys");
-//        Pull.syncWithWeb(this);
-        Log.d(TAG, "Pushing all data");
-		Push.pushAll(this);
-		
-		//download data
-		Log.d(TAG, "Fetching surveys");
-        Pull.syncWithWeb(this);
 
         setContentView(R.layout.survey_list_view);
 

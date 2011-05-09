@@ -48,13 +48,13 @@ public class CoordinatorService extends IntentService {
         //TODO: have alarmManager run SurveyScheduler at specified interval
         
         //schedule SurveyScheduler to run periodically
-        /*Intent surveySchedulerIntent = new Intent(this, SurveyScheduler.class);
+        Intent surveySchedulerIntent = new Intent(this, SurveyScheduler.class);
         PendingIntent pendingScheduler = PendingIntent.getService(this, 0,
         		surveySchedulerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.setRepeating(
         					AlarmManager.ELAPSED_REALTIME_WAKEUP,
         					SystemClock.elapsedRealtime(),
-        					SCHEDULER_PERIOD, pendingScheduler);*/
+        					SCHEDULER_PERIOD, pendingScheduler);
 	}
 
 
