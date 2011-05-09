@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
             	//##############################################################//
             	
             	//will need one of these to schedule services
-                AlarmManager alarmManager =
+                /*AlarmManager alarmManager =
                 	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 
 				PendingIntent pendingSurvey =
@@ -98,9 +98,9 @@ public class MainActivity extends Activity {
 
 				alarmManager.set(AlarmManager.RTC_WAKEUP,
 									System.currentTimeMillis()+DELAY,
-									pendingSurvey);
+									pendingSurvey);*/
             	
-            	Toast.makeText(getApplicationContext(), "The survey has been postponed for 1.5 minutes",
+            	Toast.makeText(getApplicationContext(), "The survey has been postponed for an hour",
                         Toast.LENGTH_SHORT).show();
             	finish();
             }

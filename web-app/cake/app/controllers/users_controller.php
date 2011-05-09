@@ -1,18 +1,29 @@
 <?php 
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * controllers/users_controller.php                                          *
  *                                                                           *
  * Controlls user-related functions: login, logout, registration, password   *
  * change, etc.                                                              *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Controls access to the site via user login/logout.  Also provides site
+ * admins to set up/edit/remove other users.
+ * 
+ * @author Sema Berkiten
+ * @author Austin Walker
+ */
 class UsersController extends AppController
 {
 	var $name = 'Users';
+	
 	//load the Auth (ie authorization) component
     var $components = array('Auth');
     
     var $helpers = array('Table');
-     
+    
+    //TODO though it doesn't matter at this point,
+    //it would be best to add callbacks like this to everything
+    //to protect against future additions
     function beforeFilter()
 	{
 		parent::beforeFilter();
@@ -23,7 +34,10 @@ class UsersController extends AppController
 		parent::beforeSave();
 	}
 	
-	function index($showList = false)
+	/**
+	 * Show all users.
+	 */
+	function index(/*$showList = false*//* what??? */)
 	{
 		$this->set('users', $this->User->find('all', array(
 			'fields' => array('id', 'username'),
@@ -32,26 +46,37 @@ class UsersController extends AppController
 		);
 	}
 
+	/**
+	 * Atempt to log in a user.
+	 */
     function login()
     {
     	//don't need to do anything; Auth takes care of it in the view
     	//Auth will send the user to the post-login page (defaults to the home page)
     }
     
+    /**
+     * Logs the user out.
+     */
     function logout()
     {
     	//sends user to the post-logout page (defaults to the login page)
     	$this->redirect($this->Auth->logout());
     }
     
+    /**
+     * Lets user change password, email, etc.
+     */
     function manage()
     {
     	//lets user change password, email, etc.
     }
     
+    /**
+     * Register a new user.
+     */
     function register()
     {
-    	//register a new user
     	if( !empty( $this->data ) )
     	{
     		if (!empty($this->data['User']['password_copy']))
@@ -60,8 +85,7 @@ class UsersController extends AppController
     			$this->data['User']['password'] = $this->Auth->password($this->data['User']['password']);
     		}
 			
-    		//sanitize the password
-    		//$this->User->data = Sanitize::clean($this->data);
+    		//password is automatically cleaned and hashed by cake
     		$this->User->create();
 	    	if ($this->User->save($this->data))
 	        {
@@ -75,15 +99,21 @@ class UsersController extends AppController
     	}
     }
     
+    /**
+     * User's profile page.
+     */
 	function profile()
     {
     	//main page when user logins
     }
     
+    /**
+     * Edit a user's information.
+     * 
+     * @param id - the user's id
+     */
 	function edit($id)
     {
-    	//edit user's information
-
 		$results = $this->User->find('all', array('conditions' => array('User.id' => $id)));
 		foreach($results as &$result)
 		{
@@ -123,6 +153,11 @@ class UsersController extends AppController
 			
     }
     
+    /**
+     * Delte a user.
+     * 
+     * @param id - id of the user to delete
+     */
 	function delete($id)
     {
    		if ($this->data['User']['confirm'] == 'true')

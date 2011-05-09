@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.peoples.android.activities.ConfirmSubmissionSurvey;
 import com.peoples.android.model.Survey;
 import com.peoples.android.server.Pull;
+import com.peoples.android.server.Push;
 
 /**
  * 
@@ -45,6 +46,12 @@ public class Peoples extends ListActivity {
         //Why is this here? (Diego asks...)
 //        Log.d(TAG, "Fetching surveys");
 //        Pull.syncWithWeb(this);
+        Log.d(TAG, "Pushing all data");
+		Push.pushAll(this);
+		
+		//download data
+		Log.d(TAG, "Fetching surveys");
+        Pull.syncWithWeb(this);
 
         setContentView(R.layout.survey_list_view);
 
@@ -62,13 +69,9 @@ public class Peoples extends ListActivity {
     	int survey_id = extras.getInt("SURVEY_ID");
     	
     	if (survey_id == 0)
-    	{
     		survey = new Survey(panda);
-    	}
     	else 
-    	{
             survey = new Survey(survey_id, panda);
-    	}
     	//survey = new Survey(survey_id, panda);
 
     	//Bundle extras = getIntent().getExtras(); 
@@ -139,8 +142,6 @@ public class Peoples extends ListActivity {
 	            	  else //free response
 	            	  {
 	            		  EditText edit = (EditText)findViewById(R.id.editText1);
-
-	            		  //Log.e(TAG, edit.getText().toString());
 
 	            		  survey.answer(edit.getText().toString());
 	            		  /*Toast.makeText(getApplicationContext(), 

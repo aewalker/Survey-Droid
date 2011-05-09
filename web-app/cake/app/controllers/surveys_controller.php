@@ -1,9 +1,23 @@
 <?php 
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * controllers/surveys_controller.php                                        *
  *                                                                           *
  * Controlls all web-end survey functions at the survey level.               *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*
+ * Note: all of the survey-related classes work very similarly.  Each        *
+ * follows the same pattern: all have show, edit, add, and delete functions. *
+ * Because of this, it would be better to put this kind of functionality     *
+ * into a component to avoid repeating some code.  However, for now, since   *
+ * there are some small differences between how each of the survey objects   *
+ * work, each has it's own code.                                             *
+ *---------------------------------------------------------------------------*/
+/**
+ * Controls surveys at the high level.  Unlike the lower level survey-related
+ * classes, the functions in this class are not AJAX.
+ * 
+ * @author Austin Walker
+ * @author Sema Berkiten
+ */
 class SurveysController extends AppController
 {
 	//for php4
@@ -14,7 +28,9 @@ class SurveysController extends AppController
     
     var $days = array('mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'); //for convienence
     
-    //show all surveys in a table
+    /**
+     * Display all surveys.
+     */
     function index()
     {
     	$this->set('results', $this->Survey->find('all', array
@@ -24,7 +40,12 @@ class SurveysController extends AppController
 		)));
     }
     
-    //show the details of a particular survey
+    /**
+     * Show the details of a particular survey and edit it's internal
+     * question/choice/branch/condition structure.
+     * 
+     * @param surveyid - id of the survey to show
+     */
     function viewsurvey($surveyid)
     {
     	$result = $this->Survey->find('first', array
@@ -36,7 +57,9 @@ class SurveysController extends AppController
     	$this->set('surveyid', $surveyid);
     }
     
-    //add a new survey
+    /**
+     * Add a new survey.
+     */
     function addsurvey()
     {
     	if($this->data['Survey']['confirm'] == true)
@@ -50,7 +73,11 @@ class SurveysController extends AppController
     	}
     }
     
-    //edit the name of a particular survey
+    /**
+     * Edit the name, first question, and times of a particular survey.
+     * 
+     * @param surveyid - id of the survey to edit
+     */
     function editsurvey($surveyid)
     {
 		if ($surveyid == NULL) $this->redirect('/surveys/');
@@ -95,7 +122,11 @@ class SurveysController extends AppController
 		}
     }
     
-    //delete a particular survey and it's associated data
+    /**
+     * Delete a particular survey and it's associated data.
+     * 
+     * @param surveyid - id of the survey to delete
+     */
     function deletesurvey($surveyid)
     {
 		if ($surveyid == NULL) $this->redirect('/surveys/');
