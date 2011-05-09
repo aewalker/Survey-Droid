@@ -1,15 +1,23 @@
 <?php
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * models/survey.php                                                         *
  *                                                                           *
  * Model for surveys.                                                        *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Model for the surveys presented to phone users.
+ * 
+ * @author Austin Walker
+ */
 class Survey extends AppModel
 {
 	//for php4
 	var $name = 'Survey';
 	
+	//the survey has a first question; to Cake, this means the survey "belongs
+	//to" that question
 	var $belongsTo = 'Question';
+	
 	var $hasMany = 'Question';
 	
 	var $validate = array
@@ -24,10 +32,10 @@ class Survey extends AppModel
 			'maxLength' => array
 			(
 				'rule' => array('maxLength', 255),
-				'message' => 'Survey names cannot be longer than 255 characters'
+				'message' => 'Survey name cannot be longer than 255 characters'
 			)
 		)
-		//Probably should add validation for days of week...
+		//TODO Probably should add validation for days of week...
 	);
 }
 ?>

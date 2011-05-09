@@ -1,10 +1,17 @@
 <?php 
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * controllers/questions_controller.php                                      *
  *                                                                           *
  * Controlls all web-end survey functions at the question level.  All        *
  * functions are ment to be AJAX.                                            *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Controls the question level of surveys.  See {@link SurveysController} for
+ * more information.
+ * 
+ * @author Austin Walker
+ * @author Sema Berkiten
+ */
 class QuestionsController extends AppController
 {
 	//for php4
@@ -15,8 +22,12 @@ class QuestionsController extends AppController
     
     var $layout = 'ajax';
     
-    //show all questions associated with a particular survey
-    function showquestions($surveyid = NULL)
+    /**
+     * Show all questions related to a particular survey.
+     * 
+     * @param surveyid - id of the survey whose questions are to be shown
+     */
+    function showquestions($surveyid)
     {
     	$this->set('results', $this->Question->find('all', array
 		(
@@ -27,7 +38,11 @@ class QuestionsController extends AppController
 		$this->set('surveyid', $surveyid);
     }
     
-    //add a new question to the current survey
+    /**
+     * Add a new question to a survey.
+     * 
+     * @param surveyid - if of the Question to which a branch should be added
+     */
     function addquestion($surveyid)
     {
     	$this->set('surveyid', $surveyid);
@@ -47,7 +62,11 @@ class QuestionsController extends AppController
 		}		
     }
     
-    //edit the text of a particular question
+    /**
+     * Edit the text of a particular question.
+     * 
+     * @param questionid - the id of the question to edit
+     */
     function editquestion($questionid)
     {
     	$result = $this->Question->find('first', array
@@ -89,7 +108,11 @@ class QuestionsController extends AppController
 		}
     }
     
-    //delete a particular question
+    /**
+	 * Delete a particular question.
+	 * 
+	 * @param questionid - id of the question to delete
+	 */
     function deletequestion($questionid)
     {
     	$result = $this->Question->find('first', array

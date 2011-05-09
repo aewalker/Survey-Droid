@@ -20,6 +20,7 @@
  * @since         CakePHP(tm) v 0.10.8.2117
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+include_once 'config.php'; //the main user config file
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.

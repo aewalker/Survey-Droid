@@ -1,10 +1,16 @@
 <?php 
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * controllers/subjects_controller.php                                       *
  *                                                                           *
  * Controlls functions related to the subjects (ie participants) in the      *
  * study: add/delete/edit etc.                                               *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
+/**
+ * Controls subjects (ie phone users).  In order for a phone to work with the
+ * site, it must be registered (it's device id added) to a subject.
+ * 
+ * @author Austin Walker
+ */
 class SubjectsController extends AppController
 {
 	//might as well support php4
@@ -14,13 +20,15 @@ class SubjectsController extends AppController
     var $components = array('Auth');
     var $helpers = array('Table');
     
-    //index function shows an overview of all the subjects matching a search,
-    //or shows everyone if no search terms were entered
+    /**
+     * Shows an overview of all the subjects matching a search, or shows
+     * everyone if no search terms were entered.
+     */
 	function index()
 	{
 		$this->set('results', $this->Subject->find('all', array
 		(
-			'conditions' => array
+			'conditions' => array //allow search by any of the 4 subject fields
 			(
 				'first_name LIKE' => '%'.$this->data['Subject']['first_name'].'%',
 				'last_name LIKE' => '%'.$this->data['Subject']['last_name'].'%',
@@ -32,7 +40,9 @@ class SubjectsController extends AppController
 		)));
 	}
 	
-	//add a new subject
+	/**
+	 * Add a new subject.
+	 */
 	function add()
 	{
 		$this->Subject->create();
@@ -43,7 +53,11 @@ class SubjectsController extends AppController
     	}
 	}
 	
-	//delete an existing subject
+	/**
+	 * Delete an existing subject.
+	 * 
+	 * @param id - id of the subject to delete
+	 */
 	function delete($id = NULL)
 	{
 		if ($id == NULL) $this->redirect('/subjects/');
@@ -74,7 +88,11 @@ class SubjectsController extends AppController
 		}
 	}
 	
-	//edit an existing subject's details
+	/**
+	 * Edit an existing subject's details.
+	 * 
+	 * @param id - id of the subject whose info is to be edited
+	 */
 	function edit($id = NULL)
 	{
 		if ($id == NULL) $this->redirect('/subjects/');
@@ -107,7 +125,11 @@ class SubjectsController extends AppController
 		}
 	}
 	
-	//view subject's information
+	/**
+	 * View subject's information.
+	 * 
+	 * @param subjectid - id of the subject whose information is to be shown
+	 */
 	function view($subjectid)
 	{
 		$result = $this->Subject->find('first', array

@@ -1,17 +1,27 @@
 <?php 
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * controllers/datas_controller.php                                          *
  *                                                                           *
- * Controlls data view and export.                                           *
- *****************************************************************************/
+ * Controls data view and export.                                            *
+ *---------------------------------------------------------------------------*/
+/**
+ * Controls data view and export.  Shows location an call log information by
+ * subject, and survey answer data by survey and question.
+ * 
+ * @author Sema Berkiten
+ */
 class DatasController extends AppController
 {
 	var $name = 'Datas';
 	//this controller is associated with all the models
-	var $uses = array('Survey', 'Answer', 'Location', 'StatusChange', 'Call', 'Question', 'Subject', 'Choice');
+	var $uses = array('Survey', 'Answer', 'Location', 'StatusChange',
+		'Call', 'Question', 'Subject', 'Choice');
     
     var $helpers = array('Table', 'Tablefordata');
     
+    /**
+     * Show all surveys from which data can be viewed.
+     */
     function index()
     {
     	$this->set('results', $this->Survey->find('all', array
@@ -21,11 +31,11 @@ class DatasController extends AppController
 		)));
     }
     
-    function viewdataoptions($surveyid)
-    {
-    	$this->set('surveyid', $surveyid);
-    }
-    
+    /**
+     * Show all questions for a survey with links to veiw the answers for each.
+     * 
+     * @param surveyid - id of the survey
+     */
     function answers($surveyid)
     {
     	$this->set('results', $this->Question->find('all', array
@@ -37,6 +47,11 @@ class DatasController extends AppController
 		$this->set('surveyid', $surveyid);
     }
     
+    /**
+     * Shows all the answers from a particular question.
+     * 
+     * @param questionid - id of the question whose answers should be shown
+     */
 	function showanswers($questionid)
     {
     	//$this->layout = 'ajax';
@@ -73,6 +88,9 @@ class DatasController extends AppController
 
     }
     
+    /**
+     * Show all the subjects with links to view their location data.
+     */
 	function locations()
 	{
 		$this->set('results', $this->Subject->find('all', array
@@ -87,6 +105,11 @@ class DatasController extends AppController
 		)));
 	}
 	
+	/**
+	 * Shows all the location data from a particular subject.
+	 * 
+	 * @param subjectid - id of the subject whose location data is shown
+	 */
 	function showlocations($subjectid)
 	{
 		$this->set('results', $this->Location->find('all', array
@@ -98,6 +121,9 @@ class DatasController extends AppController
 		$this->set('subjectid', $subjectid);
 	}
 	
+	/**
+	 * Shows all subjects with links to view each subjects call data.
+	 */
 	function calls()
 	{
 		$this->set('results', $this->Subject->find('all', array
@@ -112,6 +138,11 @@ class DatasController extends AppController
 		)));
 	}
 	
+	/**
+	 * Shows all the call data from a particular subject.
+	 * 
+	 * @param subjectid - id of the subject whose call data is shown
+	 */
 	function showcalls($subjectid)
 	{
 		$this->set('results', $this->Call->find('all', array
@@ -123,6 +154,10 @@ class DatasController extends AppController
 		$this->set('subjectid', $subjectid);
 	}
 	
+	/**
+	 * Shows all phone status changes.
+	 */
+	//TODO this has not yet been implemented on the phones
 	function subjectstatuses()
 	{
 		$this->set('results', $this->StatusChange->find('all', array
@@ -132,6 +167,9 @@ class DatasController extends AppController
 		)));
 	}
     
+	/**
+	 * Export data in .xls format.
+	 */
 	function export_xls() 
 	{
 		$this->Data->recursive = 1;

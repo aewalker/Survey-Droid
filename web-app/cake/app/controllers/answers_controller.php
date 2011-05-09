@@ -1,10 +1,23 @@
 <?php 
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * controllers/answers_controller.php                                        *
  *                                                                           *
  * Contains functions that are used by the phone: push and pull to send a    *
  * subjects survey answers and pull new survey data, respectively.           *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*
+ * Note: status chages are not yet implemented on the phone, but will be at  *
+ * some point, so the code to handle them is left in this file.  Similarly,  *
+ * if at some future point, additional types of data are to be collected by  *
+ * the phones, one can set the website to accept that kind of data by adding *
+ * the controllers for that kind of data to the uses and models arrays.      *
+ *---------------------------------------------------------------------------*/
+/**
+ * Controls communication between phones and the database.  Access to the push
+ * and pull functions are not restricted to logged in users to allow the phones
+ * to use them without being logged in.
+ * 
+ * @author Austin Walker
+ */
 class AnswersController extends AppController
 {
 	//for php4
@@ -22,7 +35,9 @@ class AnswersController extends AppController
 		'allowedActions' => array('push', 'pull')
 	));
 	
-	//pull survey data (and descendants) from the database
+	/**
+	 * Pull survey data from the database and convert to JSON.
+	 */
 	function pull()
 	{
 		$results = array
@@ -52,12 +67,15 @@ class AnswersController extends AppController
 		$this->set('results', $results);
 	}
 	
-	//push answers, locations, statuschanges, and calls to the database
+	/**
+	 * Accepts a request continaing a JSON object with answers, locations,
+	 * statuschanges, and calls and attepmts to parse that data and put it into
+	 * the database.
+	 */
 	function push()
 	{
+		//since the JSON object is in the body of the request, get the whole request text
 		$info = file_get_contents('php://input');
-		//$info = '{"deviceId":"lololol","surveys":[{"field":"value"},{"field":"value"}],'.
-		//	'"answers":[{"question_id":1,"choice_id":1,"created":'.time().'}, {"question_id":2,"choice_id":3,"created":'.time().'}]}';
 		
 		//array of modles to look for data to save as [JSON name] => [CakePHP name]
 		$models = array
@@ -69,7 +87,7 @@ class AnswersController extends AppController
 		);
 		
 		//assuming there is some textual JSON array in $info:
-		$result = true; //did the push work?
+		$result = true; //did the push work?  changed to false on error
 		$message = NULL; //if it didn't, why not?
 		$info = json_decode($info, true);
 		if ($info == NULL)
@@ -88,10 +106,10 @@ class AnswersController extends AppController
 			}
 			else
 			{
-				/******************************/
+				/*----------------------------*/
 				//testing only!!!!
-				$info['deviceId'] = 'phone1';
-				/******************************/
+				//$info['deviceId'] = 'phone1';
+				/*----------------------------*/
 				
 				//now, make sure the given deviceId is registered to a subject
 				$subjectid = $this->Subject->find('first', array
@@ -103,7 +121,7 @@ class AnswersController extends AppController
 				if ($subjectid == NULL)
 				{
 					$result = false;
-					$message = 'invalid device id';
+					$message = 'invalid or unregistered device id';
 				}
 				else
 				{
@@ -111,7 +129,7 @@ class AnswersController extends AppController
 					foreach ($info as $table => $items)
 					{
 						foreach ($models as $json_name => $cake_name)
-						{
+						{ //TODO this can be more efficent
 							if ($table == $json_name)
 							{
 								foreach ($items as $item)
@@ -124,8 +142,8 @@ class AnswersController extends AppController
 											// From http://snippets.dzone.com/posts/show/1455
 											$val = gmdate('Y-m-d H:i:s', $val);
 										
-										//add the deviceId to the contact_id to create an anonomyous number
-										//in place of the phone number:
+										//add the deviceId to the contact_id to create an anonomyous and
+										//unique number in place of the real phone number:
 										if ($key == 'contact_id')
 											$val = $info['deviceId'].$val;
 										
@@ -146,6 +164,7 @@ class AnswersController extends AppController
 				}
 			}
 		}
+		//finally, set the results and possibly the error message for the view
 		$this->set('result', $result);
 		if ($result == false) $this->set('message', $message);
 	}

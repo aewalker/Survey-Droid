@@ -1,3 +1,10 @@
+/*---------------------------------------------------------------------------*
+ * pull.json                                                                 *
+ *                                                                           *
+ * A mock JSON file showing the format of the servers response to a pull     *
+ * request.  For reference only.                                             *
+ *---------------------------------------------------------------------------*/
+
 {
     "surveys": [
         {

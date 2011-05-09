@@ -1,16 +1,17 @@
 <?php
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * views/users/index.ctp                                                     *
  *                                                                           *
- * Lists all users                                                           *
- *****************************************************************************/
+ * Lists all users for admins.                                               *
+ *---------------------------------------------------------------------------*/
 if($session->read('Auth.User.admin'))
 {
 	echo $this->Session->flash();
 	
 	echo $table->startTable('User');
 	echo $table->tableBody($users);
-	echo $table->endTable(array('Create new user' => array('command' => 'register', 'arg' => NULL, 'type' => 'link')));
+	echo $table->endTable(array('Create new user' => array(
+		'command' => 'register', 'arg' => NULL, 'type' => 'link')));
 }
 else
 {

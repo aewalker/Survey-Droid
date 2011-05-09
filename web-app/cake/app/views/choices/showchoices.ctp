@@ -1,13 +1,14 @@
 <?php
-/*****************************************************************************
+/*---------------------------------------------------------------------------*
  * views/choices/showchoices.ctp                                             *
  *                                                                           *
  * Choices of a question.                                                    *
- *****************************************************************************/
+ *---------------------------------------------------------------------------*/
 echo $this->Session->flash();
 
 //show the results
-echo $table->startTable("Choice", array('class' => array('table' => 'choices')));
+echo $table->startTable("Choice",
+	array('class' => array('table' => 'choices')));
 echo $table->tableBody($results, array(
             'Edit' => array(
                   'command' => 'editchoice',
