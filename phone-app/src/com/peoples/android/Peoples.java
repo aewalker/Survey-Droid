@@ -24,6 +24,7 @@ import com.peoples.android.server.Push;
  * Used to launch processes during development and testing
  * 
  * @author Vlad
+ * @author Henry
  *
  */
 public class Peoples extends ListActivity {	
@@ -202,10 +203,4 @@ public class Peoples extends ListActivity {
         }
     }
     
-/*    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        setContentView(R.layout.survey_list_view);
-    	Log.e(TAG, "panddaaaa");
-    }*/
 }
