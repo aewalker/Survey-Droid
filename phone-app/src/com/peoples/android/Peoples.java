@@ -69,13 +69,9 @@ public class Peoples extends ListActivity {
     	int survey_id = extras.getInt("SURVEY_ID");
     	
     	if (survey_id == 0)
-    	{
     		survey = new Survey(panda);
-    	}
     	else 
-    	{
             survey = new Survey(survey_id, panda);
-    	}
     	//survey = new Survey(survey_id, panda);
 
     	//Bundle extras = getIntent().getExtras(); 
@@ -146,8 +142,6 @@ public class Peoples extends ListActivity {
 	            	  else //free response
 	            	  {
 	            		  EditText edit = (EditText)findViewById(R.id.editText1);
-
-	            		  //Log.e(TAG, edit.getText().toString());
 
 	            		  survey.answer(edit.getText().toString());
 	            		  /*Toast.makeText(getApplicationContext(), 
