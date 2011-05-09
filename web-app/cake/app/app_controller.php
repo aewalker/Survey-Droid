@@ -17,15 +17,12 @@ class AppController extends Controller
 	//controllers; this causes all pages to default to requiring a user to log
 	//in to see them.
     var $components = array('Auth', 'Session', 'Ssl');
-
-    /**
-     * May be modified to force all connections to be secure.
-     */
+    
 	function beforeFilter()
 	{
-	    /*--------------------------------------------------------------*/
-	    //$this->Ssl->force(); //uncomment to force all pages to use https
-	    /*--------------------------------------------------------------*/
+		//if the user has set the site to use ssl, force https connections
+		if (SSL === true)
+			$this->Ssl->force();
 	}
 }
 ?>
