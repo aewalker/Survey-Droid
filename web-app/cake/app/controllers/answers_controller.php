@@ -108,7 +108,7 @@ class AnswersController extends AppController
 			{
 				/*----------------------------*/
 				//testing only!!!!
-				$info['deviceId'] = 'phone1';
+				//$info['deviceId'] = 'phone1';
 				/*----------------------------*/
 				
 				//now, make sure the given deviceId is registered to a subject
