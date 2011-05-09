@@ -21,7 +21,7 @@ Example usage:
 Creating Surveys
 ----------------
 
-Survey mySurvey = new Survey(survey_id);
+Survey mySurvey = new Survey(survey_id, context);
 
 This looks at that database and generates the entire Survey corresponding to
 the survey_id.
@@ -61,14 +61,14 @@ Answering a Question
 
 When a subject answers a question, call one of:
 
-mySurvey.answer(question, choice, null); //for multiple choice
-mySurvey.answer(question, null, "answer text"); //for free response
+mySurvey.answer(question, choice); //for multiple choice
+mySurvey.answer(question, "answer text"); //for free response
 
 Internally, answering a question:
 	-generates an Answer object to be saved later
 	-updates the next question based on branches
-Make sure to answer a question before you call nextQuestion() or nextQuestion()
-will just return the current question!
+Make sure to answer a question before you call nextQuestion() or an error will
+occur!
 
 ------------------
 Finishing a Survey
@@ -90,7 +90,7 @@ Putting it all together
 
 Here's what a real usage might look like.  UI.* are made up:
 
-Suvery mySurvey = new Survey(1);
+Suvery mySurvey = new Survey(1, context);
 while (!mySurvey.done())
 {
 	UI.displayQuestion(mySurvey.getText());
