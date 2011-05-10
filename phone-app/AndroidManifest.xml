@@ -61,7 +61,8 @@
 		<activity android:name=".Peoples"
 			android:theme="@style/CustomTheme"
 			android:configChanges="keyboardHidden|orientation"
-			android:screenOrientation="portrait">
+			android:screenOrientation="portrait"
+			android:windowSoftInputMode="adjustPan">
 		</activity>
 		<activity android:name=".activities.MainActivity" android:label="@string/app_name"
 		android:theme="@android:style/Theme.Dialog"></activity>
