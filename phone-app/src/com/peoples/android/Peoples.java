@@ -17,18 +17,10 @@ import com.peoples.android.activities.ConfirmSubmissionSurvey;
 import com.peoples.android.database.ScheduledSurveyDBHandler;
 import com.peoples.android.model.Survey;
 
-import com.peoples.android.model.SurveyIntent;
-import com.peoples.android.server.Pull;
-import com.peoples.android.server.Push;
-
-
 /**
- * 
- * Used to launch processes during development and testing
- * 
+ * Used to launch actual surveys
  * @author Vlad
  * @author Henry
- *
  */
 public class Peoples extends ListActivity {	
     
@@ -47,29 +39,29 @@ public class Peoples extends ListActivity {
 
         setContentView(R.layout.survey_list_view);
 
-    	final Context panda = this;
+    	final Context ctxt = this;
     	
     	Bundle extras = getIntent().getExtras(); 
     	int survey_id = extras.getInt("SURVEY_ID");
     	
     	if (survey_id == 0)
-    		survey = new Survey(panda);
+    		survey = new Survey(ctxt);
     	else 
-            survey = new Survey(survey_id, panda);
-    	//survey = new Survey(survey_id, panda);
-
-    	//Bundle extras = getIntent().getExtras(); 
-    	//survey = (Survey) extras.getSerializable("survey");
+            survey = new Survey(survey_id, ctxt);
     	
         Log.d(TAG, "Finished creating survey");
 
         if (survey.done()) throw new RuntimeException("Survey has no questions!");
+        
     	final TextView q = (TextView) this.findViewById(R.id.question_textView);
-    	setListAdapter(new ArrayAdapter<String>(panda, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
+    	setListAdapter(new ArrayAdapter<String>(ctxt, R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
     	q.setText(survey.getText());
           
     	Button prev = (Button) findViewById(R.id.button1);
         prev.setText("Previous Question");
+        /**
+         * Handler for previous button
+         */
         final View.OnClickListener prevListener = new View.OnClickListener() {
             public void onClick(View view) {
           	  
@@ -79,7 +71,7 @@ public class Peoples extends ListActivity {
 	            	  
 	            	  if (survey.getChoices().length != 0) //if multiple choice
 	            	  {
-		                  setListAdapter(new ArrayAdapter<String>(panda, 
+		                  setListAdapter(new ArrayAdapter<String>(ctxt, 
 		                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
 		              	  q.setText(survey.getText());
 		              	  
@@ -93,7 +85,7 @@ public class Peoples extends ListActivity {
 	            		  {
 	            			  test[0] = survey.getAnswerText();
 	            		  }
-	            		  setListAdapter(new ArrayAdapter<String>(panda, 
+	            		  setListAdapter(new ArrayAdapter<String>(ctxt, 
 		                		  R.layout.list_item, test));
 		              	  q.setText(survey.getText());
 
@@ -115,37 +107,32 @@ public class Peoples extends ListActivity {
           	  if ((survey.getChoices().length != 0 && lv.getCheckedItemPosition() != -1)||
           			  (survey.getChoices().length == 0))
           	  {
-	            	  //save response gogo?
+	            	  //save response 
 	            	  if (survey.getChoices().length != 0) //multiple choice
 	            	  {
 	            		  survey.answer(survey.getChoices()[lv.getCheckedItemPosition()]);
-	            		  /*Toast.makeText(getApplicationContext(), 
-	                			  survey.getChoices()[lv.getCheckedItemPosition()].getText(),
-	                              Toast.LENGTH_SHORT).show();*/
+
 	            	  }
 	            	  else //free response
 	            	  {
 	            		  EditText edit = (EditText)findViewById(R.id.editText1);
 
 	            		  survey.answer(edit.getText().toString());
-	            		  /*Toast.makeText(getApplicationContext(), 
-	            				  edit.getText().toString(),
-	                              Toast.LENGTH_SHORT).show();*/
 	            	  }
 
 
-	            	  survey.nextQuestion(); //go to the next Question
+	            	  survey.nextQuestion(); //go to the next question
 
-	                  if (survey.done()) //if there are no more Questions....
+	                  if (survey.done()) //if there are no more questions....
 	                  {
 	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
 	                	  startActivityForResult(myIntent, requestCode);
 	                  }
-	                  else //there are still more Questions
+	                  else //there are still more questions
 	                  {
 	                	  if (survey.getChoices().length != 0) //if multiple choice
 	                	  {
-			                  setListAdapter(new ArrayAdapter<String>(panda, 
+			                  setListAdapter(new ArrayAdapter<String>(ctxt, 
 			                		  R.layout.simple_list_item_single_choice, survey.getChoiceTexts()));
 			              	  q.setText(survey.getText());
 			              	  
@@ -163,7 +150,7 @@ public class Peoples extends ListActivity {
 		            		  {
 		            			  test[0] = survey.getAnswerText();
 		            		  }
-		            		  setListAdapter(new ArrayAdapter<String>(panda, 
+		            		  setListAdapter(new ArrayAdapter<String>(ctxt, 
 			                		  R.layout.list_item, test));
 			              	  q.setText(survey.getText());
 
@@ -195,8 +182,7 @@ public class Peoples extends ListActivity {
             finish();
         }
         else{
-            //Toast.makeText(this, "Fail", Toast.LENGTH_LONG).show();
-            //go to the previous question and start over?
+            //go to the previous question
             survey.prevQuestion();
         }
     }
