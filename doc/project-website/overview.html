@@ -26,7 +26,7 @@
 				<h2>
 					Computer Science 333<br />
 					Advanced Programming Techniques<br />
-					PEOPLES Project Ovierview Document<br />
+					PEOPLES Project Overview Document<br />
 				</h2>
 			</td>
 			<td align="right" valign="middle">
@@ -84,7 +84,7 @@
 	<li>
 		Phone call information gathering:
 		<ul>
-			<li>Call data is anonymized to protect researchers from legal trouble</li>
+			<li>Call data is anonymous to protect researchers from legal trouble</li>
 			<li>Researchers can see the exact times calls are made and the type of call</li>
 		</ul>
 	</li>
@@ -151,7 +151,7 @@ The website is written in PHP using the open-source framework CakePHP, which req
 
 <h4>Researchers - Implement Survey</h4>
 
-<p>User arrives at the index page, and enters his/her username and password. From the main screen, the "Surveys" button brings the user to a list of all surveys with the option to edit or delete an exisiting survey, or add a new one.  The survey editing page will allow the user to write questions and answers, as well as define the control flow of the survey and set when it should be displayed to subjects.</p>
+<p>User arrives at the index page, and enters his/her username and password. From the main screen, the "Surveys" button brings the user to a list of all surveys with the option to edit or delete an existing survey, or add a new one.  The survey editing page will allow the user to write questions and answers, as well as define the control flow of the survey and set when it should be displayed to subjects.</p>
 
 <h4>Researchers - Access Data</h4>
 
@@ -163,11 +163,11 @@ The website is written in PHP using the open-source framework CakePHP, which req
 
 <h4>Subjects - Complete Survey</h4>
 
-<p>Users will recieve a small, unobtrusive notification whenever a survey is ready to be taken. User must then navigate to the phone application. There, the user can take the survey via the phone's touchscreen and keyboard.  Only one question is displayed at a time since future questions can depend on past questions. If at any point, the user terminates the application to do something else (ie. answer a call, send a text message, etc) answers will be saved up to the question where the user left off. If however, the phone is turned off, or the application is disabled, user will lose all unsubmitted survey data. Warning messages will be implemented to prevent this from happening.</p>
+<p>Users will receive a small, unobtrusive notification whenever a survey is ready to be taken. User must then navigate to the phone application. There, the user can take the survey via the phone's touchscreen and keyboard.  Only one question is displayed at a time since future questions can depend on past questions. If at any point, the user terminates the application to do something else (ie. answer a call, send a text message, etc) answers will be saved up to the question where the user left off. If however, the phone is turned off, or the application is disabled, user will lose all unsubmitted survey data. Warning messages will be implemented to prevent this from happening.</p>
 
 <h4>Subjects - Disable Application</h4>
 
-<p>Users will be given complete instructions on how to disable this application.  When they recieve their phones. To disable the application, user goes to the application options menu, located at the bottom on the application pane. From there, user may choose to enable/disable various aspects of the application, including the minor notifications, the use of the GPS module, or even a global disable. If user keeps the application disabled for an extended period of time, they will recieve a notification, and if he/she refuses to comply, the researchers are notified.</p>
+<p>Users will be given complete instructions on how to disable this application.  When they receive their phones. To disable the application, user goes to the application options menu, located at the bottom on the application pane. From there, user may choose to enable/disable various aspects of the application, including the minor notifications, the use of the GPS module, or even a global disable. If user keeps the application disabled for an extended period of time, they will receive a notification, and if he/she refuses to comply, the researchers are notified.</p>
 
 <hr />
 
@@ -207,7 +207,7 @@ The website is written in PHP using the open-source framework CakePHP, which req
 		<li>name</li>
 		<li>created</li>
 		<li>starting_question</li>
-		<li>mo (fields to track when a survey should be adminstered)</li>
+		<li>mo (fields to track when a survey should be administered)</li>
 		<li>tu</li>
 		<li>we</li>
 		<li>th</li>
@@ -257,7 +257,7 @@ The website is written in PHP using the open-source framework CakePHP, which req
 		<li>question_id</li>
 		<li>subject_id</li>
 		<li>choice_id (null if free-response question)</li>
-		<li>ans_text (null if multiple-choice quiestion)</li>
+		<li>ans_text (null if multiple-choice question)</li>
 		<li>created</li>
 	</ul>
 </li>
@@ -268,7 +268,7 @@ The website is written in PHP using the open-source framework CakePHP, which req
 		<li>subject_id</li>
 		<li>created</li>
 		<li>longitude</li>
-		<li>lattitude</li>
+		<li>latitude</li>
 	</ul>
 </li>
 	
@@ -278,18 +278,8 @@ The website is written in PHP using the open-source framework CakePHP, which req
 		<li>contact_id (unique number generated in place of a phone number)</li>
 		<li>subject_id</li>
 		<li>created</li>
-		<li>type (call made, call recieved, missed call, etc.)</li>
+		<li>type (call made, call received, missed call, etc.)</li>
 		<li>duration</li>
-	</ul>
-</li>
-	
-<li>status_changes (tracks when a subject enables/disables parts of the application)
-	<ul>
-		<li>id</li>
-		<li>subject_id</li>
-		<li>created</li>
-		<li>status</li>
-		<li>feature</li>
 	</ul>
 </li>
 </ul>
@@ -298,7 +288,7 @@ The website is written in PHP using the open-source framework CakePHP, which req
 
 <h4>Phone Application</h4>
 
-<p>We will develop for Android in Java using Googles Android API version 7 targeted at Android version 2.1 (specifically, for the Samsung Intercept phones that Naomi will be using), though we hope to design our app so that it can be easily used with newer versions of Android.  The major components of the phone app are:</p>
+<p>We will develop for Android in Java using Google's Android API version 7 targeted at Android version 2.1 (specifically, for the Samsung Intercept phones that Naomi will be using), though we hope to design our app so that it can be easily used with newer versions of Android.  The major components of the phone app are:</p>
 <ol>
 	<li>Data Collection: this component will be responsible for collecting GPS and calling data and holding it until it can be sent to the server.  This is where we anticipate the most differences between different versions of Android will be, so we must be careful to encapsulate as much version-specific code as possible in this section.</li>
 	<li>Server Communication: this component is responsible for communicating information from other components to the server and communicating responses back.  We will try to encapsulate most of the MySQL specific code here so the app can easily be adapted to other database engines.</li>
@@ -341,7 +331,7 @@ Meetings with Naomi will take place on the following dates: 3/21, 4/6, 4/18, 5/2
 		By 3/20 (end of Spring Break)
 		<ul>
 			<li class="partial">All team members running the proper development software (see development section)</li>
-			<li class="done">Testing/development server is running and has Appache, PHP, and MySQL installed</li>
+			<li class="done">Testing/development server is running and has Apache, PHP, and MySQL installed</li>
 			<li class="partial">All team members have SSH access to the server</li>
 			<li class="done">Decide on whether or not to use a web-application framework and what one</li>
 			<li class="done">Server is tested in a simple way to ensure that all required technologies are working</li>
@@ -404,7 +394,7 @@ Meetings with Naomi will take place on the following dates: 3/21, 4/6, 4/18, 5/2
 	<li>
 		By 5/10 (Dean's Date)
 		<ul>
-			<li>User's guide, design document, source code, presentation sliede, and final report finished</li>
+			<li>User's guide, design document, source code, presentation slides, and final report finished</li>
 		</ul>
 	</li>
 </ul>
@@ -415,9 +405,9 @@ Meetings with Naomi will take place on the following dates: 3/21, 4/6, 4/18, 5/2
 
 <h3>Risks and Open Issues</h3>
 
-<p>None of us are experienced on open source Android application, so we need to learn Android development environment initially. Also because we don't know so much about Android and we don't work with anyone who is expert or experienced on Android applications, we could face with something very difficult or impossible to implement. For example, there is a possibility of unavailable functions on phone API. Futhermore, compatibility is another issue. Our application might be used on lots of different devices with different hardware, that is why we may need to write different drivers for different devices. And while doing this, we might face with some quirks because we don't know differences between various versions of Android.</p>
+<p>None of us are experienced on open source Android application, so we need to learn Android development environment initially. Also because we don't know so much about Android and we don't work with anyone who is expert or experienced on Android applications, we could face with something very difficult or impossible to implement. For example, there is a possibility of unavailable functions on phone API. Furthermore, compatibility is another issue. Our application might be used on lots of different devices with different hardware, that is why we may need to write different drivers for different devices. And while doing this, we might face with some quirks because we don't know differences between various versions of Android.</p>
 
-<p>Hosting is an open issue, for now we decided to use a temporary server but in the long run we need to find a permanent server. And during server transfer, we might face with some problems that we cannot predict now and it could be very complicated.  In addition to the live test server, Austin and Sema have set up localy running Apache servers to test code without comitting it to GitHub first.</p>
+<p>Hosting is an open issue, for now we decided to use a temporary server but in the long run we need to find a permanent server. And during server transfer, we might face with some problems that we cannot predict now and it could be very complicated.  In addition to the live test server, Austin and Sema have set up locally running Apache servers to test code without committing it to GitHub first.</p>
 
 <p>In addition to the phone application, we will also design a web-portal for researchers such that they can have some amount of control over the application. <del>However it is still an open issue if we will use PHP, Java or something else as server-side web language. Just two of team members know PHP and if we decide to move on with PHP then other team members would have to learn PHP.</del> We have decided to go with PHP, but we decided that the phone app would be more work so only 2 people will be working on the website: Austin and Sema (both know PHP).</p>
 

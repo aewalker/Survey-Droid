@@ -62,6 +62,13 @@ public class SurveyScheduler extends IntentService {
 	//FIXME remove when used
 	private static long EXPIRES = 3*60*1000;
 	
+	/**
+	 * 
+	 * Time format of the entries found in the surveys database 
+	 * 
+	 */
+	private static String TIME_FORMAT = "HHmm";
+	
 	public SurveyScheduler() {
 		super(SurveyScheduler.class.getName());
 	}
@@ -70,11 +77,11 @@ public class SurveyScheduler extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		
 		//upload data
-		Log.d(TAG, "Pushing all data");
+		if(D) Log.d(TAG, "Pushing all data");
 		Push.pushAll(this);
 		
 		//download data
-		Log.d(TAG, "Fetching surveys");
+		if(D) Log.d(TAG, "Fetching surveys");
         Pull.syncWithWeb(this);
 		
 		//Surveys that need scheduling come from two places:
@@ -86,12 +93,163 @@ public class SurveyScheduler extends IntentService {
 		//reschedule the first, otherwise simply keep its entry in the prev.
 		//scheduled database and only keep the new one.
 		
-		//TODO: iterate over scheduled surveys table
-		//TODO: iterate over surveys
-		//note: currently testing iterating over survey tables below
+		
+		ScheduledSurveyDBHandler ssHandler = new ScheduledSurveyDBHandler(this);
+		ssHandler.openRead();
+		
+		String today = getDayOfWeek();
+		
+		//deal w previously scheduled surveys
+		Cursor scheduledCursor = ssHandler.getScheduledSurveys(today);
+		previouslyScheduled(scheduledCursor);
+		scheduledCursor.close();
+		
+		//get surveys that were skipped or have not been scheduled
+		Cursor unscheduledCursor = ssHandler.getUnScheduledSurveys(today);
+		previouslyUnScheduled(ssHandler,
+								unscheduledCursor);		
+		unscheduledCursor.close();
+
+		ssHandler.close();
+	}
+		
+	private void previouslyUnScheduled(ScheduledSurveyDBHandler ssHandler,
+										Cursor unscheduledCursor){
+		//will loop over unscheduled surveys and schedule them
+		while(unscheduledCursor.moveToNext()){
+			
+			Integer id, survid;
+			
+			if(D) Log.d(TAG, "unscheduled surveys:");
+			
+			//will hold the day of the week and id as given by db
+			String survDay = "";
+			survDay	= unscheduledCursor.getString(0);
+			survid  = unscheduledCursor.getInt(1);
+			
+			if(D) Log.d(TAG, survDay+" "+survid);
+			
+			//validate and make sure we don't get a null day from db
+			if( survDay == null ||
+					survDay.equals("null") ||
+					survDay.length() == 0 )
+				continue;
+				
+			String[] times = survDay.split(",");
+			
+			for(String survTime : times){
+
+				//TODO: do real error handling
+				try {
+					
+					Long scheduleTime = hhmmToUnixMillis(survTime);
+					
+					//TODO: NEEDS TO BE TUNED. Currently does not schedule if
+					// original time is in past
+					if( System.currentTimeMillis() <= scheduleTime  )
+						scheduleSurvey(	survid,	scheduleTime);
+					else
+						continue;
+					
+					//write scheduled surveys to scheduled database
+					long s = ssHandler.putIntoScheduledTable(survid, scheduleTime);
+					
+					if(D) Log.d(TAG,
+							"Attempted to insert into scheduled db, status:"+s);
+
+				} catch (ParseException e) {
+						// TODO actually handle the exception
+						Log.e(TAG, "DATE PARSE ERROR", e);		
+				}
+			}			
+		}		
+	}
+	
+	private void previouslyScheduled(Cursor scheduledCursor) {
+		while(scheduledCursor.moveToNext()){
+			Log.d(TAG, "Previously scheduled surveys:");
+			
+			Integer survid;
+			long survTime;
+			
+			survid 		= scheduledCursor.getInt(1);
+			survTime	= scheduledCursor.getLong(2);
+			
+			//TODO: NEEDS TO BE TUNED. Currently does not schedule if
+			// original time is in past
+			if( System.currentTimeMillis() + EXPIRES > survTime  ){
+				scheduleSurvey(	survid,	survTime);
+			}else{	
+				//TODO mark skipped surveys
+				continue;
+			}
+
+			//no need to write scheduled surveys into db, they're there
+
+			if(D) Log.d(TAG,
+					" rescheduled survey with id: "+survid+
+					" with original time: "+survTime);
+		}
+		
+	}
+
+	private void scheduleSurvey( int survid, Long scheduledTime) {
+		
+		if(D){
+			Log.d(TAG, "Scheduling survey with id: "+ survid);
+			Log.d(TAG, "Current time: "+ System.currentTimeMillis());
+			Log.d(TAG, "Scheduling for: "+ scheduledTime);
+		}
+		
+		//will need one of these to schedule services
+        AlarmManager alarmManager =
+        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		
+		SurveyIntent surveyIntent =
+			new SurveyIntent(getApplicationContext(),
+					survid,
+					scheduledTime,
+					MainActivity.class);
+		
+		PendingIntent pendingSurvey =
+			PendingIntent.getActivity(getApplicationContext(), 0,
+					surveyIntent,
+					PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		alarmManager.set(AlarmManager.RTC_WAKEUP,
+				scheduledTime, pendingSurvey);
+
+	}
+	
+	public static Long hhmmToUnixMillis(String survTime) throws ParseException {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+		//Parse the time found in the database
+		sdf.parse(survTime);
+		
+		//get a calendar with the current day/time, and 
+		//change only the time to match what was parsed from DB
+		Calendar surveyTime = Calendar.getInstance();
+		surveyTime.set(Calendar.HOUR_OF_DAY, sdf.getCalendar().get(Calendar.HOUR_OF_DAY));
+		surveyTime.set(Calendar.MINUTE, sdf.getCalendar().get(Calendar.MINUTE));
+		surveyTime.set(Calendar.SECOND, 0);
+		surveyTime.set(Calendar.MILLISECOND, 0);
 		
 		
-		//TODO: seems useful to warrant moving into scheduled survey DB handler 
+		return surveyTime.getTimeInMillis();
+	}
+
+	/**
+	 * 
+	 * Returns the current day of the week, given by the static
+	 * constant strings defined in PeoplesDB.SurveyTable
+	 * 
+	 * @return day of the week
+	 */
+	public static String getDayOfWeek(){
+		
 		String today = null;
 		int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 		switch (day) {
@@ -113,134 +271,6 @@ public class SurveyScheduler extends IntentService {
 			break;
 		}
 		
-		//TODO: can make better by combining the handlers
-		ScheduledSurveyDBHandler ssHandler = new ScheduledSurveyDBHandler(this);
-		
-		//FIXME remove when used
-		SurveyDBHandler		   survHandler = new SurveyDBHandler(this);
-		
-		
-		//open handler
-		ssHandler.openRead();
-		
-		//get previously scheduled surveys
-		Cursor scheduledCursor = ssHandler.getScheduledSurveys(today);
-		
-		//testing
-		Integer id, survid;
-		String origTime, time;
-		String prevSurv = "";
-		
-		while(scheduledCursor.moveToNext()){
-			Log.d(TAG, "Previously scheduled surveys:");
-			
-			prevSurv = "";
-			
-			id 			= scheduledCursor.getInt(0);
-			survid 		= scheduledCursor.getInt(1);
-			origTime	= scheduledCursor.getString(2);
-			time		= scheduledCursor.getString(3);
-			
-			prevSurv = 	"id: "+id+" survID "+survid+" origTime "+origTime+
-						" time "+time;
-			
-			Log.d(TAG, prevSurv);
-		}
-		//close the cursor
-		scheduledCursor.close();
-		
-		
-		//get surveys that were skipped or have not been scheduled
-		Cursor unscheduledCursor = ssHandler.getUnScheduledSurveys(today);
-		
-		String survDay = "";
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
-		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-		Date survDate;
-		
-		Calendar calendar;
-		
-		
-		//will need one of these to schedule services
-        AlarmManager alarmManager =
-        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		
-		while(unscheduledCursor.moveToNext()){
-			Log.d(TAG, "unscheduled surveys:");
-			
-			survDay	= unscheduledCursor.getString(0);
-			survid  = unscheduledCursor.getInt(1);
-			
-			Log.d(TAG, survDay+" "+survid);
-			
-			//gotta make sure we're not retrieving null day
-			if( survDay == null ||
-					survDay.equals("null") ||
-					survDay.length() == 0 )
-				continue;
-				
-			String[] dates = survDay.split(",");
-			
-			for(String survTime : dates){
-
-				//TODO: do real error handling
-				try {
-					//make calendar for current time
-					Log.d(TAG, "-------------------");
-					
-					//Parse the time found in the database
-					sdf.parse(survTime);
-					
-					//get a calendar with the current day/time, and 
-					//change only the time to match what was parsed from DB
-					Calendar surveyTime = Calendar.getInstance();
-					surveyTime.set(Calendar.HOUR_OF_DAY, sdf.getCalendar().get(Calendar.HOUR_OF_DAY));
-					surveyTime.set(Calendar.MINUTE, sdf.getCalendar().get(Calendar.MINUTE));
-
-					//*****************************************
-					//TODO: NEEDS TO BE TUNED
-					//*****************************************
-					// Currently does not schedule if original time is in past
-					if( System.currentTimeMillis() > surveyTime.getTimeInMillis() )
-						continue;
-					
-
-					//Debug reporting
-					if(D){
-						Log.d(TAG, "Scheduling survey with id: "+ survid);
-						Log.d(TAG, "Current time: "+ System.currentTimeMillis());
-						Log.d(TAG, "Scheduling for: "+ surveyTime.getTimeInMillis());
-					}
-					
-					//survey intent has valuable intel
-					SurveyIntent surveyIntent =
-						new SurveyIntent(getApplicationContext(),
-								survid,
-								surveyTime.getTimeInMillis(),
-								MainActivity.class);
-					
-					PendingIntent pendingSurvey =
-						PendingIntent.getActivity(getApplicationContext(), 0,
-								surveyIntent,
-								PendingIntent.FLAG_UPDATE_CURRENT);
-
-					alarmManager.set(AlarmManager.RTC_WAKEUP,
-							surveyTime.getTimeInMillis(), pendingSurvey);
-
-					//TODO: write scheduled surveys to scheduled database
-
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						Log.e(TAG, "DATE PARSE ERROR", e);
-					}
-				}			
-		}
-		//close the cursor
-		unscheduledCursor.close();
-		
-		//close handler
-		ssHandler.close();
-		
+		return today;
 	}
 }

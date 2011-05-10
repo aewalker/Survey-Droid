@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=us-ascii" />
+	<meta name="author" content="Austin Walker" />
+	<title>PEOPLES Web Installation Guide</title>
+	<style>li{padding:5px 0px 5px 0px;}</style>
+</head>
+
+<body>
+<h1>PEOPLES Web Site Installation Guide</h1>
+<hr />
+
+<p><em><strong>Note:</strong> this guide assumes you have a working web server setup, a working SQL-compatible database setup, and administrative privlages on those setups.  In addition, this guide is written for primarily for Apache and MySQL.  If your setup differs, you may need to consult the appropriate documentation for your server and/or database.</em></p>
+
+<hr />
+<h3>Database Setup</h3>
+
+<ol>
+	<li>Log into your database server using an account that has administrative privileges.</li>
+	<li>Create the database you would like to use for PEOPLES (&quot;<code>CREATE DATABASE <em>dbname</em>&semi;</code>&quot;), or, if you have already created it, switch to it now (&quot;<code>USE <em>dbname</em>&semi;</code>&quot;).  You may name the database anything you like; just be sure to remember what you call it.</li>
+	<li>Once you are using the correct database, run the file setup.sql (or copy its contents into your terminal).  It can be found in web-app/SQL.  This should set up the needed tables for PEOPLES.  If errors occur, you may have to modify setup.sql to be compatible with your particular database program.</li>
+	<li>Set up a user agent that CakePHP can use to log into the database with &quot;<code>CREATE USER '<em>username</em>@<em>host</em>' IDENTIFIED BY '<em>password</em>'&semi;</code>&quot;.  Again, you may name this user anything you like and give it any password you like, as long as you remember them for later.  If your web server is on the same system as your database server, <code><em>host</em></code> should be localhost, otherwise, it should be the address of your webserver.</li>
+	<li>Set the newly created user to have the proper permissions by running &quot;<code>GRANT SELECT, UPDATE, INSERT, DELETE ON <em>dbname</em>.* TO <em>username</em>&semi;</code>&quot; where <em>dbname</em> is the name of the database created in step 2 and <em>username</em> is the new user created in step 4.</li>
+</ol>
+
+<hr />
+<h3>Web Server Setup</h3>
+<em><strong>Note:</strong> if you already have CakePHP running on your server and do not wish to install a second copy, consult the CakePHP documentation for how to install additional applications in Cake.  For a typical setup, you can simply skip the first two instructions below, and instead copy the app directory from PEOPLES into a suitable location.</em>
+
+<ol>
+	<li>PEOPLES comes packaged with a copy of CakePHP version 1.3.  Locate the cake folder within the web-app folder.  Copy the entire cake directory into a location your web server can read, but not one that is publicly visible.</li>
+	<li>While it is not required, Cake will work much better if mod_rewrite (or the equivalent module for non-Apache servers) is installed and enabled.  In order for mod_rewrite to work, you need to edit your site configuration file to have &quot;<code>AllowOverride FileInfo Options</code>&quot; (at a minimum) inside of the cake directory.  If you do not wish to use mod_rewrite, consult the Cake documentation.</li>
+	<li>Make sure the files in cake have the correct permissions.  All files will need to be readable by your servers user, usually php files and folders need to be executable as well.  The PEOPLES files should have the correct permissions by default, but you should check to be sure (you may also want to give them stricter permissions for security).</li>
+	<li>Cake uses a tmp folder to write temporary data to.  Create this folder in app.  Depending on your server configuration, you may need to create the sub-directories inside of tmp manually.  To be sure that things will work, create cache, logs, and sessions folders inside of the tmp folder.  Also, inside of the cache folder, create models, persistent, and views folders.  Your servers user needs to have full permissions inside of the tmp folder and sub folders; make sure it does.</li>
+	<li>Set up the the database access for PEOPLES.  Do this by editing the the database.php file found in the app/config directory.  You will need to fill in the username, password, host (the database server, not the web server), and driver (mysqli for MySQL and PHP 5).</li>
+	<li>For security purposes, you should create new salting strings to use when storing passwords.  Do this by editing app/config/core.php.  Change Security.salt and Security.cipherSeed to be a random string of characters and a random string of digits, as instructed in the comments.  You can also configure some of the other aspects of site security here, such as how long sessions take to time out and the session cookie name.</li>
+	<li>If you are planning on using HTTPS to connect to your site (and the PEOPLES team strongly suggest that you do if possible), you should enable SSL by setting SSL to true in app/config/config.php.  In order for this to work properly, your site will need a valid SLL certificate, as well as proper server configuration for an https site.  Consult your server software documentation for more information.</li>
+	<li>Configure your webserver so that the publicly visible root of your site is the app/webroot directory.</li>
+	<li>When PEOPLES runs for the first time, it will detect that no users are registered, and create one.  The default user will be &quot;peoplesroot&quot;, its password will be &quot;peoplespass&quot;, and it will have admin privileges.  <strong>Change this quickly!</strong>  You can either keep this account or use it to make others, but you should change the password and email ASAP.</li>
+</ol>
+
+</body>
+</html>

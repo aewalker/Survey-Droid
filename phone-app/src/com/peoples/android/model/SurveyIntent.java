@@ -1,6 +1,9 @@
 package com.peoples.android.model;
 
 import com.peoples.android.Peoples;
+import com.peoples.android.activities.MainActivity;
+
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
@@ -73,5 +76,4 @@ public class SurveyIntent extends Intent {
 		return true;
 	}
 	
-
 }

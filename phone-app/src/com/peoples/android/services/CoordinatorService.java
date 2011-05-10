@@ -32,7 +32,6 @@ public class CoordinatorService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		
-		//TODO: Implement logic that will get called regularly:
 		//i.e. check on surveys, pull any new ones, push any responses, push GPS or call log data
 		//check that everything is running smoothly, and report any errors to the server
 		
@@ -42,12 +41,10 @@ public class CoordinatorService extends IntentService {
         AlarmManager alarmManager =
         	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
         
-		//for now, let's try scheduling a survey every minute?
 		//TODO: figure out proper flag!!!
         	
-        //TODO: have alarmManager run SurveyScheduler at specified interval
-        
         //schedule SurveyScheduler to run periodically
+        //survey scheduler pushes, pulls, and schedules
         Intent surveySchedulerIntent = new Intent(this, SurveyScheduler.class);
         PendingIntent pendingScheduler = PendingIntent.getService(this, 0,
         		surveySchedulerIntent, PendingIntent.FLAG_UPDATE_CURRENT);

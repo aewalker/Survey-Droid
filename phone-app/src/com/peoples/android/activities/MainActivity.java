@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 //import android.content.Context;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,7 +37,7 @@ public class MainActivity extends Activity {
     
     
     //time to vibrate to warn user, in milliseconds
-    private static final long VIBRATION_TIME = 1*1000;
+    private static final long VIBRATION_TIME = 500;
     
     //Time to delay the survey for if user chooses to
     private static final long DELAY = 120*1000;
@@ -58,8 +59,8 @@ public class MainActivity extends Activity {
         
         
         //TADA!
-//        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//        vibrator.vibrate(1*1000);
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(VIBRATION_TIME);
         
         setContentView(R.layout.remind);
 
