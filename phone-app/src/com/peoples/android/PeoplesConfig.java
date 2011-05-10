@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
  * @author Tony
  * @author Henry Liu
  */
-public class Settings {
+public class PeoplesConfig {
     
     Context ctxt;
     
@@ -17,7 +17,7 @@ public class Settings {
      * 
      * @param ctx - the application context 
      */
-    public Settings(Context ctxt) {
+    public PeoplesConfig(Context ctxt) {
         this.ctxt = ctxt;
     }
 
