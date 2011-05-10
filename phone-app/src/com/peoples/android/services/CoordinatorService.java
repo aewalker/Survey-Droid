@@ -6,7 +6,6 @@ import com.peoples.android.database.PeoplesDBHandler;
 import com.peoples.android.server.Pull;
 import com.peoples.android.server.Push;
 
-
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -21,142 +20,144 @@ import android.os.SystemClock;
 import android.util.Log;
 
 public class CoordinatorService extends IntentService {
-	
-	private static final String TAG = "CoordinatorService";
+
+    private static final String TAG = "CoordinatorService";
     private static final boolean D = true;
-    
-    
+
     /**
      * Run scheduler this often
      */
-    private static long SCHEDULER_PERIOD = 30*1000;
-    
-    
-    private static long CALL_LOG_PERIOD = 60*60*1000;
-    
-    private static long GPS_PERIOD		= 60*1000;
-    
-    private static LocationListener LOCATION_LISTENER;
-    
-	public CoordinatorService() {
-		super(CoordinatorService.class.getName());
-		LOCATION_LISTENER = new GPSListener();
-	}
+    private static long SCHEDULER_PERIOD = 30 * 1000;
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		
-		//i.e. check on surveys, pull any new ones, push any responses, push GPS or call log data
-		//check that everything is running smoothly, and report any errors to the server
-		
-		if(D) Log.e(TAG, "onHandleIntent");
-		
+    private static long CALL_LOG_PERIOD = 60 * 60 * 1000;
+
+    private static long GPS_PERIOD = 60 * 1000;
+
+    private static LocationListener LOCATION_LISTENER;
+
+    public CoordinatorService() {
+        super(CoordinatorService.class.getName());
+        LOCATION_LISTENER = new GPSListener();
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+
+        // i.e. check on surveys, pull any new ones, push any responses, push
+        // GPS or call log data
+        // check that everything is running smoothly, and report any errors to
+        // the server
+
+        if (D)
+            Log.e(TAG, "onHandleIntent");
+
         PeoplesConfig config = new PeoplesConfig(getApplicationContext());
-        
-        //begin GPS collection
-        if(config.isLocationEnabled())
-        	launchGPS();
-        else
-        	killGPS();
-        
-        //begin call log collection
-        if(config.isLocationEnabled())
-        	launchCallLog();
-        else
-        	killCallLog();
-        
-        
-        AlarmManager alarmManager =
-        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        
-        //schedule SurveyScheduler to run periodically
-        //survey scheduler pushes, pulls, and schedules
+
+        // begin GPS collection
+        // if(config.isLocationEnabled())
+        launchGPS();
+        // else
+        // killGPS();
+
+        // begin call log collection
+        // if(config.isCallLogEnabled())
+        launchCallLog();
+        // else
+        // killCallLog();
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        // schedule SurveyScheduler to run periodically
+        // survey scheduler pushes, pulls, and schedules
         Intent surveySchedulerIntent = new Intent(this, SurveyScheduler.class);
         PendingIntent pendingScheduler = PendingIntent.getService(this, 0,
-        		surveySchedulerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setRepeating(
-        					AlarmManager.ELAPSED_REALTIME_WAKEUP,
-        					SystemClock.elapsedRealtime(),
-        					SCHEDULER_PERIOD, pendingScheduler);
-	}
-	
-	
+                surveySchedulerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime(), SCHEDULER_PERIOD,
+                pendingScheduler);
+    }
 
-	
+    private void launchCallLog() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-	private void launchCallLog() {
-		AlarmManager alarmManager =
-        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        
-        //schedule call logger to run periodically
+        // schedule call logger to run periodically
         Intent callLogIntent = new Intent(this, CallLogService.class);
         PendingIntent pendingLogIntent = PendingIntent.getService(this, 0,
-        		callLogIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setRepeating(
-        					AlarmManager.ELAPSED_REALTIME_WAKEUP,
-        					SystemClock.elapsedRealtime(),
-        					CALL_LOG_PERIOD, pendingLogIntent);
-	}
-	
-	private void killCallLog() {
-		// TODO Auto-generated method stub
-		
-	}
+                callLogIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime(), CALL_LOG_PERIOD,
+                pendingLogIntent);
+    }
 
-	private void launchGPS() {
-		
-		if(D) Log.d(TAG, "+++launchGPS+++");
-		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		String provider = locManager.getBestProvider(new Criteria(), true);
-		
-		if(provider == null){
-			
-			locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_PERIOD, 0, LOCATION_LISTENER);
-			locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_PERIOD, 0, LOCATION_LISTENER);
-			
-		} else{
-			locManager.requestLocationUpdates(provider, GPS_PERIOD, 0, LOCATION_LISTENER);
-		}
-		
-		
-	}
-	
-	private void killGPS() {
-		
-		if(D) Log.d(TAG, "+++killGPS+++");
-		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locManager.removeUpdates(LOCATION_LISTENER);
-	}
-	
-	private class GPSListener implements LocationListener{
+    // This is where we might want to move the logic for disabling call logging
+    private void killCallLog() {
+        // TODO Auto-generated method stub
 
-		@Override
-		public void onLocationChanged(Location location) {
-			
-			PeoplesDBHandler locHandler = new PeoplesDBHandler(getApplicationContext());
-			locHandler.openWrite();
-			locHandler.insertLocation(location);
-			locHandler.close();
-			
-		}
+    }
 
-		@Override
-		public void onProviderDisabled(String provider) {
-			Log.d(TAG, "Provider disabled: "+provider);
-		}
+    private void launchGPS() {
 
-		@Override
-		public void onProviderEnabled(String provider) {
-			Log.d(TAG, "Provider enabled: "+provider);
-		}
+        if (D)
+            Log.d(TAG, "+++launchGPS+++");
+        LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        String provider = locManager.getBestProvider(new Criteria(), true);
 
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			Log.d(TAG, "onStatusChanged. Provider: "+provider+" status" + status);
-		}
-		
-	}
+        if (provider == null) {
 
+            locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    GPS_PERIOD, 0, LOCATION_LISTENER);
+            locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    GPS_PERIOD, 0, LOCATION_LISTENER);
 
+        } else {
+            locManager.requestLocationUpdates(provider, GPS_PERIOD, 0,
+                    LOCATION_LISTENER);
+        }
+
+    }
+
+    private void killGPS() {
+
+        if (D)
+            Log.d(TAG, "+++killGPS+++");
+        LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locManager.removeUpdates(LOCATION_LISTENER);
+    }
+
+    private class GPSListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            // Before collecting location, check to ensure that location is
+            // enabled in the PEOPLES control panel
+            PeoplesConfig config = new PeoplesConfig(getApplicationContext());
+            if (!config.isLocationEnabled()) {
+                return;
+            }
+            
+            PeoplesDBHandler locHandler = new PeoplesDBHandler(
+                    getApplicationContext());
+            locHandler.openWrite();
+            locHandler.insertLocation(location);
+            locHandler.close();
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            Log.d(TAG, "Provider disabled: " + provider);
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.d(TAG, "Provider enabled: " + provider);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.d(TAG, "onStatusChanged. Provider: " + provider + " status"
+                    + status);
+        }
+
+    }
 
 }

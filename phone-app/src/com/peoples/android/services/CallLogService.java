@@ -2,6 +2,7 @@ package com.peoples.android.services;
 
 import java.util.ArrayList;
 
+import com.peoples.android.PeoplesConfig;
 import com.peoples.android.database.PeoplesDB;
 
 import android.app.IntentService;
@@ -18,6 +19,13 @@ public class CallLogService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        // This code checks to see whether call logging is enabled in the PEOPLES
+        // control panel. Ideally this should be checked in CoordinatorService
+        PeoplesConfig config = new PeoplesConfig(getApplicationContext());
+        if(!config.isCallLogEnabled()) {
+            return;
+        }
+        
         PeoplesDB pdb = new PeoplesDB(this);
         SQLiteDatabase db = pdb.getWritableDatabase();
 
