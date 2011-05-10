@@ -45,11 +45,11 @@ public class CoordinatorService extends IntentService {
 		
         PeoplesConfig config = new PeoplesConfig(getApplicationContext());
         
-        //TODO: begin GPS collection
+        //begin GPS collection
         if(config.isLocationEnabled())
         	launchGPS();
         
-        //TODO: begin call log collection
+        //begin call log collection
         if(config.isLocationEnabled())
         	launchCallLog();
         

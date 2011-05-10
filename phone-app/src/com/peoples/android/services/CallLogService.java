@@ -5,6 +5,7 @@ import com.peoples.android.database.PeoplesDB;
 import android.app.IntentService;
 import android.content.Intent;
 //import android.database.Cursor;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class CallLogService extends IntentService {
@@ -16,10 +17,12 @@ public class CallLogService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         PeoplesDB pdb = new PeoplesDB(this);
+        
         //FIXME remove when used
-        @SuppressWarnings("unused")
 		SQLiteDatabase db = pdb.getWritableDatabase();
-        /*
+        
+        
+        
         Cursor d = this.getContentResolver().query(android.provider.CallLog.Calls.CONTENT_URI,
                 null, null, null,
                 android.provider.CallLog.Calls.DATE + " DESC");
@@ -35,7 +38,7 @@ public class CallLogService extends IntentService {
                 // do something
             }
         }
-        */
+        
     }
     
 }
