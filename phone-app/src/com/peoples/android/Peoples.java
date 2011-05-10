@@ -16,12 +16,13 @@ import android.widget.Toast;
 import com.peoples.android.activities.ConfirmSubmissionSurvey;
 import com.peoples.android.database.ScheduledSurveyDBHandler;
 import com.peoples.android.model.Survey;
+import com.peoples.android.model.SurveyIntent;
 
 /**
  * Used to launch actual surveys
  * @author Vlad
  * @author Henry
- */
+ */	
 public class Peoples extends ListActivity {	
     
 	// Debugging
@@ -125,7 +126,23 @@ public class Peoples extends ListActivity {
 
 	                  if (survey.done()) //if there are no more questions....
 	                  {
-	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
+	                	  //Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
+	                	  Intent myIntent = getIntent();
+	                	  myIntent.setClass(view.getContext(), ConfirmSubmissionSurvey.class);
+	                	  
+	                	  Intent executedIntent = myIntent;
+	                	  
+	                	  Integer survid 	= executedIntent.getIntExtra(
+	                			  SurveyIntent.SURVEY_ID,
+	                			  -1);
+
+	                	  Long time		= executedIntent.getLongExtra(
+	                			  SurveyIntent.SURVEY_TIME,
+	                			  -1);
+
+	                	  Log.d(TAG, "survid: "+survid);
+	                	  Log.d(TAG, "time: "+time);
+	                	  
 	                	  startActivityForResult(myIntent, requestCode);
 	                  }
 	                  else //there are still more questions

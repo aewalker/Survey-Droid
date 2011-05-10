@@ -98,6 +98,7 @@ public class Push extends WebClient {
                 }
             }
             
+            sdb.close();
             pdb.close();
             return success;
         } catch (Exception e) {

@@ -146,15 +146,20 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 	public static int removeIntent(Context context, Intent executedIntent){
 		
 		Integer survid 	= executedIntent.getIntExtra(
-							PeoplesDB.ScheduledSurveys.SURVEY_ID,
+							SurveyIntent.SURVEY_ID,
 							-1);
 		
 		Long time		= executedIntent.getLongExtra(
-							PeoplesDB.ScheduledSurveys.ORIGINAL_TIME,
+							SurveyIntent.SURVEY_TIME,
 							-1);
 		
-		if( survid == -1 || time == -1)
+		Log.d(TAG, "survid: "+survid);
+		Log.d(TAG, "time: "+time);
+		
+		if( survid == -1 || time == -1){
+			Log.d(TAG, "Negative, there is no -1 survey id");
 			return -1;
+		}
 		
 		ScheduledSurveyDBHandler ssHandler =
 			new ScheduledSurveyDBHandler(context);
@@ -163,12 +168,24 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 		
 		String table = PeoplesDB.SS_TABLE_NAME;
 		
-		String whereClause = PeoplesDB.ScheduledSurveys.SURVEY_ID + "=? AND " +
-							 PeoplesDB.ScheduledSurveys.ORIGINAL_TIME +"=?";
+		String whereClause = table+"."+PeoplesDB.ScheduledSurveys.SURVEY_ID + " = ? AND " +
+							 table+"."+PeoplesDB.ScheduledSurveys.ORIGINAL_TIME +" = ?";
 			
 		String[] whereArgs = {Integer.toString(survid),Long.toString(time)};
 		
-		return ssHandler.db.delete(table, whereClause, whereArgs);	
+		int returnInt = ssHandler.db.delete(table, whereClause, whereArgs);
+		
+		ssHandler.close();
+		
+		return 	returnInt;
+	}
+	
+	public static void printScheduledTable(){
+		
+		
+		
+		
+		
 	}
 	
 }
