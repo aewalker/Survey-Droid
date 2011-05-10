@@ -1,11 +1,6 @@
 package com.peoples.android.activities;
 
-//import java.util.List;
-
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-//import android.content.Context;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -17,10 +12,7 @@ import android.widget.Toast;
 
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
-//import com.peoples.android.model.Survey;
-//import com.peoples.android.processTest.LocationTestActivity;
-//import com.peoples.android.server.Pull;
-//import com.peoples.android.services.BootService;
+
 import com.peoples.android.model.Survey;
 import com.peoples.android.model.SurveyIntent;
 
@@ -29,13 +21,9 @@ import com.peoples.android.model.SurveyIntent;
 public class MainActivity extends Activity {
 
 	// Debugging
-	// TEST
-	// TEST
     private static final String TAG = "MainActivity";
     private static final boolean D = true;
-    private Survey survey;
-    
-    
+
     //time to vibrate to warn user, in milliseconds
     private static final long VIBRATION_TIME = 500;
     
@@ -54,7 +42,6 @@ public class MainActivity extends Activity {
             Log.d(TAG, "Deploying survey_id: "+extras.getInt("SURVEY_ID", -1));
             Log.d(TAG, "Original time: "+ extras.getLong("SURVEY_TIME"));
             Log.d(TAG, "Current  time: "+ System.currentTimeMillis());
-            
         }
         
         

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
-    android:layout_width="wrap_content" android:layout_height="wrap_content" 
-    android:orientation="vertical" android:background="@drawable/around_world"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:orientation="vertical" 
+    android:background="@drawable/around_world"
     android:gravity="center_vertical|center_horizontal">
-   	    <TextView 
-	    xmlns:android="http://schemas.android.com/apk/res/android"
+   	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:textSize="32sp"
 	    android:id="@+id/confirm"
 	    android:layout_height="wrap_content"
@@ -14,26 +14,23 @@
 	    android:textStyle="bold"
 		android:typeface="serif"
 		android:gravity="center_vertical|center_horizontal"></TextView>
-
-<LinearLayout android:gravity="center_vertical|center_horizontal" android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content">
-    <Button 
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/back" 
-	android:layout_height="wrap_content"
-	android:text="Go Back"
-	android:layout_weight="1" android:layout_width="0dip"
-	android:background="@drawable/custom_button"
-	android:layout_margin="10dip">
-	</Button>
-	<Button
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_weight="1" android:layout_width="0dip"
-	android:background="@drawable/custom_button"
-	android:layout_margin="10dip"
-	android:layout_height="wrap_content"
-	android:id="@+id/finish"
-	android:text="Submit Survey" />
-</LinearLayout>
-
-
+	<LinearLayout android:gravity="center_vertical|center_horizontal" 
+		android:orientation="horizontal" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content">
+	    <Button xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/back" 
+			android:layout_height="wrap_content"
+			android:text="Go Back"
+			android:layout_weight="1" android:layout_width="0dip"
+			android:background="@drawable/custom_button"
+			android:layout_margin="10dip"/>
+		<Button xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_weight="1" android:layout_width="0dip"
+			android:background="@drawable/custom_button"
+			android:layout_margin="10dip"
+			android:layout_height="wrap_content"
+			android:id="@+id/finish"
+			android:text="Submit Survey" />
+	</LinearLayout>
 </LinearLayout>

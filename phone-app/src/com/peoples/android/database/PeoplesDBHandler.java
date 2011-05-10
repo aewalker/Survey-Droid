@@ -38,7 +38,7 @@ public class PeoplesDBHandler {
 	public void openRead(){
 		if(D) Log.d(TAG, "in openRead()");
 		pdb = new PeoplesDB(contx);
-		db  = pdb.getReadableDatabase();	
+		db  = pdb.getReadableDatabase();
 	}
 	
 	public long insertLocation(Location loc){
@@ -119,6 +119,7 @@ public class PeoplesDBHandler {
 	 */
 	public void close() {
 		if(D) Log.d(TAG, "in close()");
+		db.close();
 		pdb.close();
 	}
 	
