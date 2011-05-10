@@ -79,7 +79,7 @@
 <p>As described in our Elevator Speech, PEOPLES is a tool for social science research. Primarily the application will provide the functionality needed by Naomi F. Sugie's project. Briefly, those features are:</p>
 <ul>
 	<li>
-		GPS and cell tower-based location tracking
+		GPS location tracking
 	</li>
 	<li>
 		Phone call information gathering:
@@ -98,13 +98,14 @@
 	</li>
 </ul>
 
-<p>Additionally, we will provide a web-based portal to allow researchers to interact with the phone applications. The main features of the site will allow researchers to:
+<p>Additionally, we will provide a web-based portal to allow researchers to interact with the phone applications. The main features of the site will allow researchers to:</p>
 <ul>
 	<li>Design and modify surveys</li>
-	<li>Monitor subject participation</li>
+	<li>Enter new subjects and their phones</li>
 	<li>Download collected data</li>
+	<li>(admins only) oversee web users</li>
 </ul>
-The website is written in PHP using the open-source framework CakePHP, which requires no special server modules beyond those that come with Apache. This ensures that just about any server can be set up with a copy of the site without any new third-party software.</p>
+<p>The website is written in PHP using the open-source framework CakePHP, which requires no special server modules beyond those that come with Apache. This ensures that just about any server can be set up with a copy of the site without any new third-party software.</p>
 
 <p>Though PEOPLES is being created for a particular project, we intend to for it to outlive the current study and allow other researchers to use the application in a different context.</p>
 
@@ -135,11 +136,9 @@ The website is written in PHP using the open-source framework CakePHP, which req
 
 <p>There are two user groups of our application, the researchers and the study subjects. For each of the user groups there is a primary interface with which they will interact.</p>
 
-<p>Through the web portal, researchers will be able to interact with their research project. In preparation for the study, researchers will be able to set various parameters on the data that will be gathered from the study participants. These parameters will include times of location tracking, phone call information to be collected, and the design and modification of surveys pushed to participants. As the study is being conducted the portal will allow researchers to monitor subject participation, to access participant data, and to export the information so that it can be processed further. </p>
+<p>Through the web portal, researchers will be able to interact with their research project.  They will be able to design and modify surveys pushed to participants. As the study is being conducted the portal will allow researchers to access participant data and to export the information so that it can be processed further. </p>
 
-<p>The Android phone application will be the primary means through which study participants will be followed throughout the study. The application will enable location tracking at specific hours, will track different outgoing and incoming phone numbers, and will present surveys to be completed by the participant. The application will allow the users to turn on/off features they may not want at any given time. Surveys need to be interactive, and may change based on the responses from previous surveys or the current survey. The UI needs to be clear, intuitive, and out of the way. The application will need to monitor the battery life of the phone and be active or inactive depending on the level.</p>
-
-<p>Lastly, there may be some overlap between the Web Interface and the phone interface. Researchers may collect some data from the subjects that may affect data collection. For example, participants may be asked for names of family members that will later be displayed on the surveys. Part of the web portal should ease the difficulty of gathering information from 100 subject participants and making custom surveys for each.</p>
+<p>The Android phone application will be the primary means through which study participants will be followed throughout the study. The application will enable location tracking, will track different outgoing and incoming phone numbers, and will present surveys to be completed by the participant. The application will allow the users to turn on/off features they may not want at any given time. Surveys need to be interactive, and may change based on the responses from previous surveys or the current survey. The UI needs to be clear, intuitive, and out of the way.</p>
 
 <p>In short, our application will have two main components, a web based portal for researchers, and the Android application for study participants. The overlap, as well as the specific functions of each component will allow researchers to more easily collect data that was previously difficult to gather.</p>
 
@@ -157,23 +156,21 @@ The website is written in PHP using the open-source framework CakePHP, which req
 
 <p>The application automatically collects data from all subjects including their locations, phone calls, and survey responses.  This information is cached on the phone until it is sent to the server.  At that point, web users can view data related to a specific subject and export data as comma separated values.</p>
 
-<h4>Researchers - Notifications</h4>
-
-<p>If subjects keep certain aspects of the applications disabled for an extended period of time, then users will receive a notification email consisting of the subject's number, which aspect(s) has been disabled, and for long how it(they) has been disabled. The consequences that follow are left for the users to decide.</p>
-
 <h4>Subjects - Complete Survey</h4>
 
-<p>Users will receive a small, unobtrusive notification whenever a survey is ready to be taken. User must then navigate to the phone application. There, the user can take the survey via the phone's touchscreen and keyboard.  Only one question is displayed at a time since future questions can depend on past questions. If at any point, the user terminates the application to do something else (ie. answer a call, send a text message, etc) answers will be saved up to the question where the user left off. If however, the phone is turned off, or the application is disabled, user will lose all unsubmitted survey data. Warning messages will be implemented to prevent this from happening.</p>
+<p>Users will receive a small notification whenever a survey is ready to be taken. User must then navigate to the phone application. There, the user can take the survey via the phone's touchscreen and keyboard.  Only one question is displayed at a time since future questions can depend on past questions.</p>
 
 <h4>Subjects - Disable Application</h4>
 
-<p>Users will be given complete instructions on how to disable this application.  When they receive their phones. To disable the application, user goes to the application options menu, located at the bottom on the application pane. From there, user may choose to enable/disable various aspects of the application, including the minor notifications, the use of the GPS module, or even a global disable. If user keeps the application disabled for an extended period of time, they will receive a notification, and if he/she refuses to comply, the researchers are notified.</p>
+<p>Users will be given complete instructions on how to disable this application when they receive their phones. To disable parts of the application, the user goes to the application options menu, located at the bottom on the application pane. From there, user may choose to enable/disable various aspects of the application.</p>
 
 <hr />
 
 <!--Design -->
 
 <h3>Design</h3>
+
+<p>For detailed design information, see the <a href="http://www.eigendiego.com/doc/project-website/design.html">design document</a>.</p>
 
 <h4>Database</h4>
 
@@ -288,17 +285,12 @@ The website is written in PHP using the open-source framework CakePHP, which req
 
 <h4>Phone Application</h4>
 
-<p>We will develop for Android in Java using Google's Android API version 7 targeted at Android version 2.1 (specifically, for the Samsung Intercept phones that Naomi will be using), though we hope to design our app so that it can be easily used with newer versions of Android.  The major components of the phone app are:</p>
+<p>We will develop for Android in Java using Google's Android API version 7 targeted at Android version 2.1 (specifically, for the Samsung Intercept phones that Naomi will be using), though we hope to design our app so that it can be easily used with newer versions of Android.  At a high level, the major parts of the phone app are:</p>
 <ol>
 	<li>Data Collection: this component will be responsible for collecting GPS and calling data and holding it until it can be sent to the server.  This is where we anticipate the most differences between different versions of Android will be, so we must be careful to encapsulate as much version-specific code as possible in this section.</li>
 	<li>Server Communication: this component is responsible for communicating information from other components to the server and communicating responses back.  We will try to encapsulate most of the MySQL specific code here so the app can easily be adapted to other database engines.</li>
 	<li>User Interface: this component is responsible for allowing the user to respond to surveys and power the app or parts of it on and off.</li>
 </ol>
-
-<p>
-	Here are the latest updates on the Phone application design:
-	<a href="https://docs.google.com/document/pub?id=12AqD6qyfr94OVOdn3HBiAqdpq4WLnYdaQ_aUxXznK1U">Google doc notes</a>
-</p>
 
 <h4>Web Application</h4>
 
@@ -322,9 +314,6 @@ The website is written in PHP using the open-source framework CakePHP, which req
 
 <h3>Milestones</h3>
 
-Meetings with Naomi will take place on the following dates: 3/21, 4/6, 4/18, 5/2, 5/9
-
-<h4>Milestones</h4>
 <div class="done" style="display:inline">Completed </div><div class="partial" style="display:inline">Partial/Delayed </div><div class="failed" style="display:inline">Failed</div>
 <ul>
 	<li>
@@ -375,26 +364,31 @@ Meetings with Naomi will take place on the following dates: 3/21, 4/6, 4/18, 5/2
 		By 4/26 (Beta version)
 		<ul>
 			<li class="done">CSS/graphics complete on web app</li>
-			<li>
+			<li class="partial">
 				Bugs fixed and user interfaces polished:
-				<ul><li class="done">web interface</li><li>phone interface</li></ul>
+				<ul><li class="done">web interface</li><li class="partial">phone interface</li></ul>
 			</li>
-			<li>Phone app can be turned on/off</li>
-			<li>GPS and call data are reported to web server</li>
+			<li class="failed">Phone app can be turned on/off (moved to final version)</li>
+			<li class="partial">GPS and call data are reported to web server</li>
 			<li class="done">Phone builds survey objects from database, administers them, and saves results.</li>
-			<li>Survey results on phone are uploaded to server.</li>
+			<li class="done">Survey results on phone are uploaded to server.</li>
 		</ul>
 	</li>
 	<li>
 		By 5/3 (Presentation and final version)
 		<ul>
-			<li>Extensive testing completed on:<ul><li>phone</li><li>website</li></ul></li>
+			<li class="failed">GPS and call log complete (moved to dean's date)</li>
+			<li class="failed">Surveys can be scheduled in the background (moved to dean's date)</li>
+			<li class="done">Phone app can be turned on and off</li>
+			<li class="partial">Extensive testing completed on:<ul><li class="partial">phone</li><li class="done">website</li></ul></li>
 		</ul>
 	</li>
 	<li>
 		By 5/10 (Dean's Date)
 		<ul>
-			<li>User's guide, design document, source code, presentation slides, and final report finished</li>
+			<li>GPS and call log complete</li>
+			<li class="done">Surveys can be scheduled</li>
+			<li>Documentation finished</li>
 		</ul>
 	</li>
 </ul>
