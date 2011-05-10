@@ -1,6 +1,8 @@
 package com.peoples.android.activities;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -29,6 +31,9 @@ public class MainActivity extends Activity {
 
     //time to vibrate to warn user, in milliseconds
     private static final long VIBRATION_TIME = 500;
+    
+    //Delay in milliseconds of your life passing
+    private static final long DELAY = 20*1000;
 
     /** Called when the activity is first created. */
     @Override
@@ -74,7 +79,7 @@ public class MainActivity extends Activity {
                 //startActivityForResult(myIntent, 0);
 
             	//will need one of these to schedule services
-                /*AlarmManager alarmManager =
+                AlarmManager alarmManager =
                 	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 
 				PendingIntent pendingSurvey =
@@ -84,7 +89,7 @@ public class MainActivity extends Activity {
 
 				alarmManager.set(AlarmManager.RTC_WAKEUP,
 									System.currentTimeMillis()+DELAY,
-									pendingSurvey);*/
+									pendingSurvey);
             	
             	Toast.makeText(getApplicationContext(), "The survey has been postponed for one hour",
                         Toast.LENGTH_SHORT).show();
