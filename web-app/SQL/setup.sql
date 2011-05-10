@@ -1,7 +1,5 @@
 /* SQL to set up the Databse */
 
-USE socioapp;
-
 CREATE TABLE users (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	username VARCHAR(20) NOT NULL UNIQUE,

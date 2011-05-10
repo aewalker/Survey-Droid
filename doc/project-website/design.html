@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=us-ascii" />
+	<meta name="author" content="Austin Walker" />
+	<title>Design Document</title>
+</head>
+
+<body>
+<h1>PEOPLES Design Document</h1>
+<hr />
+<h3>Overview</h3>
+<p>The PEOPLES system consists of an Android phone application and a supporting website with a database.</p>
+
+<hr />
+<h3>Database</h3>
+<p>The website uses a MySQL database.  It contains the following tables:</p>
+<ul>
+<li>users (the web users - researchers)
+	<ul>
+		<li>username</li>
+		<li>email</li>
+		<li>password</li>
+		<li>first_name</li>
+		<li>last_name</li>
+		<li>admin (typically the project leader will be an admin)</li>
+	</ul>
+</li>
+	
+<li>subjects (the phone users)
+	<ul>
+		<li>phone_num</li>
+		<li>first_name</li>
+		<li>last_name</li>
+	</ul>
+</li>
+	
+<li>surveys
+	<ul>
+		<li>name</li>
+		<li>created</li>
+		<li>starting_question</li>
+		<li>mo, tu, we, th, fr, sa, su (fields to track when a survey should be administered)</li>
+	</ul>
+</li>
+	
+<li>questions (survey questions)
+	<ul>
+		<li>survey_id (survey that this question is part of)</li>
+		<li>text</li>
+	</ul>
+</li>
+	
+<li>branches (branches dictate control flow in a survey)
+	<ul>
+		<li>previous_question</li>
+		<li>next_question</li>
+	</ul>
+</li>
+	
+<li>conditions (conditions belong to branches; in order to follow a branch all its conditions must be true)
+	<ul>
+		<li>branch_id</li>
+		<li>question_id (the question to look at)</li>
+		<li>choice_id (the answer to the above question that must have been given for this condition to be true)</li>
+		<li>type (determine whether to look at questions in this survey or in all past surveys)</li>
+	</ul>
+</li>
+	
+<li>choices (choices are the options a subject can pick from when answering a question; a question with no choices is free-response)
+	<ul>
+		<li>choice_text</li>
+		<li>question_id</li>
+	</ul>
+</li>
+	
+<li>answers (keeps track of subjects' survey answers)
+	<ul>
+		<li>question_id</li>
+		<li>subject_id</li>
+		<li>choice_id (null if free-response question)</li>
+		<li>ans_text (null if multiple-choice question)</li>
+		<li>created</li>
+	</ul>
+</li>
+	
+<li>locations (GPS location data)
+	<ul>
+		<li>subject_id</li>
+		<li>created</li>
+		<li>longitude</li>
+		<li>latitude</li>
+	</ul>
+</li>
+	
+<li>calls (call log information)
+	<ul>
+		<li>contact_id (unique number generated in place of a phone number)</li>
+		<li>subject_id</li>
+		<li>created</li>
+		<li>type (call made, call received, missed call, etc.)</li>
+		<li>duration</li>
+	</ul>
+</li>
+</ul>
+<p>In addition to the listed fields above, each table also has an id as its primary key (CakePHP requires this for all data).</p>
+
+<p>In addition, there is a status_changes table.  This was made to track when parts of the phone application were disabled by the phone users.  However, due to time constraints, this feature was not fully implemented on the phone.  The table has been left in the database for future development.</p>
+
+<p>To make creating of this database easier, a setup file was created.  See web-app/SQL/setup.sql.</p>
+
+<hr />
+<h3>Website Design</h3>
+<p>The PEOPLES website is written in PHP using the open source CakePHP (or just Cake for short) framework (version 1.3). It was designed and tested using PHP version 5, but should be compatible with PHP 4 with only minor modifications. In order to explain the system well, a quick overview of Cake is necessary.</p>
+
+<h4>CakePHP</h4>
+<p>A CakePHP site consists of 7 major types of files: models, view, and controllers (as with most MVC systems), as well as layouts, helpers, components, and behaviors:</p>
+<ul>
+	<li>A <strong>model</strong> corresponds to some data source, typically a database table.</li>
+	<li><strong>Controllers</strong> manage the internal logic associated with a particular model or models.</li>
+	<li>Each controller has <strong>views</strong>, which render the output into some form (typically HTML) that the user sees.</li>
+	<li><strong>Layouts</strong> are templates into which views are rendered.  A typical layout contains boilerplate HTML things (DOCTYPE, etc.) as well as any code that should be present in many different pages.</li>
+	<li>Logic that is to be used in many views is put into a <strong>helper</strong>.  Helpers make things such a formating a data or rendering HTML elements easier.</li>
+	<li><strong>Components</strong> work like helpers, but for controllers.  Things such as user authentication that need to be done on many pages are typically put into components so they can be shared between many controllers.  <em>Note: unfortunately, the name &quot;component&quot; can be confusing.  In this guide, the term component refers only to a CakePHP component.  To refer to what might be called a component in a typical system, the term module is used.</em></li>
+	<li><strong>Behaviors</strong> act like components, but are used with models.</li>
+</ul>
+<p>Cake is largely object oriented, so each of these types of files (except for views and layouts) define a class.  Cake maps request URLs onto functions within controllers.  Each of these functions then calls upon a view to show the result.  For example, &lt;site_root&gt;/users/login/johnd would call the login function within the users controller and pass &quot;johnd&quot; as the argument.  The result would be rendered into the view found in views/users/login.ctp (Cake uses the .ctp extension for PHP files that do not declare a class).</p>
+<p>Much of the power of Cake comes from its ability to automatically link source files together.  It does this by requiring that created files to be named according to convention and placed in the correct places.  There is typically a cake folder on the web server, within it is an app folder containing the files specific to the application.  Within the app folder are several folders: controllers (containing controllers and components), models (containing models and behaviors), webroot (containing things like CSS and JavaScript that must be visible to users), and views.  Within view are layouts, helpers, pages (which holds static pages, such as a welcome page), as well as a folders for each of the controllers that hold the views for that controller.</p>
+<p>For more information about Cake, see the Cake user manual: the <a href="http://book.cakephp.org/">Cookbook</a>.</p>
+
+<h4>The PEOPLES Site</h4>
+<p>The PEOPLES site consists of 5 main modules: user control, subject control, survey control, data view/export, and communications.  Each of these modules works independently, so there are no real interfaces between them other than the implicit interface of the database layout.</p>
+<ul>
+	<li><p><strong>User Control</strong> - responsible for logging users in and out, as well as allowing admins to add, remove, or manage users.  Login and logout are implemented using Cake's built-in Authentication component, which automatically salts and hashes all passwords.  By loading Authentication component in this module, we also require that users be logged in to see any pages within the module other than the login page.  In addition to login/logout, admin-level functions to add, remove, or edit the details of other users are present.  The admin field of the users table holds an int (1 or 0) to mark which users are admins.</p></li>
+	<li><p><strong>Subject Control</strong> - tracks phone users (aka subjects).  The main functionality of this module is the ability to add, remove, and edit the details of phone users.  The most important thing is the ability to input a phone's deviceID (it's serial number).  Only phones whose id has been registered on the website will be able to send data to the website.  The main subjects page (create by the index() function) shows a list of all subjects in the database as well a form to allow search.  As with the users module, this module is secured by the Authentication component.</li>
+	<li><p><strong>Survey Control</strong> - controls the creation of surveys.  This is by far the most complicated part of the site.  The PEOPLES survey system if both powerful and flexible; it allows users to create surveys that check past questions to determine what the next question will be.  There are 5 levels to each survey that correspond to the 5 survey-related tables in the database:
+	<ul>
+		<li>Survey level: contains the name of the survey, when it should be administered, and the first question</li>
+		<li>Question level: each survey is made up of questions</li>
+		<li>Choice level: each question has 0 or more choices from which a user can pick when answering the question (0 choices means the question is free response)</li>
+		<li>Branch level: questions have branches that lead to other questions</li>
+		<li>Condition level: each branch checks 0 or more conditions to determine whether or not that branch should be followed; those conditions then check the answers to previous questions, either in the current survey, or in previous surveys</li>
+	</ul>
+	</p>  
+	<p>Unlike the other modules, which consist of a single controller with associated views, the survey module is actually made up of five different controllers, one for each level of the survey.  The survey level allows users to create or delete surveys, and to modify the name of a survey as well as the weekly schedule on which a survey should be administered.</p>
+	<p>Unlike the survey level (and the rest of the site), the question, choice, branch, and condition controllers use AJAX.  Essentially, when the user clicks on the select button next to a survey, a mostly empty page is loaded.  From there, a table of questions is loaded into the page using AJAX.  That table contains links to add, delete, and edit questions, as well as links to view the choices and branches of each question.  These links all use AJAX as well; the goal is to keep as much information in front of the user as possible.  Building a complex survey is a complicated task, so the more information that can be kept in front of the user, the better.</p>
+	<p>In order to minimized the hassle of creating AJAX scripts, Cake has a built in helper called the Js helper that can use many of the popular JavaScript libraries (PEOPLES used jQuery).  Using the Js helper, almost no JavaScript was written by hand.  Instead, within PHP, functions within the helper were used to create AJAX links automatically.</p>
+	<p>As before, this module is secured by the Authentication component.</p></li>
+	<li><p><strong>Data View/Export</strong> - allows the users to view the data that phones have pushed to the web server and export it as a .xls (Microsoft Excel) file.  Survey data is viewed by survey and by question, so there are functions to allow a user to pick a survey (and within that, a question) for which answers should be shown. Location and call logs are views by subject, so there is a similar function to allow a user to pick a subject for which that data should be shown.  This module is secured by the Authentication component.</p></li>
+	<li><p><strong>Communications</strong> - this module is not geared towards users, rather, it handles requests from the phones.  It contains only two functions: push, which lets phones send data (survey answers, locations, and call logs) to the server, and pull, which sends data (survey information) to the phone requesting it.  Since the phones, and not the users, will be using this module, it is not secured by Authentication; instead, it validates the information being pushed to it by matching the deviceID (which the phones include in their push request) against the subjects database to make sure that the phone sending the push request is registered.</p>
+	<p>The communication module uses the answers controller.  This controller generates (in the case of pull) or parses (in the case of push) JSON.  PEOPLES uses a straight-forward JSON communication protocol; see the files push.json and pull.json (in the main directory) for more info.</p></li>
+</ul>
+
+<p>In addition to these main modules, there are a couple of additional files, the most important of which is the table helper.  The nature of the web site calls for a lot of data to be displayed in tables, so the table helper is used to format the results of a model (ie database) query and put it into a nice table.  It also allows commands (including AJAX commands) to be added to the data and placed in the resulting table as a link.  This was used extensively in the surveys module.</p>
+
+<p>Finally, the PEOPLES system is designed to collect potentially sensitive data, so it is important that it be secure.  To that end, the option to use SSL on all pages has been set up and can be enabled in the configuration file in cake/app/config/config.php.  See that file for more information.</p>
+
+<hr />
+<h3>Android App Design</h3>
+
+<p>The Android platform supports Java applications, so the PEOPLES phone app is written in Java.  The Android API provides 4 main types of class:</p>
+<ul>
+	<li><strong>Services</strong> run in the background.</li>
+	<li><strong>Activities</strong> run in the foreground and include some type of graphical element.</li>
+	<li><strong></strong></li>
+</ul>
+</body>
+</html>

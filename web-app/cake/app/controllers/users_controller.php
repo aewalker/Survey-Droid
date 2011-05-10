@@ -51,7 +51,21 @@ class UsersController extends AppController
 	 */
     function login()
     {
-    	//don't need to do anything; Auth takes care of it in the view
+    	//TODO there has got to be a more secure way to do this...
+    	//chek to see if this is the first run.  If so, make the root user.
+    	if (!$this->User->hasAny())
+    	{
+    		$this->User->create();
+    		$this->User->save(array('User' => array(
+	    		'username' => 'peoplesroot',
+	    		'password' => 'peoplespass',
+    			'password_copy' => 'peoplespass',
+    			'password_confirm' => 'peoplespass',
+    			'email' => 'noemail@nohost.com'
+    		)));
+    	}
+    	
+    	//don't need to do anything else; Auth takes care of it in the view
     	//Auth will send the user to the post-login page (defaults to the home page)
     }
     
