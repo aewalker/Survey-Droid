@@ -24,10 +24,9 @@ public class ConfirmSubmissionSurvey extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+    	if (D) Log.d(TAG, "+++ ON CREATE ConfirmSubmission activity +++");
         //setting the layout of the activity
         setContentView(R.layout.confirmpage);
-        
         
         Intent executedIntent = getIntent();
         
@@ -50,7 +49,6 @@ public class ConfirmSubmissionSurvey extends Activity {
         back.setText("No, Go Back");
         back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	Intent in = new Intent();
             	setResult(0,getIntent());
                 finish();
             }
@@ -60,7 +58,6 @@ public class ConfirmSubmissionSurvey extends Activity {
         confirm.setText("Submit my responses");
         confirm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	Intent in = new Intent();
             	setResult(1,getIntent());
                 finish();
             }
