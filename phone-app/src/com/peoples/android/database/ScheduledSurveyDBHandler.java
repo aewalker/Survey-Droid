@@ -2,7 +2,9 @@ package com.peoples.android.database;
 
 import com.peoples.android.model.SurveyIntent;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -120,11 +122,51 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 	}
 	
 	
-	public void putIntoScheduledTable(Integer survid, Long time){
+	public long putIntoScheduledTable(Integer survid, Long time){
 		
 		//TODO: write scheduled surveys to scheduled database
+		
+		ContentValues values = new ContentValues(3);
+		
+		values.put(PeoplesDB.ScheduledSurveys.SURVEY_ID, survid);
+		values.put(PeoplesDB.ScheduledSurveys.ORIGINAL_TIME, time);
+		values.put(PeoplesDB.ScheduledSurveys.SKIPPED, false);
+		
+		return db.insert(PeoplesDB.SS_TABLE_NAME, null, values);
 	}
 	
+	/**
+	 * 
+	 * @param context
+	 * @param executedIntent
+	 * @return The number of rows affected, -1 if no row matches the intent.
+	 */
+	public static int removeIntent(Context context, SurveyIntent executedIntent){
+		
+		Integer survid 	= executedIntent.getIntExtra(
+							PeoplesDB.ScheduledSurveys.SURVEY_ID,
+							-1);
+		
+		Long time		= executedIntent.getLongExtra(
+							PeoplesDB.ScheduledSurveys.ORIGINAL_TIME,
+							-1);
+		
+		if( survid == -1 || time == -1)
+			return -1;
+		
+		ScheduledSurveyDBHandler ssHandler =
+			new ScheduledSurveyDBHandler(context);
+		
+		ssHandler.openWrite();
+		
+		String table = PeoplesDB.SS_TABLE_NAME;
+		
+		String whereClause = PeoplesDB.ScheduledSurveys.SURVEY_ID + "=? AND " +
+							 PeoplesDB.ScheduledSurveys.ORIGINAL_TIME +"=?";
+			
+		String[] whereArgs = {Integer.toString(survid),Long.toString(time)};
+		
+		return ssHandler.db.delete(table, whereClause, whereArgs);	
+	}
 	
-
 }

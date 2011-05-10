@@ -75,5 +75,5 @@ public class SurveyIntent extends Intent {
 		//return true since time and id are the same
 		return true;
 	}
-
+	
 }

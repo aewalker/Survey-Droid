@@ -168,9 +168,11 @@ public class SurveyScheduler extends IntentService {
 					else
 						continue;
 					
-					
 					//TODO: write scheduled surveys to scheduled database
-					ssHandler.putIntoScheduledTable(survid, scheduleTime);
+					long s = ssHandler.putIntoScheduledTable(survid, scheduleTime);
+					
+					if(D) Log.d(TAG,
+							"Attempted to insert into scheduled db, status:"+s);
 
 					} catch (ParseException e) {
 						
@@ -185,6 +187,9 @@ public class SurveyScheduler extends IntentService {
 		//close handler
 		ssHandler.close();
 	}
+	
+	
+	
 	
 	private void scheduleSurvey( int survid, Long scheduledTime) {
 		
@@ -213,6 +218,8 @@ public class SurveyScheduler extends IntentService {
 				scheduledTime, pendingSurvey);
 
 	}
+	
+	
 	
 	public static Long hhmmToUnixMillis(String survTime) throws ParseException {
 		
