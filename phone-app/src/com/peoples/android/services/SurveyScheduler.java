@@ -93,47 +93,32 @@ public class SurveyScheduler extends IntentService {
 		//reschedule the first, otherwise simply keep its entry in the prev.
 		//scheduled database and only keep the new one.
 		
-		//TODO: iterate over scheduled surveys table
-		//TODO: iterate over surveys
-		//note: currently testing iterating over survey tables below
 		
-		//TODO: can make better by combining the handlers
 		ScheduledSurveyDBHandler ssHandler = new ScheduledSurveyDBHandler(this);
 		ssHandler.openRead();
 		
 		String today = getDayOfWeek();
+		
+		//deal w previously scheduled surveys
 		Cursor scheduledCursor = ssHandler.getScheduledSurveys(today);
-		
-		//testing
-		Integer id, survid;
-		String origTime, time;
-		String prevSurv = "";
-		
-		while(scheduledCursor.moveToNext()){
-			Log.d(TAG, "Previously scheduled surveys:");
-			
-			prevSurv = "";
-			
-			id 			= scheduledCursor.getInt(0);
-			survid 		= scheduledCursor.getInt(1);
-			origTime	= scheduledCursor.getString(2);
-			time		= scheduledCursor.getString(3);
-			
-			prevSurv = 	"id: "+id+" survID "+survid+" origTime "+origTime+
-						" time "+time;
-			
-			Log.d(TAG, prevSurv);
-		}
-		//close the cursor
+		previouslyScheduled(scheduledCursor);
 		scheduledCursor.close();
 		
 		//get surveys that were skipped or have not been scheduled
 		Cursor unscheduledCursor = ssHandler.getUnScheduledSurveys(today);
+		previouslyUnScheduled(ssHandler,
+								unscheduledCursor);		
+		unscheduledCursor.close();
+
+		ssHandler.close();
+	}
 		
-		//TODO: divide on previously scheduled and to be scheduled
-		
-        //will loop over unscheduled surveys and schedule them
+	private void previouslyUnScheduled(ScheduledSurveyDBHandler ssHandler,
+										Cursor unscheduledCursor){
+		//will loop over unscheduled surveys and schedule them
 		while(unscheduledCursor.moveToNext()){
+			
+			Integer id, survid;
 			
 			if(D) Log.d(TAG, "unscheduled surveys:");
 			
@@ -150,47 +135,64 @@ public class SurveyScheduler extends IntentService {
 					survDay.length() == 0 )
 				continue;
 				
-			String[] dates = survDay.split(",");
+			String[] times = survDay.split(",");
 			
-			for(String survTime : dates){
+			for(String survTime : times){
 
 				//TODO: do real error handling
 				try {
 					
-					if(D) Log.d(TAG, "-------------------");
-					
 					Long scheduleTime = hhmmToUnixMillis(survTime);
 					
-					//TODO: NEEDS TO BE TUNED
-					// Currently does not schedule if original time is in past
+					//TODO: NEEDS TO BE TUNED. Currently does not schedule if
+					// original time is in past
 					if( System.currentTimeMillis() <= scheduleTime  )
 						scheduleSurvey(	survid,	scheduleTime);
 					else
 						continue;
 					
-					//TODO: write scheduled surveys to scheduled database
+					//write scheduled surveys to scheduled database
 					long s = ssHandler.putIntoScheduledTable(survid, scheduleTime);
 					
 					if(D) Log.d(TAG,
 							"Attempted to insert into scheduled db, status:"+s);
 
-					} catch (ParseException e) {
-						
+				} catch (ParseException e) {
 						// TODO actually handle the exception
-						Log.e(TAG, "DATE PARSE ERROR", e);
-						
-					}
-				}			
-		}
-		//close the cursor
-		unscheduledCursor.close();
-		//close handler
-		ssHandler.close();
+						Log.e(TAG, "DATE PARSE ERROR", e);		
+				}
+			}			
+		}		
 	}
 	
-	
-	
-	
+	private void previouslyScheduled(Cursor scheduledCursor) {
+		while(scheduledCursor.moveToNext()){
+			Log.d(TAG, "Previously scheduled surveys:");
+			
+			Integer survid;
+			long survTime;
+			
+			survid 		= scheduledCursor.getInt(1);
+			survTime	= scheduledCursor.getLong(2);
+			
+			//TODO: NEEDS TO BE TUNED. Currently does not schedule if
+			// original time is in past
+			if( System.currentTimeMillis() + EXPIRES > survTime  ){
+				scheduleSurvey(	survid,	survTime);
+			}else{	
+				//TODO mark skipped surveys
+				continue;
+			}
+
+			//no need to write scheduled surveys into db, they're there
+
+			if(D) Log.d(TAG,
+					" rescheduled survey with id: "+survid+
+					" with original time: "+survTime);
+		}
+		
+	}
+
 	private void scheduleSurvey( int survid, Long scheduledTime) {
 		
 		if(D){
@@ -218,8 +220,6 @@ public class SurveyScheduler extends IntentService {
 				scheduledTime, pendingSurvey);
 
 	}
-	
-	
 	
 	public static Long hhmmToUnixMillis(String survTime) throws ParseException {
 		

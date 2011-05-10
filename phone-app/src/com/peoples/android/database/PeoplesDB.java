@@ -298,7 +298,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     		return "CREATE TABLE " + SS_TABLE_NAME + " (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     				SURVEY_ID + " INT UNSIGNED NOT NULL, " +
-    				ORIGINAL_TIME + " INT UNSIGNED NOT NULL, " +
+    				ORIGINAL_TIME + " LONG UNSIGNED NOT NULL, " +
     				SKIPPED	+ " BOOLEAN NOT NULL);";
     		
     	}
