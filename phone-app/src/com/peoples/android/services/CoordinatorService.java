@@ -1,6 +1,7 @@
 package com.peoples.android.services;
 
 //import com.peoples.android.Peoples;
+import com.peoples.android.PeoplesConfig;
 import com.peoples.android.server.Pull;
 import com.peoples.android.server.Push;
 
@@ -24,6 +25,11 @@ public class CoordinatorService extends IntentService {
     private static long SCHEDULER_PERIOD = 30*1000;
     
     
+    private static long CALL_LOG_PERIOD = 60*60*1000;
+    
+    private static long GPS_PERIOD		= 15*60*1000;
+    
+    
 
 	public CoordinatorService() {
 		super(CoordinatorService.class.getName());
@@ -37,12 +43,20 @@ public class CoordinatorService extends IntentService {
 		
 		if(D) Log.e(TAG, "onHandleIntent");
 		
-        //will need one of these to schedule services
+        PeoplesConfig config = new PeoplesConfig(getApplicationContext());
+        
+        //TODO: begin GPS collection
+        if(config.isLocationEnabled())
+        	launchGPS();
+        
+        //TODO: begin call log collection
+        if(config.isLocationEnabled())
+        	launchCallLog();
+        
+        
         AlarmManager alarmManager =
         	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
         
-		//TODO: figure out proper flag!!!
-        	
         //schedule SurveyScheduler to run periodically
         //survey scheduler pushes, pulls, and schedules
         Intent surveySchedulerIntent = new Intent(this, SurveyScheduler.class);
@@ -52,6 +66,34 @@ public class CoordinatorService extends IntentService {
         					AlarmManager.ELAPSED_REALTIME_WAKEUP,
         					SystemClock.elapsedRealtime(),
         					SCHEDULER_PERIOD, pendingScheduler);
+	}
+	
+	private void launchCallLog() {
+		AlarmManager alarmManager =
+        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        
+        //schedule call logger to run periodically
+        Intent callLogIntent = new Intent(this, CallLogService.class);
+        PendingIntent pendingLogIntent = PendingIntent.getService(this, 0,
+        		callLogIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setRepeating(
+        					AlarmManager.ELAPSED_REALTIME_WAKEUP,
+        					SystemClock.elapsedRealtime(),
+        					CALL_LOG_PERIOD, pendingLogIntent);
+	}
+
+	private void launchGPS() {
+		AlarmManager alarmManager =
+        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        
+        //schedule location logger to run periodically
+        Intent gpsIntent = new Intent(this, GPSLocationService.class);
+        PendingIntent pendingGPSIntent = PendingIntent.getService(this, 0,
+        		gpsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setRepeating(
+        					AlarmManager.ELAPSED_REALTIME_WAKEUP,
+        					SystemClock.elapsedRealtime(),
+        					GPS_PERIOD, pendingGPSIntent);
 	}
 
 

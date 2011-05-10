@@ -1,5 +1,7 @@
 package com.peoples.android.services;
 
+import com.peoples.android.PeoplesConfig;
+
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -41,20 +43,6 @@ public class BootService extends IntentService {
     	
     	if(D) Log.e(TAG, "onHandleIntent");
     	
-        // TODO Auto-generated method stub
-        Toast.makeText(this, "BootService Started", Toast.LENGTH_LONG).show();
-        
-        
-        //TODO: schedule master service
-        
-        
-        
-        //TODO: begin GPS collection
-        
-        
-        
-        //TODO: begin call log collection
-        
         
         //implementing master service scheduling
         //TODO: set COORDINATOR_PERIOD programatically
@@ -77,5 +65,4 @@ public class BootService extends IntentService {
 				pendingCoordinator);        
    
     }
-    
 }

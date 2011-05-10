@@ -13,7 +13,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.peoples.android.R;
-import com.peoples.android.Settings;
+import com.peoples.android.PeoplesConfig;
 
 
 /**
@@ -38,7 +38,7 @@ public class PeoplesSettings extends Activity {
         //setting the layout of the activity
         setContentView(R.layout.settings);
 
-        final Settings settings = new Settings(panda);
+        final PeoplesConfig settings = new PeoplesConfig(panda);
         
         final ToggleButton gpsCheckbox = (ToggleButton) findViewById(R.id.toggleButton1);
         gpsCheckbox.setChecked(settings.isLocationEnabled());
