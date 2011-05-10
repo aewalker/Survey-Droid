@@ -17,12 +17,14 @@ import android.widget.Toast;
 import com.peoples.android.activities.ConfirmSubmissionSurvey;
 import com.peoples.android.model.Survey;
 import com.peoples.android.server.Pull;
+import com.peoples.android.server.Push;
 
 /**
  * 
  * Used to launch processes during development and testing
  * 
  * @author Vlad
+ * @author Henry
  *
  */
 public class Peoples extends ListActivity {	
@@ -41,10 +43,6 @@ public class Peoples extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
-        
-        //Why is this here? (Diego asks...)
-//        Log.d(TAG, "Fetching surveys");
-//        Pull.syncWithWeb(this);
 
         setContentView(R.layout.survey_list_view);
 
@@ -62,13 +60,9 @@ public class Peoples extends ListActivity {
     	int survey_id = extras.getInt("SURVEY_ID");
     	
     	if (survey_id == 0)
-    	{
     		survey = new Survey(panda);
-    	}
     	else 
-    	{
             survey = new Survey(survey_id, panda);
-    	}
     	//survey = new Survey(survey_id, panda);
 
     	//Bundle extras = getIntent().getExtras(); 
@@ -140,8 +134,6 @@ public class Peoples extends ListActivity {
 	            	  {
 	            		  EditText edit = (EditText)findViewById(R.id.editText1);
 
-	            		  //Log.e(TAG, edit.getText().toString());
-
 	            		  survey.answer(edit.getText().toString());
 	            		  /*Toast.makeText(getApplicationContext(), 
 	            				  edit.getText().toString(),
@@ -211,10 +203,4 @@ public class Peoples extends ListActivity {
         }
     }
     
-/*    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        setContentView(R.layout.survey_list_view);
-    	Log.e(TAG, "panddaaaa");
-    }*/
 }
