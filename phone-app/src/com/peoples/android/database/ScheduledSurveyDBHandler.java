@@ -1,5 +1,7 @@
 package com.peoples.android.database;
 
+import com.peoples.android.model.SurveyIntent;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -114,6 +116,12 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 						  	su+"."+PeoplesDB.SurveyTable._ID+" )";
 		
 		return db.rawQuery(query, null);
+		
+	}
+	
+	
+	public void putIntoScheduledTable(SurveyIntent si){
+		
 		
 	}
 	

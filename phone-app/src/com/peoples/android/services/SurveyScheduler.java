@@ -62,6 +62,13 @@ public class SurveyScheduler extends IntentService {
 	//FIXME remove when used
 	private static long EXPIRES = 3*60*1000;
 	
+	/**
+	 * 
+	 * Time format of the entries found in the surveys database 
+	 * 
+	 */
+	private static String TIME_FORMAT = "HHmm";
+	
 	public SurveyScheduler() {
 		super(SurveyScheduler.class.getName());
 	}
@@ -70,11 +77,11 @@ public class SurveyScheduler extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		
 		//upload data
-		Log.d(TAG, "Pushing all data");
+		if(D) Log.d(TAG, "Pushing all data");
 		Push.pushAll(this);
 		
 		//download data
-		Log.d(TAG, "Fetching surveys");
+		if(D) Log.d(TAG, "Fetching surveys");
         Pull.syncWithWeb(this);
 		
 		//Surveys that need scheduling come from two places:
@@ -90,40 +97,11 @@ public class SurveyScheduler extends IntentService {
 		//TODO: iterate over surveys
 		//note: currently testing iterating over survey tables below
 		
-		
-		//TODO: seems useful to warrant moving into scheduled survey DB handler 
-		String today = null;
-		int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-		switch (day) {
-		case Calendar.SUNDAY:
-			today = PeoplesDB.SurveyTable.SU; break;
-		case Calendar.MONDAY:
-			today = PeoplesDB.SurveyTable.MO; break;
-		case Calendar.TUESDAY:
-			today = PeoplesDB.SurveyTable.TU; break;
-		case Calendar.WEDNESDAY:
-			today = PeoplesDB.SurveyTable.WE; break;
-		case Calendar.THURSDAY:
-			today = PeoplesDB.SurveyTable.TH; break;
-		case Calendar.FRIDAY:
-			today = PeoplesDB.SurveyTable.FR; break;
-		case Calendar.SATURDAY:
-			today = PeoplesDB.SurveyTable.SA; break;
-		default:
-			break;
-		}
-		
 		//TODO: can make better by combining the handlers
 		ScheduledSurveyDBHandler ssHandler = new ScheduledSurveyDBHandler(this);
-		
-		//FIXME remove when used
-		SurveyDBHandler		   survHandler = new SurveyDBHandler(this);
-		
-		
-		//open handler
 		ssHandler.openRead();
 		
-		//get previously scheduled surveys
+		String today = getDayOfWeek();
 		Cursor scheduledCursor = ssHandler.getScheduledSurveys(today);
 		
 		//testing
@@ -149,32 +127,29 @@ public class SurveyScheduler extends IntentService {
 		//close the cursor
 		scheduledCursor.close();
 		
-		
 		//get surveys that were skipped or have not been scheduled
 		Cursor unscheduledCursor = ssHandler.getUnScheduledSurveys(today);
 		
-		String survDay = "";
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
-		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-		Date survDate;
-		
-		Calendar calendar;
-		
+		//TODO: divide on previously scheduled and to be scheduled
 		
 		//will need one of these to schedule services
         AlarmManager alarmManager =
         	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		
+        
+        //will loop over unscheduled surveys and schedule them
 		while(unscheduledCursor.moveToNext()){
-			Log.d(TAG, "unscheduled surveys:");
 			
+			if(D) Log.d(TAG, "unscheduled surveys:");
+			
+			//will hold the day of the week and id as given by db
+			String survDay = "";
 			survDay	= unscheduledCursor.getString(0);
 			survid  = unscheduledCursor.getInt(1);
 			
-			Log.d(TAG, survDay+" "+survid);
+			if(D) Log.d(TAG, survDay+" "+survid);
 			
-			//gotta make sure we're not retrieving null day
+			//validate and make sure we don't get a null day from db
 			if( survDay == null ||
 					survDay.equals("null") ||
 					survDay.length() == 0 )
@@ -186,38 +161,29 @@ public class SurveyScheduler extends IntentService {
 
 				//TODO: do real error handling
 				try {
-					//make calendar for current time
-					Log.d(TAG, "-------------------");
 					
-					//Parse the time found in the database
-					sdf.parse(survTime);
+					if(D) Log.d(TAG, "-------------------");
 					
-					//get a calendar with the current day/time, and 
-					//change only the time to match what was parsed from DB
-					Calendar surveyTime = Calendar.getInstance();
-					surveyTime.set(Calendar.HOUR_OF_DAY, sdf.getCalendar().get(Calendar.HOUR_OF_DAY));
-					surveyTime.set(Calendar.MINUTE, sdf.getCalendar().get(Calendar.MINUTE));
-
+					Long scheduledTime = hhmmToUnixMillis(survTime);
+					
 					//*****************************************
 					//TODO: NEEDS TO BE TUNED
 					//*****************************************
 					// Currently does not schedule if original time is in past
-					if( System.currentTimeMillis() > surveyTime.getTimeInMillis() )
+					if( System.currentTimeMillis() > scheduledTime  )
 						continue;
 					
-
-					//Debug reporting
 					if(D){
 						Log.d(TAG, "Scheduling survey with id: "+ survid);
 						Log.d(TAG, "Current time: "+ System.currentTimeMillis());
-						Log.d(TAG, "Scheduling for: "+ surveyTime.getTimeInMillis());
+						Log.d(TAG, "Scheduling for: "+ scheduledTime);
 					}
 					
-					//survey intent has valuable intel
+					//we pass the surveyID and the scheduled time to the SurveyIntent
 					SurveyIntent surveyIntent =
 						new SurveyIntent(getApplicationContext(),
 								survid,
-								surveyTime.getTimeInMillis(),
+								scheduledTime,
 								MainActivity.class);
 					
 					PendingIntent pendingSurvey =
@@ -226,21 +192,82 @@ public class SurveyScheduler extends IntentService {
 								PendingIntent.FLAG_UPDATE_CURRENT);
 
 					alarmManager.set(AlarmManager.RTC_WAKEUP,
-							surveyTime.getTimeInMillis(), pendingSurvey);
+							scheduledTime, pendingSurvey);
 
 					//TODO: write scheduled surveys to scheduled database
 
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
+						
+						// TODO actually handle the exception
 						Log.e(TAG, "DATE PARSE ERROR", e);
+						
+					} finally {
+						
+						
+						
+						
+						
+						
 					}
 				}			
 		}
 		//close the cursor
 		unscheduledCursor.close();
-		
 		//close handler
 		ssHandler.close();
+	}
+	
+	
+	public static Long hhmmToUnixMillis(String survTime) throws ParseException {
 		
+		SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+		//Parse the time found in the database
+		sdf.parse(survTime);
+		
+		//get a calendar with the current day/time, and 
+		//change only the time to match what was parsed from DB
+		Calendar surveyTime = Calendar.getInstance();
+		surveyTime.set(Calendar.HOUR_OF_DAY, sdf.getCalendar().get(Calendar.HOUR_OF_DAY));
+		surveyTime.set(Calendar.MINUTE, sdf.getCalendar().get(Calendar.MINUTE));
+		surveyTime.set(Calendar.SECOND, 0);
+		surveyTime.set(Calendar.MILLISECOND, 0);
+		
+		
+		return surveyTime.getTimeInMillis();
+	}
+
+	/**
+	 * 
+	 * Returns the current day of the week, given by the static
+	 * constant strings defined in PeoplesDB.SurveyTable
+	 * 
+	 * @return day of the week
+	 */
+	public static String getDayOfWeek(){
+		
+		String today = null;
+		int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+		switch (day) {
+		case Calendar.SUNDAY:
+			today = PeoplesDB.SurveyTable.SU; break;
+		case Calendar.MONDAY:
+			today = PeoplesDB.SurveyTable.MO; break;
+		case Calendar.TUESDAY:
+			today = PeoplesDB.SurveyTable.TU; break;
+		case Calendar.WEDNESDAY:
+			today = PeoplesDB.SurveyTable.WE; break;
+		case Calendar.THURSDAY:
+			today = PeoplesDB.SurveyTable.TH; break;
+		case Calendar.FRIDAY:
+			today = PeoplesDB.SurveyTable.FR; break;
+		case Calendar.SATURDAY:
+			today = PeoplesDB.SurveyTable.SA; break;
+		default:
+			break;
+		}
+		
+		return today;
 	}
 }
