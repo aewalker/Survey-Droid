@@ -3,7 +3,6 @@ package com.peoples.android;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-//import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,9 +16,11 @@ import android.widget.Toast;
 import com.peoples.android.activities.ConfirmSubmissionSurvey;
 import com.peoples.android.database.ScheduledSurveyDBHandler;
 import com.peoples.android.model.Survey;
+
 import com.peoples.android.model.SurveyIntent;
 import com.peoples.android.server.Pull;
 import com.peoples.android.server.Push;
+
 
 /**
  * 
@@ -48,14 +49,6 @@ public class Peoples extends ListActivity {
 
     	final Context panda = this;
     	
-    	//code you need to put into your file to run my GUI using your survey id
-    	//Bundle bundle = new Bundle();
- 	    //bundle.putInt("survey_id", YOUR_FAVORITE_INTEGER(the survey id));
- 		//Intent myIntent = new Intent(this, Peoples.class);
-        //myIntent.putExtras(bundle);
-    	//startActivityForResult(myIntent, 0);
-
-    	//here's where i get the survey id from the bundle
     	Bundle extras = getIntent().getExtras(); 
     	int survey_id = extras.getInt("SURVEY_ID");
     	

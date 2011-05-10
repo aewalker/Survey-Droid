@@ -1,33 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content" android:layout_height="wrap_content"
-	android:stretchColumns="1" android:background="@drawable/around_world">
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:stretchColumns="1" 
+	android:background="@drawable/around_world">
 	<TableRow>
 		<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-			android:textSize="32sp" android:id="@+id/question_textView"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:text="TextView" android:textStyle="bold" android:typeface="serif"></TextView>
+			android:textSize="32sp" 
+			android:id="@+id/question_textView"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:text="TextView" 
+			android:textStyle="bold" 
+			android:typeface="serif"/>
 	</TableRow>
 	<TableRow>
 		<LinearLayout android:orientation="horizontal">
 			<Button xmlns:android="http://schemas.android.com/apk/res/android"
-				android:id="@+id/button1" android:layout_height="wrap_content"
-				android:text="Previous Question" android:layout_weight="1"
-				android:layout_width="0dip" android:background="@drawable/custom_button"
-				android:layout_margin="10dip">
-			</Button>
+				android:id="@+id/button1" 
+				android:layout_height="wrap_content"
+				android:text="Previous Question" 
+				android:layout_weight="1"
+				android:layout_width="0dip" 
+				android:background="@drawable/custom_button"
+				android:layout_margin="10dip"/>
 			<Button xmlns:android="http://schemas.android.com/apk/res/android"
-				android:id="@+id/button2" android:layout_height="wrap_content"
-				android:text="Next Question" android:layout_weight="1"
-				android:layout_width="0dip" android:background="@drawable/custom_button"
-				android:layout_margin="10dip">
-			</Button>
+				android:id="@+id/button2" 
+				android:layout_height="wrap_content"
+				android:text="Next Question" 
+				android:layout_weight="1"
+				android:layout_width="0dip" 
+				android:background="@drawable/custom_button"
+				android:layout_margin="10dip"/>
 		</LinearLayout>
 	</TableRow>
 	<TableRow>
-		<ListView android:layout_height="fill_parent" android:id="@id/android:list"
-			android:layout_width="wrap_content" android:choiceMode="singleChoice"
-			android:layout_alignParentRight="true"></ListView>
+		<ListView 
+			android:layout_height="fill_parent" 
+			android:id="@id/android:list"
+			android:layout_width="wrap_content" 
+			android:choiceMode="singleChoice"
+			android:layout_alignParentRight="true"/>
 	</TableRow>
 </TableLayout>
