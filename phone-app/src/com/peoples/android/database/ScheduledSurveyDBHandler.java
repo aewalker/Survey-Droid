@@ -137,11 +137,13 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 	
 	/**
 	 * 
+	 * TODO: TAKE A SURVEYINTENT, NOT JUST AN INTENT
+	 * 
 	 * @param context
 	 * @param executedIntent
 	 * @return The number of rows affected, -1 if no row matches the intent.
 	 */
-	public static int removeIntent(Context context, SurveyIntent executedIntent){
+	public static int removeIntent(Context context, Intent executedIntent){
 		
 		Integer survid 	= executedIntent.getIntExtra(
 							PeoplesDB.ScheduledSurveys.SURVEY_ID,

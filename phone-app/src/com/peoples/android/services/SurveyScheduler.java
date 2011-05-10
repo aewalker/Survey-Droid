@@ -60,6 +60,7 @@ public class SurveyScheduler extends IntentService {
 	 * this much time late
 	 */
 	//FIXME remove when used
+	//let's say 3 minutes for now...
 	private static long EXPIRES = 3*60*1000;
 	
 	/**
@@ -115,6 +116,7 @@ public class SurveyScheduler extends IntentService {
 		
 	private void previouslyUnScheduled(ScheduledSurveyDBHandler ssHandler,
 										Cursor unscheduledCursor){
+		Log.d(TAG, "Previously UNscheduled surveys:");
 		//will loop over unscheduled surveys and schedule them
 		while(unscheduledCursor.moveToNext()){
 			
@@ -166,8 +168,8 @@ public class SurveyScheduler extends IntentService {
 	}
 	
 	private void previouslyScheduled(Cursor scheduledCursor) {
+		Log.d(TAG, "Previously scheduled surveys:");
 		while(scheduledCursor.moveToNext()){
-			Log.d(TAG, "Previously scheduled surveys:");
 			
 			Integer survid;
 			long survTime;
