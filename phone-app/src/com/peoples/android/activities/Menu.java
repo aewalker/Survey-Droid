@@ -33,8 +33,6 @@ public class Menu extends Activity {
 
         if(D) Log.e(TAG, "+++ ON CREATE menu activity +++");
         
-        //TODO: write a more proper Action, or use provided ones
-        //let the coordinator service take care of sync stuff
         Intent coordinatorIntent			= new Intent(this, CoordinatorService.class);
     	coordinatorIntent.setAction(MainActivity.class.getName());
         startService(coordinatorIntent);
@@ -83,21 +81,8 @@ public class Menu extends Activity {
             public void onClick(View view) {
             	finish();
             }
-        });
-        
-        
-        //TODO: CANT FIND SYNC VIEW!
-        
-//        Button sync = (Button) findViewById(R.id.Sync);
-//        sync.setText("Sync the surveys manually, to update deploy time or questions");
-//        sync.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
-//                startActivityForResult(myIntent, 0);
-//            }
-//        });
+        }); 
     }
-    
     
     /**
      * Called after your activity has been stopped, prior to it being started again.

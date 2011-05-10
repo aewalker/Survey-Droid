@@ -72,11 +72,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 //Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
                 //startActivityForResult(myIntent, 0);
-            	
-            	//##############################################################//
-            	//here's where you would call the service to postpone the survey//
-            	//##############################################################//
-            	
+
             	//will need one of these to schedule services
                 /*AlarmManager alarmManager =
                 	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
