@@ -20,7 +20,7 @@ import com.peoples.android.model.Survey;
 /**
  * Used to launch actual surveys
  * @author Vlad
- * @author Henry
+ * @author Henry Liu
  */
 public class Peoples extends ListActivity {	
     
@@ -46,6 +46,7 @@ public class Peoples extends ListActivity {
     	Bundle extras = getIntent().getExtras(); 
     	int survey_id = extras.getInt("SURVEY_ID");
     	
+    	// Use the deprecated constructor if survey id is 0 (debugging purposes)
     	if (survey_id == 0)
     		survey = new Survey(ctxt);
     	else 
@@ -88,22 +89,24 @@ public class Peoples extends ListActivity {
 	            		  {
 	            			  test[0] = survey.getAnswerText(); //if answer has been saved before
 	            		  }
+	            		  
 	            		  setListAdapter(new ArrayAdapter<String>(ctxt, 
 		                		  R.layout.list_item, test));
 		              	  q.setText(survey.getText());
 	            	  }
           	  }
-          	  else Toast.makeText(getApplicationContext(), "You can't go back on the first question",
+          	  else Toast.makeText(getApplicationContext(), "You cannot go back on the first question",
                         Toast.LENGTH_SHORT).show();
       	  }
         };
         prev.setOnClickListener(prevListener);
     	
+
+        Button next = (Button) findViewById(R.id.button2);
+        next.setText("Next Question");
         /**
          * Handler for "next" button
          */
-        Button next = (Button) findViewById(R.id.button2);
-        next.setText("Next Question");
         final View.OnClickListener nextListener = new View.OnClickListener() {
             public void onClick(View view) {
           	  
@@ -116,7 +119,6 @@ public class Peoples extends ListActivity {
 	            	  if (survey.getChoices().length != 0) //multiple choice
 	            	  {
 	            		  survey.answer(survey.getChoices()[lv.getCheckedItemPosition()]);
-
 	            	  }
 	            	  else //free response
 	            	  {
@@ -125,8 +127,7 @@ public class Peoples extends ListActivity {
 	            	  }
 
 	            	  survey.nextQuestion(); //go to the next question
-
-	                  if (survey.done()) //if there are no more questions....
+	                  if (survey.done()) //if there are no more questions
 	                  {
 	                	  Intent myIntent = new Intent(view.getContext(), ConfirmSubmissionSurvey.class);
 	                	  startActivityForResult(myIntent, requestCode);
@@ -168,7 +169,7 @@ public class Peoples extends ListActivity {
     }
     
     /**
-     * Triggers when result is returned from the confirm submission acitivity
+     * Triggers when result is returned from the confirm submission activity
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

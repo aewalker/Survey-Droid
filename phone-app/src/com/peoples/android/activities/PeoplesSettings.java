@@ -18,7 +18,7 @@ import com.peoples.android.Settings;
 
 /**
  * The Activity that triggers toggling the different settings on and off.
- * @author Henry
+ * @author Henry Liu
  */
 
 public class PeoplesSettings extends Activity {

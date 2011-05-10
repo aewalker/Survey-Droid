@@ -6,19 +6,19 @@ import android.content.SharedPreferences;
 /**
  * Used to adjust privacy settings on phone
  * @author Tony
- * @author Henry
+ * @author Henry Liu
  */
 public class Settings {
     
-    Context ctx;
+    Context ctxt;
     
     /**
      * Initialize the setting object. Settings are available application-wide
      * 
      * @param ctx - the application context 
      */
-    public Settings(Context ctx) {
-        this.ctx = ctx;
+    public Settings(Context ctxt) {
+        this.ctxt = ctxt;
     }
 
     /**
@@ -82,7 +82,7 @@ public class Settings {
      * @param value - this method only accepts boolean value
      */
     private void putBoolean(String key, boolean value) {
-        SharedPreferences settings = ctx.getSharedPreferences("com.peoples.settings", 0);
+        SharedPreferences settings = ctxt.getSharedPreferences("com.peoples.settings", 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(key, value);
         editor.commit();
@@ -97,7 +97,7 @@ public class Settings {
      * @return value is it is set, else the defaultValue
      */
     private boolean getBoolean(String key, boolean defaultValue) {
-        SharedPreferences settings = ctx.getSharedPreferences("com.peoples.settings", 0);
+        SharedPreferences settings = ctxt.getSharedPreferences("com.peoples.settings", 0);
         return settings.getBoolean(key, defaultValue);
     }
 }

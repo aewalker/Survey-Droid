@@ -11,8 +11,7 @@ import com.peoples.android.R;
 
 /**
  * Activity that starts to confirm the submission of a survey
- * @author Henry
- *
+ * @author Henry Liu
  */
 public class ConfirmSubmissionSurvey extends Activity {
 	
@@ -20,6 +19,8 @@ public class ConfirmSubmissionSurvey extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        //setting the layout of the activity
         setContentView(R.layout.confirmpage);
             
         final TextView t = (TextView)this.findViewById(R.id.confirm);

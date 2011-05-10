@@ -17,7 +17,7 @@ import com.peoples.android.services.CoordinatorService;
 
 /**
  * The Activity for the administration panel of the PEOPLES application.
- * @author Henry
+ * @author Henry Liu
  */
 public class Menu extends Activity {
 
