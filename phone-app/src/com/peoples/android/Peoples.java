@@ -194,7 +194,7 @@ public class Peoples extends ListActivity {
         if(resultCode==1){
         	
         	int remove = ScheduledSurveyDBHandler.removeIntent(
-        					getApplicationContext(), (SurveyIntent) data );
+        					getApplicationContext(), data );
         	
             Toast.makeText(this, "Thank you for taking our survey", Toast.LENGTH_LONG).show();
             if(!survey.submit()) Log.e(TAG, "Something went wrong and the survey didn't submit");
