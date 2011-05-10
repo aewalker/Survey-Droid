@@ -39,6 +39,9 @@ public class CallLogService extends IntentService {
             }
         }
         
+        db.close();
+        pdb.close();
+        
     }
     
 }

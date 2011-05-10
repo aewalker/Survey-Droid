@@ -34,7 +34,7 @@ public class CoordinatorService extends IntentService {
     
     private static long CALL_LOG_PERIOD = 60*60*1000;
     
-    private static long GPS_PERIOD		= 15*60*1000;
+    private static long GPS_PERIOD		= 60*1000;
     
     private static LocationListener LOCATION_LISTENER;
     
@@ -108,7 +108,17 @@ public class CoordinatorService extends IntentService {
 		if(D) Log.d(TAG, "+++launchGPS+++");
 		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		String provider = locManager.getBestProvider(new Criteria(), true);
-		locManager.requestLocationUpdates(provider, GPS_PERIOD, 0, LOCATION_LISTENER);
+		
+		if(provider == null){
+			
+			locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_PERIOD, 0, LOCATION_LISTENER);
+			locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_PERIOD, 0, LOCATION_LISTENER);
+			
+		} else{
+			locManager.requestLocationUpdates(provider, GPS_PERIOD, 0, LOCATION_LISTENER);
+		}
+		
+		
 	}
 	
 	private void killGPS() {
