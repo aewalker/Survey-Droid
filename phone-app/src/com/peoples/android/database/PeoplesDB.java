@@ -105,6 +105,28 @@ public class PeoplesDB extends SQLiteOpenHelper {
         public static final String TIME = "time";
         public static final String UPLOADED = "uploaded";
 
+        // Given an integer call type, return a string representation
+        public static String getCallTypeString(int callType) {
+            String stringCallType;
+            
+            switch (callType) {
+                case android.provider.CallLog.Calls.INCOMING_TYPE:
+                    stringCallType = "Incoming";
+                    break;
+                case android.provider.CallLog.Calls.MISSED_TYPE:
+                    stringCallType = "Missed";
+                    break;
+                case android.provider.CallLog.Calls.OUTGOING_TYPE:
+                    stringCallType = "Outgoing";
+                    break;
+                default:
+                    stringCallType = "";
+                    break;
+            }
+            
+            return stringCallType;
+        }
+        
         private static String createSql() {
         	return "CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
             + CallLogTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -336,8 +358,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-    	//I think this is being called every time I create a nre PeoplesDB
-
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + GPS_TABLE_NAME);
@@ -359,7 +379,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
                                                       null, null, null,
                                                       android.provider.CallLog.Calls.DATE + " DESC");
 
-        // Retrieve the column-indixes of phoneNumber, date and calltype
+        // Retrieve the column-indices of phoneNumber, date and calltype
         int numberColumn = c.getColumnIndex(android.provider.CallLog.Calls.NUMBER);
         int dateColumn = c.getColumnIndex(android.provider.CallLog.Calls.DATE);
 
@@ -376,24 +396,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
 
                 ContentValues call = new ContentValues();
 
-                switch (callType) {
-
-                case android.provider.CallLog.Calls.INCOMING_TYPE:
-                    stringCallType = "Incoming";
-                    break;
-
-                case android.provider.CallLog.Calls.MISSED_TYPE:
-                    stringCallType = "Missed";
-                    break;
-
-                case android.provider.CallLog.Calls.OUTGOING_TYPE:
-                    stringCallType = "Outgoing";
-                    break;
-                default:
-                    stringCallType = "";
-                    break;
-
-                }
+                stringCallType = CallLogTable.getCallTypeString(callType);
 
                 call.put(CallLogTable.PHONE_NUMBER, callerPhoneNumber);
                 call.put(CallLogTable.CALL_TYPE, stringCallType);
