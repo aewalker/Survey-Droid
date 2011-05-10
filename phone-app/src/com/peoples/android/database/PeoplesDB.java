@@ -377,7 +377,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
     private void buildInitialCallLog(SQLiteDatabase db) {
         Cursor c = context.getContentResolver().query(android.provider.CallLog.Calls.CONTENT_URI,
                                                       null, null, null,
-                                                      android.provider.CallLog.Calls.DATE + " DESC");
+                                                      android.provider.CallLog.Calls.DATE);
 
         // Retrieve the column-indices of phoneNumber, date and calltype
         int numberColumn = c.getColumnIndex(android.provider.CallLog.Calls.NUMBER);
@@ -390,7 +390,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 String callerPhoneNumber = c.getString(numberColumn);
-                int callDate = c.getInt(dateColumn);
+                String callDate = c.getString(dateColumn);
                 int callType = c.getInt(typeColumn);
                 String stringCallType;
 
