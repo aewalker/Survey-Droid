@@ -29,7 +29,7 @@ public class Menu extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Context panda = this;
+        final Context ctxt = this;
 
         if(D) Log.e(TAG, "+++ ON CREATE menu activity +++");
         
@@ -66,7 +66,7 @@ public class Menu extends Activity {
         phoneID.setText("Find this phone's unique ID");
         phoneID.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	TelephonyManager tManager = (TelephonyManager)panda.getSystemService(Context.TELEPHONY_SERVICE);
+            	TelephonyManager tManager = (TelephonyManager)ctxt.getSystemService(Context.TELEPHONY_SERVICE);
             	String uid = tManager.getDeviceId();
             	
             	Toast.makeText(getApplicationContext(), uid,
