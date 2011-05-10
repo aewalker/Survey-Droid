@@ -27,11 +27,11 @@ public class CoordinatorService extends IntentService {
     /**
      * Run scheduler this often
      */
-    private static long SCHEDULER_PERIOD = 30 * 1000;
+    private static long SCHEDULER_PERIOD = 5 * 60 * 1000;
 
     private static long CALL_LOG_PERIOD = 60 * 60 * 1000;
 
-    private static long GPS_PERIOD = 60 * 1000;
+    private static long GPS_PERIOD = 15 * 60 * 1000;
 
     private static LocationListener LOCATION_LISTENER;
 
