@@ -117,10 +117,11 @@ public class SurveyScheduler extends IntentService {
 	private void previouslyUnScheduled(ScheduledSurveyDBHandler ssHandler,
 										Cursor unscheduledCursor){
 		Log.d(TAG, "Previously UNscheduled surveys:");
+		unscheduledCursor.moveToFirst();
 		//will loop over unscheduled surveys and schedule them
 		while(unscheduledCursor.moveToNext()){
 			
-			Integer id, survid;
+			Integer survid;
 			
 			if(D) Log.d(TAG, "unscheduled surveys:");
 			
@@ -169,6 +170,7 @@ public class SurveyScheduler extends IntentService {
 	
 	private void previouslyScheduled(Cursor scheduledCursor) {
 		Log.d(TAG, "Previously scheduled surveys:");
+		scheduledCursor.moveToFirst();
 		while(scheduledCursor.moveToNext()){
 			
 			Integer survid;
