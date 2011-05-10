@@ -11,26 +11,19 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.peoples.android.Peoples;
 import com.peoples.android.R;
-import com.peoples.android.Settings;
-//import com.peoples.android.model.Survey;
-//import com.peoples.android.processTest.LocationTestActivity;
-//import com.peoples.android.server.Pull;
-//import com.peoples.android.services.BootService;
-import com.peoples.android.model.Survey;
 import com.peoples.android.model.SurveyIntent;
 import com.peoples.android.services.CoordinatorService;
-//import com.peoples.android.services.GPSLocationService;
 
-
-
+/**
+ * The Activity for the administration panel of the PEOPLES application.
+ * @author Henry
+ */
 public class Menu extends Activity {
 
-	// TEST
+	// Debugging
     private static final String TAG = "Menu";
     private static final boolean D = true;
-    private Survey survey;
 
     /** Called when the activity is first created. */
     @Override
@@ -40,14 +33,13 @@ public class Menu extends Activity {
 
         if(D) Log.e(TAG, "+++ ON CREATE menu activity +++");
         
-        
         //TODO: write a more proper Action, or use provided ones
         //let the coordinator service take care of sync stuff
         Intent coordinatorIntent			= new Intent(this, CoordinatorService.class);
     	coordinatorIntent.setAction(MainActivity.class.getName());
         startService(coordinatorIntent);
         
-
+        //setting the layout of the activity
         setContentView(R.layout.main);
 
         final TextView q = (TextView) this.findViewById(R.id.title);

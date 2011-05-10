@@ -3,6 +3,11 @@ package com.peoples.android;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+/**
+ * Used to adjust privacy settings on phone
+ * @author Tony
+ * @author Henry
+ */
 public class Settings {
     
     Context ctx;

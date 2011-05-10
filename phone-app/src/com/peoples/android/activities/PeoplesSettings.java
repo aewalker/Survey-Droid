@@ -5,37 +5,27 @@ package com.peoples.android.activities;
 import android.app.Activity;
 //import android.content.Context;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.peoples.android.Peoples;
 import com.peoples.android.R;
 import com.peoples.android.Settings;
-//import com.peoples.android.model.Survey;
-//import com.peoples.android.processTest.LocationTestActivity;
-//import com.peoples.android.server.Pull;
-//import com.peoples.android.services.BootService;
-import com.peoples.android.model.Survey;
-import com.peoples.android.services.CoordinatorService;
-//import com.peoples.android.services.GPSLocationService;
 
 
+/**
+ * The Activity that triggers toggling the different settings on and off.
+ * @author Henry
+ */
 
 public class PeoplesSettings extends Activity {
 
 	// Debugging
-	// TEST
-	//TEST
     private static final String TAG = "Menu";
     private static final boolean D = true;
-    //private Survey survey;
 
     /** Called when the activity is first created. */
     @Override
@@ -45,12 +35,11 @@ public class PeoplesSettings extends Activity {
 
         if(D) Log.e(TAG, "+++ ON CREATE settings activity +++");
 
+        //setting the layout of the activity
         setContentView(R.layout.settings);
 
         final Settings settings = new Settings(panda);
         
-        
-        Bundle extras = getIntent().getExtras(); 
         final ToggleButton gpsCheckbox = (ToggleButton) findViewById(R.id.toggleButton1);
         gpsCheckbox.setChecked(settings.isLocationEnabled());
         final ToggleButton callLogCheckbox = (ToggleButton) findViewById(R.id.toggleButton2);
@@ -62,7 +51,6 @@ public class PeoplesSettings extends Activity {
         save.setText("Save Changes");
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	//for now, toast prints what needs to be done attn:Tony
             	StringBuilder info = new StringBuilder();
             	
             	settings.setLocationService(gpsCheckbox.isChecked());

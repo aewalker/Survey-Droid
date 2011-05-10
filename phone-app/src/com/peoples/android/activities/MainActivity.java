@@ -13,11 +13,14 @@ import android.widget.Toast;
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
 
-import com.peoples.android.model.Survey;
 import com.peoples.android.model.SurveyIntent;
 
 
-
+/**
+ * Triggers the pop-up informing user they have a new survey awaiting.
+ * @author Henry
+ *
+ */
 public class MainActivity extends Activity {
 
 	// Debugging
@@ -26,15 +29,11 @@ public class MainActivity extends Activity {
 
     //time to vibrate to warn user, in milliseconds
     private static final long VIBRATION_TIME = 500;
-    
-    //Time to delay the survey for if user chooses to
-    private static final long DELAY = 120*1000;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Context panda = this;
 
         if(D){
         	Log.d(TAG, "+++ ON CREATE main activity +++");
