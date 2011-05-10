@@ -120,9 +120,9 @@ public class ScheduledSurveyDBHandler extends PeoplesDBHandler {
 	}
 	
 	
-	public void putIntoScheduledTable(SurveyIntent si){
+	public void putIntoScheduledTable(Integer survid, Long time){
 		
-		
+		//TODO: write scheduled surveys to scheduled database
 	}
 	
 	

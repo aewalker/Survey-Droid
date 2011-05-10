@@ -132,11 +132,6 @@ public class SurveyScheduler extends IntentService {
 		
 		//TODO: divide on previously scheduled and to be scheduled
 		
-		//will need one of these to schedule services
-        AlarmManager alarmManager =
-        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		
-        
         //will loop over unscheduled surveys and schedule them
 		while(unscheduledCursor.moveToNext()){
 			
@@ -164,49 +159,23 @@ public class SurveyScheduler extends IntentService {
 					
 					if(D) Log.d(TAG, "-------------------");
 					
-					Long scheduledTime = hhmmToUnixMillis(survTime);
+					Long scheduleTime = hhmmToUnixMillis(survTime);
 					
-					//*****************************************
 					//TODO: NEEDS TO BE TUNED
-					//*****************************************
 					// Currently does not schedule if original time is in past
-					if( System.currentTimeMillis() > scheduledTime  )
+					if( System.currentTimeMillis() <= scheduleTime  )
+						scheduleSurvey(	survid,	scheduleTime);
+					else
 						continue;
 					
-					if(D){
-						Log.d(TAG, "Scheduling survey with id: "+ survid);
-						Log.d(TAG, "Current time: "+ System.currentTimeMillis());
-						Log.d(TAG, "Scheduling for: "+ scheduledTime);
-					}
 					
-					//we pass the surveyID and the scheduled time to the SurveyIntent
-					SurveyIntent surveyIntent =
-						new SurveyIntent(getApplicationContext(),
-								survid,
-								scheduledTime,
-								MainActivity.class);
-					
-					PendingIntent pendingSurvey =
-						PendingIntent.getActivity(getApplicationContext(), 0,
-								surveyIntent,
-								PendingIntent.FLAG_UPDATE_CURRENT);
-
-					alarmManager.set(AlarmManager.RTC_WAKEUP,
-							scheduledTime, pendingSurvey);
-
 					//TODO: write scheduled surveys to scheduled database
+					ssHandler.putIntoScheduledTable(survid, scheduleTime);
 
 					} catch (ParseException e) {
 						
 						// TODO actually handle the exception
 						Log.e(TAG, "DATE PARSE ERROR", e);
-						
-					} finally {
-						
-						
-						
-						
-						
 						
 					}
 				}			
@@ -217,6 +186,33 @@ public class SurveyScheduler extends IntentService {
 		ssHandler.close();
 	}
 	
+	private void scheduleSurvey( int survid, Long scheduledTime) {
+		
+		if(D){
+			Log.d(TAG, "Scheduling survey with id: "+ survid);
+			Log.d(TAG, "Current time: "+ System.currentTimeMillis());
+			Log.d(TAG, "Scheduling for: "+ scheduledTime);
+		}
+		
+		//will need one of these to schedule services
+        AlarmManager alarmManager =
+        	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		
+		SurveyIntent surveyIntent =
+			new SurveyIntent(getApplicationContext(),
+					survid,
+					scheduledTime,
+					MainActivity.class);
+		
+		PendingIntent pendingSurvey =
+			PendingIntent.getActivity(getApplicationContext(), 0,
+					surveyIntent,
+					PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		alarmManager.set(AlarmManager.RTC_WAKEUP,
+				scheduledTime, pendingSurvey);
+
+	}
 	
 	public static Long hhmmToUnixMillis(String survTime) throws ParseException {
 		
