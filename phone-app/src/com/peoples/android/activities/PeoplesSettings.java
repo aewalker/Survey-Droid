@@ -31,14 +31,14 @@ public class PeoplesSettings extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Context panda = this;
+        final Context ctxt = this;
 
         if(D) Log.e(TAG, "+++ ON CREATE settings activity +++");
 
         //setting the layout of the activity
         setContentView(R.layout.settings);
 
-        final PeoplesConfig settings = new PeoplesConfig(panda);
+        final PeoplesConfig settings = new PeoplesConfig(ctxt);
         
         final ToggleButton gpsCheckbox = (ToggleButton) findViewById(R.id.toggleButton1);
         gpsCheckbox.setChecked(settings.isLocationEnabled());

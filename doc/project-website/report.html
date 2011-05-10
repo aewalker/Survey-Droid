@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=us-ascii" />
+	<meta name="author" content="PEOPLES Group, ed. Austin Walker" />
+	<title>PEOPLES Final Report</title>
+</head>
+
+<body>
+<h1>PEOPLES Project Final Report</h1>
+
+<hr />
+
+<h3>Initial Planning</h3>
+
+<p>In retrospect, our original planning for this project (especially the phone side) seems a little insufficient, but this is largely due to our inexperience with the Android system. It became apparent throughout the course of the semester that some of the features we had originally planned would not be possible given the time constraints of the project, or in some cases, at all. In addition, one of the components (nominally, the surveys themselves) was far more complicated than we had previously assumed, resulting in a ton of collaborative and individual effort towards the end of the semester; at one point Austin moved over to the phone team to deal with this. There was almost no we we could have foreseen this problem, but a little more research at the beginning would have saved plenty of frustration throughout the semester.</p>
+
+<p>Our group was actually lucky in one very important way: we had a real user to tell us what was needed.  Naomi has been extremely helpful throughout this project, and we are very thankful for her participation.  She was able to tell us what she needed, which essentially pinned down a lot of the functionality of the system right from the start.  We didn't have to guess at what a real sociologist would need; we could just ask.  She was also able to give us testing phones to use.</p>
+
+<p>One big problem was the order that we choose to do things in; this was an especially big problem on the phone side.  We should have done things in almost the opposite order that we did them: we should have defined how things that affected the most other things (for example, communication and background services) should work, and then moved down to the rest of the things.  Since we didn't do this, we ended up rushing a lot of Android code that ended up having to be re-written latter on once the code that was going to run above it had been written.</p>
+
+<p>On the web end, Austin and Sema did a great job by using the CakePHP framework, which allowed the web team to keep their project organized and never once had to re-architect the site.  Austin already knew CakePHP, which saved the web side from a lot of the troubles that were faced by the phone side.</p>
+
+<hr />
+
+<h3>Milestones</h3>
+
+<p>Our progress on our milestones was mixed:</p>
+
+<p>The web team did pretty well keeping up with their milestones. Our milestones worked well on the web side, we didn't have any problem with time.  We basically finished the web site as we planned from the very start</p>
+
+<p>The phone team lagged behind.  A substantial amount of work on the phone was done the week of the Alpha version and to some extent the week of the Beta version. The problem is not so much that we left those coding tasks to the last minute, but rather we did not anticipate them being needed. In particular, we should have allotted appropriate amount of time to make sure that each and person on the phone team has time to read through Android documentations and walk through the tutorials on the developer site. This learning process really should have been a milestone in and of itself and should have been accounted for in the original project planning.</p>
+
+<p>Taking this into account (the steep Android learning curve), we feel that met met our milestones in an ok but not good way. Our initial milestones were mostly written to break up our final goal into weekly chunks, which doesn't line up perfectly with the time it takes to learn a certain framework.</p>
+
+
+<p>If we had taken into account the time it would take to learn Android, our phone milestones would have looked better as follows:</p>
+<ol>
+<li>learn basics of Android framework: i.e. activities, services, gui stuff</li>
+<li>Learn how to obtained the desired data using given libraries</li>
+<li>learn how to persist information</li>
+<li>Implement GUI, location, call log collection as proper activities/services that rely on separate module for database writing/reading. Write method signatures for any needed database methods.</li>
+<li>Implement database handler, and any of the methods that were needed by the activities/services</li>
+<li>Integration: work on writing a centralized service that takes care of coordination amongst different modules</li>
+<li>Testing</li>
+</ol>
+
+<hr />
+
+<h3>Experience and Learning</h3>
+
+<p>Since everyone on this project did different things, this section is broken up by person.</p>
+
+<p><strong>Sema</strong></p>
+
+<p>Although I knew PHP, it took a couple of weeks to learn and get used to CakePhp because it is very different than plain PHP. First of all, CakePHP is very strict on name conventions, and it also has MVC design pattern. After learning stage, it was really useful and easy to use because it save us from writing lots of code.</p>
+
+<p><strong>Vlad</strong></p>
+
+<p>I really wanted to learn how to program for Android, and I was happy to get an opportunity to do so with this project.  One that that I really had trouble with was git and GitHub.  I had some of my code get erased a few times due to this.  I think I should have spent more time at the start of the project figuring out how to use git properly instead of having to learn it later.</p>
+
+<p><strong>Henry</strong></p>
+
+<p>I worked almost entirely on the phone-end for this project, more specially the graphical user interface of the phone application. I found programming on the Android platform painless, as I have a lot of experience with Java, and Android is simply Java with several small constraints. The documentation was excellent: nearly all my questions while programming could be answered with a short trip to the android development website, and those that couldn't would be resolved while perusing a couple pages of Google. Testing was also relatively painless, as Eclipse provides a very easy way of keeping track of the phone's activities and services.</p>
+
+<p><strong>Diego</strong></p>
+
+<p>Beyond simply learning a substantial amount of practical knowledge of a certain architecture (Android), I've learned of the potential for immediately making something that is useful and of value for someone else. Making a phone application is one thing, but making a phone application that can help someone earn the PhD thesis, and to learn more about causes of re-incarceration certainly feels rewarding. Beyond specific programming skills, it was the group aspect of the project and having to put everyone's work together that taught me more than a few things that I'll be able to draw on for future projects.</p>
+
+<p><strong>Austin</strong></p>
+
+<p>I'm pretty happy about the choice of languages.  I like Java quite a bit, and I think PHP with Cake was a good choice for the website.  Once we got things set up, testing was pretty easy.</p>
+
+<p>One big thing that I realized during this project was the importance of testing and establishing a .  The test server we set up was very important, and the update script that pulled all the code and moved it around automatically was also a huge help (and it also helped me improve my bash skills).  At some point, Sema and I realized that even that server was too slow to test on, so we started using Apache on our own computers (I already had it set up on one of my computers).  Luckily, I'm pretty experienced when it comes to configuring Apache, so getting all this working wasn't a huge problem.</p>
+
+<p>I think I've also learned more about how I prefer to program.  I seem to be a rapid prototyping guy; I just like to get something that works ASAP.  I've also found that I actually like the source code rigor that classes like 217 imposed.  I tried to make sure that all the source code had some unified style.</p>
+
+<p><strong>Tony</strong></p>
+
+<p>Before this project, I have had extensive experiences with web application MVC frameworks. The languages I was fluent in included Java, Python, JavaScript, C, to name a few. I have however never really had formal testing experience and what little system I knew was from just personal reading. Design and interface knowledge also do not go much beyond the web design. However, after the project, I gained tremendous insight into the mobile application development space. The most important concepts, such as Activity, which represents a screen that can be used by any application, not just the one it was written for, and Intent, which allows application to communicate to the operating system something it wants done but does not have the privilege to do itself are truly useful and deeply useful and interesting.</p>
+
+
+<hr />
+
+<h3>Surprises and Choices</h3>
+
+<p>The biggest surprise was the need for more complicated surveys.  We were working in the 2nd or 3rd week, and we were looking at the survey Naomi had proposed, and we realized that there was this crazy question that had 3 different branches but only two choices.  At that point, we had a full team meeting (including Naomi) and worked all day to figure out how we were going to deal with that.  In the end, this surprise turned out ok; the way we dealt with surveys and the system we built up became one of the best parts of the whole project.</p>
+
+<p>Another big surprise was the lack of good 64 bit drivers for the test phones we were given.  Even now, the phones do not work very well with most of the group members' computers.  This forced us to rely on emulators quite a bit, which made real testing more difficult.</p>
+
+<p>We were also a bit surprised by how difficult it was to coordinate such a large team.  Six people is really a pretty huge team.  We ended up spending a lot of time and effor just trying to coordinate who did what.</p>
+
+<p>As for decisions: we made a couple of big decisions right at the start.  First, we decided to keep the web and phone teams separate to try and make coordination easier.  This worked well for the most part, except towards the end of the semester when Austin switched over to help the phone team.</p>
+
+<p>On the phone side, we chose to use PHP and CakePHP over Python and Django.  This turned out to be a really great choice because Austin already knew CakePHP.  This helped us to avoid a lot of the troubles that the phone side had with learning a new framework.</p>
+
+<p>We also made the choice to use git and GitHug pretty early.  This worked out well for the most part once everyone was set up using the system.  Some people (especially Vlad) had trouble with git, so it might have been a good idea to have an early meeting about using git and get everyone on the same page.</p>
+
+<hr />
+
+<h3>Conclusion</h3>
+
+<p>In the end, everyone enjoyed this project.  We didn't get as much done as we had hoped to, but we still learned a lot.  It is likely that Naomi will hire a couple of us to work on this project over the summer, so we will have a chance to actually implement the things that we didn't get to this time.</p>
+
+<p>On that note, here are some of the things that we didn't get to do that we wish we had:</p>
+<ul>
+	<li>
+		Phone
+		<ul>
+			<li>Track the phone status: when does it get turnned on/off, when is the app disabled?</li>
+			<li>Create a feature that lets the location tracking be disabled automatically when the subject leaves a certain area (Naomi wants this to ensure that she doesn't have data proving parolees violated their parole conditions).</li>
+			<li>Refactor all the code: right now, a lot of the code doesn't fit into packages the way that it naturally should based on its function.</li>
+		</ul>
+	</li>
+	<li>
+		Web
+		<ul>
+			<li>Create a &quot;drag and drop&quot; interface for creating surveys.  This way, the user can build a flowchart/tree, which is the natural way to think about the surveys.</li>
+			<li>Create a &quot;study&quot; level of control: allow multiple studies to be run of one server and be able to set up when they start/stop.</li>
+			<li>Give web users the ability to control more things on the phones via configuration settings.</li>
+			<li>Provide more survey options, specifically, let subjects select multiple answers for a multiple choice question.</li>
+		</ul>
+	</li>
+</ul>
+
+<p>If we were to do this again, there are two big things that we could change.  First, we would put way more effort into the first stages of the project.  We really needed to do more planning.  It would have been good to get the group together before Spring Break, but we were one of the later groups to form, so that wasn't possible.  Second, we would have liked to have had a smaller team.  It's good to have a lot of people to do work, but it's not always worth the effort to coordinate such a large group.  We could have been more efficient with fewer people.</p>
+
+<p>Overall, I would say the project had its bumps but we were really able to put everything together toward the end and finish the project and achieve most of our initial targets.</p>
+
+<hr />
+
+<h3>Final Notes</h3>
+
+<p>The PEOPLES team would like to extend a special thanks to the following people:</p>
+<ul>
+	<li>Dr. Dondero and Cole for all their hard work making this a great class.</li>
+	<li>Naomi, for all her help and support.</li>
+</ul>
+
+</body>
+</html>
