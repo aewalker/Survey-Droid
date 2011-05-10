@@ -15,7 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.peoples.android.activities.ConfirmSubmissionSurvey;
+import com.peoples.android.database.ScheduledSurveyDBHandler;
 import com.peoples.android.model.Survey;
+import com.peoples.android.model.SurveyIntent;
 import com.peoples.android.server.Pull;
 import com.peoples.android.server.Push;
 
@@ -28,16 +30,14 @@ import com.peoples.android.server.Push;
  *
  */
 public class Peoples extends ListActivity {	
-    // Debugging
-	// TEST
-	//TEST
-    private static final String TAG = "Peoples";
+    
+	// Debugging
+	private static final String TAG = "Peoples";
     private static final boolean D = true;
     private int requestCode;
     
     private Survey survey;
-    
-    
+        
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -192,8 +192,13 @@ public class Peoples extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==1){
+        	
+        	int remove = ScheduledSurveyDBHandler.removeIntent(
+        					getApplicationContext(), (SurveyIntent) data );
+        	
             Toast.makeText(this, "Thank you for taking our survey", Toast.LENGTH_LONG).show();
             if(!survey.submit()) Log.e(TAG, "Something went wrong and the survey didn't submit");
+            if(remove <= 0) Log.e(TAG, "no surveys matched in the scheduled db");
             finish();
         }
         else{
