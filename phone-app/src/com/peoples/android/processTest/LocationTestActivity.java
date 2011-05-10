@@ -21,7 +21,11 @@ import android.widget.Toast;
 import com.peoples.android.R;
 import com.peoples.android.activities.MainActivity;
 import com.peoples.android.database.PeoplesDBHandler;
-
+/**
+ * 
+ * @author Henry Liu
+ *
+ */
 public class LocationTestActivity extends Activity {
 	
 	private static final String TAG = "LocTestActi";

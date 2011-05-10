@@ -23,10 +23,6 @@ public class BootIntentReceiver extends BroadcastReceiver {
     	
     	if(D) Log.e(TAG, "on Receive");
     	
-//    	before (doesn't work):
-//    	new Intent(context, BootService.class)
-    	
-//    	after (works):
     	Intent bootIntent = new Intent();
     	bootIntent.setAction("com.peoples.android.BootService");
     	bootIntent.setClass(context, BootService.class);

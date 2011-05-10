@@ -13,11 +13,14 @@ import android.widget.Toast;
 import com.peoples.android.Peoples;
 import com.peoples.android.R;
 
-import com.peoples.android.model.Survey;
 import com.peoples.android.model.SurveyIntent;
 
 
-
+/**
+ * Triggers the pop-up informing user they have a new survey awaiting.
+ * @author Henry Liu
+ *
+ */
 public class MainActivity extends Activity {
 
 	// Debugging
@@ -26,15 +29,11 @@ public class MainActivity extends Activity {
 
     //time to vibrate to warn user, in milliseconds
     private static final long VIBRATION_TIME = 500;
-    
-    //Time to delay the survey for if user chooses to
-    private static final long DELAY = 120*1000;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Context panda = this;
 
         if(D){
         	Log.d(TAG, "+++ ON CREATE main activity +++");
@@ -44,11 +43,11 @@ public class MainActivity extends Activity {
             Log.d(TAG, "Current  time: "+ System.currentTimeMillis());
         }
         
-        
-        //TADA!
+        // Vibrates the phone when this activity is created
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(VIBRATION_TIME);
         
+        //setting the layout of the activity
         setContentView(R.layout.remind);
 
         final TextView q = (TextView) this.findViewById(R.id.msg);
@@ -73,11 +72,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 //Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
                 //startActivityForResult(myIntent, 0);
-            	
-            	//##############################################################//
-            	//here's where you would call the service to postpone the survey//
-            	//##############################################################//
-            	
+
             	//will need one of these to schedule services
                 /*AlarmManager alarmManager =
                 	(AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -96,19 +91,6 @@ public class MainActivity extends Activity {
             	finish();
             }
         });
-        
-        
-        //TODO: CANT FIND SYNC VIEW!
-        
-//        Button sync = (Button) findViewById(R.id.Sync);
-//        sync.setText("Sync the surveys manually, to update deploy time or questions");
-//        sync.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                Intent myIntent = new Intent(view.getContext(), LocationTestActivity.class);
-//                startActivityForResult(myIntent, 0);
-//            }
-//        });
-
     }
     
     
