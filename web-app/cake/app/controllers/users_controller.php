@@ -58,10 +58,13 @@ class UsersController extends AppController
     		$this->User->create();
     		$this->User->save(array('User' => array(
 	    		'username' => 'peoplesroot',
-	    		'password' => 'peoplespass',
+	    		'password' => $this->Auth->password('peoplespass'),
     			'password_copy' => 'peoplespass',
     			'password_confirm' => 'peoplespass',
-    			'email' => 'noemail@nohost.com'
+    			'email' => 'noemail@nohost.com',
+    			'admin' => true,
+    			'first_name' => 'PEOPLES',
+    			'last_name' => 'Administrator'
     		)));
     	}
     	
