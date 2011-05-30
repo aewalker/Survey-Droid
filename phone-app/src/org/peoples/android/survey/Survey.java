@@ -6,7 +6,6 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -31,11 +30,8 @@ import org.peoples.android.Config;
  * @author Tony Xiao
  * @author Austin Walker
  */
-public class Survey implements Serializable
+public class Survey
 {
-	//to be serializable, must have this
-	private static final long serialVersionUID = 1L;
-	
 	//the database helper instance and Context
 	private final SurveyDBHandler db;
 	private final Context ctxt;

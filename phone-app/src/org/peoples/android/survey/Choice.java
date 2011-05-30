@@ -6,8 +6,6 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
-import java.io.Serializable;
-
 import android.content.Context;
 import android.database.Cursor;
 
@@ -25,10 +23,8 @@ import org.peoples.android.database.PeoplesDB;
  * @author Diego Vargas
  * @author Austin Walker
  */
-public class Choice implements Serializable
+public class Choice
 {
-	private static final long serialVersionUID = 1L;
-	
 	//the text to display as an option
 	private final String choice_text;
 	

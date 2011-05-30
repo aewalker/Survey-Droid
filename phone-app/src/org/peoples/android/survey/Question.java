@@ -6,7 +6,6 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Stack;
 import android.content.Context;
@@ -23,12 +22,10 @@ import android.content.Context;
  * @author Austin Walker
  * @author Henry Liu
  */
-public class Question implements Serializable
+public class Question
 {
-	//have to keep the Question id to look up history in the DB\
+	//have to keep the Question id to look up history in the DB
 	private final int id;
-	
-	private static final long serialVersionUID = 1L;
 	
 	//question text
 	private final String q_text;

@@ -6,7 +6,6 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -22,10 +21,8 @@ import java.util.Map;
  * @author Diego Vargas
  * @author Austin Walker
  */
-public class Condition implements Serializable
+public class Condition
 {
-	private static final long serialVersionUID = 1L;
-	
 	//enumeration of the comparison types
 	public static final int JUST_WAS = 0;
 	public static final int EVER_WAS = 1;

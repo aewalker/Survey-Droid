@@ -18,6 +18,28 @@
 				android:debuggable="true"
 				android:screenOrientation="portrait"
 				android:configChanges="keyboardHidden|orientation">
+		<receiver android:label="BootIntentReceiver" android:name="BootIntentReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+		<service android:label="SurveyScheduler" android:name=".survey.SurveyScheduler"></service>
+		<service android:name=".survey.SurveyService" android:label="SurveyService">
+			<intent-filter>
+				<action android:name="org.peoples.android.survey.ACTION_SHOW_SURVEY" />
+				<action android:name="org.peoples.android.survey.ACTION_NEXT_QUESTION" />
+				<action android:name="org.peoples.android.survey.ACTION_PREV_QUESTION" />
+				<action android:name="org.peoples.android.survey.ACTION_SUBMIT_ANSWERS" />
+			</intent-filter>
+		</service>
+		<activity android:label="QuesitonActivity" android:name=".survey.QuestionActivity"></activity>
+		<activity android:label="ConfirmSubmitActivity" android:name=".survey.ConfirmSubmitActivity"></activity>
+		<activity android:label="MainActivity" android:name="MainActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
 
 	</application>
 </manifest>
