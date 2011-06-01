@@ -38,6 +38,7 @@
 				<action android:name="org.peoples.android.survey.ACTION_SUBMIT_ANSWERS" />
 			</intent-filter>
 		</service>
+		<activity android:label="NotificationActivity" android:name=".survey.NotificationActivity"></activity>
 		<activity android:label="QuesitonActivity" android:name=".survey.QuestionActivity"></activity>
 		<activity android:label="ConfirmSubmitActivity" android:name=".survey.ConfirmSubmitActivity"></activity>
 		<activity android:label="MainActivity" android:name="MainActivity">
