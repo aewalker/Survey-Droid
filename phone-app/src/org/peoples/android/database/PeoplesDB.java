@@ -55,7 +55,12 @@ public class PeoplesDB extends SQLiteOpenHelper {
     public static final String CONDITION_TABLE_NAME = "conditions";
     public static final String QUESTION_TABLE_NAME = "questions";
     public static final String SURVEY_TABLE_NAME = "surveys";
-    public static final String SS_TABLE_NAME	 = "scheduled_surveys";
+    
+    //for convenience
+    public static final String[] TABLES = {LOCATION_TABLE_NAME,
+    	CALLLOG_TABLE_NAME, ANSWER_TABLE_NAME, BRANCH_TABLE_NAME,
+    	CHOICE_TABLE_NAME, CONDITION_TABLE_NAME, QUESTION_TABLE_NAME,
+    	SURVEY_TABLE_NAME};
 
     //needed for creating the call log
     private Context context;
@@ -287,6 +292,9 @@ public class PeoplesDB extends SQLiteOpenHelper {
     	public static final String FR = "fr";
     	public static final String SA = "sa";
     	public static final String SU = "su";
+    	
+    	//for convenience
+    	public static final String[] DAYS = {SU, MO, TU, WE, TH, FR, SA, SA};
 
     	private static String createSql() {
     		return "CREATE TABLE surveys (" +
@@ -303,32 +311,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
     	}
     }
     
-    /**
-     * Table tracking surveys that were scheduled to happen but were rejected
-     * by the phone user to be asked at a later time.  Contains the surveys id,
-     * the time it was originally supposed to be complete, and how many times
-     * it has been skipped.
-     * 
-     * @author Diego Vargas
-     */
-    public static final class ScheduledSurveys implements BaseColumns {
-    	 
-    	public static final String SURVEY_ID	 = "survey_id";
-    	public static final String ORIGINAL_TIME = "original_time";
-    	public static final String SKIPPED		 = "survey_skipped";
-    	
-    	private static String createSql() {
-    		
-    		return "CREATE TABLE " + SS_TABLE_NAME + " (" +
-    				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    				SURVEY_ID + " INT UNSIGNED NOT NULL, " +
-    				ORIGINAL_TIME + " LONG UNSIGNED NOT NULL, " +
-    				SKIPPED	+ " BOOLEAN NOT NULL);";
-    		
-    	}
-    }
-    
-
     @Override
     public void onCreate(SQLiteDatabase db) {
     	AnswerTable.createSql();
@@ -345,7 +327,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
             db.execSQL(ConditionTable.createSql());
             db.execSQL(QuestionTable.createSql());
             db.execSQL(SurveyTable.createSql());
-            db.execSQL(ScheduledSurveys.createSql());
 
             buildInitialCallLog(db);
 
@@ -370,7 +351,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + CONDITION_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + QUESTION_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SURVEY_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + SS_TABLE_NAME);
         
         onCreate(db);
     }

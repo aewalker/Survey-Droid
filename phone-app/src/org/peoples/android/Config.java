@@ -17,4 +17,14 @@ public class Config
 {
 	/** Is debugging enabled? */
 	public static final boolean D = true;
+	
+	/** Frequency with which to run the survey scheduler (in minutes) */
+	public static final int SCHEDULER_INTERVAL = 5;
+	//public static final int SCHEDULER_INTERVAL = 60 * 24;
+	
+	/** Format of survey times. */
+	public static final String TIME_FORMAT = "HHmm";
+	
+	/** Format of survey days. */
+	public static final String DAY_FORMAT = "EE";
 }

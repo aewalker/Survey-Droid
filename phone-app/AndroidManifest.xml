@@ -23,9 +23,15 @@
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
-		<service android:label="SurveyScheduler" android:name=".survey.SurveyScheduler"></service>
+		<service android:label="SurveyScheduler" android:name=".survey.SurveyScheduler">
+			<intent-filter>
+				<action android:name="org.peoples.android.survey.ACTION_ADD_SURVEY" />
+				<action android:name="org.peoples.android.survey.ACTION_SCHEDULE_SURVEYS" />
+			</intent-filter>
+		</service>
 		<service android:name=".survey.SurveyService" android:label="SurveyService">
 			<intent-filter>
+				<action android:name="org.peoples.android.survey.ACTION_SURVEY_READY" />
 				<action android:name="org.peoples.android.survey.ACTION_SHOW_SURVEY" />
 				<action android:name="org.peoples.android.survey.ACTION_NEXT_QUESTION" />
 				<action android:name="org.peoples.android.survey.ACTION_PREV_QUESTION" />

@@ -38,6 +38,34 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	/*-----------------------------------------------------------------------*/
 	
 	/**
+	 * Get all surveys (id and time fields only); used for scheduling.
+	 */
+	public Cursor getSurveys()
+	{
+		if (Config.D) Log.d(TAG, "getting all surveys");
+		
+		//set up the query
+
+		String    table    = PeoplesDB.SURVEY_TABLE_NAME;
+		String[]  cols     = {PeoplesDB.SurveyTable._ID,
+						      PeoplesDB.SurveyTable.SU,
+						      PeoplesDB.SurveyTable.MO,
+						      PeoplesDB.SurveyTable.TU,
+						      PeoplesDB.SurveyTable.WE,
+						      PeoplesDB.SurveyTable.TH,
+						      PeoplesDB.SurveyTable.FR,
+						      PeoplesDB.SurveyTable.SA};
+		String    selc     = null;
+		String[]  selcArgs = null;
+		String    group    = null;
+		String    having   = null;
+		String    orderBy  = null;
+		
+		//run it
+		return db.query(table, cols, selc, selcArgs, group, having, orderBy);
+	}
+	
+	/**
 	 * Get the Survey level data.
 	 * 
 	 * @param id - the survey_id
