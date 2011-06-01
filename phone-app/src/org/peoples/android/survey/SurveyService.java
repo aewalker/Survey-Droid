@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import org.peoples.android.Config;
+import org.peoples.android.coms.ComsService;
 
 /**
  * Runs while a survey is being administered to the user.  "Spawns" instances
@@ -126,6 +127,15 @@ public class SurveyService extends Service
 			{ //subject has approved submission of answers
 				if (!survey.submit()) Log.e(TAG, "Survey submission error");
 				else if (Config.D) Log.d(TAG, "Answers submitted");
+				
+				//try to upload the new answers ASAP
+				Intent comsIntent =
+					new Intent(getApplicationContext(), ComsService.class);
+				comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+				comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
+						ComsService.SURVEY_DATA);
+				startService(comsIntent);
+				
 				stopSelf();
 			}
 			else

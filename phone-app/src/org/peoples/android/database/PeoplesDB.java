@@ -80,7 +80,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
         public static final String LONGITUDE = "longitude";
         public static final String LATITUDE = "latitude";
         public static final String TIME = "time";
-        public static final String UPLOADED = "uploaded";
 
         private static String createSql() {
         	return "CREATE TABLE " + LOCATION_TABLE_NAME + " (" 
@@ -88,7 +87,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
             + LocationTable.LONGITUDE	+ " DOUBLE,"
             + LocationTable.LATITUDE		+ " DOUBLE," 
             + LocationTable.TIME			+ " INTEGER,"
-            + LocationTable.UPLOADED 	+ " INT UNSIGNED DEFAULT 0"
             						+ " );";
         }
     }
@@ -110,7 +108,6 @@ public class PeoplesDB extends SQLiteOpenHelper {
         public static final String CALL_TYPE = "call_type";
         public static final String DURATION = "duration";
         public static final String TIME = "time";
-        public static final String UPLOADED = "uploaded";
 
         // Given an integer call type, return a string representation
         public static String getCallTypeString(int callType) {
@@ -140,8 +137,7 @@ public class PeoplesDB extends SQLiteOpenHelper {
             + CallLogTable.PHONE_NUMBER + " TEXT,"
             + CallLogTable.CALL_TYPE + " TEXT," 
             + CallLogTable.DURATION + " INTEGER," 
-            + CallLogTable.TIME + " TEXT,"
-            + "uploaded INT UNSIGNED DEFAULT 0)";
+            + CallLogTable.TIME + " TEXT)";
         }
     }
    

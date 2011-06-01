@@ -38,6 +38,12 @@
 				<action android:name="org.peoples.android.survey.ACTION_SUBMIT_ANSWERS" />
 			</intent-filter>
 		</service>
+		<service android:name=".coms.ComsService" android:label="ComsService">
+			<intent-filter>
+				<action android:name="org.peoples.android.coms.ACTION_UPLOAD_DATA" />
+				<action android:name="org.peoples.android.coms.ACTION_DOWNLOAD_DATA" />
+			</intent-filter>
+		</service>
 		<activity android:label="NotificationActivity" android:name=".survey.NotificationActivity"></activity>
 		<activity android:label="QuesitonActivity" android:name=".survey.QuestionActivity"></activity>
 		<activity android:label="ConfirmSubmitActivity" android:name=".survey.ConfirmSubmitActivity"></activity>
