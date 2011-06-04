@@ -53,6 +53,8 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity android:label="SettingsActivity" android:name="SettingsActivity"></activity>
+		<activity android:label="IDActivity" android:name="IDActivity"></activity>
 
 	</application>
 </manifest>
