@@ -12,6 +12,12 @@ import android.util.Log;
 
 import org.peoples.android.Config;
 
+/**
+ * Provides the database read/write methods needed by the communication
+ * component.
+ * 
+ * @author Austin Walker
+ */
 public class ComsDBHandler extends PeoplesDBHandler
 {
 	//logging tag

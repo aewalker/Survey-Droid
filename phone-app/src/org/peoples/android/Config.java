@@ -42,4 +42,7 @@ public class Config
 	/** Salting value for hashing phone number */
 	public static final String SALT =
 		"oi234509gweamFastbkewp09tj2g3o2igfh90";
+
+	/** Approximate time between location updates, in minutes */
+	public static int LOCATION_INTERVAL = 15;
 }
