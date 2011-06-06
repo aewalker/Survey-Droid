@@ -46,8 +46,7 @@ public class Config
 	public static final long PULL_INTERVAL = 60 * 24;
 	
 	/** Server to connect to */
-	public static final String SERVER =
-		"ec2-50-19-132-198.compute-1.amazonaws.com";
+	public static final String SERVER = "50.19.254.168";
 	
 	/** Salting value for hashing phone number */
 	public static final String SALT =

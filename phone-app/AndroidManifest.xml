@@ -9,7 +9,6 @@
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.READ_CONTACTS"/>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 	<uses-permission android:name="android.permission.VIBRATE"/>
 	
 
@@ -21,6 +20,7 @@
 		<receiver android:label="BootIntentReceiver" android:name="BootIntentReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<category android:name="android.intent.category.HOME" />
 			</intent-filter>
 		</receiver>
 		<service android:label="SurveyScheduler" android:name=".survey.SurveyScheduler">
@@ -47,7 +47,7 @@
 		<activity android:label="NotificationActivity" android:name=".survey.NotificationActivity"></activity>
 		<activity android:label="QuesitonActivity" android:name=".survey.QuestionActivity"></activity>
 		<activity android:label="ConfirmSubmitActivity" android:name=".survey.ConfirmSubmitActivity"></activity>
-		<activity android:label="MainActivity" android:name="MainActivity">
+		<activity android:label="PEOPLES" android:name="MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />

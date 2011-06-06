@@ -5,6 +5,8 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.coms;
 
+import java.util.Calendar;
+
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -99,28 +101,31 @@ public class ComsService extends IntentService
 	{
 		if (intent.getBooleanExtra(EXTRA_REPEATING, false))
 		{
-			long time = intent.getLongExtra(EXTRA_RUNNING_TIME, -1);
-			if (time == -1)
-				throw new RuntimeException("Must give running time");
+//			long time = intent.getLongExtra(EXTRA_RUNNING_TIME, -1);
+//			if (time == -1)
+//				throw new RuntimeException("Must give running time");
+			long time = Calendar.getInstance().getTimeInMillis();
 			Intent comsIntent = new Intent(getApplicationContext(),
 					ComsService.class);
 			comsIntent.setAction(intent.getAction());
 			comsIntent.putExtra(EXTRA_REPEATING, true);
+			if (intent.getAction().equals(ACTION_UPLOAD_DATA))
+			{
+				comsIntent.putExtra(EXTRA_RUNNING_TIME,
+						time + (Config.PUSH_INTERVAL * 60 * 1000));
+			}
+			else
+			{
+				comsIntent.putExtra(EXTRA_RUNNING_TIME,
+						time + (Config.PULL_INTERVAL * 60 * 1000));
+			}
 			PendingIntent pendingComs = PendingIntent.getService(
 					getApplicationContext(), 0, comsIntent,
 					PendingIntent.FLAG_ONE_SHOT);
 			AlarmManager alarm =
 				(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-			if (intent.getAction().equals(ACTION_UPLOAD_DATA))
-			{
-				alarm.set(AlarmManager.RTC_WAKEUP,
-					time + (Config.PUSH_INTERVAL * 60 * 1000), pendingComs);
-			}
-			else
-			{
-				alarm.set(AlarmManager.RTC_WAKEUP,
-					time + (Config.PULL_INTERVAL * 60 * 1000), pendingComs);
-			}
+			alarm.set(AlarmManager.RTC_WAKEUP,
+				time + (comsIntent.getLongExtra(EXTRA_RUNNING_TIME, -1)), pendingComs);
 		}
 	}
 }

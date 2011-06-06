@@ -83,10 +83,10 @@ public class PeoplesDB extends SQLiteOpenHelper {
 
         private static String createSql() {
         	return "CREATE TABLE " + LOCATION_TABLE_NAME + " (" 
-        	+ LocationTable._ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT," 
+        	+ LocationTable._ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + LocationTable.LONGITUDE	+ " DOUBLE,"
             + LocationTable.LATITUDE		+ " DOUBLE," 
-            + LocationTable.TIME			+ " INTEGER,"
+            + LocationTable.TIME			+ " INTEGER"
             						+ " );";
         }
     }

@@ -90,6 +90,9 @@ public class CallTracker extends PhoneStateListener
 				cdbh.close();
 			}
 		}
-		else throw new RuntimeException("Unkown phone state: " + state);
+		else if (state != TelephonyManager.CALL_STATE_IDLE)
+		{
+			throw new RuntimeException("Unkown phone state: " + state);
+		}
 	}
 }

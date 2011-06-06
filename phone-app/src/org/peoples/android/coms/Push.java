@@ -56,7 +56,10 @@ public class Push extends WebClient
             		+ answers.getCount());
             answers.moveToFirst();
             
-            while (!answers.isAfterLast()) {
+            if (answers.getCount() == 0) return true;
+            
+            while (!answers.isAfterLast())
+            {
                 JSONObject ans = new JSONObject();
                 ans.put(PeoplesDB.AnswerTable._ID, answers.getInt(
                 		answers.getColumnIndexOrThrow(
@@ -87,7 +90,7 @@ public class Push extends WebClient
         	String uid = tManager.getDeviceId();
             
             data.put("deviceId", uid);
-            data.put("answers", answers);
+            data.put("answers", answersJSON);
             if (Config.D) Log.d(TAG, data.toString());
             boolean success = postJsonToUrl(PUSH_URL, data.toString());
             
@@ -133,6 +136,8 @@ public class Push extends WebClient
             
             if (Config.D) Log.d("Push", "# of locations to push : "
             		+ locations.getCount());
+            
+            if (locations.getCount() == 0) return true;
             
             locations.moveToFirst();
             while (!locations.isAfterLast())
@@ -205,9 +210,12 @@ public class Push extends WebClient
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
             cdbh.openRead();
             Cursor calls = cdbh.getCalls();
+            cdbh.close();
             JSONArray callsJSON = new JSONArray();
             
             Log.d(TAG, "# of call logs to push : " + calls.getCount());
+            
+            if (calls.getCount() == 0) return true;
             
             calls.moveToFirst();
             while (!calls.isAfterLast())
