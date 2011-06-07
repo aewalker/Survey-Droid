@@ -38,8 +38,8 @@ public class MainActivity extends Activity
         if (Config.D) Log.d(TAG, "starting mainActivity");
         
         //FIXME TESTING ONLY!
-        BootIntentReceiver bir = new BootIntentReceiver();
-        bir.startup(getApplicationContext());
+        //BootIntentReceiver bir = new BootIntentReceiver();
+        //bir.startup(getApplicationContext());
         
         //setting the layout of the activity
         setContentView(R.layout.main);
@@ -57,8 +57,8 @@ public class MainActivity extends Activity
                 Intent surveyIntent = new Intent(view.getContext(),
                 		SurveyService.class);
                 surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
-                //FIXME TESING ONLY!
-                surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID, 1);
+                surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID,
+                		SurveyService.DUMMY_SURVEY_ID);
                 startService(surveyIntent);
             }
         });

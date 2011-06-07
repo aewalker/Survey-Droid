@@ -52,6 +52,11 @@ public class QuestionActivity extends ListActivity
 		if (choices == null) throw new RuntimeException("No question choices");
 		final boolean isOnFirst =
 			intent.getBooleanExtra(IS_FIRST_QUESTION, true);
+		final int prevAnsIndex =
+			intent.getIntExtra(SurveyService.EXTRA_ANS_INDEX, -1);
+		String prevAnsText = "";
+		if (prevAnsIndex == -1)
+			prevAnsText = intent.getStringExtra(SurveyService.EXTRA_ANS_TEXT);
 		
 		//set the information to be used in the views
 		setContentView(org.peoples.android.R.layout.survey_list_view);
@@ -59,12 +64,18 @@ public class QuestionActivity extends ListActivity
 				org.peoples.android.R.id.question_textView);
 		if (choices.length == 0)
 		{
-			
+			setListAdapter(new ArrayAdapter<String>(this,
+				org.peoples.android.R.layout.list_item, new String[] {prevAnsText}));
 		}
 		else
 		{
-		setListAdapter(new ArrayAdapter<String>(this,
-				R.layout.simple_list_item_single_choice, choices));
+			//TODO change this to be ArrayAdapter<Choice> and implement
+			//toString() in Choice, then remove the getChoiceTexts() method
+			//from Survey
+			setListAdapter(new ArrayAdapter<String>(this,
+					R.layout.simple_list_item_single_choice, choices));
+			if (prevAnsIndex != -1)
+				getListView().setItemChecked(prevAnsIndex, true);
 		}
 		qTextView.setText(qText);
 		

@@ -49,6 +49,7 @@ public class ConfirmSubmitActivity extends Activity
 				Intent backIntent = new Intent(
 						getApplicationContext(), SurveyService.class);
 				backIntent.setAction(SurveyService.ACTION_PREV_QUESTION);
+				startService(backIntent);
 				finish();
 			}
 		});
@@ -63,6 +64,7 @@ public class ConfirmSubmitActivity extends Activity
 				Intent finishIntent = new Intent(
 						getApplicationContext(), SurveyService.class);
 				finishIntent.setAction(SurveyService.ACTION_SUBMIT_ANSWERS);
+				startService(finishIntent);
 				finish();
 			}
 		});

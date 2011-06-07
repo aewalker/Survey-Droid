@@ -123,7 +123,6 @@ public class SurveyScheduler extends IntentService
 		SurveyDBHandler sdbh = new SurveyDBHandler(this);
 		sdbh.openRead();
 		Cursor surveys = sdbh.getSurveys();
-		sdbh.close();
 		
 		surveys.moveToFirst();
 		String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -170,6 +169,7 @@ public class SurveyScheduler extends IntentService
 			surveys.moveToNext();
 		}
 		surveys.close();
+		sdbh.close();
 		
 		//make sure to run this again later
 		Intent schedulerIntent = new Intent(getApplicationContext(),

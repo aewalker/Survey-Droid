@@ -48,7 +48,6 @@ public class Push extends WebClient
         	ComsDBHandler cdbh = new ComsDBHandler(ctx);
             cdbh.openRead();
             Cursor answers = cdbh.getNewAnswers();
-            cdbh.close();
             
             JSONArray answersJSON = new JSONArray();
             
@@ -56,7 +55,12 @@ public class Push extends WebClient
             		+ answers.getCount());
             answers.moveToFirst();
             
-            if (answers.getCount() == 0) return true;
+            if (answers.getCount() == 0)
+            {
+            	answers.close();
+                cdbh.close();
+            	return true;
+            }
             
             while (!answers.isAfterLast())
             {
@@ -80,6 +84,7 @@ public class Push extends WebClient
                 answers.moveToNext();
             }
             answers.close();
+            cdbh.close();
             
             // now send to actual server
             JSONObject data = new JSONObject();
@@ -130,14 +135,18 @@ public class Push extends WebClient
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
             cdbh.openRead();
             Cursor locations = cdbh.getLocations();
-            cdbh.close();
             
             JSONArray locationsJSON = new JSONArray();
             
             if (Config.D) Log.d("Push", "# of locations to push : "
             		+ locations.getCount());
             
-            if (locations.getCount() == 0) return true;
+            if (locations.getCount() == 0)
+            {
+            	locations.close();
+                cdbh.close();
+            	return true;
+            }
             
             locations.moveToFirst();
             while (!locations.isAfterLast())
@@ -159,6 +168,7 @@ public class Push extends WebClient
                 locations.moveToNext();
             }
             locations.close();
+            cdbh.close();
             
             // now send to actual server
             JSONObject data = new JSONObject();
@@ -210,12 +220,17 @@ public class Push extends WebClient
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
             cdbh.openRead();
             Cursor calls = cdbh.getCalls();
-            cdbh.close();
             JSONArray callsJSON = new JSONArray();
             
-            Log.d(TAG, "# of call logs to push : " + calls.getCount());
+            if (Config.D)
+            	Log.d(TAG, "# of call logs to push : " + calls.getCount());
             
-            if (calls.getCount() == 0) return true;
+            if (calls.getCount() == 0)
+            {
+            	calls.close();
+                cdbh.close();
+            	return true;
+            }
             
             calls.moveToFirst();
             while (!calls.isAfterLast())
@@ -240,6 +255,7 @@ public class Push extends WebClient
                 calls.moveToNext();
             }
             calls.close();
+            cdbh.close();
             
             // now send to actual server
             JSONObject data = new JSONObject();

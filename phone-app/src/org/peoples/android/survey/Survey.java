@@ -56,6 +56,8 @@ public class Survey
 
 	//the Question history via a stack
 	private final Stack<Question> history = new Stack<Question>();
+	
+	/** Used as the survey id for a dummy survey that will not be recoreded */
 
 	/*-----------------------------------------------------------------------*/
 	/**

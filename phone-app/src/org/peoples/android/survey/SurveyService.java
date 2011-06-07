@@ -43,6 +43,12 @@ public class SurveyService extends Service
 	public static final String EXTRA_ANS_INDEX =
 		"org.peoples.android.survey.EXTRA_ANS_INDEX";
 	
+	/**
+	 * Given this id, a dummy survey will be used and the answers will not be
+	 * recorded.
+	 */
+	public static final int DUMMY_SURVEY_ID = 0;
+	
 	//the survey instance that each instance of this service uses
 	private Survey survey;
 	
@@ -58,16 +64,18 @@ public class SurveyService extends Service
 			Intent notificationIntent =
 				new Intent(getApplicationContext(), NotificationActivity.class);
 			notificationIntent.putExtra(EXTRA_SURVEY_ID,
-					intent.getIntExtra(EXTRA_SURVEY_ID, 0));
+					intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID));
 			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(notificationIntent);
 		}
 		else if (action.equals(ACTION_SHOW_SURVEY))
 		{ //survey is just being started
 			Log.i(TAG, "Starting survey service");
-			int surveyID = intent.getIntExtra(EXTRA_SURVEY_ID, 0);
+			int surveyID =
+				intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID);
 			if (Config.D) Log.d(TAG, "Starting survey number " + surveyID);
-			if (surveyID == 0) survey = new Survey(getApplicationContext());
+			if (surveyID == DUMMY_SURVEY_ID)
+				survey = new Survey(getApplicationContext());
 			else survey = new Survey(surveyID, getApplicationContext());
 			
 			//spawn the first QuestionActivity
@@ -160,6 +168,15 @@ public class SurveyService extends Service
 				survey.getChoiceTexts());
 		questionIntent.putExtra(QuestionActivity.IS_FIRST_QUESTION,
 				survey.isOnFirst());
+		int ans = survey.getAnswerChoice();
+		if (ans == -1)
+		{
+			questionIntent.putExtra(EXTRA_ANS_TEXT, survey.getAnswerText());
+		}
+		else
+		{
+			questionIntent.putExtra(EXTRA_ANS_INDEX, ans);
+		}
 		questionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(questionIntent);
 	}
