@@ -32,16 +32,13 @@ public class BootIntentReceiver extends BroadcastReceiver
     {
     	if (!intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
     		throw new RuntimeException("Wrong action: " + intent.getAction());
-    	
+    	startup(context);
+    }
+    
+    //FIXME FOR TESTING ONLY - move back to onReceive when done
+    public void startup(Context context)
+    {
     	Log.i(TAG, "+++Starting PEOPLES+++");
-    	
-    	//start the survey scheduler
-    	if (Config.D) Log.d(TAG, "Starting survey scheduler");
-    	Intent schedulerIntent = new Intent(context, SurveyScheduler.class);
-    	schedulerIntent.setAction(SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
-    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUNNING_TIME,
-    			Calendar.getInstance().getTimeInMillis());
-        context.startService(schedulerIntent);
         
         //start the coms service pulling
         if (Config.D) Log.d(TAG, "Starting pull service");
@@ -76,5 +73,13 @@ public class BootIntentReceiver extends BroadcastReceiver
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
         		Config.LOCATION_INTERVAL * 60 * 1000, 0,
         		new LocationTracker(context));
+    	
+    	//start the survey scheduler
+    	if (Config.D) Log.d(TAG, "Starting survey scheduler");
+    	Intent schedulerIntent = new Intent(context, SurveyScheduler.class);
+    	schedulerIntent.setAction(SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
+    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUNNING_TIME,
+    			Calendar.getInstance().getTimeInMillis());
+        context.startService(schedulerIntent);
     }
 }

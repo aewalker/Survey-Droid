@@ -38,7 +38,8 @@ import org.peoples.android.Config;
  * @author Diego Vargas
  * @author Vladimir Costescu
  */
-public class PeoplesDB extends SQLiteOpenHelper {
+public class PeoplesDB extends SQLiteOpenHelper
+{
     private static final String TAG = "PeoplesDB";
 
     //Change the version number here to force the database to

@@ -23,6 +23,17 @@
 				<category android:name="android.intent.category.HOME" />
 			</intent-filter>
 		</receiver>
+		<receiver android:label="SurveyReceiver" android:name=".survey.SurveyReceiver">
+			<intent-filter>
+				<action android:name="org.peoples.android.survey.ACTION_SCHEDULE_SURVEYS" />
+			</intent-filter>
+		</receiver>
+		<receiver android:label="ComsReceiver" android:name=".coms.ComsReceiver">
+			<intent-filter>
+				<action android:name="org.peoples.android.coms.ACTION_UPLOAD_DATA" />
+				<action android:name="org.peoples.android.coms.ACTION_DOWNLOAD_DATA" />
+			</intent-filter>
+		</receiver>
 		<service android:label="SurveyScheduler" android:name=".survey.SurveyScheduler">
 			<intent-filter>
 				<action android:name="org.peoples.android.survey.ACTION_ADD_SURVEY" />

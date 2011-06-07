@@ -57,8 +57,15 @@ public class QuestionActivity extends ListActivity
 		setContentView(org.peoples.android.R.layout.survey_list_view);
 		final TextView qTextView = (TextView) this.findViewById(
 				org.peoples.android.R.id.question_textView);
-		setListAdapter(new ArrayAdapter<String>(getApplicationContext(),
+		if (choices.length == 0)
+		{
+			
+		}
+		else
+		{
+		setListAdapter(new ArrayAdapter<String>(this,
 				R.layout.simple_list_item_single_choice, choices));
+		}
 		qTextView.setText(qText);
 		
 		//set up the buttons

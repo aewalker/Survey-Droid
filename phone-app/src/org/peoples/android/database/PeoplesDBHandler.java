@@ -23,8 +23,8 @@ import org.peoples.android.Config;
  * @author Diego Vargas
  * @author Austin Walker
  */
-public class PeoplesDBHandler {
-	
+public class PeoplesDBHandler
+{
 	//logging tag
 	protected static final String TAG = "LocationTableHandler";
 	

@@ -96,7 +96,12 @@ public class SurveyScheduler extends IntentService
 	//schedule survey id for the given time
 	private void addSurvey(int id, long time)
 	{
-		if (Config.D) Log.d(TAG, "Scheduling survey " + id + " for " + time);
+		if (Config.D)
+		{
+			Calendar c = Calendar.getInstance();
+			c.setTimeInMillis(time);
+			Log.d(TAG, "Scheduling survey " + id + " for " + c.getTime().toString());
+		}
 		
 		Intent surveyIntent = new Intent(getApplicationContext(),
 				SurveyService.class);
@@ -115,7 +120,7 @@ public class SurveyScheduler extends IntentService
 	{
 		Log.i(TAG, "Scheduling surveys");
 		
-		SurveyDBHandler sdbh = new SurveyDBHandler(getApplicationContext());
+		SurveyDBHandler sdbh = new SurveyDBHandler(this);
 		sdbh.openRead();
 		Cursor surveys = sdbh.getSurveys();
 		sdbh.close();
@@ -123,26 +128,48 @@ public class SurveyScheduler extends IntentService
 		surveys.moveToFirst();
 		String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 		long nextRun = runningTime + (Config.SCHEDULER_INTERVAL * 60 * 1000);
+		if (Config.D)
+		{
+			Log.d(TAG, "Current run time: "
+				+ runningTime + ", next run time: " + nextRun);
+			Log.d(TAG, "Number of surveys found: " + surveys.getCount());
+		}
 		while (!surveys.isAfterLast())
 		{
 			int id = surveys.getInt(surveys.getColumnIndexOrThrow(
 					PeoplesDB.SurveyTable._ID));
+			if (Config.D) Log.d(TAG, "Doing survey " + id);
 			for (int i = 0; i < days.length; i++)
 			{
+				if (Config.D) Log.d(TAG, "Doing " + days[i]);
 				for (String time : surveys.getString(
 						surveys.getColumnIndexOrThrow(
 								PeoplesDB.SurveyTable.DAYS[i])).split(","))
 				{
 					long scheduledTime = getUnixTime(days[i], time);
+
+					if (Config.D)
+					{
+						Calendar c = Calendar.getInstance();
+						c.setTimeInMillis(scheduledTime);
+						Log.d(TAG, "Survey scheduled for "
+								+ c.getTime().toString());
+						Log.d(TAG, "should be scheduled for "
+								+ days[i] + " at " + time);
+					}
+					
 					if (scheduledTime < nextRun + 60l
 							&& scheduledTime >= runningTime)
 					{
+						if (Config.D) Log.d(TAG, "Survey "
+								+ id + " scheduled!");
 						addSurvey(id, scheduledTime);
 					}
 				}
 			}
 			surveys.moveToNext();
 		}
+		surveys.close();
 		
 		//make sure to run this again later
 		Intent schedulerIntent = new Intent(getApplicationContext(),

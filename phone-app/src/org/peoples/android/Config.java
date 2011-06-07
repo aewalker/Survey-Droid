@@ -35,7 +35,7 @@ public class Config
 	
 	//TODO convert these to use shared preferences
 	/** Frequency with which to run the survey scheduler (in minutes) */
-	public static final long SCHEDULER_INTERVAL = 5;
+	public static final long SCHEDULER_INTERVAL = 2;
 	//public static final int SCHEDULER_INTERVAL = 60 * 24;
 	
 	/** Frequency with which to push data (in minutes) */

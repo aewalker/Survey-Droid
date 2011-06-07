@@ -43,12 +43,12 @@ public class Pull extends WebClient
      * 
      * @param ctx - the Context
      */
-    public static void syncWithWeb(Context ctx)
+    public static void syncWithWeb(Context ctxt)
     {
     	try
     	{
             JSONObject json = new JSONObject(getUrlContent(PULL_URL));
-            PeoplesDB pdb = new PeoplesDB(ctx);
+            PeoplesDB pdb = new PeoplesDB(ctxt);
             SQLiteDatabase sdb = pdb.getWritableDatabase();
             syncSurveys(sdb, json.getJSONArray("surveys"));
             syncQuestions(sdb, json.getJSONArray("questions"));
@@ -69,7 +69,8 @@ public class Pull extends WebClient
     	Log.i(TAG, "Syncing surveys table");
     	try
     	{
-	    	for (int i =0 ; i < surveys.length(); i++)
+    		if (Config.D) Log.d(TAG, "Fetched " + surveys.length() + " surveys");
+	    	for (int i = 0 ; i < surveys.length(); i++)
 	    	{
 	    		JSONObject survey = surveys.getJSONObject(i);
 	    		ContentValues values = new ContentValues();
@@ -85,10 +86,18 @@ public class Pull extends WebClient
 	    		values.put(SurveyTable.FR, survey.getString("fr"));
 	    		values.put(SurveyTable.SA, survey.getString("sa"));
 	    		values.put(SurveyTable.SU, survey.getString("su"));
-				if (db.replace(SURVEY_TABLE_NAME, null, values) == -1 )
+	    		
+	    		//TODO change this so that it uses replace()?
+	    		db.beginTransaction();
+	    		db.delete(SURVEY_TABLE_NAME, SurveyTable._ID + " = ?",
+	    				new String[] {Integer.toString(survey.getInt("id"))});
+				if (db.insert(SURVEY_TABLE_NAME, null, values) == -1 )
 				{
-					throw new RuntimeException("Database replace error");
+					db.endTransaction();
+					throw new RuntimeException("Database insert error");
 				}
+				db.setTransactionSuccessful();
+				db.endTransaction();
 	    	}
     	}
     	catch (JSONException e)
