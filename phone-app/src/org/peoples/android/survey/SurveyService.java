@@ -8,8 +8,11 @@
 package org.peoples.android.survey;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
 import org.peoples.android.Config;
@@ -58,15 +61,25 @@ public class SurveyService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
+		//filter the intent action
 		String action = intent.getAction();
 		if (action.equals(ACTION_SURVEY_READY))
 		{
+			//wake up the phone if it's asleep
+			PowerManager pm =
+				(PowerManager) getSystemService(Context.POWER_SERVICE);
+			WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
+					| PowerManager.ACQUIRE_CAUSES_WAKEUP
+					| PowerManager.ON_AFTER_RELEASE, TAG);
+			wl.acquire();
+			
 			Intent notificationIntent =
 				new Intent(getApplicationContext(), NotificationActivity.class);
 			notificationIntent.putExtra(EXTRA_SURVEY_ID,
 					intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID));
 			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(notificationIntent);
+			wl.release();
 		}
 		else if (action.equals(ACTION_SHOW_SURVEY))
 		{ //survey is just being started
