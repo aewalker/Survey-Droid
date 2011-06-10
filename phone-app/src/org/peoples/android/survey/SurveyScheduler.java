@@ -45,6 +45,7 @@ public class SurveyScheduler extends IntentService
 		"org.peoples.android.survey.ACTION_SCHEDULE_SURVEYS";
 	
 	//intent extras
+	//TODO use the EXTRA_SURVEY_ID from the survey service
 	public static final String EXTRA_SURVEY_ID =
 		"org.peoples.android.survey.EXTRA_SURVEY_ID";
 	public static final String EXTRA_SKIPPED_COUNT =
@@ -75,7 +76,8 @@ public class SurveyScheduler extends IntentService
 			if (time == -1) throw new RuntimeException("No time given");
 			
 			//get the survey id
-			int id = intent.getIntExtra(EXTRA_SURVEY_ID, 0);
+			int id = intent.getIntExtra(EXTRA_SURVEY_ID,
+					SurveyService.DUMMY_SURVEY_ID);
 			
 			addSurvey(id, time);
 		}
@@ -107,6 +109,7 @@ public class SurveyScheduler extends IntentService
 				SurveyService.class);
 		surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
 		surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID, id);
+		surveyIntent.putExtra(EXTRA_RUNNING_TIME, time);
 		PendingIntent pendingSurvey = PendingIntent.getService(
 				getApplicationContext(), 0, surveyIntent,
 				PendingIntent.FLAG_ONE_SHOT);
@@ -129,7 +132,7 @@ public class SurveyScheduler extends IntentService
 		long nextRun = runningTime + (Config.SCHEDULER_INTERVAL * 60 * 1000);
 		if (Config.D)
 		{
-			Log.d(TAG, "Current run time: "
+			Log.v(TAG, "Current run time: "
 				+ runningTime + ", next run time: " + nextRun);
 			Log.d(TAG, "Number of surveys found: " + surveys.getCount());
 		}
@@ -140,7 +143,7 @@ public class SurveyScheduler extends IntentService
 			if (Config.D) Log.d(TAG, "Doing survey " + id);
 			for (int i = 0; i < days.length; i++)
 			{
-				if (Config.D) Log.d(TAG, "Doing " + days[i]);
+				if (Config.D) Log.v(TAG, "Doing " + days[i]);
 				for (String time : surveys.getString(
 						surveys.getColumnIndexOrThrow(
 								PeoplesDB.SurveyTable.DAYS[i])).split(","))
@@ -151,17 +154,15 @@ public class SurveyScheduler extends IntentService
 					{
 						Calendar c = Calendar.getInstance();
 						c.setTimeInMillis(scheduledTime);
-						Log.d(TAG, "Survey scheduled for "
+						Log.v(TAG, "Survey would be scheduled for "
 								+ c.getTime().toString());
-						Log.d(TAG, "should be scheduled for "
+						Log.v(TAG, "should be scheduled for "
 								+ days[i] + " at " + time);
 					}
-					
-					if (scheduledTime < nextRun + 60l
-							&& scheduledTime >= runningTime)
+					//TODO fix this...
+					if (/*(scheduledTime < (nextRun + (60 * 1000)))
+							&& (*/scheduledTime >= runningTime/*)*/)
 					{
-						if (Config.D) Log.d(TAG, "Survey "
-								+ id + " scheduled!");
 						addSurvey(id, scheduledTime);
 					}
 				}

@@ -55,6 +55,12 @@ public class Config
 	/** Approximate time between location updates, in minutes */
 	public static int LOCATION_INTERVAL = 15;
 	
+	/** Time to vibrate to warn user that a survey is ready in milliseconds. */
+    public static final long VIBRATION_TIME = 2000;
+    
+    /** Time to delay a survey for in minutes if the user chooses to. */
+    public static final long SURVEY_DELAY = 15;
+	
 	/**
 	 * Initialize the setting object.  Settings are available application-wide.
 	 * 

@@ -35,18 +35,23 @@ public class LocationTracker implements LocationListener
 	@Override
 	public void onLocationChanged(Location loc)
 	{
-		TrackingDBHandler tdbh = new TrackingDBHandler(ctxt);
-		tdbh.openWrite();
-		tdbh.writeLocation(
-				loc.getLatitude(), loc.getLongitude(), loc.getTime());
-		tdbh.close();
+		Config cfg = new Config(ctxt);
+		if (cfg.isLocationEnabled());
+		{
+			TrackingDBHandler tdbh = new TrackingDBHandler(ctxt);
+			tdbh.openWrite();
+			tdbh.writeLocation(
+					loc.getLatitude(), loc.getLongitude(), loc.getTime());
+			tdbh.close();
+		}
 	}
 
 	@Override
 	public void onProviderDisabled(String provider)
 	{
 		if (Config.D) Log.d(TAG, "GPS disabled!");
-		/* Turns out, it's actually not possible to turn on the GPS
+		/* 
+		 * Turns out, it's actually not possible to turn on the GPS
 		 * programatically without exploiting some pretty serious security
 		 * flaws in the Android system.  Since it's probably not a good idea
 		 * to write stuff that relies on bugs that are likely to get fixed,

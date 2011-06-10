@@ -13,7 +13,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.Vibrator;
+import android.os.PowerManager.WakeLock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,12 +37,15 @@ public class NotificationActivity extends Activity
 	//Logging tag
 	private static final String TAG = "NotificationActivity";
 	
-	//time to vibrate to warn user, in milliseconds
-    private static final long VIBRATION_TIME = 500;
+    //has the subject started the survey (ie pressed take now)?
+    private boolean started = false;
     
-    //time to delay a survey for in milliseconds
-    private static final long DELAY = 15 * 60 * 1000;  //15 mins
+    //the id of the survey that is ready.
+    private int id;
 	
+	//wakelock to keep the phone on while a survey is being started
+	private WakeLock wl;
+    
 	@Override
 	protected void onCreate(Bundle savedState)
 	{
@@ -48,13 +53,22 @@ public class NotificationActivity extends Activity
 		if (Config.D) Log.d(TAG, "Creating NotificationActivity");
 		
 		//get the survey id
-		final int id =
-			getIntent().getIntExtra(SurveyService.EXTRA_SURVEY_ID, 0);
+		id = getIntent().getIntExtra(SurveyService.EXTRA_SURVEY_ID, 0);
+		
+		//wake up the phone if it's asleep
+		PowerManager pm =
+			(PowerManager) getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
+				| PowerManager.ACQUIRE_CAUSES_WAKEUP
+				| PowerManager.ON_AFTER_RELEASE, TAG);
+		wl.acquire();
 		
 		//vibrate the phone
 		Vibrator vibrator =
 			(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		vibrator.vibrate(VIBRATION_TIME);
+		vibrator.vibrate(Config.VIBRATION_TIME);
+		
+		wl.release();
 		
 		//set up the views
 		setContentView(R.layout.remind);
@@ -72,6 +86,7 @@ public class NotificationActivity extends Activity
 				surveyIntent.setAction(SurveyService.ACTION_SHOW_SURVEY);
 				surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID, id);
 				startService(surveyIntent);
+				started = true;
 				finish();
 			}
 		});
@@ -82,15 +97,44 @@ public class NotificationActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				Intent postponeIntent =
-					new Intent(getApplicationContext(), SurveyScheduler.class);
-				postponeIntent.setAction(SurveyScheduler.ACTION_ADD_SURVEY);
-				postponeIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_ID, id);
-				postponeIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_TIME,
-						Calendar.getInstance().getTimeInMillis() + DELAY);
-				startService(postponeIntent);
+				finish();
 			}
 		});
+	}
+	
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
 		
+		//Don't let this activity sit in the background; kill it if for some
+		//reaon the subject tries to hide it without responding.  This way,
+		//onDestroy() is called, which will cause this to pop back up later.
+		finish();
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		
+		if (!started && isFinishing() && id != SurveyService.DUMMY_SURVEY_ID)
+		{
+			//set an alarm for this survey to reapear
+			Intent postponeIntent =
+				new Intent(getApplicationContext(), SurveyScheduler.class);
+			postponeIntent.setAction(SurveyScheduler.ACTION_ADD_SURVEY);
+			postponeIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_ID, id);
+			postponeIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_TIME,
+					Calendar.getInstance().getTimeInMillis()
+					+ (Config.SURVEY_DELAY * 60 * 1000));
+			startService(postponeIntent);
+			
+			//tell the survey service to shut down
+			Intent stopServiceIntent =
+				new Intent(getApplicationContext(), SurveyService.class);
+			stopServiceIntent.setAction(SurveyService.ACTION_STOP_SURVEY);
+			startService(stopServiceIntent);
+		}
 	}
 }

@@ -123,6 +123,9 @@ public class Answer implements Serializable
      */
     public boolean write()
     {
+    	//don't write dummy answers
+    	if (questionID == 0) return true;
+    	
     	SurveyDBHandler db = new SurveyDBHandler(ctxt);
     	db.openWrite();
     	boolean worked = false;

@@ -38,8 +38,8 @@ public class MainActivity extends Activity
         if (Config.D) Log.d(TAG, "starting mainActivity");
         
         //FIXME TESTING ONLY!
-        //BootIntentReceiver bir = new BootIntentReceiver();
-        //bir.startup(getApplicationContext());
+        BootIntentReceiver bir = new BootIntentReceiver();
+        bir.startup(getApplicationContext());
         
         //setting the layout of the activity
         setContentView(R.layout.main);
