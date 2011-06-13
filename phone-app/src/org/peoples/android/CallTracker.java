@@ -36,6 +36,12 @@ public class CallTracker extends PhoneStateListener
 	//the most recent CallLog lookup
 	private long lastLookup = Calendar.getInstance().getTimeInMillis();
 	
+	/**
+	 * Constructor.  Typically only one instance of this class should be
+	 * created; it is given to the telephony manager to receive updates.
+	 * 
+	 * @param ctxt - the application context
+	 */
 	public CallTracker(Context ctxt)
 	{
 		super();
@@ -94,7 +100,9 @@ public class CallTracker extends PhoneStateListener
 		}
 		else if (state != TelephonyManager.CALL_STATE_IDLE)
 		{
-			throw new RuntimeException("Unkown phone state: " + state);
+			if (Config.D)
+				throw new RuntimeException("Unkown phone state: " + state);
+			else Log.w(TAG, "Unknown phone state: " + state);
 		}
 	}
 }

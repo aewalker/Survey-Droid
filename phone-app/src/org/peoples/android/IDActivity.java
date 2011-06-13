@@ -13,6 +13,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * A very simple screen that shows the phone's id.
+ * 
+ * @author Austin Walker
+ */
 public class IDActivity extends Activity
 {
 	@Override
@@ -31,6 +36,7 @@ public class IDActivity extends Activity
 		uid.setText(tManager.getDeviceId());
 		
 		//set up the back button
+		//FIXME for some reason, this doesn't appear; needs to be looked into
 		final Button back = (Button) this.findViewById(R.id.id_back);
         back.setOnClickListener(new View.OnClickListener()
         {

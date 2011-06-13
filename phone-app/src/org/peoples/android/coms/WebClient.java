@@ -3,6 +3,7 @@
  * needed.  Adapted from Android Wikitionary example provided with the       *
  * Android SDK.                                                              *
  *---------------------------------------------------------------------------*/
+//TODO add the ability to deal with https (includeing self-signed certs
 package org.peoples.android.coms;
 
 import java.io.ByteArrayOutputStream;

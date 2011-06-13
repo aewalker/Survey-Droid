@@ -26,7 +26,7 @@ import org.peoples.android.survey.SurveyService;
  */
 public class MainActivity extends Activity
 {
-	// Debugging
+	//logging tag
     private static final String TAG = "MainActivity";
 
     /** Called when the activity is first created. */

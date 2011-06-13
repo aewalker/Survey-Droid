@@ -39,19 +39,48 @@ public class SurveyScheduler extends IntentService
 	private static final String TAG = "SurveyScheduler";
 	
 	//intent actions
+	/**
+	 * Use this action to tell the scheduler to schedule a survey for a
+	 * particular time.  Must be used with {@link EXTRA_SURVEY_ID} and
+	 * {@link EXTRA_SURVEY_TIME}.
+	 */
 	public static final String ACTION_ADD_SURVEY =
 		"org.peoples.android.survey.ACTION_ADD_SURVEY";
+	
+	/**
+	 * Tells the survey scheduler to look for surveys that need to be
+	 * scheduled and do so.  Must be used with {@link EXTRA_RUNNING_TIME}.
+	 */
 	public static final String ACTION_SCHEDULE_SURVEYS =
 		"org.peoples.android.survey.ACTION_SCHEDULE_SURVEYS";
 	
 	//intent extras
 	//TODO use the EXTRA_SURVEY_ID from the survey service
+	/**
+	 * The id of the survey to be added.  Used with {@link ACTION_ADD_SURVEY}.
+	 */
 	public static final String EXTRA_SURVEY_ID =
 		"org.peoples.android.survey.EXTRA_SURVEY_ID";
+	
+	//TODO add code to make use of this
+	/**
+	 * The number of times a survey has been skipped.  Used (optionally)
+	 * with {@link ACTION_ADD_SURVEY}.
+	 */
 	public static final String EXTRA_SKIPPED_COUNT =
 		"org.peoples.android.survey.EXTRA_SKIPPED_COUNT";
+	
+	/**
+	 * The time the survey is to be scheduled for.  Used with
+	 * {@link ACTION_ADD_SURVEY}.
+	 */
 	public static final String EXTRA_SURVEY_TIME =
 		"org.peoples.android.survey.EXTRA_SURVEY_TIME";
+	
+	/**
+	 * The time this service was set to run.  Used with
+	 * {@link ACTION_SCHEDULE_SURVEYS}.
+	 */
 	public static final String EXTRA_RUNNING_TIME =
 		"org.peoples.android.survey.EXTRA_RUNNING_TIME";
 	

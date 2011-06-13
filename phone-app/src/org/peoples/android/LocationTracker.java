@@ -27,7 +27,13 @@ public class LocationTracker implements LocationListener
 	//logging tag
 	private static final String TAG = "LocationTracker";
 
-	LocationTracker(Context ctxt)
+	/**
+	 * Constructor.  Typically only one instance of this class should be
+	 * created; it can be given to the location manager.
+	 * 
+	 * @param ctxt - the application context
+	 */
+	public LocationTracker(Context ctxt)
 	{
 		this.ctxt = ctxt;
 	}
@@ -49,7 +55,7 @@ public class LocationTracker implements LocationListener
 	@Override
 	public void onProviderDisabled(String provider)
 	{
-		if (Config.D) Log.d(TAG, "GPS disabled!");
+		Log.i(TAG, "GPS disabled!");
 		/* 
 		 * Turns out, it's actually not possible to turn on the GPS
 		 * programatically without exploiting some pretty serious security

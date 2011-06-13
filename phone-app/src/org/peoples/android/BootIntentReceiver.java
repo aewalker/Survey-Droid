@@ -31,7 +31,18 @@ public class BootIntentReceiver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
     	if (!intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
-    		throw new RuntimeException("Wrong action: " + intent.getAction());
+    	{
+    		if (Config.D)
+    		{
+    			throw new RuntimeException("Wrong action: "
+    				+ intent.getAction());
+    		}
+    		else
+    		{
+    			Log.w(TAG, "Wrong action: " + intent.getAction());
+    			return;
+    		}
+    	}
     	startup(context);
     }
     
