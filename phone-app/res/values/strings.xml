@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="hello">Hello World, main!</string>
+	<!-- Name of the whole application. -->
 	<string name="app_name">PEOPLES</string>
+	
+	<!-- The titles for each activity (shown at the top usually. -->
+	<string name="main_title">Welcome to PEOPLES!</string>
+	<string name="id_title">This Phone has ID:</string>
+	<string name="settings_title">PEOPLES Settings</string>
+	
+	<!-- The button to show the phone id. -->
+	<string name="settings_idButton">Show Phone ID</string>
+	
+	<!-- The default phone id. -->
+	<string name="id_defaultHoriz">0000 0000 0000 0000</string>
+	<string name="id_defaultVert">0000\n0000\n0000\n0000</string>
+	
+	<!-- The back button on the id screen. --> 
+	<string name="id_backButton">Back</string>
+	
+	<!-- The back button on the settings screen. -->
+	<string name="settings_backButton">Back</string>
+	
+	<!-- The title for the survey progress bar. -->
+	<string name="main_progressTitle">Survey\nCompletion:</string>
+	
+	<!-- The four buttons on the main screen. -->
+	<string name="main_settingsButton">Settings</string>
+	<string name="main_sampleButton">Sample\nSurvey</string>
+	<string name="main_callButton">Call\n</string>
+	<string name="main_exitButton">Exit</string>
+	
+	<!-- The three phone settings. -->
+	<string name="settings_surveysSetting">Surveys</string>
+	<string name="settings_locationSetting">Location Tracking</string>
+	<string name="settings_loggingSetting">Call/Text Logging</string>
 </resources>

@@ -1,0 +1,321 @@
+<mockup version="1.0" skin="sketch" measuredW="3918" measuredH="1993" mockupW="3910" mockupH="1993">
+  <controls>
+    <control controlID="124" controlTypeID="__group__" x="8" y="0" w="2757" h="861" measuredW="2757" measuredH="861" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <controlName>OtherScreens</controlName>
+      </controlProperties>
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="561" y="0" w="510" h="861" measuredW="510" measuredH="861" zOrder="0" locked="false" isInGroup="124">
+          <controlProperties>
+            <controlName>IDActivity</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="579" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="0" locked="false" isInGroup="0">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="114" y="53" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="1" locked="false" isInGroup="0">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="185" y="0" w="-1" h="-1" measuredW="139" measuredH="51" zOrder="2" locked="false" isInGroup="0">
+              <controlProperties>
+                <size>32</size>
+                <text>Show%20ID</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="1" controlTypeID="__group__" x="1122" y="0" w="510" h="861" measuredW="510" measuredH="861" zOrder="1" locked="false" isInGroup="124">
+          <controlProperties>
+            <controlName>SettingsActivity</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="114" y="54" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="1">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="579" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="1" locked="false" isInGroup="1">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="188" y="0" w="-1" h="-1" measuredW="133" measuredH="51" zOrder="2" locked="false" isInGroup="1">
+              <controlProperties>
+                <size>32</size>
+                <text>Settings</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="2" controlTypeID="__group__" x="1683" y="0" w="510" h="861" measuredW="510" measuredH="861" zOrder="2" locked="false" isInGroup="124">
+          <controlProperties>
+            <controlName>NotificationActivity</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="106" y="54" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="2">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="579" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="1" locked="false" isInGroup="2">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="101" y="0" w="-1" h="-1" measuredW="307" measuredH="51" zOrder="2" locked="false" isInGroup="2">
+              <controlProperties>
+                <size>32</size>
+                <text>Survey%20Notification</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="3" controlTypeID="__group__" x="2247" y="0" w="510" h="861" measuredW="510" measuredH="861" zOrder="3" locked="false" isInGroup="124">
+          <controlProperties>
+            <controlName>ConfirmationActivity</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="124" y="54" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="3">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="579" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="1" locked="false" isInGroup="3">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="95" y="0" w="-1" h="-1" measuredW="319" measuredH="51" zOrder="2" locked="false" isInGroup="3">
+              <controlProperties>
+                <size>32</size>
+                <text>Survey%20Confirmation</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="4" controlTypeID="__group__" x="0" y="0" w="510" h="861" measuredW="510" measuredH="861" zOrder="4" locked="false" isInGroup="124">
+          <controlProperties>
+            <controlName>MainActivity</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Label" x="149" y="0" w="-1" h="-1" measuredW="212" measuredH="51" zOrder="0" locked="false" isInGroup="4">
+              <controlProperties>
+                <size>32</size>
+                <text>Main%20Activity</text>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="__group__" x="114" y="54" w="282" h="510" measuredW="282" measuredH="510" zOrder="1" locked="false" isInGroup="4">
+              <controlProperties>
+                <controlName>MainVert</controlName>
+              </controlProperties>
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="0" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <topBar>false</topBar>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+            <control controlID="2" controlTypeID="__group__" x="0" y="579" w="510" h="282" measuredW="510" measuredH="282" zOrder="2" locked="false" isInGroup="4">
+              <controlProperties>
+                <controlName>MainHoiz</controlName>
+              </controlProperties>
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="0" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="0" locked="false" isInGroup="2">
+                  <controlProperties>
+                    <orientation>landscape</orientation>
+                    <topBar>false</topBar>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="132" controlTypeID="__group__" x="8" y="1095" w="3910" h="898" measuredW="3910" measuredH="898" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <controlName>SurveyScreens</controlName>
+      </controlProperties>
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="0" y="1" w="510" h="897" measuredW="510" measuredH="897" zOrder="0" locked="false" isInGroup="132">
+          <controlProperties>
+            <controlName>SingleChoiceText</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="615" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="0" locked="false" isInGroup="0">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="114" y="68" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="1" locked="false" isInGroup="0">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="69" y="0" w="-1" h="-1" measuredW="372" measuredH="51" zOrder="2" locked="false" isInGroup="0">
+              <controlProperties>
+                <size>32</size>
+                <text>Single%20Choice%20with%20Text</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="1" controlTypeID="__group__" x="561" y="2" w="510" h="896" measuredW="510" measuredH="896" zOrder="1" locked="false" isInGroup="132">
+          <controlProperties>
+            <controlName>MultipleChoiceText</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="114" y="67" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="1">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="614" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="1" locked="false" isInGroup="1">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="54" y="0" w="-1" h="-1" measuredW="402" measuredH="51" zOrder="2" locked="false" isInGroup="1">
+              <controlProperties>
+                <size>32</size>
+                <text>Multiple%20Choice%20with%20Text</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="2" controlTypeID="__group__" x="1122" y="2" w="510" h="896" measuredW="510" measuredH="896" zOrder="2" locked="false" isInGroup="132">
+          <controlProperties>
+            <controlName>SingleChoiceGraphics</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="114" y="75" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="2">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="614" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="1" locked="false" isInGroup="2">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="40" y="0" w="-1" h="-1" measuredW="430" measuredH="51" zOrder="2" locked="false" isInGroup="2">
+              <controlProperties>
+                <size>32</size>
+                <text>Single%20Choice%20with%20Graphics</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="3" controlTypeID="__group__" x="1683" y="2" w="510" h="896" measuredW="510" measuredH="896" zOrder="3" locked="false" isInGroup="132">
+          <controlProperties>
+            <controlName>MultipleChoiceGraphics</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="114" y="75" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="3">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="614" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="1" locked="false" isInGroup="3">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="25" y="0" w="-1" h="-1" measuredW="460" measuredH="51" zOrder="2" locked="false" isInGroup="3">
+              <controlProperties>
+                <size>32</size>
+                <text>Multiple%20Choice%20with%20Graphics</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="4" controlTypeID="__group__" x="2257" y="2" w="510" h="896" measuredW="510" measuredH="896" zOrder="4" locked="false" isInGroup="132">
+          <controlProperties>
+            <controlName>SlidingScaleText</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="114" y="67" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="4">
+              <controlProperties>
+                <orientation>portrait</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="614" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="1" locked="false" isInGroup="4">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="74" y="0" w="-1" h="-1" measuredW="370" measuredH="51" zOrder="2" locked="false" isInGroup="4">
+              <controlProperties>
+                <size>32</size>
+                <text>Sliding%20Scale%20with%20Text</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="5" controlTypeID="__group__" x="2832" y="2" w="510" h="896" measuredW="510" measuredH="896" zOrder="5" locked="false" isInGroup="132">
+          <controlProperties>
+            <controlName>SlidingScaleGraphics</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="120" y="75" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="5">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="614" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="1" locked="false" isInGroup="5">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="41" y="0" w="-1" h="-1" measuredW="428" measuredH="51" zOrder="2" locked="false" isInGroup="5">
+              <controlProperties>
+                <size>32</size>
+                <text>Sliding%20Scale%20with%20Graphics</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="6" controlTypeID="__group__" x="3400" y="0" w="510" h="898" measuredW="510" measuredH="898" zOrder="6" locked="false" isInGroup="132">
+          <controlProperties>
+            <controlName>Free%20Response</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="616" w="-1" h="-1" measuredW="510" measuredH="282" zOrder="0" locked="false" isInGroup="6">
+              <controlProperties>
+                <orientation>landscape</orientation>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="114" y="69" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="1" locked="false" isInGroup="6">
+              <controlProperties>
+                <topBar>false</topBar>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="142" y="0" w="-1" h="-1" measuredW="226" measuredH="51" zOrder="2" locked="false" isInGroup="6">
+              <controlProperties>
+                <size>32</size>
+                <text>Free%20Response</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>

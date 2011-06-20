@@ -60,6 +60,12 @@ public class Config
     
     /** Time to delay a survey for in minutes if the user chooses to. */
     public static final long SURVEY_DELAY = 15;
+
+    /** Phone number of the study administrator. */
+	public static final String ADMIN_PHONE_NUMBER = "7652996509"; //Austin cell
+	
+	/** Name of the study administrator. */
+	public static final String ADMIN_NAME = "Austin";
 	
 	/**
 	 * Initialize the setting object.  Settings are available application-wide.

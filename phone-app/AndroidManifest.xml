@@ -9,6 +9,7 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.CALL_PHONE" />
 	
 	<!-- Doesn't use these yet, but may want/need to in future -->
 	<uses-permission android:name="android.permission.BATTERY_STATS" />
