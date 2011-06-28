@@ -21,8 +21,35 @@
 	<!-- The back button on the settings screen. -->
 	<string name="settings_backButton">Back</string>
 	
+	<!-- The back button on the survey questions. -->
+	<string name="question_backButton">Previous</string>
+	
+	<!-- The next button on the survey questions. -->
+	<string name="question_nextButton">Next</string>
+	
 	<!-- The title for the survey progress bar. -->
 	<string name="main_progressTitle">Survey\nCompletion:</string>
+	
+	<!-- The text for the take now button -->
+	<string name="notification_activity_takeNow">Take Now</string>
+	
+	<!-- The text for the postpone button -->
+	<string name="notification_activity_postpone">Postpone</string>
+	
+	<!-- The title text for the notification activity -->
+	<string name="notification_activity_title">You have a new survey awaiting:</string>
+	
+	<!-- The main title for the survey confirmation page -->
+	<string name="survey_confirmation_title">Survey Completed</string>
+	
+	<!-- The subtitle for the survey confirmation page -->
+	<string name="survey_confirmation_subtitle">Are you sure you want to submit your responses?</string>
+	
+	<!-- The confirm button on the survey confirmation page -->
+	<string name="survey_confirmation_confirm">Yes</string>
+	
+	<!-- The go back button on the survey confirmation page -->
+	<string name="survey_confirmation_back">No, go back</string>
 	
 	<!-- The four buttons on the main screen. -->
 	<string name="main_settingsButton">Settings</string>

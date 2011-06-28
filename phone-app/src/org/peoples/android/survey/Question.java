@@ -1,15 +1,16 @@
 /*---------------------------------------------------------------------------*
  * Question.java                                                             *
  *                                                                           *
- * Model for a survey question.  Has Choices and Branches along with some    *
- * functionality for generating answers and progressing the survey.          *
+ * Model for a survey question.  Has Branches to other questions, and some   *
+ * basic information and functionality.  This is not a full class, it is     *
+ * meant to be extended for specific types of questions.                     *
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
 import java.util.Collection;
 import java.util.Stack;
-import android.content.Context;
 
+import android.content.Context;
 
 /**
  * Model for a survey Question.  Based on the SQL:
@@ -22,10 +23,10 @@ import android.content.Context;
  * @author Austin Walker
  * @author Henry Liu
  */
-public class Question
+public abstract class Question
 {
 	//have to keep the Question id to look up history in the DB
-	private final int id;
+	protected final int id;
 	
 	//question text
 	private final String q_text;
@@ -41,51 +42,37 @@ public class Question
 
 	//has the current Question been answered?
 	private boolean answered = false;
+	
+	//the question's type
+	protected int type;
 
 	//set of branches
-
 	private final Collection<Branch> branches;
 	
-	//set of choices
-	private final Collection<Choice> choices;
-	
 	//have to have this around to make Answers
-	private final Context ctxt;
+	protected final Context ctxt;
 	
 	/*-----------------------------------------------------------------------*/
 
 	/**
-	 * Create a new Question
+	 * Create a new Question.  Should only be used by an extending class.
 	 * 
 	 * @param text - the question text as a String
 	 * @param id - the Question's id from the database
 	 * @param b - a Collection of Branches for this Question
-	 * @param c - a Collection of Choices for this Question
 	 */
 
-	public Question(String text, int id, Collection<Branch> b,
-			Collection<Choice> c, Context ctxt)
+	protected Question(String text, int id, Collection<Branch> b,
+			int type, Context ctxt)
 	{
 		q_text = text;
 		branches = b;
-		choices = c;
+		this.type = type;
 		this.id = id;
 		this.ctxt = ctxt;
 	}
 
 	/*-----------------------------------------------------------------------*/
-
-	/**
-	 * Get all this Question's Choices as an array
-	 * 
-	 * @return all Choices as an array
-	 */
-	public Choice[] getChoices()
-	{
-		//little hack to get the right types
-		Choice[] cArray = new Choice[0];
-		return choices.toArray(cArray);
-	}
 
 	/**
 	 * Get this Question's text
@@ -96,76 +83,34 @@ public class Question
 	{
 		return q_text;
 	}
-
+	
 	/**
-	 * Answer this Question.  This should (and can) only be used to provide
-	 * an answer if this is a free response question (ie has no Choices).
+	 * Get the type of this question.
 	 * 
-	 * @param text - the text to answer with
+	 * @return an int corresponding to one of the types defined in
+	 * {@link PeoplesDB.QuestionTable}
+	 */
+	public int getType()
+	{
+		return type;
+	}
+	
+	/**
+	 * Answer this Question.  Does background work and should be called by
+	 * any extending class.
 	 * 
-	 * @return the Answer created
+	 * @param ans - the Answer to be recorded
 	 * 
-	 * @throws RuntimeException if called when there are Choices
 	 * @throws RuntimeException if the current Question has already been
 	 * answered.
 	 */
-	public Answer answer(String text)
+	protected void answer(Answer ans)
 	{
 		if (answered) throw new RuntimeException(
-				"atempt to answer the same Question multiple times");
-
-		if (choices.size() != 0)
-		{
-			throw new RuntimeException(
-					"call to answer() on a non-free response question");
-		}
-		else
-		{
-			Answer newAnswer = new Answer(this, id, null, 0, text, ctxt);
-
-			answers.push(newAnswer);
-			answered = true;
-			return newAnswer;
-		}
-	}
-
-	/**
-	 * Answer this Question.  This should (and can) only be used to provide
-	 * an answer if this is a multiple choice question.
-	 * 
-	 * @param c - the Choice to answer with
-	 * 
-	 * @return the Answer created
-	 * 
-	 * @throws RuntimeException if called when there are no Choices
-	 * @throws RuntimeException if given an invalid Choice
-	 */
-	public Answer answer(Choice c)
-	{
-		if (answered) throw new RuntimeException(
-				"attempt to answer the same Question multiple times");
+			"Atempt to answer the same Question multiple times");
 		
-		if (answered) answers.pop();
-		
-		if (choices.size() == 0)
-		{
-			throw new RuntimeException(
-					"call to answer() on a multiple-choice question");
-		}
-		else
-		{
-			if (!choices.contains(c))
-			{
-				throw new RuntimeException("invalid Choice");
-			}
-			else
-			{
-				Answer newAnswer = c.answer(this, this.id);
-				answers.push(newAnswer);
-				answered = true;
-				return newAnswer;
-			}
-		}
+		answered = true;
+		answers.push(ans);
 	}
 
 	/**
@@ -217,7 +162,9 @@ public class Question
 	}
 
 	/**
-	 * Set this Question to be unanswered.
+	 * Set this Question to be unanswered.  WARNING: only use this in
+	 * situations in which you want to reset everything (for example, when
+	 * restarting a survey).
 	 */
 	public void prime()
 	{

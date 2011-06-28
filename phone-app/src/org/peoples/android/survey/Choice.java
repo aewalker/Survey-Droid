@@ -1,13 +1,17 @@
 /*---------------------------------------------------------------------------*
  * Choice.java                                                               *
  *                                                                           *
- * Model for a survey choice.  Holds a String as it's choice text.  Also has *
- * functions to look up the history of a Choice.                             *
+ * Model for a survey choice.  Holds a String or Image as it's choice text.  *
+ * Also has functions to look up the history of a Choice.                    *
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
+import java.util.Collection;
+
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import org.peoples.android.database.SurveyDBHandler;
 import org.peoples.android.database.PeoplesDB;
@@ -25,8 +29,11 @@ import org.peoples.android.database.PeoplesDB;
  */
 public class Choice
 {
-	//the text to display as an option
+	//the text to display as an option if this is a text choice
 	private final String choice_text;
+	
+	//the bitmap to display as an option if this is an image choice
+	private final Bitmap choice_img;
 	
 	//the Choice id
 	//unlike some of the other survey classes, we have to keep track of the
@@ -34,20 +41,44 @@ public class Choice
 	//in the database
 	private final int id;
 	
+	//is this a text or image choice?
+	private final int type;
+	
 	//context, needed for the same reason as above
 	private final Context ctxt;
 	
 	/*-----------------------------------------------------------------------*/
 	
 	/**
-	 * Create a new Choice.
+	 * Create a new text Choice.
 	 * 
 	 * @param text - the text the Choice should contain
 	 * @param id - choice_id as in the database
+	 * @param c - the current context
 	 */
 	public Choice(String text, int id, Context c)
 	{
 		choice_text = text;
+		type = PeoplesDB.ChoiceTable.TEXT_CHOICE;
+		choice_img = null;
+		this.id = id;
+		ctxt = c;
+	}
+	
+	/**
+	 * Create a new image Choice.
+	 * 
+	 * @param img - the base 64 string representing the image to use
+	 * @param id - the choice_id as in the database
+	 * @param c - the current context
+	 */
+	public Choice(String img, Context c, int id) //XD it lets me do this!!!!
+	{
+		byte[] imgData = Base64Coder.decode(img);
+		choice_img = BitmapFactory.decodeByteArray(imgData, 0, imgData.length);
+		
+		choice_text = null;
+		type = PeoplesDB.ChoiceTable.IMG_CHOICE;
 		this.id = id;
 		ctxt = c;
 	}
@@ -55,11 +86,34 @@ public class Choice
 	/**
 	 * Get this Choice's text.
 	 * 
-	 * @return a String corresponding to the Choice text
+	 * @return a String corresponding to the Choice text (null if this is an
+	 * image choice)
 	 */
 	public String getText()
 	{
 		return choice_text;
+	}
+	
+	/**
+	 * Get this Choice's image.
+	 * 
+	 * @return this Choice's Bitmap image (or null if this is a text Choice)
+	 */
+	public Bitmap getImg()
+	{
+		return choice_img;
+	}
+	
+	/**
+	 * Is this Choice an image choice?
+	 * 
+	 * @return true if it is
+	 */
+	public boolean isImg()
+	{
+		if (type == PeoplesDB.ChoiceTable.IMG_CHOICE)
+			return true;
+		return false;
 	}
 	
 	/**
@@ -70,9 +124,16 @@ public class Choice
 	 * 
 	 * @return an Answer object corresponding this choice/question pair
 	 */
-	public Answer answer(Question q, int q_id)
+	public static Answer answer(Question q, int q_id, Collection<Choice> c, Context ctxt)
 	{
-		return new Answer(q, q_id, this, id, null, ctxt);
+		int[] c_ids = new int[c.size()];
+		int i = 0;
+		for (Choice choice : c)
+		{
+			c_ids[i] = choice.id;
+			i++;
+		}
+		return new Answer(q, q_id, c, c_ids, ctxt);
 	}
 	
 	/*-----------------------------------------------------------------------*/
@@ -91,19 +152,37 @@ public class Choice
 	{
 		SurveyDBHandler db = new SurveyDBHandler(ctxt);
 		db.openRead();
-		Cursor c = db.getQuestionHistory(id);
-		db.close();
+		Cursor c = db.getQuestionHistory(id);;
 		c.moveToFirst();
 		while (!c.isAfterLast())
 		{
-			if (c.getInt(c.getColumnIndexOrThrow(
-					PeoplesDB.AnswerTable.CHOICE_ID)) == this.id)
+			String[] ids = c.getString(c.getColumnIndexOrThrow(
+					PeoplesDB.AnswerTable.CHOICE_IDS)).split(",");
+			for (String thisID : ids)
 			{
-				c.close();
-				return true;
+				if (Integer.parseInt(thisID) == this.id)
+				{
+					c.close();
+					db.close();
+					return true;
+				}
 			}
 		}
 		c.close();
+		db.close();
 		return false;
+	}
+	
+	/**
+	 * Get a string representation of this choice.
+	 * 
+	 * @return the choice text
+	 */
+	public String toString()
+	{
+		if (type == PeoplesDB.ChoiceTable.TEXT_CHOICE)
+			return choice_text;
+		else
+			return "image choice";
 	}
 }

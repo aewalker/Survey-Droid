@@ -6,15 +6,22 @@
 package org.peoples.android.survey;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 import org.peoples.android.Config;
 import org.peoples.android.R;
+import org.peoples.android.survey.SurveyService.SurveyBinder;
 
 /**
  * Activity that asks the subject to either confirm their survey answers so
@@ -28,34 +35,66 @@ public class ConfirmSubmitActivity extends Activity
 	//logging tag
 	private static final String TAG = "ConfirmSubmitActivity";
 	
+	//the current survey
+	private Survey survey;
+	
+	//connection to the SurveyService
+	private ServiceConnection connection = new ServiceConnection()
+	{
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder binder)
+		{
+			SurveyBinder sBinder = (SurveyBinder) binder;
+			survey = sBinder.getSurvey();
+		}
+		
+		@Override
+		public void onServiceDisconnected(ComponentName name) {}
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
 		if (Config.D) Log.d(TAG, "Creating ConfirmSubmitActivity");
 		
-		//set up views
-		setContentView(R.layout.confirmpage);
-		final TextView tView = (TextView) findViewById(R.id.confirm);
-		tView.setText("Are you sure you want to submit your responses?");
+		//get the survey
+		Intent bindIntent = new Intent(this, SurveyService.class);
+		bindService(bindIntent, connection, Context.BIND_AUTO_CREATE);
 		
-		Button back = (Button) findViewById(R.id.back);
-		back.setText("No, go back");
+		//setting the layout of the activity
+        Display display = ((WindowManager)
+        		getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        //check what orientation the phone is in
+        //getOrientation() is depreciated as of API 8, but we're targeting
+        //API 7, so we have to use it
+        if (display.getOrientation() == Configuration.ORIENTATION_LANDSCAPE)
+        {
+        	setContentView(R.layout.survey_confirmation_horiz);
+        }
+        else
+        {
+        	setContentView(R.layout.survey_confirmation_vert);
+        }
+		
+		Button back =
+			(Button) findViewById(R.id.survey_confirmation_backButton);
 		back.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				Intent backIntent = new Intent(
-						getApplicationContext(), SurveyService.class);
-				backIntent.setAction(SurveyService.ACTION_PREV_QUESTION);
-				startService(backIntent);
+				survey.prevQuestion();
+				Intent backIntent = new Intent(getThis(),
+						QuestionActivity.getNextQusetionClass(
+								survey.getQuestionType()));
+    			startActivity(backIntent);
 				finish();
 			}
 		});
 		
-		Button finish = (Button) findViewById(R.id.finish);
-		finish.setText("Yes, submit my responses");
+		Button finish =
+			(Button) findViewById(R.id.survey_confirmation_confirmButton);
 		finish.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -68,5 +107,18 @@ public class ConfirmSubmitActivity extends Activity
 				finish();
 			}
 		});
+	}
+	
+	//little hack to get the outer object
+	private ConfirmSubmitActivity getThis()
+	{
+		return this;
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		unbindService(connection);
 	}
 }

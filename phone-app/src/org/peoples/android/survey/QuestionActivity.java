@@ -1,42 +1,124 @@
 /*---------------------------------------------------------------------------*
  * QuestionActivty.java                                                      *
  *                                                                           *
- * Shows the user a question and then reports the answer.                    *
+ * Shows the user a question.                                                *
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
-import android.R;
 import android.app.ListActivity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.peoples.android.Config; 
+import org.peoples.android.database.PeoplesDB;
+import org.peoples.android.survey.SurveyService.SurveyBinder;
 
 /**
- * Activity that shows the user a single question and reports the answer.
+ * Abstract question activity that should be extended for each of the various
+ * types of questions.
  * 
  * @author Austin Walker
  * @author Henry Liu
  */
-public class QuestionActivity extends ListActivity
-{
-	//intent extras
-	public static final String QUESTION_TEXT = 
-		"org.peoples.android.survey.QUESTION_TEXT";
-	public static final String QUESTION_CHOICES =
-		"org.peoples.android.survey.QUESTION_CHOICES";
-	public static final String IS_FIRST_QUESTION =
-		"org.peoples.android.survey.IS_FIRST_QUESTION";
-	
+public abstract class QuestionActivity extends ListActivity
+{	
 	//logging tag
-	private static final String TAG = "QuestionActivity";
+	protected static final String TAG = "QuestionActivity";
+	
+	//the survey being ran
+	protected Survey survey;
+	
+	//has the next question activity been started?
+	private boolean isDone = false;
+	
+	//connection to the SurveyService
+	private ServiceConnection connection = new ServiceConnection()
+	{
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder binder)
+		{
+			SurveyBinder sBinder = (SurveyBinder) binder;
+			survey = sBinder.getSurvey();
+		}
+		
+		@Override
+		public void onServiceDisconnected(ComponentName name) {}
+	};
+	
+	//little hack to get the outer object
+	private QuestionActivity getThis()
+	{
+		return this;
+	}
+	
+	/**
+	 * Handler for the "previous" button.  Extending classes should install
+	 * this as the onClickListener for the back button.
+	 */
+    protected final View.OnClickListener prevListener =
+    	new View.OnClickListener()
+    {
+        public void onClick(View view)
+        {
+        	if (survey.isOnFirst())
+        	{ //can't go back from first question
+        		Toast.makeText(getApplicationContext(),
+        				"Cannot go back; already on first question",
+        				Toast.LENGTH_SHORT).show();
+        	}
+        	else
+        	{ //start the next activity
+        		survey.prevQuestion();
+        		Intent prevIntent = new Intent(getThis(),
+        				getNextQusetionClass(survey.getQuestionType()));
+        		startActivity(prevIntent);
+        		isDone = true;
+        	}
+        }
+    };
+    
+    /**
+     * Handler for the "next" button.  Extending classes should install
+     * this as the onClickListener for the next button.
+	 */
+    protected final View.OnClickListener nextListener =
+    	new View.OnClickListener()
+    {
+        public void onClick(View view)
+        {
+        	if (getThis().isAnswered())
+        	{ //question has been answered properly
+        		getThis().answer();
+        		survey.nextQuestion();
+        		if (!survey.done())
+        		{ //still have more questions
+        			Intent nextIntent = new Intent(getThis(),
+        					getNextQusetionClass(survey.getQuestionType()));
+        			startActivity(nextIntent);
+        		}
+        		else
+        		{ //survey is over
+        			Intent submitIntent = new Intent(getThis(),
+        					ConfirmSubmitActivity.class);
+        			startActivity(submitIntent);
+        		}
+        		isDone = true;
+        	}
+        	else
+        	{ //no answer has been given
+        		Toast.makeText(getApplicationContext(),
+        				getThis().getInvalidAnswerMsg(),
+        				Toast.LENGTH_SHORT).show();
+        	}
+        }
+    };
 	
 	@Override
 	protected void onCreate(Bundle savedState)
@@ -44,106 +126,78 @@ public class QuestionActivity extends ListActivity
 		super.onCreate(savedState);
 		if (Config.D) Log.d(TAG, "Creating QuestionActivity");
 		
-		//extract information from the intent
-		Intent intent = getIntent();
-		final String qText = intent.getStringExtra(QUESTION_TEXT);
-		if (qText == null) throw new RuntimeException("No question text");
-		final String[] choices = intent.getStringArrayExtra(QUESTION_CHOICES);
-		if (choices == null) throw new RuntimeException("No question choices");
-		final boolean isOnFirst =
-			intent.getBooleanExtra(IS_FIRST_QUESTION, true);
-		final int prevAnsIndex =
-			intent.getIntExtra(SurveyService.EXTRA_ANS_INDEX, -1);
-		String prevAnsText = "";
-		if (prevAnsIndex == -1)
-			prevAnsText = intent.getStringExtra(SurveyService.EXTRA_ANS_TEXT);
-		
-		//set the information to be used in the views
-		setContentView(org.peoples.android.R.layout.survey_list_view);
-		final TextView qTextView = (TextView) this.findViewById(
-				org.peoples.android.R.id.question_textView);
-		if (choices.length == 0)
+		//get the survey
+		Intent bindIntent = new Intent(this, SurveyService.class);
+		bindService(bindIntent, connection, Context.BIND_AUTO_CREATE);
+	}
+	
+	@Override
+	protected void onStop()
+	{
+		/*
+		 * When the activity is stopped (that is, when it is no longer
+		 * visible), kill it, but only if the next question has been
+		 * started.  This makes the app run more smoothly; the user doesn't
+		 * see black screens in between questions.
+		 */
+		super.onStop();
+		if (isDone) finish();
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		unbindService(connection);
+	}
+	
+	/**
+	 * Determines if the current question has been meaningfully answered.
+	 * 
+	 * @return true if it is
+	 */
+	protected abstract boolean isAnswered();
+	
+	/**
+	 * Answer the current question with the appropriate answer() call to
+	 * survey.  Note that you should NOT call survey.nextQuestion().
+	 */
+	protected abstract void answer();
+	
+	/**
+	 * Should return a string that is to be displayed to the user as an
+	 * explanation of why they cannot move to the next question.  Called if
+	 * the next button is pressed and isAnswered() returns false.
+	 * 
+	 * @return the message to show to the user
+	 */
+	protected abstract String getInvalidAnswerMsg();
+	
+	/**
+	 * Gets the proper class for a question of a given type.  Useful when
+	 * creating intents to start question activities.
+	 * 
+	 * @param type - the type as seen in {@link PeoplesDB.QuestionTable}
+	 * 
+	 * @return the class type corresponding to that type
+	 */
+	public static Class<? extends QuestionActivity>
+		getNextQusetionClass(int type)
+	{
+		switch (type)
 		{
-			setListAdapter(new ArrayAdapter<String>(this,
-				org.peoples.android.R.layout.list_item, new String[] {prevAnsText}));
+		case PeoplesDB.QuestionTable.SINGLE_CHOICE:
+			return SingleChoiceActivity.class;
+		case PeoplesDB.QuestionTable.MULTI_CHOICE:
+			return MultiChoiceActivity.class;
+		case PeoplesDB.QuestionTable.SCALE_TEXT:
+			return TextScaleActivity.class;
+		case PeoplesDB.QuestionTable.SCALE_IMG:
+			return ImgScaleActivity.class;
+		case PeoplesDB.QuestionTable.FREE_RESPONSE:
+			return FreeResponseActivity.class;
+		default:
+			throw new RuntimeException("Unknown question type: " + type);
 		}
-		else
-		{
-			//TODO change this to be ArrayAdapter<Choice> and implement
-			//toString() in Choice, then remove the getChoiceTexts() method
-			//from Survey
-			setListAdapter(new ArrayAdapter<String>(this,
-					R.layout.simple_list_item_single_choice, choices));
-			if (prevAnsIndex != -1)
-				getListView().setItemChecked(prevAnsIndex, true);
-		}
-		qTextView.setText(qText);
-		
-		//set up the buttons
-		Button prev = (Button) findViewById(org.peoples.android.R.id.button1);
-		prev.setText("Previous Question");
-		Button next = (Button) findViewById(org.peoples.android.R.id.button2);
-		next.setText("Next Question");
-		
-		//Handler for "previous" button
-        final View.OnClickListener prevListener = new View.OnClickListener()
-        {
-            public void onClick(View view)
-            {
-            	if (isOnFirst)
-            	{ //can't go back from first question
-            		Toast.makeText(getApplicationContext(),
-            				"Cannot go back; already on first question",
-            				Toast.LENGTH_SHORT).show();
-            	}
-            	else
-            	{ //request the service start the next activity
-            		Intent prevIntent = new Intent(getApplicationContext(),
-            				SurveyService.class);
-            		prevIntent.setAction(SurveyService.ACTION_PREV_QUESTION);
-            		startService(prevIntent);
-            		finish();
-            	}
-            }
-        };
-        prev.setOnClickListener(prevListener);
-        
-        //Handler for the "next" button
-        final View.OnClickListener nextListener = new View.OnClickListener()
-        {
-            public void onClick(View view)
-            {
-            	int choice = getListView().getCheckedItemPosition();
-            	boolean isMC = (choices.length != 0); //isMultipleChoice
-            	
-            	if ((isMC && choice != -1) || !isMC)
-            	{ //question has been answered properly
-            		Intent nextIntent = new Intent(getApplicationContext(),
-            				SurveyService.class);
-            		nextIntent.setAction(SurveyService.ACTION_NEXT_QUESTION);
-            		if (isMC)
-            		{
-            			nextIntent.putExtra(
-            					SurveyService.EXTRA_ANS_INDEX, choice);
-            		}
-            		else
-            		{
-            			EditText eText = (EditText) findViewById(
-            					org.peoples.android.R.id.editText1);
-            			nextIntent.putExtra(SurveyService.EXTRA_ANS_TEXT,
-            					eText.getText().toString());
-            		}
-            		startService(nextIntent);
-            		finish();
-            	}
-            	else
-            	{ //no answer has been given
-            		Toast.makeText(getApplicationContext(),
-            				"Please select a choice",
-            				Toast.LENGTH_SHORT).show();
-            	}
-            }
-        };
-        next.setOnClickListener(nextListener);
 	}
 }

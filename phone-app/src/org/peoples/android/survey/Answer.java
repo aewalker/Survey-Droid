@@ -6,16 +6,12 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
-import java.io.Serializable;
+import java.util.Collection;
 
 import android.content.Context;
 
+import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.SurveyDBHandler;
-
-//import org.json.JSONException;
-//import org.json.JSONObject;
-
-//import android.util.Log;
 
 /**
  * Model for a Survey answer.  Based on the SQL:
@@ -31,20 +27,24 @@ import org.peoples.android.database.SurveyDBHandler;
  * @author Diego Vargas
  * @author Austin Walker
  */
-public class Answer implements Serializable
+public class Answer
 {
-	private static final long serialVersionUID = 1L;
-	
 	//the Question being answered
     private final Question question;
     private final int questionID;
-
+    
+    //the type of answer
+    private final int type;
+    
     //the Choice given for that Question
-    private final Choice choice;
-    private final int choiceID;
+    private final Collection<Choice> choices;
+    private final int[] choiceIDs;
 
     //the text given for a free-response Question
     private final String text;
+    
+    //the value for a slider question
+    private final int value;
 
     //time when this Answer was given/created
     private final long created;
@@ -56,32 +56,74 @@ public class Answer implements Serializable
     /*-----------------------------------------------------------------------*/
     
     /**
-     * Create a new Answer.
+     * Create a new Answer to a free response question.
      * 
      * @param q - the Question object being answered
      * @param q_id - that Question's id
-     * @param c - the Choice being given (if multiple Choice)
-     * @param c_id - that Choice's id (ignored if Choice is null)
      * @param t - the answer text for a free response Question
+     * @param ctxt - the current context
      */
-	public Answer(Question q, int q_id, Choice c, int c_id, String t, Context ctxt)
+	public Answer(Question q, int q_id, String t, Context ctxt)
 	{
 		question = q;
 		questionID = q_id;
-		if (c != null)
-		{
-			choice = c;
-			choiceID = c_id;
-			text = null;
-		}
-		else
-		{
-			text = t;
-			choice = null;
-			choiceID = 0;
-		}
+		text = t;
+		type = PeoplesDB.AnswerTable.TEXT;
 		this.ctxt = ctxt;
 		created = System.currentTimeMillis() / 1000;
+		
+		//unneeded fields
+		value = -1;
+		choiceIDs = null;
+		choices = null;
+	}
+	
+	/**
+	 * Create a new Answer to a slider (value based) question.
+	 * 
+	 * @param q - the Question object being answered
+	 * @param q_id - that Question's id
+	 * @param v - the value the question was answered with
+	 * @param ctxt - the current context
+	 */
+	public Answer(Question q, int q_id, int v, Context ctxt)
+	{
+		question = q;
+		questionID = q_id;
+		value = v;
+		type = PeoplesDB.AnswerTable.VALUE;
+		this.ctxt = ctxt;
+		created = System.currentTimeMillis() / 1000;
+		
+		//unneeded fields
+		text = null;
+		choiceIDs = null;
+		choices = null;
+	}
+	
+	/**
+	 * Create a new Answer to a multiple choice question.
+	 * 
+	 * @param q - the Question object being answered
+	 * @param q_id - that Question's id
+	 * @param choices - the choices that were picked
+	 * @param choice_ids - the ids of the choices that were picked
+	 * @param ctxt - the current context
+	 */
+	public Answer(Question q, int q_id, Collection<Choice> choices,
+			int[] choice_ids, Context ctxt)
+	{
+		question = q;
+		questionID = q_id;
+		type = PeoplesDB.AnswerTable.CHOICE;
+		this.choices = choices;
+		choiceIDs = choice_ids;
+		this.ctxt = ctxt;
+		created = System.currentTimeMillis() / 1000;
+		
+		//unneeded fields
+		text = null;
+		value = -1;
 	}
 	
 	/**
@@ -95,25 +137,37 @@ public class Answer implements Serializable
 	}
 	
 	/**
-	 * Get this Answer's Choice
+	 * Get the choices given in this answer
 	 * 
-	 * @return the Choice the Question was answered with if the Question was
-	 * multiple choice, or null if the Question was free response
+	 * @return the Choice array the Question was answered with if the
+	 * Question was multiple choice, or null if the Question was free response
+	 * or value based.
 	 */
-	public Choice getChoice()
+	public Collection<Choice> getChoices()
 	{
-		return choice;
+		return choices;
 	}
 	
 	/**
 	 * Get this Answer's text
 	 * 
 	 * @return the text as a String that was given as a response if the
-	 * Question was free response, or null if it was multiple choice
+	 * Question was free response, or null otherwise
 	 */
     public String getText()
     {
         return text;
+    }
+    
+    /**
+     * Get this Answer's value
+     * 
+     * @return the value (an int), or -1 if this answer was not for a scale
+     * question
+     */
+    public int getValue()
+    {
+    	return value;
     }
     
     /**
@@ -129,33 +183,21 @@ public class Answer implements Serializable
     	SurveyDBHandler db = new SurveyDBHandler(ctxt);
     	db.openWrite();
     	boolean worked = false;
-    	if (text == null) //multiple choice
+    	switch (type)
     	{
-    		worked = db.writeAnswer(questionID, choiceID, created);
-    	}
-    	else //free response
-    	{
+    	case PeoplesDB.AnswerTable.CHOICE:
+    		worked = db.writeAnswer(questionID, choiceIDs, created);
+    		break;
+    	case PeoplesDB.AnswerTable.VALUE:
+    		worked = db.writeAnswer(questionID, value, created);
+    		break;
+    	case PeoplesDB.AnswerTable.TEXT:
     		worked = db.writeAnswer(questionID, text, created);
+    		break;
+    	default:
+    		throw new RuntimeException("Invalid answer type: " + type);
     	}
     	db.close();
     	return worked;
     }
-
-    //TODO I (Austin) think this should be done elsewhere
-    /*public JSONObject getAsJson() {
-        JSONObject j = null;
-        try {
-            j = new JSONObject();
-            j.put("question_id", 1); // hack for now
-            if (type == 0) {
-                j.put("ans_text", text);
-            } else {
-                j.put("ans_text", text);
-            }
-            j.put("created", Long.toString(System.currentTimeMillis() / 1000));
-        } catch (JSONException e) {
-            Log.e("Answer", e.getMessage());
-        }
-        return j;
-    }*/
 }

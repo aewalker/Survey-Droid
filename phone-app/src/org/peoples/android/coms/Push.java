@@ -68,18 +68,42 @@ public class Push extends WebClient
                 ans.put(PeoplesDB.AnswerTable._ID, answers.getInt(
                 		answers.getColumnIndexOrThrow(
                 				PeoplesDB.AnswerTable._ID)));
-                ans.put(PeoplesDB.AnswerTable.QUESTION_ID, answers.getInt(
+                ans.put(PeoplesDB.AnswerTable.ANS_TYPE, answers.getInt(
                 		answers.getColumnIndexOrThrow(
-                				PeoplesDB.AnswerTable.QUESTION_ID)));
-                ans.put(PeoplesDB.AnswerTable.ANS_TEXT, answers.getString(
-                		answers.getColumnIndexOrThrow(
-                				PeoplesDB.AnswerTable.ANS_TEXT)));
-                ans.put(PeoplesDB.AnswerTable.CHOICE_ID, answers.getInt(
-                		answers.getColumnIndexOrThrow(
-                				PeoplesDB.AnswerTable.CHOICE_ID)));
+                				PeoplesDB.AnswerTable.ANS_TYPE)));
                 ans.put(PeoplesDB.AnswerTable.CREATED, answers.getLong(
                 		answers.getColumnIndexOrThrow(
                 				PeoplesDB.AnswerTable.CREATED)));
+                ans.put(PeoplesDB.AnswerTable.QUESTION_ID, answers.getInt(
+                		answers.getColumnIndexOrThrow(
+                				PeoplesDB.AnswerTable.QUESTION_ID)));
+                
+                //now sort what gets uploaded based on the answer type
+                switch (answers.getInt(
+                		answers.getColumnIndexOrThrow(
+                				PeoplesDB.AnswerTable.ANS_TYPE)))
+                {
+                case PeoplesDB.AnswerTable.CHOICE:
+                    ans.put(PeoplesDB.AnswerTable.CHOICE_IDS, answers.getInt(
+                    		answers.getColumnIndexOrThrow(
+                    				PeoplesDB.AnswerTable.CHOICE_IDS)));
+                	break;
+                case PeoplesDB.AnswerTable.VALUE:
+                	ans.put(PeoplesDB.AnswerTable.ANS_VALUE, answers.getInt(
+                    		answers.getColumnIndexOrThrow(
+                    				PeoplesDB.AnswerTable.ANS_VALUE)));
+                	break;
+                case PeoplesDB.AnswerTable.TEXT:
+                    ans.put(PeoplesDB.AnswerTable.ANS_TEXT, answers.getString(
+                    		answers.getColumnIndexOrThrow(
+                    				PeoplesDB.AnswerTable.ANS_TEXT)));
+                	break;
+                default:
+                	throw new RuntimeException("Unknown answer type: "
+                			+ answers.getInt(
+                    		answers.getColumnIndexOrThrow(
+                    				PeoplesDB.AnswerTable.ANS_TYPE)));
+                }
                 answersJSON.put(ans);
                 answers.moveToNext();
             }

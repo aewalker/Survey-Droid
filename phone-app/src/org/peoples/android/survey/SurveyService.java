@@ -5,21 +5,21 @@
  * allows the user to rotate the screen without having to rebuild the whole  *
  * survey.                                                                   *
  *---------------------------------------------------------------------------*/
-//TODO Another way to set up this whole service is as bound service that is
-//initiated by the first question activity and called upon to provide the
-//survey object's methods when needed.  This would avoid having to start a
-//separate activity for each question.
 package org.peoples.android.survey;
+
+//import java.util.Calendar;
 
 import java.util.Calendar;
 
 import android.app.Service;
+//import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
 import org.peoples.android.Config;
-import org.peoples.android.coms.ComsService;
+//import org.peoples.android.coms.ComsService;
 
 /**
  * Runs while a survey is being administered to the user.  "Spawns" instances
@@ -46,22 +46,6 @@ public class SurveyService extends Service
 		"org.peoples.android.survey.ACTION_SHOW_SURVEY";
 	
 	/**
-	 * Move the survey to the next question and display it.  Should only be
-	 * sent after {@link ACTION_SURVEY_READY}, otherwise the survey will not
-	 * be built and an exception will be thrown
-	 */
-	public static final String ACTION_NEXT_QUESTION =
-		"org.peoples.android.survey.ACTION_NEXT_QUESTION";
-	
-	/**
-	 * Move the survey to the prvious question and display it.  Should only be
-	 * sent after {@link ACTION_SURVEY_READY}, otherwise the survey will not
-	 * be built and an exception will be thrown.
-	 */
-	public static final String ACTION_PREV_QUESTION =
-		"org.peoples.android.survey.ACTION_PREV_QUESTION";
-	
-	/**
 	 * Submit all live answers for this survey and stop. Should only be
 	 * sent after {@link ACTION_SURVEY_READY}, otherwise the survey will not
 	 * be built and an exception will be thrown.
@@ -70,30 +54,21 @@ public class SurveyService extends Service
 		"org.peoples.android.survey.ACTION_SUBMIT_ANSWERS";
 	
 	/**
-	 * Stop the survey service.  Used when the user has declined to take a
-	 * survey.
+	 * Stop the survey service.  Used when the user has finished a survey.
 	 */
-	public static final String ACTION_STOP_SURVEY =
-		"org.peoples.android.survey.ACTION_STOP_SURVEY";
+	public static final String ACTION_END_SURVEY =
+		"org.peoples.android.survey.ACTION_END_SURVEY";
 	
 	//key values for extras
 	/** The id of the survey this service is starting for. */
 	public static final String EXTRA_SURVEY_ID =
 		"org.peoples.android.survey.EXTRA_SURVEY_ID";
+
+	/** Name/title of the current survey */
+	public static final String EXTRA_SURVEY_NAME =
+		"org.peoples.android.survey.EXTRA_SURVEY_NAME";
 	
-	/**
-	 * Contains the text of the current answer if the current question is free
-	 * response. Should not be set if the question is multiple choice.
-	 */
-	public static final String EXTRA_ANS_TEXT =
-		"org.peoples.android.survey.EXTRA_ANS_TEXT";
-	
-	/**
-	 * Contains the index of the current answer if the current qustion is
-	 * multiple choice.  Should not be set if the question is free response.
-	 */
-	public static final String EXTRA_ANS_INDEX =
-		"org.peoples.android.survey.EXTRA_ANS_INDEX";
+	/*-----------------------------------------------------------------------*/
 	
 	/**
 	 * Given this id, a dummy survey will be used and the answers will not be
@@ -104,54 +79,54 @@ public class SurveyService extends Service
 	//the survey instance that each instance of this service uses
 	private Survey survey;
 	
+	//is the survey running?
+	private Boolean active;
+	
+	//the binder to send to clients
+	private final SurveyBinder surveyBinder = new SurveyBinder();
+	
 	//logging tag
 	private static final String TAG = "SurveyService";
 	
 	@Override
-	public synchronized int onStartCommand(Intent intent, int flags, int startid)
+	public int onStartCommand(Intent intent, int flags, int startid)
 	{
-		/*
-		 * Why synchronized?  Well there's a big issue that I (Austin) found
-		 * with this service.  If the time is changed on the phone (which, at
-		 * least on the phone I'm using, happens every time it turns on), it
-		 * can cause more than one survey to be started at one time because
-		 * alarms that are set for a time in the past are delivered at once.
-		 * The combination of making this synchronized and doing the check to
-		 * see if survey is not null when receiving an ACTION_SURVEY_READY
-		 * should ensure that only one survey runs at a time.
-		 */
-		
 		//filter the intent action
 		String action = intent.getAction();
 		if (action.equals(ACTION_SURVEY_READY))
 		{
-			if (survey != null)
+			//check to make sure only one thing is running
+			synchronized (active)
 			{
-				//another survey is already running, so delay the new one
-				Intent delayIntent =
-					new Intent(getApplicationContext(), SurveyScheduler.class);
-				delayIntent.setAction(SurveyScheduler.ACTION_ADD_SURVEY);
-				delayIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_ID,
-						intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID));
-				delayIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_TIME,
-						Calendar.getInstance().getTimeInMillis()
-						+ (Config.SURVEY_DELAY * 60 * 1000));
-				startService(delayIntent);
-				return START_STICKY;
-			}
-			
-			//check that surveys are enabled
-			Config cfg = new Config(this);
-			if (!cfg.isSurveyEnabled())
-			{
-				//if the user is already taking a survey, then we don't want
-				//to stop it, even if s/he disables surveys during it
-				if (survey == null)
+				if (active)
 				{
-					stopSelf();
-					return START_NOT_STICKY;
+					//another survey is already running, so delay the new one
+					Intent delayIntent =
+						new Intent(this, SurveyScheduler.class);
+					delayIntent.setAction(SurveyScheduler.ACTION_ADD_SURVEY);
+					delayIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_ID,
+							intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID));
+					delayIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_TIME,
+							Calendar.getInstance().getTimeInMillis()
+							+ (Config.SURVEY_DELAY * 60 * 1000));
+					startService(delayIntent);
+					return START_STICKY;
 				}
-				return START_STICKY;
+			
+				//check that surveys are enabled
+				Config cfg = new Config(this);
+				if (!cfg.isSurveyEnabled())
+				{
+					//if the user is already taking a survey, then we don't want
+					//to stop it, even if s/he disables surveys during it
+					if (!active)
+					{
+						stopSelf();
+						return START_NOT_STICKY;
+					}
+					return START_STICKY;
+				}
+				active = true;
 			}
 			
 			/*
@@ -159,21 +134,24 @@ public class SurveyService extends Service
 			 * The assumption is that most of the time, the user will take the
 			 * survey when first asked to.  Because building a survey can be
 			 * time consuming, build it here to provide the user with a snappy
-			 * UI.
+			 * UI.  However, IT IS CRITICAL that future changes ensure that
+			 * this occurs after the check to see whether another survey is
+			 * running.
 			 */
 			int surveyID =
 				intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID);
 			Log.i(TAG, "Starting survey service for survey " + surveyID);
 			if (surveyID == DUMMY_SURVEY_ID)
-				survey = new Survey(getApplicationContext());
-			else survey = new Survey(surveyID, getApplicationContext());
+				survey = new Survey(this);
+			else survey = new Survey(surveyID, this);
 			
 			Intent notificationIntent =
-				new Intent(getApplicationContext(), NotificationActivity.class);
+				new Intent(this, NotificationActivity.class);
 			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			notificationIntent.putExtra(EXTRA_SURVEY_NAME, survey.getName());
 			startActivity(notificationIntent);
 		}
-		else if (action.equals(ACTION_STOP_SURVEY))
+		else if (action.equals(ACTION_END_SURVEY))
 		{
 			stopSelf();
 		}
@@ -190,65 +168,10 @@ public class SurveyService extends Service
 				if (Config.D) Log.d(TAG, "Starting survey");
 				
 				//spawn the first QuestionActivity
-				startQuestionActivity();
-			}
-			else if (action.equals(ACTION_NEXT_QUESTION))
-			{ //subject has entered a response and is moving on
-				int ansIndex = intent.getIntExtra(EXTRA_ANS_INDEX, -1);
-				if (ansIndex != -1)
-				{ //multiple choice answer given
-					survey.answer(survey.getChoices()[ansIndex]);
-					if (Config.D)
-						Log.d(TAG, "Question answered with " + ansIndex);
-					survey.nextQuestion();
-				}
-				else
-				{ //free response answer given
-					String ansText = intent.getStringExtra(EXTRA_ANS_TEXT);
-					if (ansText == null)
-					{ //the intent did not contain answer information!
-						throw new RuntimeException("No answer provided");
-					}
-					else
-					{
-						survey.answer(ansText);
-						if (Config.D) Log.d(TAG,
-								"Question answered with \"" + ansText + "\"");
-						survey.nextQuestion();
-					}
-				}
-				
-				if (!survey.done())
-				{ //spawn the next QuestionActivity
-					startQuestionActivity();
-				}
-				else
-				{ //ask the subject to confirm submission of answers
-					Intent confirmIntent = new Intent(getApplicationContext(),
-							ConfirmSubmitActivity.class);
-					confirmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					startActivity(confirmIntent);
-				}
-			}
-			else if (action.equals(ACTION_PREV_QUESTION))
-			{ //subject has requested to move back a question
-				survey.prevQuestion();
-				startQuestionActivity();
-			}
-			else if (action.endsWith(ACTION_SUBMIT_ANSWERS))
-			{ //subject has approved submission of answers
-				if (!survey.submit()) Log.e(TAG, "Survey submission error");
-				else if (Config.D) Log.d(TAG, "Answers submitted");
-				
-				//try to upload the new answers ASAP
-				Intent comsIntent =
-					new Intent(getApplicationContext(), ComsService.class);
-				comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
-				comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
-						ComsService.SURVEY_DATA);
-				startService(comsIntent);
-				
-				stopSelf();
+				Intent questionIntent = new Intent(getApplicationContext(),
+						QuestionActivity.class);
+				questionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(questionIntent);
 			}
 			else
 			{
@@ -267,34 +190,28 @@ public class SurveyService extends Service
 		}
 		return START_STICKY;
 	}
-	
-	//start a QuestionActivity for the current question in the survey
-	private void startQuestionActivity()
-	{
-		Intent questionIntent =
-			new Intent(getApplicationContext(), QuestionActivity.class);
-		questionIntent.putExtra(
-				QuestionActivity.QUESTION_TEXT, survey.getText());
-		questionIntent.putExtra(QuestionActivity.QUESTION_CHOICES,
-				survey.getChoiceTexts());
-		questionIntent.putExtra(QuestionActivity.IS_FIRST_QUESTION,
-				survey.isOnFirst());
-		int ans = survey.getAnswerChoice();
-		if (ans == -1)
-		{
-			questionIntent.putExtra(EXTRA_ANS_TEXT, survey.getAnswerText());
-		}
-		else
-		{
-			questionIntent.putExtra(EXTRA_ANS_INDEX, ans);
-		}
-		questionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(questionIntent);
-	}
 
+	/**
+	 * Simple Binder extension that provides a survey object.
+	 * 
+	 * @author Austin Walker
+	 */
+	public class SurveyBinder extends Binder
+	{
+		/**
+		 * Called to get the survey object currently running.
+		 * 
+		 * @return the Survey object
+		 */
+		public Survey getSurvey()
+		{
+			return survey;
+		}
+	}
+	
 	@Override
 	public IBinder onBind(Intent intent)
 	{
-		return null;
+		return surveyBinder;
 	}
 }

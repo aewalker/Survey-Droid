@@ -69,23 +69,26 @@ public class Pull extends WebClient
     	Log.i(TAG, "Syncing surveys table");
     	try
     	{
-    		if (Config.D) Log.d(TAG, "Fetched " + surveys.length() + " surveys");
+    		if (Config.D) Log.d(TAG, "Fetched "
+    				+ surveys.length() + " surveys");
 	    	for (int i = 0 ; i < surveys.length(); i++)
 	    	{
 	    		JSONObject survey = surveys.getJSONObject(i);
 	    		ContentValues values = new ContentValues();
 	    		values.put(SurveyTable._ID, survey.getInt("id"));
-	    		values.put(SurveyTable.NAME, survey.getString("name"));
-	    		values.put(SurveyTable.CREATED, survey.getLong("created"));
+	    		values.put(SurveyTable.NAME,
+	    				survey.getString(SurveyTable.NAME));
+	    		values.put(SurveyTable.CREATED,
+	    				survey.getLong(SurveyTable.CREATED));
 	    		values.put(SurveyTable.QUESTION_ID,
-	    				survey.getInt("question_id"));
-	    		values.put(SurveyTable.MO, survey.getString("mo"));
-	    		values.put(SurveyTable.TU, survey.getString("tu"));
-	    		values.put(SurveyTable.WE, survey.getString("we"));
-	    		values.put(SurveyTable.TH, survey.getString("th"));
-	    		values.put(SurveyTable.FR, survey.getString("fr"));
-	    		values.put(SurveyTable.SA, survey.getString("sa"));
-	    		values.put(SurveyTable.SU, survey.getString("su"));
+	    				survey.getInt(SurveyTable.QUESTION_ID));
+	    		values.put(SurveyTable.MO, survey.getString(SurveyTable.MO));
+	    		values.put(SurveyTable.TU, survey.getString(SurveyTable.TU));
+	    		values.put(SurveyTable.WE, survey.getString(SurveyTable.WE));
+	    		values.put(SurveyTable.TH, survey.getString(SurveyTable.TH));
+	    		values.put(SurveyTable.FR, survey.getString(SurveyTable.FR));
+	    		values.put(SurveyTable.SA, survey.getString(SurveyTable.SA));
+	    		values.put(SurveyTable.SU, survey.getString(SurveyTable.SU));
 	    		
 	    		//TODO change this so that it uses replace()?
 	    		db.beginTransaction();
@@ -116,8 +119,19 @@ public class Pull extends WebClient
 	    		ContentValues values = new ContentValues();
 	    		values.put(QuestionTable._ID, survey.getInt("id"));
 	    		values.put(QuestionTable.SURVEY_ID,
-	    				survey.getInt("survey_id"));
-	    		values.put(QuestionTable.Q_TEXT, survey.getString("q_text"));
+	    				survey.getInt(QuestionTable.SURVEY_ID));
+	    		values.put(QuestionTable.Q_TYPE,
+	    				survey.getInt(QuestionTable.Q_TYPE));
+	    		values.put(QuestionTable.Q_TEXT,
+	    				survey.getString(QuestionTable.Q_TEXT));
+	    		values.put(QuestionTable.Q_SCALE_IMG_LOW,
+	    				survey.getString(QuestionTable.Q_SCALE_IMG_LOW));
+	    		values.put(QuestionTable.Q_SCALE_IMG_HIGH,
+	    				survey.getString(QuestionTable.Q_SCALE_IMG_HIGH));
+	    		values.put(QuestionTable.Q_SCALE_TEXT_LOW,
+	    				survey.getString(QuestionTable.Q_SCALE_TEXT_LOW));
+	    		values.put(QuestionTable.Q_SCALE_TEXT_HIGH,
+	    				survey.getString(QuestionTable.Q_SCALE_TEXT_HIGH));
 	    		if (db.replace(QUESTION_TABLE_NAME, null, values) == -1 )
 				{
 					throw new RuntimeException("Database replace error");
@@ -140,12 +154,12 @@ public class Pull extends WebClient
 	    		ContentValues values = new ContentValues();
 	    		values.put(ConditionTable._ID, survey.getInt("id"));
 	    		values.put(ConditionTable.BRANCH_ID,
-	    				survey.getInt("branch_id"));
+	    				survey.getInt(ConditionTable.BRANCH_ID));
 	    		values.put(ConditionTable.QUESTION_ID,
-	    				survey.getInt("question_id"));
+	    				survey.getInt(ConditionTable.QUESTION_ID));
 	    		values.put(ConditionTable.CHOICE_ID,
-	    				survey.getInt("choice_id"));
-	    		values.put(ConditionTable.TYPE, survey.getInt("type"));
+	    				survey.getInt(ConditionTable.CHOICE_ID));
+	    		values.put(ConditionTable.TYPE, survey.getInt(ConditionTable.TYPE));
 	    		if (db.replace(CONDITION_TABLE_NAME, null, values) == -1 )
 				{
 					throw new RuntimeException("Database replace error");
@@ -168,8 +182,8 @@ public class Pull extends WebClient
 	    		ContentValues values = new ContentValues();
 	    		values.put(BranchTable._ID, survey.getInt("id"));
 	    		values.put(BranchTable.QUESTION_ID,
-	    				survey.getInt("question_id"));
-	    		values.put(BranchTable.NEXT_Q, survey.getInt("next_q"));
+	    				survey.getInt(BranchTable.QUESTION_ID));
+	    		values.put(BranchTable.NEXT_Q, survey.getInt(BranchTable.NEXT_Q));
 	    		if (db.replace(BRANCH_TABLE_NAME, null, values) == -1 )
 				{
 					throw new RuntimeException("Database replace error");
@@ -192,9 +206,11 @@ public class Pull extends WebClient
 	    		ContentValues values = new ContentValues();
 	    		values.put(ChoiceTable._ID, survey.getInt("id"));
 	    		values.put(ChoiceTable.QUESTION_ID,
-	    				survey.getInt("question_id"));
+	    				survey.getInt(ChoiceTable.QUESTION_ID));
 	    		values.put(ChoiceTable.CHOICE_TEXT,
-	    				survey.getString("choice_text"));
+	    				survey.getString(ChoiceTable.CHOICE_TEXT));
+	    		values.put(ChoiceTable.CHOICE_IMG,
+	    				survey.getString(ChoiceTable.CHOICE_IMG));
 	    		if (db.replace(CHOICE_TABLE_NAME, null, values) == -1 )
 				{
 					throw new RuntimeException("Database replace error");

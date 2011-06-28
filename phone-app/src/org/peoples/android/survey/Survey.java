@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.peoples.android.database.PeoplesDB;
@@ -56,8 +57,6 @@ public class Survey
 
 	//the Question history via a stack
 	private final Stack<Question> history = new Stack<Question>();
-	
-	/** Used as the survey id for a dummy survey that will not be recoreded */
 
 	/*-----------------------------------------------------------------------*/
 	/**
@@ -147,12 +146,6 @@ public class Survey
 			Collection<Condition> cList,
 			Queue<Integer> toDo)
 	{
-		Cursor q = db.getQuestion(id);
-		q.moveToFirst();
-		String text = q.getString(
-				q.getColumnIndexOrThrow(PeoplesDB.QuestionTable.Q_TEXT));
-		q.close();
-
 		//set up Branches
 		Cursor b = db.getBranches(id);
 		b.moveToFirst();
@@ -194,7 +187,44 @@ public class Survey
 		ch.close();
 		Log.d("Survey", "Building new question");
 		//finally, create the new Question
-		Question newQ = new Question(text, id, branches, choices, ctxt);
+		Cursor q = db.getQuestion(id);
+		q.moveToFirst();
+		String text = q.getString(
+				q.getColumnIndexOrThrow(PeoplesDB.QuestionTable.Q_TEXT));
+		int q_type = q.getInt(
+				q.getColumnIndexOrThrow(PeoplesDB.QuestionTable.Q_TYPE));
+		Question newQ;
+		switch (q_type)
+		{
+		case PeoplesDB.QuestionTable.FREE_RESPONSE:
+			newQ = new FreeResponseQuestion(text, id, bList, ctxt);
+			break;
+		case PeoplesDB.QuestionTable.MULTI_CHOICE:
+			newQ = new ChoiceQuestion(text, id, bList, choices, true, ctxt);
+			break;
+		case PeoplesDB.QuestionTable.SINGLE_CHOICE:
+			newQ = new ChoiceQuestion(text, id, bList, choices, false, ctxt);
+			break;
+		case PeoplesDB.QuestionTable.SCALE_TEXT:
+			newQ = new SlidingScaleTextQuestion(text, id, bList,
+					q.getString(q.getColumnIndexOrThrow(
+							PeoplesDB.QuestionTable.Q_SCALE_TEXT_LOW)),
+					q.getString(q.getColumnIndexOrThrow(
+							PeoplesDB.QuestionTable.Q_SCALE_TEXT_HIGH)),
+					ctxt);
+			break;
+		case PeoplesDB.QuestionTable.SCALE_IMG:
+			newQ = new SlidingScaleImgQuestion(text, id, bList,
+					q.getString(q.getColumnIndexOrThrow(
+							PeoplesDB.QuestionTable.Q_SCALE_IMG_LOW)),
+					q.getString(q.getColumnIndexOrThrow(
+							PeoplesDB.QuestionTable.Q_SCALE_IMG_HIGH)),
+					ctxt);
+			break;
+		default:
+			throw new IllegalStateException("Invlaid question type: " + q_type);
+		}
+		q.close();
 		qMap.put(id, newQ);
 		return newQ;
 	}
@@ -236,9 +266,22 @@ public class Survey
 		}
 		Cursor c = db.getChoice(id);
 		c.moveToFirst();
-		Choice newC = new Choice(c.getString(
-				c.getColumnIndexOrThrow(PeoplesDB.ChoiceTable.CHOICE_TEXT)),
-				id, ctxt);
+		Choice newC;
+		switch (c.getInt(c.getColumnIndexOrThrow(
+				PeoplesDB.ChoiceTable.CHOICE_TYPE)))
+		{
+		case PeoplesDB.ChoiceTable.TEXT_CHOICE:
+			newC = new Choice(c.getString(c.getColumnIndexOrThrow(
+					PeoplesDB.ChoiceTable.CHOICE_TEXT)), id, ctxt);
+			break;
+		case PeoplesDB.ChoiceTable.IMG_CHOICE:
+			//be careful about which constructor this is!
+			newC = new Choice(c.getString(c.getColumnIndexOrThrow(
+					PeoplesDB.ChoiceTable.CHOICE_IMG)), ctxt, id);
+			break;
+		default:
+			throw new IllegalStateException("Invlaid choice type");
+		}
 		cMap.put(id, newC);
 		c.close();
 		return newC;
@@ -246,42 +289,17 @@ public class Survey
 
 	/**
 	 * A simple constructor to put together a sample survey.
+	 * 
+	 * @param ctxt - the current Context
 	 */
 	public Survey(Context ctxt)
 	{
 		this.ctxt = ctxt;
 		db = null;
 
-		String[] questionTexts =
-		{
-			"Who is your favorite actress?",
-			"What is your favorite color",
-			"What is your favorite animal?",
-			"How old are you?",
-			"What country are you from?"
-		};
-
-		String[][] choices =
-		{
-			{"Keira Knightley", "Natalie Portman", "Emmanuelle Chiriqui"},
-			{"Red", "Blue", "Green", "Purple"},
-			{"Panda", "Tiger", "Penguin"},
-			{"10", "24", "33"},
-			{"United States", "Canada", "Turkey"}
-		};
-
-		//new Question(String text, int id, Collection<Branch> b, Collection<Choice> c)
-		//new Branch(Question q, Collection<Condition> c)
-		//new Choice(String text, int id)
-
 		Question prevQ = null;
-		for (int i = questionTexts.length - 1; i >= 0; i--)
+		for (int i = 4; i >= 0; i--)
 		{
-			LinkedList<Choice> choicesList = new LinkedList<Choice>();
-			for (String choice : choices[i])
-			{
-				choicesList.add(new Choice(choice, 0, ctxt));
-			}
 			LinkedList<Branch> branches = new LinkedList<Branch>();
 			if (prevQ != null)
 			{
@@ -291,13 +309,43 @@ public class Survey
 				b.setQuestion(qMap);
 				branches.add(b);
 			}
-			prevQ = new Question(questionTexts[i], i, branches, choicesList, ctxt);
+			switch (i)
+			{
+			case 0:
+				LinkedList<Choice> choicesList0 = new LinkedList<Choice>();
+				choicesList0.add(new Choice("Keira Knightley", 0, ctxt));
+				choicesList0.add(new Choice("Natalie Portman", 0, ctxt));
+				choicesList0.add(new Choice("Emmanuelle Chiriqui", 0, ctxt));
+				prevQ = new ChoiceQuestion("Who is your favorite actress?", i,
+						branches, choicesList0, false, ctxt);
+				break;
+			case 1:
+				LinkedList<Choice> choicesList1 = new LinkedList<Choice>();
+				choicesList1.add(new Choice("Red", 0, ctxt));
+				choicesList1.add(new Choice("Blue", 0, ctxt));
+				choicesList1.add(new Choice("Green", 0, ctxt));
+				choicesList1.add(new Choice("Orange", 0, ctxt));
+				choicesList1.add(new Choice("Black", 0, ctxt));
+				prevQ = new ChoiceQuestion("What are your favorite colors", i,
+						branches, choicesList1, true, ctxt);
+				break;
+			case 2:
+				prevQ = new SlidingScaleTextQuestion("How awesome is today?",
+						i, branches, "Not at all", "Really", ctxt);
+				break;
+			case 3:
+				prevQ = new SlidingScaleTextQuestion("How old are you?", i,
+						branches, "1", "100", ctxt);
+				break;
+			case 4:
+				prevQ = new FreeResponseQuestion("What country are you from?",
+						i, branches, ctxt);
+				break;
+			}
 		}
 		firstQ = prevQ;
 		currentQ = prevQ;
 		name = "Test Survey";
-		if (firstQ == null) throw new RuntimeException("null question");
-		if (firstQ.getChoices().length == 0) throw new RuntimeException("no choices");
 	}
 
 	/*-----------------------------------------------------------------------*/
@@ -327,33 +375,110 @@ public class Survey
 	/**
 	 * Get the current question's choices.
 	 * 
-	 * @return the current question's choices as an array
+	 * @return the current question's choices as an array.  If the current
+	 * question does not exist or is not of the correct type, then an empty
+	 * array will be returned
 	 */
 	public Choice[] getChoices()
 	{
-		if (currentQ != null)
+		if (currentQ != null &&
+				(currentQ.getType() == PeoplesDB.QuestionTable.MULTI_CHOICE ||
+				 currentQ.getType() == PeoplesDB.QuestionTable.SINGLE_CHOICE))
 		{
-			return currentQ.getChoices();
+			ChoiceQuestion q = (ChoiceQuestion) currentQ;
+			return q.getChoices();
 		}
 		return new Choice[0];
 	}
-
+	
 	/**
-	 * Get an array of Strings corresponding to the text of the choices for the
-	 * current question.
+	 * Get the current question's low-end text.
 	 * 
-	 * @return array of choice texts as Strings
+	 * @return the current question's low-end text.  If the current
+	 * question does not exist or is not a text-based scale question, then
+	 * null will be returned.
 	 */
-	public String[] getChoiceTexts()
+	public String getLowText()
 	{
-		Choice[] choices = currentQ.getChoices();
-		String[] choiceTexts = new String[choices.length];
-
-		for (int i = 0; i < choices.length; i++)
+		return getScaleText("low");
+	}
+	
+	/**
+	 * Get the current question's high-end text.
+	 * 
+	 * @return the current question's high-end text.  If the current
+	 * question does not exist or is not a text-based scale question, then
+	 * null will be returned.
+	 */
+	public String getHighText()
+	{
+		return getScaleText("high");
+	}
+	
+	//gets the scale text for a question ("low" or "high")
+	private String getScaleText(String where)
+	{
+		if (currentQ != null &&
+				currentQ.getType() == PeoplesDB.QuestionTable.SCALE_TEXT)
 		{
-			choiceTexts[i] = choices[i].getText();
+			SlidingScaleTextQuestion q = (SlidingScaleTextQuestion) currentQ;
+			if (where.equals("low"))
+			{
+				return q.getLowText();
+			}
+			else if (where.equals("high"))
+			{
+				return q.getHighText();
+			}
+			else throw new IllegalArgumentException(
+					"\"" + where + "\" is not a valid location");
 		}
-		return choiceTexts;
+		return null;
+	}
+	
+	/**
+	 * Get the current question's low-end image.
+	 * 
+	 * @return the current question's low-end image as a Bitmap. If the current
+	 * question does not exist or is not an image-based scale question, then
+	 * null will be returned.
+	 */
+	public Bitmap getLowImg()
+	{
+		return getScaleImg("low");
+	}
+	
+	/**
+	 * Get the current question's high-end image.
+	 * 
+	 * @return the current question's high-end image as a Bitmap. If the current
+	 * question does not exist or is not an image-based scale question, then
+	 * null will be returned.
+	 */
+	public Bitmap getHighImg()
+	{
+		return getScaleImg("high");
+	}
+	
+	//gets the scale image for a question ("low" or "high")
+	private Bitmap getScaleImg(String where)
+	{
+		if (currentQ != null &&
+				currentQ.getType() == PeoplesDB.QuestionTable.SCALE_IMG)
+		{
+			SlidingScaleImgQuestion q = (SlidingScaleImgQuestion) currentQ;
+			if (where.equals("low"))
+			{
+				return q.getLowImg();
+			}
+			else if (where.equals("high"))
+			{
+				return q.getHighImg();
+			}
+			else throw new IllegalArgumentException(
+					"\"" + where + "\" is not a valid location");
+		}
+		return null;
 	}
 
 	/**
@@ -367,44 +492,56 @@ public class Survey
 	}
 
 	/**
-	 * Get the current question's current answer's choice's index
+	 * Get the current question's current answer's choice or choices' index or
+	 * indices.
 	 * 
-	 * @return the index as an int, or -1 if this was a free response question
-	 * or no choice has yet been selected.
+	 * @return an array of ints corresponding to the indices, or null if this
+	 * was a free response or scale question or if no choice has yet been
+	 * selected.
 	 * 
 	 * @throws RuntimeException on internal error
 	 */
-	public int getAnswerChoice()
+	public int[] getAnswerChoices()
 	{
 		if (currentAns == null)
 		{
-			return -1;
+			return null;
 		}
-		if (!currentAns.getQuestion().equals(currentQ))
-			throw new RuntimeException("questions aren't equal");
-		Choice choice = currentAns.getChoice();
-		if (choice != null) //multiple choice
+		if (Config.D)
 		{
-			int i = 0;
-			for (Choice c : currentQ.getChoices())
-			{
-				if (c.equals(choice))
-				{
-					return i;
-				}
-				i++;
-			}
-			throw new RuntimeException(
-					"something is very wrong: choice not found");
+			if (!currentAns.getQuestion().equals(currentQ))
+				throw new RuntimeException("questions aren't equal");
 		}
-		else return -1;
+		Collection<Choice> choices = currentAns.getChoices();
+		if (choices != null) //multiple choice
+		{
+			int[] toReturn = new int[choices.size()];
+			int i = 0; //position in return array
+			int cInd = 0; //position in choice array
+			ChoiceQuestion q = (ChoiceQuestion) currentQ;
+			for (Choice c1 : choices)
+			{
+				for (Choice c2 : q.getChoices())
+				{
+					if (c1.equals(c2))
+					{
+						toReturn[i] = cInd;
+						i++;
+						break;
+					}
+				}
+				cInd++;
+			}
+			return toReturn;
+		}
+		else return null;
 	}
 
 	/**
 	 * Get the current question's current answer's text
 	 * 
 	 * @return the text as a String, or the empty string if no answer has
-	 * been given yet, or null if this was a multiple choice question
+	 * been given yet, or null if this was not a free response question
 	 */
 	public String getAnswerText()
 	{
@@ -413,6 +550,21 @@ public class Survey
 			return "";
 		}
 		return currentAns.getText();
+	}
+	
+	/**
+	 * Get the current qusetion's current answer's value
+	 * 
+	 * @return the value (an int), or -1 if no answer has been given yet
+	 * or this was not a scale question
+	 */
+	public int getAnswerValue()
+	{
+		if (currentAns == null)
+		{
+			return -1;
+		}
+		return currentAns.getValue();
 	}
 
 	/**
@@ -453,25 +605,79 @@ public class Survey
 		if (currentQ == null) return false;
 		return (currentQ.equals(firstQ));
 	}
+	
+	/**
+	 * Get the type of the current question.
+	 * 
+	 * @return the type, as in {@link PeoplesDB.QuestionTable}
+	 */
+	public int getQuestionType()
+	{
+		if (currentQ == null) throw new
+			RuntimeException("Call to getQuestionType after end of survey");
+		return currentQ.getType();
+	}
+	
+	/*-----------------------------------------------------------------------*/
 
 	/**
 	 * Answer a multiple choice question.
 	 * 
-	 * @param c - the {@link Choice} to answer with
+	 * @param c - the Collection of {@link Choice}s to answer with
+	 * 
+	 * @throws RuntimeException if the question being answered is not a
+	 * choice question
 	 */
-	public void answer(Choice c)
+	public void answer(Collection<Choice> c)
 	{
-		registry.push(currentQ.answer(c));
+		if (currentQ.getType() == PeoplesDB.QuestionTable.SINGLE_CHOICE ||
+			currentQ.getType() == PeoplesDB.QuestionTable.MULTI_CHOICE)
+		{
+			ChoiceQuestion q = (ChoiceQuestion) currentQ;
+			registry.push(q.answer(c));
+		}
+		else throw new RuntimeException("Wrong question type");
 	}
 
 	/**
 	 * Answer a free response question.
 	 * 
 	 * @param text - the String to answer with
+	 * 
+	 * @throws RuntimeException if the question being answered is not a free
+	 * response question
 	 */
 	public void answer(String text)
 	{
-		registry.push(currentQ.answer(text));
+		if (currentQ.getType() == PeoplesDB.QuestionTable.FREE_RESPONSE)
+		{
+			FreeResponseQuestion q = (FreeResponseQuestion) currentQ;
+			registry.push(q.answer(text));
+		}
+		else throw new RuntimeException("Wrong question type");
+	}
+	
+	/**
+	 * Answer a scale question.
+	 * 
+	 * @param val - the scale value
+	 * 
+	 * @throws RuntimeException if the question being answered is not a scale
+	 * question
+	 */
+	public void answer(int val)
+	{
+		if (currentQ.getType() == PeoplesDB.QuestionTable.SCALE_IMG)
+		{
+			SlidingScaleImgQuestion q = (SlidingScaleImgQuestion) currentQ;
+			registry.push(q.answer(val));
+		}
+		else if (currentQ.getType() == PeoplesDB.QuestionTable.SCALE_TEXT)
+		{
+			SlidingScaleTextQuestion q = (SlidingScaleTextQuestion) currentQ;
+			registry.push(q.answer(val));
+		}
+		else throw new RuntimeException("Wrong question type");
 	}
 
 	/**

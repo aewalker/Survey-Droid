@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/notification_activity_topLayout"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_vertical|center_horizontal">
+	<TextView  
+	    android:layout_width="wrap_content" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/notification_activity_title"
+	    android:id="@+id/notification_activity_message"
+	    android:gravity="center_vertical|center_horizontal"></TextView>
+	<TextView  
+	    android:id="@+id/notification_activity_surveyName"
+	    android:gravity="center_vertical|center_horizontal"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"></TextView>
+	<LinearLayout
+		android:id="@+id/notification_activity_buttonsLayout"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/notification_activity_takeButton"
+			android:text="@string/notification_activity_takeNow"
+			android:layout_margin="5dip"></Button>
+		<Button 
+			android:text="@string/notification_activity_postpone"
+			android:layout_width="wrap_content"
+			android:id="@+id/notification_activity_postponeButton" 
+			android:layout_height="wrap_content"
+		    android:layout_margin="5dip"></Button>
+	</LinearLayout>
+</LinearLayout>

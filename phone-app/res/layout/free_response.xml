@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/free_response_topLayout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:layout_gravity="center_horizontal|center_vertical">
+    <TextView
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/free_response_question"
+	    android:layout_width="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_weight="1"></TextView>
+    <EditText
+    	android:id="@+id/free_response_textEntry"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content" android:layout_weight="30">
+        <requestFocus></requestFocus>
+    </EditText>
+    <LinearLayout
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/free_response_buttonsLayout"
+    	android:layout_weight="1"
+    	android:layout_gravity="center">
+        <Button
+        	android:id="@+id/free_response_backButton"
+        	android:text="@string/question_backButton"
+        	android:layout_height="wrap_content"
+        	android:layout_width="100dip"
+        	android:layout_gravity="center"></Button>
+        <Button
+        	android:id="@+id/free_response_nextButton"
+        	android:text="@string/question_nextButton"
+        	android:layout_height="wrap_content"
+        	android:layout_width="100dip"
+        	android:layout_gravity="center"></Button>
+    </LinearLayout>
+</LinearLayout>

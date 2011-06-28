@@ -48,6 +48,7 @@ public class Config
 	/** Server to connect to */
 	public static final String SERVER = "50.19.254.168";
 	
+	//TODO each phone should generate a unique salt string
 	/** Salting value for hashing phone number */
 	public static final String SALT =
 		"oi234509gweamFastbkewp09tj2g3o2igfh90";
@@ -66,6 +67,12 @@ public class Config
 	
 	/** Name of the study administrator. */
 	public static final String ADMIN_NAME = "Austin";
+	
+	/** Should we allow the entry of blank free response answers? */
+	public static final boolean ALLOW_BLANK_FREE_RESPONSE = true;
+	
+	/** Should we allow answering multiple choice with no answers? */
+	public static final boolean ALLOW_NO_CHOICES = false;
 	
 	/**
 	 * Initialize the setting object.  Settings are available application-wide.

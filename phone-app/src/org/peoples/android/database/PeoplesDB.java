@@ -6,9 +6,7 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.database;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -45,7 +43,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     //Change the version number here to force the database to
     //update itself.  This throws out all data.
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     
     //table names
     public static final String LOCATION_TABLE_NAME = "locations";
@@ -64,7 +62,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	SURVEY_TABLE_NAME};
 
     //needed for creating the call log
-    private Context context;
+    //private Context context;
 
     /**
      * Location data table.  Contains longitude, latitude, uploaded (to mark
@@ -155,17 +153,25 @@ public class PeoplesDB extends SQLiteOpenHelper
     */
    public static final class AnswerTable implements BaseColumns {
     	public static final String QUESTION_ID = "question_id";
-    	public static final String CHOICE_ID = "choice_id";
+    	public static final String ANS_TYPE = "ans_type";
+    	public static final String CHOICE_IDS = "choice_ids";
+    	public static final String ANS_VALUE = "ans_value";
     	public static final String ANS_TEXT = "ans_text";
     	public static final String CREATED = "created";
     	public static final String UPLOADED = "uploaded";
+    	
+    	/** Answer types */
+    	public static final int CHOICE = 0;
+    	public static final int VALUE = 1;
+    	public static final int TEXT = 2;
 
     	private static String createSql() {
     		return "CREATE TABLE answers (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"question_id INT UNSIGNED NOT NULL," +
-    				"choice_id INT UNSIGNED," +
+    				"choice_ids TEXT," +
     				"ans_text TEXT," +
+    				"ans_value INT," +
     				"uploaded INT UNSIGNED DEFAULT 0," +
     				"created DATETIME);";
     	}
@@ -204,13 +210,21 @@ public class PeoplesDB extends SQLiteOpenHelper
      * @author Vladimir Costescu
      */
     public static final class ChoiceTable implements BaseColumns {
+    	public static final String CHOICE_TYPE = "choice_type";
     	public static final String CHOICE_TEXT = "choice_text";
+    	public static final String CHOICE_IMG = "choice_img";
     	public static final String QUESTION_ID = "question_id";
+    	
+    	/** Choice types */
+    	public static final int TEXT_CHOICE = 0;
+    	public static final int IMG_CHOICE = 1;
 
     	private static String createSql() {
     		return "CREATE TABLE choices (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+    				"choice_type INT UNSIGNED NOT NULL," +
     				"choice_text VARCHAR(255)," +
+    				"choice_img BLOB," +
     				"question_id INT UNSIGNED);";
     	}
 
@@ -245,8 +259,8 @@ public class PeoplesDB extends SQLiteOpenHelper
     }
     
     /**
-     * Survey Questions table.  Contains the survey id each Questionbelongs
-     * to and the text of each question.
+     * Survey Questions table.  Contains the survey id each Question belongs
+     * to, the type of question, and the text of each question.
      * 
      * @see com.peoples.android.model.Question
      * 
@@ -256,12 +270,29 @@ public class PeoplesDB extends SQLiteOpenHelper
     public static final class QuestionTable implements BaseColumns {
     	public static final String SURVEY_ID = "survey_id";
     	public static final String Q_TEXT = "q_text";
+    	public static final String Q_TYPE = "q_type";
+    	public static final String Q_SCALE_IMG_LOW = "q_img_low";
+    	public static final String Q_SCALE_IMG_HIGH = "q_img_high";
+    	public static final String Q_SCALE_TEXT_LOW = "q_text_low";
+    	public static final String Q_SCALE_TEXT_HIGH = "q_text_high";
+    	
+    	/** Question types */
+    	public static final int SINGLE_CHOICE = 0;
+    	public static final int MULTI_CHOICE = 1;
+    	public static final int SCALE_TEXT = 2;
+    	public static final int SCALE_IMG = 3;
+    	public static final int FREE_RESPONSE = 4;
 
     	private static String createSql() {
     		return "CREATE TABLE questions (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"survey_id INT UNSIGNED NOT NULL," +
-    				"q_text TEXT);";
+    				"q_text TEXT," +
+    				"q_img_low TEXT," +
+    				"q_img_high TEXT," +
+    				"q_text_low TEXT," +
+    				"q_text_high TEXT," +
+    				"q_type INT NOT NULL);";
     	}
 
     }
@@ -325,7 +356,7 @@ public class PeoplesDB extends SQLiteOpenHelper
             db.execSQL(QuestionTable.createSql());
             db.execSQL(SurveyTable.createSql());
 
-            buildInitialCallLog(db);
+            //buildInitialCallLog(db);
 
             db.setTransactionSuccessful();
         }
@@ -353,41 +384,42 @@ public class PeoplesDB extends SQLiteOpenHelper
     }
 
     //check the phone's call records and copy them into the PEOPLES database
-    private void buildInitialCallLog(SQLiteDatabase db) {
-        Cursor c = context.getContentResolver().query(android.provider.CallLog.Calls.CONTENT_URI,
-                                                      null, null, null,
-                                                      android.provider.CallLog.Calls.DATE);
-
-        // Retrieve the column-indices of phoneNumber, date and calltype
-        int numberColumn = c.getColumnIndex(android.provider.CallLog.Calls.NUMBER);
-        int dateColumn = c.getColumnIndex(android.provider.CallLog.Calls.DATE);
-
-        // type can be: Incoming, Outgoing or Missed
-        int typeColumn = c.getColumnIndex(android.provider.CallLog.Calls.TYPE);
-
-        // Loop through all entries the cursor provides to us.
-        if (c.moveToFirst()) {
-            do {
-                String callerPhoneNumber = c.getString(numberColumn);
-                String callDate = c.getString(dateColumn);
-                int callType = c.getInt(typeColumn);
-                String stringCallType;
-
-                ContentValues call = new ContentValues();
-
-                stringCallType = CallLogTable.getCallTypeString(callType);
-
-                call.put(CallLogTable.PHONE_NUMBER, callerPhoneNumber);
-                call.put(CallLogTable.CALL_TYPE, stringCallType);
-                call.put(CallLogTable.TIME, callDate);
-
-                db.insert(CALLLOG_TABLE_NAME, null, call);
-
-            } while (c.moveToNext());
-        }
-
-        c.close();
-    }
+    //TODO evaluate the usefulness of this
+//    private void buildInitialCallLog(SQLiteDatabase db) {
+//        Cursor c = context.getContentResolver().query(android.provider.CallLog.Calls.CONTENT_URI,
+//                                                      null, null, null,
+//                                                      android.provider.CallLog.Calls.DATE);
+//
+//        // Retrieve the column-indices of phoneNumber, date and calltype
+//        int numberColumn = c.getColumnIndex(android.provider.CallLog.Calls.NUMBER);
+//        int dateColumn = c.getColumnIndex(android.provider.CallLog.Calls.DATE);
+//
+//        // type can be: Incoming, Outgoing or Missed
+//        int typeColumn = c.getColumnIndex(android.provider.CallLog.Calls.TYPE);
+//
+//        // Loop through all entries the cursor provides to us.
+//        if (c.moveToFirst()) {
+//            do {
+//                String callerPhoneNumber = c.getString(numberColumn);
+//                String callDate = c.getString(dateColumn);
+//                int callType = c.getInt(typeColumn);
+//                String stringCallType;
+//
+//                ContentValues call = new ContentValues();
+//
+//                stringCallType = CallLogTable.getCallTypeString(callType);
+//
+//                call.put(CallLogTable.PHONE_NUMBER, callerPhoneNumber);
+//                call.put(CallLogTable.CALL_TYPE, stringCallType);
+//                call.put(CallLogTable.TIME, callDate);
+//
+//                db.insert(CALLLOG_TABLE_NAME, null, call);
+//
+//            } while (c.moveToNext());
+//        }
+//
+//        c.close();
+//    }
 
 
     /**
@@ -397,7 +429,7 @@ public class PeoplesDB extends SQLiteOpenHelper
      */
     public PeoplesDB(Context context){
     	super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context;
+        //this.context = context;
         Log.d(TAG, "in constructor");
     }
 

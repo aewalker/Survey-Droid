@@ -188,7 +188,7 @@ public class SurveyScheduler extends IntentService
 						Log.v(TAG, "should be scheduled for "
 								+ days[i] + " at " + time);
 					}
-					//TODO fix this...
+					//FIXME should check the time better
 					if (/*(scheduledTime < (nextRun + (60 * 1000)))
 							&& (*/scheduledTime >= runningTime/*)*/)
 					{

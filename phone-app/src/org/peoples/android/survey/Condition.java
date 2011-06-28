@@ -120,9 +120,12 @@ public class Condition
 		{
 			if (a.getQuestion().equals(question))
 			{
-				if (a.getChoice().equals(choice))
+				for (Choice c : a.getChoices())
 				{
-					return true;
+					if (c.equals(choice))
+					{
+						return true;
+					}
 				}
 			}
 		}
