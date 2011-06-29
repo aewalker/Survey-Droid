@@ -7,7 +7,7 @@
 	    android:orientation="vertical"
 	    android:layout_gravity="center_horizontal|center_vertical">
     <TextView
-	    android:text="TextView"
+	    android:text="@string/question_loading_text"
 	    android:textAppearance="?android:attr/textAppearanceLarge"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/multiple_choice_question"
@@ -15,7 +15,7 @@
 	    android:layout_gravity="center"></TextView>
 	<ListView
 		android:layout_weight="1"
-		android:id="@+id/multiple_choice_list"
+		android:id="@android:id/list"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent">
 	</ListView>

@@ -109,7 +109,8 @@ public class NotificationActivity extends Activity
 		//Don't let this activity sit in the background; kill it if for some
 		//reason the subject tries to hide it without responding.  This way,
 		//onDestroy() is called, which will cause this to pop back up later.
-		finish();
+		if (!isFinishing()) //avoid a warning
+			finish();
 	}
 	
 	@Override

@@ -80,7 +80,7 @@ public class SurveyService extends Service
 	private Survey survey;
 	
 	//is the survey running?
-	private Boolean active;
+	private Boolean active = false;
 	
 	//the binder to send to clients
 	private final SurveyBinder surveyBinder = new SurveyBinder();
@@ -169,9 +169,15 @@ public class SurveyService extends Service
 				
 				//spawn the first QuestionActivity
 				Intent questionIntent = new Intent(getApplicationContext(),
-						QuestionActivity.class);
+						QuestionActivity.getNextQusetionClass(
+								survey.getQuestionType()));
 				questionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(questionIntent);
+			}
+			else if (action.equals(ACTION_SUBMIT_ANSWERS))
+			{
+				survey.submit();
+				stopSelf();
 			}
 			else
 			{
@@ -212,6 +218,7 @@ public class SurveyService extends Service
 	@Override
 	public IBinder onBind(Intent intent)
 	{
+		if (Config.D) Log.d(TAG, "in onBind");
 		return surveyBinder;
 	}
 }

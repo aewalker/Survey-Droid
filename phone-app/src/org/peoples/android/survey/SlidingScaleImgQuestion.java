@@ -36,7 +36,7 @@ public class SlidingScaleImgQuestion extends Question
 	 * @param ctxt - the context (used for database calls)
 	 */
 	public SlidingScaleImgQuestion(String text, int id, Collection<Branch> b,
-			String imgLow, String imgHigh, Context ctxt)
+			char[] imgLow, char[] imgHigh, Context ctxt)
 	{
 		super(text, id, b, PeoplesDB.QuestionTable.SCALE_IMG, ctxt);
 		
@@ -44,7 +44,7 @@ public class SlidingScaleImgQuestion extends Question
 		byte[] lowImgData = Base64Coder.decode(imgLow);
 		this.imgLow = BitmapFactory.decodeByteArray(
 				lowImgData, 0, lowImgData.length);
-
+		
 		byte[] highImgData = Base64Coder.decode(imgHigh);
 		this.imgHigh = BitmapFactory.decodeByteArray(
 				highImgData, 0, highImgData.length);

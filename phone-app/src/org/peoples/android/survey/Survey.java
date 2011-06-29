@@ -6,6 +6,7 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -16,11 +17,13 @@ import java.util.HashMap;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.SurveyDBHandler;
 import org.peoples.android.Config;
+import org.peoples.android.R;
 
 /**
  * The highest-level survey-related class.  A survey object contains everything
@@ -215,11 +218,11 @@ public class Survey
 			break;
 		case PeoplesDB.QuestionTable.SCALE_IMG:
 			newQ = new SlidingScaleImgQuestion(text, id, bList,
-					q.getString(q.getColumnIndexOrThrow(
-							PeoplesDB.QuestionTable.Q_SCALE_IMG_LOW)),
-					q.getString(q.getColumnIndexOrThrow(
-							PeoplesDB.QuestionTable.Q_SCALE_IMG_HIGH)),
-					ctxt);
+				q.getString(q.getColumnIndexOrThrow(
+					PeoplesDB.QuestionTable.Q_SCALE_IMG_LOW)).toCharArray(),
+				q.getString(q.getColumnIndexOrThrow(
+					PeoplesDB.QuestionTable.Q_SCALE_IMG_HIGH)).toCharArray(),
+				ctxt);
 			break;
 		default:
 			throw new IllegalStateException("Invlaid question type: " + q_type);
@@ -277,7 +280,7 @@ public class Survey
 		case PeoplesDB.ChoiceTable.IMG_CHOICE:
 			//be careful about which constructor this is!
 			newC = new Choice(c.getString(c.getColumnIndexOrThrow(
-					PeoplesDB.ChoiceTable.CHOICE_IMG)), ctxt, id);
+				PeoplesDB.ChoiceTable.CHOICE_IMG)).toCharArray(), ctxt, id);
 			break;
 		default:
 			throw new IllegalStateException("Invlaid choice type");
@@ -320,18 +323,48 @@ public class Survey
 						branches, choicesList0, false, ctxt);
 				break;
 			case 1:
+				//this looks rather dumb; it's just a test to make sure the
+				//encoding works properly
 				LinkedList<Choice> choicesList1 = new LinkedList<Choice>();
-				choicesList1.add(new Choice("Red", 0, ctxt));
-				choicesList1.add(new Choice("Blue", 0, ctxt));
-				choicesList1.add(new Choice("Green", 0, ctxt));
-				choicesList1.add(new Choice("Orange", 0, ctxt));
-				choicesList1.add(new Choice("Black", 0, ctxt));
+				//blue
+				Bitmap blueImg = BitmapFactory.decodeResource(
+						ctxt.getResources(), R.drawable.blue_back_medium);
+				ByteArrayOutputStream baosBlue = new ByteArrayOutputStream();
+				blueImg.compress(Bitmap.CompressFormat.PNG, 100, baosBlue);
+				choicesList1.add(new Choice(Base64Coder.encode(
+						baosBlue.toByteArray()), ctxt, 0));
+				
+				//red
+				Bitmap redImg = BitmapFactory.decodeResource(
+						ctxt.getResources(), R.drawable.red_back_medium);
+				ByteArrayOutputStream baosRed = new ByteArrayOutputStream();
+				redImg.compress(Bitmap.CompressFormat.PNG, 100, baosRed);
+				choicesList1.add(new Choice(Base64Coder.encode(
+						baosRed.toByteArray()), ctxt, 0));
+				
+				//green
+				Bitmap greenImg = BitmapFactory.decodeResource(
+						ctxt.getResources(), R.drawable.green_back_medium);
+				ByteArrayOutputStream baosGreen = new ByteArrayOutputStream();
+				greenImg.compress(Bitmap.CompressFormat.PNG, 100, baosGreen);
+				choicesList1.add(new Choice(Base64Coder.encode(
+						baosGreen.toByteArray()), ctxt, 0));
+				
 				prevQ = new ChoiceQuestion("What are your favorite colors", i,
 						branches, choicesList1, true, ctxt);
 				break;
 			case 2:
-				prevQ = new SlidingScaleTextQuestion("How awesome is today?",
-						i, branches, "Not at all", "Really", ctxt);
+				Bitmap lowImg = BitmapFactory.decodeResource(
+						ctxt.getResources(), R.drawable.blue_back_medium);
+				Bitmap highImg = BitmapFactory.decodeResource(
+						ctxt.getResources(), R.drawable.red_back_medium);
+				ByteArrayOutputStream baosLow = new ByteArrayOutputStream();
+				ByteArrayOutputStream baosHigh = new ByteArrayOutputStream();
+				lowImg.compress(Bitmap.CompressFormat.PNG, 100, baosLow);
+				highImg.compress(Bitmap.CompressFormat.PNG, 100, baosHigh);
+				prevQ = new SlidingScaleImgQuestion("How awesome is today?", i,
+						branches, Base64Coder.encode(baosLow.toByteArray()),
+						Base64Coder.encode(baosHigh.toByteArray()), ctxt);
 				break;
 			case 3:
 				prevQ = new SlidingScaleTextQuestion("How old are you?", i,

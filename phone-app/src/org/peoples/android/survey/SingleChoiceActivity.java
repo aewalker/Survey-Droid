@@ -9,9 +9,11 @@ package org.peoples.android.survey;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.peoples.android.Config;
 import org.peoples.android.R;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,6 +25,10 @@ import android.widget.TextView;
  */
 public class SingleChoiceActivity extends QuestionActivity
 {
+	//the logging tag
+	private static final String TAG = "SingleChoiceActivity";
+	
+	//the main list where choices are shown
 	private ListView listView;
 	
 	@Override
@@ -37,7 +43,11 @@ public class SingleChoiceActivity extends QuestionActivity
 				prevListener);
 		findViewById(R.id.multiple_choice_nextButton).setOnClickListener(
 				nextListener);
-		
+	}
+
+	@Override
+	protected void onSurveyLoaded()
+	{
 		//set the question text
 		TextView qText = (TextView) findViewById(R.id.multiple_choice_question);
 		qText.setText(survey.getText());
@@ -49,9 +59,9 @@ public class SingleChoiceActivity extends QuestionActivity
 			list[i][ImageOrTextAdapter.IMG_POS] = choices[i].getImg();
 			list[i][ImageOrTextAdapter.STRING_POS] = choices[i].getText();
 		}
-		listView = (ListView) findViewById(R.id.multiple_choice_list);
+		//FIXME still doesn't look like items are selected
+		listView = (ListView) findViewById(android.R.id.list);
 		listView.setAdapter(new ImageOrTextAdapter(this, list));
-		listView.setItemsCanFocus(false);
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}
 	
@@ -67,6 +77,8 @@ public class SingleChoiceActivity extends QuestionActivity
 	@Override
 	protected boolean isAnswered()
 	{
+		if (Config.D)
+			Log.d(TAG, "Answer index: " + listView.getCheckedItemPosition());
 		if (listView.getCheckedItemPosition() == ListView.INVALID_POSITION)
 			return false;
 		return true;

@@ -27,6 +27,9 @@
 	<!-- The next button on the survey questions. -->
 	<string name="question_nextButton">Next</string>
 	
+	<!-- The text to display while a question is loading -->
+	<string name="question_loading_text">Question Loading...</string>
+	
 	<!-- The title for the survey progress bar. -->
 	<string name="main_progressTitle">Survey\nCompletion:</string>
 	

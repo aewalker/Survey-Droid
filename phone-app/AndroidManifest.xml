@@ -11,9 +11,13 @@
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.CALL_PHONE" />
 	
-	<!-- Doesn't use these yet, but may want/need to in future -->
+	<!--
+	Doesn't use these yet, but may want/need to in future
+	 
 	<uses-permission android:name="android.permission.BATTERY_STATS" />
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	
+	-->
 	
 
 	<application android:icon="@drawable/icon" 
@@ -59,17 +63,21 @@
 				<action android:name="org.peoples.android.coms.ACTION_DOWNLOAD_DATA" />
 			</intent-filter>
 		</service>
-		<activity android:label="NotificationActivity" android:name=".survey.NotificationActivity"></activity>
-		<activity android:label="QuesitonActivity" android:name=".survey.QuestionActivity"></activity>
-		<activity android:label="ConfirmSubmitActivity" android:name=".survey.ConfirmSubmitActivity"></activity>
+		<activity android:label="PEOPLES Survey Notification" android:name=".survey.NotificationActivity"></activity>
+		<activity android:label="PEOPLES Survey" android:name=".survey.SingleChoiceActivity"></activity>
+		<activity android:label="PEOPLES Survey" android:name=".survey.MultiChoiceActivity"></activity>
+		<activity android:label="PEOPLES Survey" android:name=".survey.TextScaleActivity"></activity>
+		<activity android:label="PEOPLES Survey" android:name=".survey.ImgScaleActivity"></activity>
+		<activity android:label="PEOPLES Survey" android:name=".survey.FreeResponseActivity"></activity>
+		<activity android:label="PEOPLES Survey" android:name=".survey.ConfirmSubmitActivity"></activity>
 		<activity android:label="PEOPLES" android:name="MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:label="SettingsActivity" android:name="SettingsActivity"></activity>
-		<activity android:label="IDActivity" android:name="IDActivity"></activity>
+		<activity android:label="PEOPLES Settings" android:name="SettingsActivity"></activity>
+		<activity android:label="PEOPLES" android:name="IDActivity"></activity>
 
 	</application>
 </manifest>

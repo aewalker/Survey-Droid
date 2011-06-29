@@ -33,22 +33,12 @@ public class TextScaleActivity extends QuestionActivity
 				R.id.text_scale_backButton).setOnClickListener(prevListener);
 		findViewById(
 				R.id.text_scale_nextButton).setOnClickListener(nextListener);
-		
-		//set the question text
-		TextView qText = (TextView) findViewById(R.id.text_scale_question);
-		qText.setText(survey.getText());
-		
-		//set the text on each end of the scale
-		TextView lowText = (TextView) findViewById(R.id.text_scale_lowText);
-		TextView highText = (TextView) findViewById(R.id.text_scale_highText);
-		lowText.setText(survey.getLowText());
-		highText.setText(survey.getHighText());
 	}
 	
 	@Override
 	protected void answer()
 	{
-		SeekBar input = (SeekBar) findViewById(R.id.img_scale_slider);
+		SeekBar input = (SeekBar) findViewById(R.id.text_scale_slider);
 		int ans = input.getProgress();
 		ans++; //because SeekBar starts at 0
 		ans *= (100 / input.getMax()); //have to scale the answer
@@ -66,5 +56,19 @@ public class TextScaleActivity extends QuestionActivity
 	protected String getInvalidAnswerMsg()
 	{ //this should never get called because of the way isAnswered is written
 		return null;
+	}
+
+	@Override
+	protected void onSurveyLoaded()
+	{
+		//set the question text
+		TextView qText = (TextView) findViewById(R.id.text_scale_question);
+		qText.setText(survey.getText());
+		
+		//set the text on each end of the scale
+		TextView lowText = (TextView) findViewById(R.id.text_scale_lowText);
+		TextView highText = (TextView) findViewById(R.id.text_scale_highText);
+		lowText.setText(survey.getLowText());
+		highText.setText(survey.getHighText());
 	}
 }

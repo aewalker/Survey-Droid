@@ -34,16 +34,6 @@ public class ImgScaleActivity extends QuestionActivity
 				R.id.img_scale_backButton).setOnClickListener(prevListener);
 		findViewById(
 				R.id.img_scale_nextButton).setOnClickListener(nextListener);
-		
-		//set the question text
-		TextView qText = (TextView) findViewById(R.id.img_scale_question);
-		qText.setText(survey.getText());
-		
-		//set the scale images
-		ImageView lowImg = (ImageView) findViewById(R.id.img_scale_lowImg);
-		ImageView highImg = (ImageView) findViewById(R.id.img_scale_highImg);
-		lowImg.setImageBitmap(survey.getLowImg());
-		highImg.setImageBitmap(survey.getHighImg());
 	}
 	
 	@Override
@@ -67,5 +57,19 @@ public class ImgScaleActivity extends QuestionActivity
 	protected String getInvalidAnswerMsg()
 	{ //this should never get called because of the way isAnswered is written
 		return null;
+	}
+
+	@Override
+	protected void onSurveyLoaded()
+	{
+		//set the question text
+		TextView qText = (TextView) findViewById(R.id.img_scale_question);
+		qText.setText(survey.getText());
+		
+		//set the scale images
+		ImageView lowImg = (ImageView) findViewById(R.id.img_scale_lowImg);
+		ImageView highImg = (ImageView) findViewById(R.id.img_scale_highImg);
+		lowImg.setImageBitmap(survey.getLowImg());
+		highImg.setImageBitmap(survey.getHighImg());
 	}
 }

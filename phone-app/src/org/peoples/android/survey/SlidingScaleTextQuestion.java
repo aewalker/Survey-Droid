@@ -36,7 +36,7 @@ public class SlidingScaleTextQuestion extends Question
 	public SlidingScaleTextQuestion(String text, int id, Collection<Branch> b,
 			String textLow, String textHigh, Context ctxt)
 	{
-		super(text, id, b, PeoplesDB.QuestionTable.SCALE_IMG, ctxt);
+		super(text, id, b, PeoplesDB.QuestionTable.SCALE_TEXT, ctxt);
 		
 		this.textLow = textLow;
 		this.textHigh = textHigh;

@@ -35,10 +35,6 @@ public class FreeResponseActivity extends QuestionActivity
 		findViewById(R.id.free_response_nextButton).setOnClickListener(
 				nextListener);
 		
-		//set the question text
-		TextView qText = (TextView) findViewById(R.id.free_response_question);
-		qText.setText(survey.getText());
-		
 		//grab the input area for future use
 		input = (EditText) findViewById(R.id.free_response_textEntry);
 	}
@@ -62,5 +58,13 @@ public class FreeResponseActivity extends QuestionActivity
 	protected String getInvalidAnswerMsg()
 	{
 		return "You must enter a response";
+	}
+
+	@Override
+	protected void onSurveyLoaded()
+	{
+		//set the question text
+		TextView qText = (TextView) findViewById(R.id.free_response_question);
+		qText.setText(survey.getText());
 	}
 }

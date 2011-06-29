@@ -39,22 +39,6 @@ public class MultiChoiceActivity extends QuestionActivity
 				prevListener);
 		findViewById(R.id.multiple_choice_nextButton).setOnClickListener(
 				nextListener);
-		
-		//set the question text
-		TextView qText = (TextView) findViewById(R.id.multiple_choice_question);
-		qText.setText(survey.getText());
-		
-		Choice[] choices = survey.getChoices();
-		Object[][] list = new Object[choices.length][2];
-		for (int i = 0; i < choices.length; i++)
-		{
-			list[i][ImageOrTextAdapter.IMG_POS] = choices[i].getImg();
-			list[i][ImageOrTextAdapter.STRING_POS] = choices[i].getText();
-		}
-		listView = (ListView) findViewById(R.id.multiple_choice_list);
-		listView.setAdapter(new ImageOrTextAdapter(this, list));
-		listView.setItemsCanFocus(false);
-		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}
 	
 	@Override
@@ -87,5 +71,26 @@ public class MultiChoiceActivity extends QuestionActivity
 	protected String getInvalidAnswerMsg()
 	{
 		return "You must select at least one choice";
+	}
+
+	@Override
+	protected void onSurveyLoaded()
+	{
+		//set the question text
+		TextView qText =
+			(TextView) findViewById(R.id.multiple_choice_question);
+		qText.setText(survey.getText());
+		
+		Choice[] choices = survey.getChoices();
+		Object[][] list = new Object[choices.length][2];
+		for (int i = 0; i < choices.length; i++)
+		{
+			list[i][ImageOrTextAdapter.IMG_POS] = choices[i].getImg();
+			list[i][ImageOrTextAdapter.STRING_POS] = choices[i].getText();
+		}
+		listView = (ListView) findViewById(android.R.id.list);
+		listView.setAdapter(new ImageOrTextAdapter(this, list));
+		listView.setItemsCanFocus(false);
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 	}
 }

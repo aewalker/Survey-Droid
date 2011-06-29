@@ -14,6 +14,7 @@
 // This module is provided "as is", without warranties of any kind.
 
 //Changed by Austin
+//We accept this code under the GPLv3
 //TODO remove the class if we upgrade to API 8
 package org.peoples.android.survey;
 

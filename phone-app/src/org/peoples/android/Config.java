@@ -74,6 +74,9 @@ public class Config
 	/** Should we allow answering multiple choice with no answers? */
 	public static final boolean ALLOW_NO_CHOICES = false;
 	
+	/** Should the name/title of a survey be shown? */
+	public static final boolean SHOW_SURVEY_NAME = true;
+	
 	/**
 	 * Initialize the setting object.  Settings are available application-wide.
 	 * 

@@ -68,11 +68,11 @@ public class Choice
 	/**
 	 * Create a new image Choice.
 	 * 
-	 * @param img - the base 64 string representing the image to use
+	 * @param img - the base 64 character array representing the image to use
 	 * @param id - the choice_id as in the database
 	 * @param c - the current context
 	 */
-	public Choice(String img, Context c, int id) //XD it lets me do this!!!!
+	public Choice(char[] img, Context c, int id) //XD it lets me do this!!!!
 	{
 		byte[] imgData = Base64Coder.decode(img);
 		choice_img = BitmapFactory.decodeByteArray(imgData, 0, imgData.length);

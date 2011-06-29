@@ -5,6 +5,7 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -27,12 +28,15 @@ import org.peoples.android.survey.SurveyService.SurveyBinder;
  * @author Austin Walker
  * @author Henry Liu
  */
-public abstract class QuestionActivity extends ListActivity
+public abstract class QuestionActivity extends Activity
 {	
 	//logging tag
-	protected static final String TAG = "QuestionActivity";
+	private static final String TAG = "QuestionActivity";
 	
-	//the survey being ran
+	/**
+	 * The survey being ran.  Note that this should not be used until
+	 * onSurveyLoaded().
+	 */
 	protected Survey survey;
 	
 	//has the next question activity been started?
@@ -46,6 +50,12 @@ public abstract class QuestionActivity extends ListActivity
 		{
 			SurveyBinder sBinder = (SurveyBinder) binder;
 			survey = sBinder.getSurvey();
+			getThis().onSurveyLoaded();
+			if (Config.D) Log.d(TAG, "service connected");
+			
+			//set the title if desired
+			if (Config.SHOW_SURVEY_NAME)
+				setTitle(survey.getName());
 		}
 		
 		@Override
@@ -93,9 +103,9 @@ public abstract class QuestionActivity extends ListActivity
     {
         public void onClick(View view)
         {
-        	if (getThis().isAnswered())
+        	if (isAnswered())
         	{ //question has been answered properly
-        		getThis().answer();
+        		answer();
         		survey.nextQuestion();
         		if (!survey.done())
         		{ //still have more questions
@@ -172,6 +182,11 @@ public abstract class QuestionActivity extends ListActivity
 	 * @return the message to show to the user
 	 */
 	protected abstract String getInvalidAnswerMsg();
+	
+	/**
+	 * Called once the survey has been loaded (usually after onCreate).
+	 */
+	protected abstract void onSurveyLoaded();
 	
 	/**
 	 * Gets the proper class for a question of a given type.  Useful when

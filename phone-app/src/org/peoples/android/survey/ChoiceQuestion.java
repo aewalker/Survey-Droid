@@ -51,7 +51,10 @@ public class ChoiceQuestion extends Question
 	 */
 	public Choice[] getChoices()
 	{
-		return (Choice[]) choices.toArray();
+		//shortcoming of the generics system; can't just say:
+		// return (Choice[]) choices.toArray();
+		Choice[] c = new Choice[0];
+		return choices.toArray(c);
 	}
 	
 	/**
