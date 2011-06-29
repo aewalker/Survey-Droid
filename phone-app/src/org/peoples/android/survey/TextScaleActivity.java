@@ -41,7 +41,7 @@ public class TextScaleActivity extends QuestionActivity
 		SeekBar input = (SeekBar) findViewById(R.id.text_scale_slider);
 		int ans = input.getProgress();
 		ans++; //because SeekBar starts at 0
-		ans *= (100 / input.getMax()); //have to scale the answer
+		ans *= (99 / input.getMax()); //have to scale the answer
 		
 		survey.answer(ans);
 	}

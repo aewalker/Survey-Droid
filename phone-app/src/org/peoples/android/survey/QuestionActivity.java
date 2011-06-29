@@ -6,7 +6,6 @@
 package org.peoples.android.survey;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;

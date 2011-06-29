@@ -38,7 +38,7 @@ public class IDActivity extends Activity
         //check what orientation the phone is in
         //getOrientation() is depreciated as of API 8, but we're targeting
         //API 7, so we have to use it
-        if (display.getOrientation() == Configuration.ORIENTATION_LANDSCAPE)
+        if (display.getOrientation() == Configuration.ORIENTATION_PORTRAIT)
         {
         	setContentView(R.layout.id_activity_horiz);
         	IDSpacer = ' ';
