@@ -54,6 +54,18 @@
 	<!-- The go back button on the survey confirmation page -->
 	<string name="survey_confirmation_back">No, go back</string>
 	
+	<!-- The main text on the survey extras page -->
+	<string name="survey_extras_mainText">Would you like to send a photo or voicemail with your survey?</string>
+	
+	<!-- Text for the take photo button on the survey extras page -->
+	<string name="survey_extras_photoButton">Take photo</string>
+	
+	<!-- Text for the record voice button on the survey extras page -->
+	<string name="survey_extras_voiceButton">Record voice</string>
+	
+	<!-- Text for the done button on the survey extras page -->
+	<string name="survey_extras_doneButton">Finish</string>
+	
 	<!-- The four buttons on the main screen. -->
 	<string name="main_settingsButton">Settings</string>
 	<string name="main_sampleButton">Sample\nSurvey</string>

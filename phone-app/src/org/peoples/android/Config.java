@@ -3,7 +3,6 @@
  *                                                                           *
  * Holds configuration things (such as whether or not debugging is enabled.  *
  *---------------------------------------------------------------------------*/
-
 package org.peoples.android;
 
 import android.content.Context;
@@ -76,6 +75,16 @@ public class Config
 	
 	/** Should the name/title of a survey be shown? */
 	public static final boolean SHOW_SURVEY_NAME = true;
+
+	/**
+	 * Should full resolution photos (that are possibly/likely quite large) be
+	 * sent to the server when the user takes a photo with their survey? 
+	 * 
+	 * Note that due to an old bug on a small number of Android devices, it is
+	 * possible that that low resolution photos will be sent even if this is
+	 * turned on.
+	 */
+	public static final boolean USE_FULL_RES_PHOTOS = true;
 	
 	/**
 	 * Initialize the setting object.  Settings are available application-wide.

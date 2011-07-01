@@ -6,6 +6,9 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.database;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -54,15 +57,63 @@ public class PeoplesDB extends SQLiteOpenHelper
     public static final String CONDITION_TABLE_NAME = "conditions";
     public static final String QUESTION_TABLE_NAME = "questions";
     public static final String SURVEY_TABLE_NAME = "surveys";
+    public static final String EXTRAS_TABLE_NAME = "extras";
     
-    //for convenience
-    public static final String[] TABLES = {LOCATION_TABLE_NAME,
+    /** Contains the names of all the tables declared in PeoplesDB. */
+    public static final String[] TABLE_NAMES = {LOCATION_TABLE_NAME,
     	CALLLOG_TABLE_NAME, ANSWER_TABLE_NAME, BRANCH_TABLE_NAME,
     	CHOICE_TABLE_NAME, CONDITION_TABLE_NAME, QUESTION_TABLE_NAME,
-    	SURVEY_TABLE_NAME};
+    	SURVEY_TABLE_NAME, EXTRAS_TABLE_NAME};
+    
+    /**
+     * Returns a Collection of the classes of all the tables here.
+     * 
+     * @return Collection of table classes
+     */
+    public Collection<Class<? extends PEOPLESTable>> getTables()
+    {
+    	Collection<Class<? extends PEOPLESTable>> tables =
+    		new ArrayList<Class<? extends PEOPLESTable>>();
+    	tables.add(LocationTable.class);
+    	tables.add(CallLogTable.class);
+    	tables.add(AnswerTable.class);
+    	tables.add(BranchTable.class);
+    	tables.add(ChoiceTable.class);
+    	tables.add(ConditionTable.class);
+    	tables.add(QuestionTable.class);
+    	tables.add(SurveyTable.class);
+    	tables.add(ExtrasTable.class);
+    	return tables;
+    }
+    	
 
     //needed for creating the call log
     //private Context context;
+    
+    /**
+     * Class from which all the other tables in this class should inherit
+     * from.  Makes iterating over all the tables possible.
+     * 
+     * This should be treated as though it were abstract, though it cannot be
+     * because you can't mix static and abstract for some reason...
+     */
+    private static class PEOPLESTable implements BaseColumns {
+    	//class cannot be instantiated
+    	private PEOPLESTable() {}
+    	
+    	/**
+    	 * Get SQL that should be used to create this table.  Note that this
+    	 * method (and it's counterparts in all of the other classes) have
+    	 * SuppressWarnings("unused") because this method is never called
+    	 * directly (only through Method.invoke()).
+    	 * 
+    	 * @return SQL as a string that should be executed
+    	 */
+    	@SuppressWarnings("unused")
+		private static String createSql() {
+			return null;
+		}
+    }
 
     /**
      * Location data table.  Contains longitude, latitude, uploaded (to mark
@@ -71,7 +122,7 @@ public class PeoplesDB extends SQLiteOpenHelper
      * @author Diego Vargas
      * @author Vladimir Costescu
      */
-    public static final class LocationTable implements BaseColumns {
+    public static final class LocationTable extends PEOPLESTable {
         // This class cannot be instantiated
         private LocationTable() {}
 
@@ -80,7 +131,8 @@ public class PeoplesDB extends SQLiteOpenHelper
         public static final String LATITUDE = "latitude";
         public static final String TIME = "time";
 
-        private static String createSql() {
+        @SuppressWarnings("unused")
+		private static String createSql() {
         	return "CREATE TABLE " + LOCATION_TABLE_NAME + " (" 
         	+ LocationTable._ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + LocationTable.LONGITUDE	+ " DOUBLE,"
@@ -98,7 +150,7 @@ public class PeoplesDB extends SQLiteOpenHelper
 	* @author Diego Vargas
 	* @author Vladimir Costescu
 	*/
-   public static final class CallLogTable implements BaseColumns {
+   public static final class CallLogTable extends PEOPLESTable {
         // This class cannot be instantiated
         private CallLogTable() {}
 
@@ -130,7 +182,8 @@ public class PeoplesDB extends SQLiteOpenHelper
             return stringCallType;
         }
         
-        private static String createSql() {
+        @SuppressWarnings("unused")
+		private static String createSql() {
         	return "CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
             + CallLogTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + CallLogTable.PHONE_NUMBER + " TEXT,"
@@ -146,12 +199,12 @@ public class PeoplesDB extends SQLiteOpenHelper
     * uploaded (to mark whether each answer has been sent to the server), and
     * either a choice id or and answer text depending on the type of question.
     * 
-    * @see com.peoples.android.model.Answer
+    * @see com.peoples.android.survey.Answer
     * 
     * @author Diego Vargas
     * @author Vladimir Costescu
     */
-   public static final class AnswerTable implements BaseColumns {
+   public static final class AnswerTable extends PEOPLESTable {
     	public static final String QUESTION_ID = "question_id";
     	public static final String ANS_TYPE = "ans_type";
     	public static final String CHOICE_IDS = "choice_ids";
@@ -178,20 +231,47 @@ public class PeoplesDB extends SQLiteOpenHelper
     }
    
    /**
+    * Contains survey extras: photos and voice recordings that have been
+    * submitted as part of a survey.  Contains the survey id of each item,
+    * as well as the base 64 photo and/or voice recording.  Also includes the
+    * time of creation and whether or not it has been uploaded to the server.
+    * 
+    * @author Austin Walker
+    */
+   public static final class ExtrasTable extends PEOPLESTable {
+	   public static final String SURVEY_ID ="survey_id";
+	   public static final String PHOTO = "photo";
+	   public static final String VOICE = "voice";
+	   public static final String CREATED = "created";
+	   public static final String UPLOADED = "uploaded";
+	   
+	   @SuppressWarnings("unused")
+	private static String createSql() {
+		   	return "CREATE TABLE " + EXTRAS_TABLE_NAME + " (" +
+		   		_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+		   		SURVEY_ID + " INT UNSIGNED NOT NULL, " +
+		   		PHOTO + " TEXT, " + VOICE + " TEXT, " +
+		   		CREATED + " DATETIME, " +
+		   		UPLOADED + "INT UNSIGNED DEFAULT 0);";
+	   }
+   }
+   
+   /**
     * Survey Branches table.  Contains a question id (the question a
     * branch belongs to), and a next question (the id of the question a
     * branch points to).
     * 
-    * @see com.peoples.android.model.Branch
+    * @see com.peoples.android.survey.Branch
     * 
     * @author Diego Vargas
     * @author Vladimir Costescu
     */
-    public static final class BranchTable implements BaseColumns {
+    public static final class BranchTable extends PEOPLESTable {
     	public static final String QUESTION_ID = "question_id";
     	public static final String NEXT_Q = "next_q";
 
-    	private static String createSql() {
+    	@SuppressWarnings("unused")
+		private static String createSql() {
     		return "CREATE TABLE branches (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"question_id INT UNSIGNED NOT NULL, " +
@@ -204,12 +284,12 @@ public class PeoplesDB extends SQLiteOpenHelper
      * Survey Choices table.  Contains the choice text and the question id that
      * each Choice belongs to.
      * 
-     * @see com.peoples.android.model.Choice
+     * @see com.peoples.android.survey.Choice
      * 
      * @author Diego Vargas
      * @author Vladimir Costescu
      */
-    public static final class ChoiceTable implements BaseColumns {
+    public static final class ChoiceTable extends PEOPLESTable {
     	public static final String CHOICE_TYPE = "choice_type";
     	public static final String CHOICE_TEXT = "choice_text";
     	public static final String CHOICE_IMG = "choice_img";
@@ -219,7 +299,8 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final int TEXT_CHOICE = 0;
     	public static final int IMG_CHOICE = 1;
 
-    	private static String createSql() {
+    	@SuppressWarnings("unused")
+		private static String createSql() {
     		return "CREATE TABLE choices (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"choice_type INT UNSIGNED NOT NULL," +
@@ -236,18 +317,19 @@ public class PeoplesDB extends SQLiteOpenHelper
      * choice id that that Question should be answered with, and the type of
      * check to do.
      * 
-     * @see com.peoples.android.model.Condition
+     * @see com.peoples.android.survey.Condition
      * 
      * @author Diego Vargas
      * @author Vladimir Costescu
      */
-    public static final class ConditionTable implements BaseColumns {
+    public static final class ConditionTable extends PEOPLESTable {
     	public static final String BRANCH_ID = "branch_id";
     	public static final String QUESTION_ID = "question_id";
     	public static final String CHOICE_ID = "choice_id";
     	public static final String TYPE = "type";
 
-    	private static String createSql() {
+    	@SuppressWarnings("unused")
+		private static String createSql() {
     		return "CREATE TABLE conditions (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"branch_id INT UNSIGNED NOT NULL, " +
@@ -262,12 +344,12 @@ public class PeoplesDB extends SQLiteOpenHelper
      * Survey Questions table.  Contains the survey id each Question belongs
      * to, the type of question, and the text of each question.
      * 
-     * @see com.peoples.android.model.Question
+     * @see com.peoples.android.survey.Question
      * 
      * @author Diego Vargas
      * @author Vladimir Costescu
      */
-    public static final class QuestionTable implements BaseColumns {
+    public static final class QuestionTable extends PEOPLESTable {
     	public static final String SURVEY_ID = "survey_id";
     	public static final String Q_TEXT = "q_text";
     	public static final String Q_TYPE = "q_type";
@@ -283,7 +365,8 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final int SCALE_IMG = 3;
     	public static final int FREE_RESPONSE = 4;
 
-    	private static String createSql() {
+    	@SuppressWarnings("unused")
+		private static String createSql() {
     		return "CREATE TABLE questions (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"survey_id INT UNSIGNED NOT NULL," +
@@ -303,12 +386,12 @@ public class PeoplesDB extends SQLiteOpenHelper
      * comma separated integers that correspond to the times of the day that
      * each Survey should be given on each day of the week.
      * 
-     * @see come.peoples.android.model.Survey
+     * @see come.peoples.android.survey.Survey
      * 
      * @author Diego Vargas
      * @author Vladimir Costescu
      */
-    public static final class SurveyTable implements BaseColumns {
+    public static final class SurveyTable extends PEOPLESTable {
     	public static final String NAME = "name";
     	public static final String CREATED = "created";
     	public static final String QUESTION_ID = "question_id";
@@ -324,7 +407,8 @@ public class PeoplesDB extends SQLiteOpenHelper
     	//for convenience
     	public static final String[] DAYS = {SU, MO, TU, WE, TH, FR, SA, SA};
 
-    	private static String createSql() {
+    	@SuppressWarnings("unused")
+		private static String createSql() {
     		return "CREATE TABLE surveys (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"name VARCHAR(255),created DATETIME," +
@@ -347,21 +431,18 @@ public class PeoplesDB extends SQLiteOpenHelper
         db.beginTransaction();
 
         try {
-            db.execSQL(LocationTable.createSql());
-            db.execSQL(CallLogTable.createSql());
-            db.execSQL(AnswerTable.createSql());
-            db.execSQL(BranchTable.createSql());
-            db.execSQL(ChoiceTable.createSql());
-            db.execSQL(ConditionTable.createSql());
-            db.execSQL(QuestionTable.createSql());
-            db.execSQL(SurveyTable.createSql());
+        	for (Class<? extends PEOPLESTable> table : getTables())
+        	{
+				db.execSQL((String) table.getDeclaredMethod("createSQL",
+						(Class<?>) null).invoke(null, (Object) null));
+        	}
 
             //buildInitialCallLog(db);
 
             db.setTransactionSuccessful();
-        }
-
-        finally {
+        } catch (Exception e) {
+        	Log.e(TAG, e.getMessage());
+        } finally {
             db.endTransaction();
         }
     }
@@ -369,17 +450,12 @@ public class PeoplesDB extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+        Log.i(TAG, "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + LOCATION_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CALLLOG_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + ANSWER_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + BRANCH_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CHOICE_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CONDITION_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + QUESTION_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + SURVEY_TABLE_NAME);
-        
+        for (String table : TABLE_NAMES)
+        {
+        	db.execSQL("DROP TABLE IF EXISTS " + table);
+        }
         onCreate(db);
     }
 

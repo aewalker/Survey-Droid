@@ -257,18 +257,27 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	public boolean writeAnswer(int q_id, int[] c_ids, long created)
 	{
 		//format the ids
+		StringBuilder ids;
 		if (c_ids == null || c_ids.length == 0)
 		{
-			throw new RuntimeException("No choices given in answer");
+			if (!Config.ALLOW_NO_CHOICES)
+				throw new RuntimeException("No choices given in answer");
+			else
+			{
+				ids = new StringBuilder();
+			}
 		}
-		StringBuilder ids = new StringBuilder(Integer.toString(c_ids[0]));
-		for (int i = 1; i < c_ids.length; i++)
+		else
 		{
-			ids.append(Integer.toString(c_ids[i]));
+			ids = new StringBuilder(Integer.toString(c_ids[0]));
+			for (int i = 1; i < c_ids.length; i++)
+			{
+				ids.append(Integer.toString(c_ids[i]));
+			}
 		}
 		
 		if (Config.D) Log.d(TAG, "writing answer for question " + q_id
-				+ ": choice " + ids.toString());
+				+ ": " + ids.toString());
 		ContentValues values = new ContentValues();
 		
 		//set up the query

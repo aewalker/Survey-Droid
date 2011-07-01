@@ -211,6 +211,8 @@ public class Pull extends WebClient
 	    				survey.getString(ChoiceTable.CHOICE_TEXT));
 	    		values.put(ChoiceTable.CHOICE_IMG,
 	    				survey.getString(ChoiceTable.CHOICE_IMG));
+	    		values.put(ChoiceTable.CHOICE_TYPE,
+	    				survey.getInt(ChoiceTable.CHOICE_TYPE));
 	    		if (db.replace(CHOICE_TABLE_NAME, null, values) == -1 )
 				{
 					throw new RuntimeException("Database replace error");

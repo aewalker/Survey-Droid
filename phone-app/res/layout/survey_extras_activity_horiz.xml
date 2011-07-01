@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    	xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/main_topLayout"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/survey_extras_topLayout"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical|center_horizontal">
+	<TextView
+		android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content" 
+	    android:text="@string/survey_extras_mainText"
+	    android:id="@+id/survey_extras_message"
+	    android:gravity="center_vertical|center_horizontal" android:layout_weight="1"></TextView>
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/survey_extras_topLayout"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:gravity="center_vertical|center_horizontal" android:layout_weight="1">
+		<Button
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/survey_extras_photoButton"
+			android:text="@string/survey_extras_photoButton"
+			android:drawableTop="@drawable/blue_settings_medium"
+			android:layout_margin="5dip"
+			android:layout_weight="1"></Button>
+		<Button 
+			android:text="@string/survey_extras_voiceButton"
+			android:layout_width="fill_parent"
+			android:id="@+id/survey_extras_voiceButton"
+			android:drawableTop="@drawable/blue_settings_medium"
+			android:layout_height="wrap_content"
+		    android:layout_margin="5dip"
+		    android:layout_weight="1"></Button>
+		<Button 
+			android:text="@string/survey_extras_doneButton"
+			android:layout_width="fill_parent"
+			android:id="@+id/survey_extras_doneButton"
+			android:drawableTop="@drawable/blue_settings_medium"
+			android:layout_height="wrap_content"
+		    android:layout_margin="5dip"
+		    android:layout_weight="1"></Button>
+		</LinearLayout>
 </LinearLayout>
