@@ -19,26 +19,26 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
-
-import android.util.Log;
-
 import org.peoples.android.Config;
+
+import android.content.Context;
+import android.util.Log;
 
 /**
  * Helper methods to simplify talking with and parsing responses from a
  * SOC Online API.
- * 
+ *
  * @author Tony Xaio
  * @author Austin Walker
  */
-public class WebClient
+public abstract class WebClient
 {
 	//logging tag
 	private static final String TAG = "WebClient";
-	
+
 	//status codes
     private static final int HTTP_STATUS_OK = 200;
-    
+
     /**
      * Thrown when there were problems contacting the remote API server, either
      * because of a network error, or the server returned a bad status code.
@@ -66,11 +66,11 @@ public class WebClient
      * @return The raw content returned by the server.
      * @throws ApiException If any connection or server error occurs.
      */
-    protected static synchronized String getUrlContent(String url)
+    protected static synchronized String getUrlContent(Context ctxt, String url)
     throws ApiException
     {
         // Create client and set our specific user-agent string
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = new SocHttpClient(ctxt);
         HttpGet request = new HttpGet(url);
 
         try
@@ -91,26 +91,26 @@ public class WebClient
             throw new ApiException("Problem communicating with API", e);
         }
     }
-    
+
     protected static synchronized boolean
-    	postJsonToUrl(String url, String value)
+    	postJsonToUrl(Context ctxt, String url, String value)
     {
         try
         {
-            HttpClient httpclient = new DefaultHttpClient();
+            HttpClient httpclient = new SocHttpClient(ctxt);
             HttpPost httpPost = new HttpPost(url);
-            
-            StringEntity se = new StringEntity(value);  
+
+            StringEntity se = new StringEntity(value);
             se.setContentEncoding(
             		new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             httpPost.setEntity(se);
-            
+
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpPost);
-            
+
             if (Config.D) Log.d(TAG,
             		getInputStreamAsString(response.getEntity().getContent()));
-            
+
             StatusLine status = response.getStatusLine();
             if (status.getStatusCode() == HTTP_STATUS_OK)
                 return true;
@@ -118,12 +118,12 @@ public class WebClient
         catch (Exception e) { }
         return false;
     }
-    
+
     private static String getInputStreamAsString(InputStream is)
     {
         byte[] sBuffer = new byte[512];
         ByteArrayOutputStream content = new ByteArrayOutputStream();
-        
+
         // Read response into a buffered stream
         int readBytes = 0;
         try

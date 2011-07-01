@@ -24,7 +24,7 @@ import org.peoples.android.coms.WebClient;
 
 /**
  * Provides the ability to snyc the database with the website's.
- * 
+ *
  * @author Tony Xaio
  * @author Austin Walker
  */
@@ -32,22 +32,22 @@ public class Pull extends WebClient
 {
 	//logging tag
 	private static final String TAG = "Pull";
-	
+
 	//pull address
     private static final String PULL_URL =
-    	"http://" + Config.SERVER + "/answers/pull/";
+    	Config.getComProtocol() + "://" + Config.SERVER + "/answers/pull/";
 
     /**
      * Syncs surveys, questions, choices, branches, and conditions with the
      * webserver's database.
-     * 
+     *
      * @param ctx - the Context
      */
     public static void syncWithWeb(Context ctxt)
     {
     	try
     	{
-            JSONObject json = new JSONObject(getUrlContent(PULL_URL));
+            JSONObject json = new JSONObject(getUrlContent(ctxt, PULL_URL));
             PeoplesDB pdb = new PeoplesDB(ctxt);
             SQLiteDatabase sdb = pdb.getWritableDatabase();
             syncSurveys(sdb, json.getJSONArray("surveys"));
@@ -89,7 +89,7 @@ public class Pull extends WebClient
 	    		values.put(SurveyTable.FR, survey.getString(SurveyTable.FR));
 	    		values.put(SurveyTable.SA, survey.getString(SurveyTable.SA));
 	    		values.put(SurveyTable.SU, survey.getString(SurveyTable.SU));
-	    		
+
 	    		//TODO change this so that it uses replace()?
 	    		db.beginTransaction();
 	    		db.delete(SURVEY_TABLE_NAME, SurveyTable._ID + " = ?",

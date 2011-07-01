@@ -24,7 +24,7 @@ import org.peoples.android.Config;
  * the database, they should use these constants.  Subclasses represent the
  * various tables.  Each implements {@link BaseColumns} by having a unique id
  * field.
- * 
+ *
  * @see BaseColumns
  * @see LocationTable
  * @see CallLogTable
@@ -35,9 +35,10 @@ import org.peoples.android.Config;
  * @see QuestionTable
  * @see SurveyTable
  * @see ScheduledSurveys
- * 
+ *
  * @author Diego Vargas
  * @author Vladimir Costescu
+ * @author Tony Xiao
  */
 public class PeoplesDB extends SQLiteOpenHelper
 {
@@ -47,7 +48,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     //update itself.  This throws out all data.
     private static final String DATABASE_NAME = "peoples.db";
     private static final int DATABASE_VERSION = 2;
-    
+
     //table names
     public static final String LOCATION_TABLE_NAME = "locations";
     public static final String CALLLOG_TABLE_NAME = "calls";
@@ -118,7 +119,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     /**
      * Location data table.  Contains longitude, latitude, uploaded (to mark
      * whether or not each record has been sent to the web server), and time.
-     * 
+     *
      * @author Diego Vargas
      * @author Vladimir Costescu
      */
@@ -129,24 +130,26 @@ public class PeoplesDB extends SQLiteOpenHelper
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
         public static final String LONGITUDE = "longitude";
         public static final String LATITUDE = "latitude";
+        public static final String ACCURACY = "accuracy";
         public static final String TIME = "time";
 
         @SuppressWarnings("unused")
 		private static String createSql() {
-        	return "CREATE TABLE " + LOCATION_TABLE_NAME + " (" 
+        	return "CREATE TABLE " + LOCATION_TABLE_NAME + " ("
         	+ LocationTable._ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + LocationTable.LONGITUDE	+ " DOUBLE,"
-            + LocationTable.LATITUDE		+ " DOUBLE," 
+            + LocationTable.LATITUDE		+ " DOUBLE,"
+            + LocationTable.ACCURACY		+ " DOUBLE,"
             + LocationTable.TIME			+ " INTEGER"
             						+ " );";
         }
     }
-    
+
    /**
 	* Call log data table.  Contains phone number, duration, uploaded (to mark
 	* whether or not each record has been sent to the web server), call type,
 	* and time (the time the call was made).
-	* 
+	*
 	* @author Diego Vargas
 	* @author Vladimir Costescu
 	*/
@@ -160,39 +163,64 @@ public class PeoplesDB extends SQLiteOpenHelper
         public static final String DURATION = "duration";
         public static final String TIME = "time";
 
+        public static final class CallType {
+            public static final int INCOMING = android.provider.CallLog.Calls.INCOMING_TYPE;
+            public static final int OUTGOING = android.provider.CallLog.Calls.OUTGOING_TYPE;
+            public static final int MISSED = android.provider.CallLog.Calls.MISSED_TYPE;
+            public static final int INCOMING_TEXT = 4;
+            public static final int OUTGOING_TEXT = 5;
+        }
+
         // Given an integer call type, return a string representation
         public static String getCallTypeString(int callType) {
             String stringCallType;
-            
+
             switch (callType) {
-                case android.provider.CallLog.Calls.INCOMING_TYPE:
+                case CallType.INCOMING:
                     stringCallType = "Incoming";
                     break;
-                case android.provider.CallLog.Calls.MISSED_TYPE:
+                case CallType.MISSED:
                     stringCallType = "Missed";
                     break;
-                case android.provider.CallLog.Calls.OUTGOING_TYPE:
+                case CallType.OUTGOING:
                     stringCallType = "Outgoing";
+                    break;
+                case CallType.INCOMING_TEXT:
+                    stringCallType = "Incoming Text";
+                    break;
+                case CallType.OUTGOING_TEXT:
+                    stringCallType = "Outgoing Text";
                     break;
                 default:
                     stringCallType = "";
                     break;
             }
-            
+
             return stringCallType;
+        }
+
+        public static boolean hasDuration(int callType) {
+        	switch (callType) {
+        		case CallType.INCOMING:
+        			return true;
+        		case CallType.OUTGOING:
+        			return true;
+        		default:
+        			return false;
+        	}
         }
         
         @SuppressWarnings("unused")
-		private static String createSql() {
+        private static String createSql() {
         	return "CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
             + CallLogTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + CallLogTable.PHONE_NUMBER + " TEXT,"
-            + CallLogTable.CALL_TYPE + " TEXT," 
-            + CallLogTable.DURATION + " INTEGER," 
+            + CallLogTable.CALL_TYPE + " TEXT,"
+            + CallLogTable.DURATION + " INTEGER,"
             + CallLogTable.TIME + " TEXT)";
         }
     }
-   
+
    /**
     * Survey answers table.  Tracks what the phone user (subject) has answered
     * the administered surveys with.  Contains a question id, a created time,
@@ -212,7 +240,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final String ANS_TEXT = "ans_text";
     	public static final String CREATED = "created";
     	public static final String UPLOADED = "uploaded";
-    	
+
     	/** Answer types */
     	public static final int CHOICE = 0;
     	public static final int VALUE = 1;
@@ -229,7 +257,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     				"created DATETIME);";
     	}
     }
-   
+
    /**
     * Contains survey extras: photos and voice recordings that have been
     * submitted as part of a survey.  Contains the survey id of each item,
@@ -279,7 +307,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	}
 
     }
-    
+
     /**
      * Survey Choices table.  Contains the choice text and the question id that
      * each Choice belongs to.
@@ -294,7 +322,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final String CHOICE_TEXT = "choice_text";
     	public static final String CHOICE_IMG = "choice_img";
     	public static final String QUESTION_ID = "question_id";
-    	
+
     	/** Choice types */
     	public static final int TEXT_CHOICE = 0;
     	public static final int IMG_CHOICE = 1;
@@ -310,7 +338,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	}
 
     }
-    
+
     /**
      * Survey Conditions table.  Contains the branch id that each Condition
      * belongs to, the question id that each Condition should check, the
@@ -339,7 +367,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	}
 
     }
-    
+
     /**
      * Survey Questions table.  Contains the survey id each Question belongs
      * to, the type of question, and the text of each question.
@@ -357,7 +385,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final String Q_SCALE_IMG_HIGH = "q_img_high";
     	public static final String Q_SCALE_TEXT_LOW = "q_text_low";
     	public static final String Q_SCALE_TEXT_HIGH = "q_text_high";
-    	
+
     	/** Question types */
     	public static final int SINGLE_CHOICE = 0;
     	public static final int MULTI_CHOICE = 1;
@@ -379,7 +407,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	}
 
     }
-    
+
     /**
      * Surveys table.  Contains the survey name, its creation date/time, the
      * first Questions id, and 7 fields to hold a list of times as 4 digit,
@@ -403,7 +431,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final String FR = "fr";
     	public static final String SA = "sa";
     	public static final String SU = "su";
-    	
+
     	//for convenience
     	public static final String[] DAYS = {SU, MO, TU, WE, TH, FR, SA, SA};
 
@@ -422,7 +450,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     				"su VARCHAR(255));";
     	}
     }
-    
+
     @Override
     public void onCreate(SQLiteDatabase db) {
     	AnswerTable.createSql();
@@ -521,5 +549,5 @@ public class PeoplesDB extends SQLiteOpenHelper
     	if(Config.D) Log.d(TAG, "getWriteable");
     	return super.getWritableDatabase();
     }
-    
+
 }
