@@ -19,7 +19,7 @@ import org.peoples.android.Config;
 
 /**
  * Extension of {@link WebClient} that pushes data up to the server
- * 
+ *
  * @author Tony Xaio
  * @author Austin Walker
  */
@@ -27,17 +27,17 @@ public class Push extends WebClient
 {
 	//logging tag
 	private static final String TAG = "Push";
-	
+
 	private static final String PUSH_URL =
-		"http://" + Config.SERVER + "/answers/push/";
-	
+		Config.getComProtocol() + "://" + Config.SERVER + "/answers/push/";
+
     /**
      * Push all un-uploaded survey answers in the phone database to the server.
      * Once successfully, each pushed answer will be marked as uploaded in the
      * database.
-     * 
+     *
      * @param ctxt - the current Context
-     * 
+     *
      * @return true if all the answers has been successfully pushed
      */
     public static boolean pushAnswers(Context ctx)
@@ -48,20 +48,20 @@ public class Push extends WebClient
         	ComsDBHandler cdbh = new ComsDBHandler(ctx);
             cdbh.openRead();
             Cursor answers = cdbh.getNewAnswers();
-            
+
             JSONArray answersJSON = new JSONArray();
-            
+
             if (Config.D) Log.d(TAG, "# of answer to push : "
             		+ answers.getCount());
             answers.moveToFirst();
-            
+
             if (answers.getCount() == 0)
             {
             	answers.close();
                 cdbh.close();
             	return true;
             }
-            
+
             while (!answers.isAfterLast())
             {
                 JSONObject ans = new JSONObject();
@@ -77,7 +77,7 @@ public class Push extends WebClient
                 ans.put(PeoplesDB.AnswerTable.QUESTION_ID, answers.getInt(
                 		answers.getColumnIndexOrThrow(
                 				PeoplesDB.AnswerTable.QUESTION_ID)));
-                
+
                 //now sort what gets uploaded based on the answer type
                 switch (answers.getInt(
                 		answers.getColumnIndexOrThrow(
@@ -109,20 +109,20 @@ public class Push extends WebClient
             }
             answers.close();
             cdbh.close();
-            
+
             // now send to actual server
             JSONObject data = new JSONObject();
-            
+
             TelephonyManager tManager =
             	(TelephonyManager) ctx.getSystemService(
             			Context.TELEPHONY_SERVICE);
         	String uid = tManager.getDeviceId();
-            
+
             data.put("deviceId", uid);
             data.put("answers", answersJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(PUSH_URL, data.toString());
-            
+            boolean success = postJsonToUrl(ctx, PUSH_URL, data.toString());
+
             // mark answers as uploaded if appropriate
             if (success)
             {
@@ -142,13 +142,13 @@ public class Push extends WebClient
         }
         return false;
     }
-    
+
     /**
      * Push all GPS Locations in the phone database to the server. Once
      * successfully, each pushed location will be removed from the database.
-     * 
+     *
      * @param ctxt - the current Context
-     * 
+     *
      * @return true if all the locations has been successfully pushed
      */
     public static boolean pushLocations(Context ctx)
@@ -159,19 +159,19 @@ public class Push extends WebClient
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
             cdbh.openRead();
             Cursor locations = cdbh.getLocations();
-            
+
             JSONArray locationsJSON = new JSONArray();
-            
+
             if (Config.D) Log.d("Push", "# of locations to push : "
             		+ locations.getCount());
-            
+
             if (locations.getCount() == 0)
             {
             	locations.close();
                 cdbh.close();
             	return true;
             }
-            
+
             locations.moveToFirst();
             while (!locations.isAfterLast())
             {
@@ -193,20 +193,20 @@ public class Push extends WebClient
             }
             locations.close();
             cdbh.close();
-            
+
             // now send to actual server
             JSONObject data = new JSONObject();
-            
+
             TelephonyManager tManager =
             	(TelephonyManager) ctx.getSystemService(
             			Context.TELEPHONY_SERVICE);
         	String uid = tManager.getDeviceId();
             data.put("deviceId", uid);
-            
+
             data.put("locations", locationsJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(PUSH_URL, data.toString());
-            
+            boolean success = postJsonToUrl(ctx, PUSH_URL, data.toString());
+
             // delete locations if appropriate
             if (success)
             {
@@ -226,14 +226,14 @@ public class Push extends WebClient
         }
         return false;
     }
-    
+
     /**
      * Push all un-uploaded call logs in the phone database to the server
      * Phone number is hashed before sending to the server to preserve privacy
      * Once successful, each call log will be marked as uploaded in the database
-     * 
+     *
      * @param ctxt - the current Context
-     * 
+     *
      * @return true if push was successful
      */
     public static boolean pushCallLog(Context ctx)
@@ -245,17 +245,17 @@ public class Push extends WebClient
             cdbh.openRead();
             Cursor calls = cdbh.getCalls();
             JSONArray callsJSON = new JSONArray();
-            
+
             if (Config.D)
             	Log.d(TAG, "# of call logs to push : " + calls.getCount());
-            
+
             if (calls.getCount() == 0)
             {
             	calls.close();
                 cdbh.close();
             	return true;
             }
-            
+
             calls.moveToFirst();
             while (!calls.isAfterLast())
             {
@@ -280,20 +280,20 @@ public class Push extends WebClient
             }
             calls.close();
             cdbh.close();
-            
+
             // now send to actual server
             JSONObject data = new JSONObject();
-            
+
             TelephonyManager tManager =
             	(TelephonyManager) ctx.getSystemService(
             			Context.TELEPHONY_SERVICE);
         	String uid = tManager.getDeviceId();
             data.put("deviceId", uid);
-            
+
             data.put("calls", callsJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(PUSH_URL, data.toString());
-            
+            boolean success = postJsonToUrl(ctx, PUSH_URL, data.toString());
+
             // delete calls if appropriate
             if (success)
             {
@@ -313,7 +313,7 @@ public class Push extends WebClient
         }
         return false;
     }
-    
+
     //salt and hash (for phone numbers)
     private static Integer hash(String s)
     {

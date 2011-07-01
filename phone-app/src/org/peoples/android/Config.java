@@ -12,7 +12,7 @@ import android.content.SharedPreferences;
 /**
  * Holds static information about the current configuration, such as whether or
  * not debugging is enabled, etc.
- * 
+ *
  * @author Austin Walker
  * @author Tony Xaio
  * @author Henry Liu
@@ -21,33 +21,36 @@ public class Config
 {
 	//application context
 	private final Context ctxt;
-	
+
 	//manual settings; can't be changed programatically
 	/** Is debugging enabled? */
 	public static final boolean D = true;
-	
+
+	/** Is https enabled? */
+	public static final boolean https = true;
+
 	/** Format of survey times. */
 	public static final String TIME_FORMAT = "HHmm";
-	
+
 	/** Format of survey days. */
 	public static final String DAY_FORMAT = "EE";
-	
-	
+
+
 	//TODO convert these to use shared preferences
 	/** Frequency with which to run the survey scheduler (in minutes) */
 	public static final long SCHEDULER_INTERVAL = 20;
 	//public static final int SCHEDULER_INTERVAL = 60 * 24;
-	
+
 	/** Frequency with which to push data (in minutes) */
 	public static final long PUSH_INTERVAL = 20;
 	//public static final int PUSH_INTERVAL = 60 * 24;
-	
+
 	/** Frequency with which to pull data (in minutes) */
 	public static final long PULL_INTERVAL = 60 * 24;
-	
+
 	/** Server to connect to */
 	public static final String SERVER = "50.19.254.168";
-	
+
 	//TODO each phone should generate a unique salt string
 	/** Salting value for hashing phone number */
 	public static final String SALT =
@@ -55,93 +58,104 @@ public class Config
 
 	/** Approximate time between location updates, in minutes */
 	public static int LOCATION_INTERVAL = 15;
-	
+
 	/** Time to vibrate to warn user that a survey is ready in milliseconds. */
     public static final long VIBRATION_TIME = 2000;
-    
+
     /** Time to delay a survey for in minutes if the user chooses to. */
     public static final long SURVEY_DELAY = 15;
 
     /** Phone number of the study administrator. */
 	public static final String ADMIN_PHONE_NUMBER = "7652996509"; //Austin cell
-	
+
 	/** Name of the study administrator. */
 	public static final String ADMIN_NAME = "Austin";
-	
+
 	/** Should we allow the entry of blank free response answers? */
 	public static final boolean ALLOW_BLANK_FREE_RESPONSE = true;
-	
+
 	/** Should we allow answering multiple choice with no answers? */
 	public static final boolean ALLOW_NO_CHOICES = false;
-	
+
 	/** Should the name/title of a survey be shown? */
 	public static final boolean SHOW_SURVEY_NAME = true;
-	
+
 	/**
 	 * Initialize the setting object.  Settings are available application-wide.
-	 * 
+	 *
 	 * @param ctxt - the application context
 	 */
 	public Config(Context ctxt)
 	{
 		this.ctxt = ctxt;
 	}
-	
+
 	/**
      * Enable / disable location service
-     * 
+     *
      * @param enabled - true to enable location service
      */
     public void setLocationService(boolean enabled) {
         putBoolean("locationOn", enabled);
     }
-    
+
     /**
      * Enable / disable call log service
-     * 
+     *
      * @param enabled - true to enable call log service
      */
     public void setCallLogService(boolean enabled) {
         putBoolean("callLogOn", enabled);
     }
-    
+
     /**
      * Enable / disable survey service
-     * 
+     *
      * @param enabled - true to enable survey service
      */
     public void setSurveyService(boolean enabled) {
         putBoolean("surveyOn", enabled);
     }
-    
+
     /**
      * Check this method to make sure if location service should run
-     * 
+     *
      * @return true if location is enabled
      */
     public boolean isLocationEnabled() {
         return getBoolean("locationOn", true);
     }
-    
+
     /**
      * Check this method to make sure if call log service should run
-     * 
+     *
      * @return true if call log is enabled
      */
     public boolean isCallLogEnabled() {
         return getBoolean("callLogOn", true);
     }
-    
+
     /**
      * Check this method to make sure if survey service should run
-     * 
+     *
      * @return true if survey is enabled
      */
     public boolean isSurveyEnabled() {
         return getBoolean("surveyOn", true);
     }
-    
-    //Private helper to persist key-value pairs 
+
+    /**
+     * Call this method to get the default communications protocol
+     *
+     * @return uri protocol to be used
+     */
+    public static String getComProtocol() {
+    	if (https)
+    		return "https";
+    	return "http";
+    }
+
+    //Private helper to persist key-value pairs
     private void putBoolean(String key, boolean value) {
         SharedPreferences settings = ctxt.getSharedPreferences(
         		"peoples.conf", 0);
@@ -149,7 +163,7 @@ public class Config
         editor.putBoolean(key, value);
         editor.commit();
     }
-    
+
     //Private helper to retrieve key-value pairs
     private boolean getBoolean(String key, boolean defaultValue) {
         SharedPreferences settings = ctxt.getSharedPreferences(

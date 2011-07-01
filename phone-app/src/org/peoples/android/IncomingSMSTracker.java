@@ -25,6 +25,7 @@ import android.util.Log;
 public class IncomingSMSTracker extends BroadcastReceiver {
     // logging tag
     private static final String TAG = "IncomingSMS";
+	private static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
     @Override
     public void onReceive(Context ctxt, Intent intent) {
@@ -33,6 +34,9 @@ public class IncomingSMSTracker extends BroadcastReceiver {
 		if (!cfg.isCallLogEnabled()) return;
 
         // Make sure sms messages are available
+		if (!ACTION_SMS_RECEIVED.equals(intent.getAction()))
+			return;
+
         Bundle bundle = intent.getExtras();
         Object messages[] = (Object[]) bundle.get("pdus");
         if (messages == null || messages.length == 0)
