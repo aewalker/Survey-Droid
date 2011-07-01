@@ -35,6 +35,7 @@ import org.peoples.android.Config;
  * 
  * @author Diego Vargas
  * @author Vladimir Costescu
+ * @author Tony Xiao
  */
 public class PeoplesDB extends SQLiteOpenHelper
 {
@@ -108,19 +109,33 @@ public class PeoplesDB extends SQLiteOpenHelper
         public static final String DURATION = "duration";
         public static final String TIME = "time";
 
+        public static final class CallType {
+            public static final int INCOMING = android.provider.CallLog.Calls.INCOMING_TYPE;
+            public static final int OUTGOING = android.provider.CallLog.Calls.OUTGOING_TYPE;
+            public static final int MISSED = android.provider.CallLog.Calls.MISSED_TYPE;
+            public static final int INCOMING_TEXT = 4;
+            public static final int OUTGOING_TEXT = 5;
+        }
+        
         // Given an integer call type, return a string representation
         public static String getCallTypeString(int callType) {
             String stringCallType;
             
             switch (callType) {
-                case android.provider.CallLog.Calls.INCOMING_TYPE:
+                case CallType.INCOMING:
                     stringCallType = "Incoming";
                     break;
-                case android.provider.CallLog.Calls.MISSED_TYPE:
+                case CallType.MISSED:
                     stringCallType = "Missed";
                     break;
-                case android.provider.CallLog.Calls.OUTGOING_TYPE:
+                case CallType.OUTGOING:
                     stringCallType = "Outgoing";
+                    break;
+                case CallType.INCOMING_TEXT:
+                    stringCallType = "Incoming Text";
+                    break;
+                case CallType.OUTGOING_TEXT:
+                    stringCallType = "Outgoing Text";
                     break;
                 default:
                     stringCallType = "";
