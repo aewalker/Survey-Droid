@@ -64,7 +64,7 @@ public class TrackingDBHandler extends PeoplesDBHandler
 	 * @param lon - longitude
 	 * @param time - time at which the subject was at the location
 	 */
-	public void writeLocation(double lat, double lon, long time)
+	public void writeLocation(double lat, double lon, double accuracy, long time)
 	{
 		if (Config.D) Log.d(TAG, "Writing location: " + lat + ", " + lon);
 
@@ -73,6 +73,7 @@ public class TrackingDBHandler extends PeoplesDBHandler
 		//set up query
 		values.put(LocationTable.LATITUDE, lat);
 		values.put(LocationTable.LONGITUDE, lon);
+		values.put(LocationTable.ACCURACY, accuracy);
 		values.put(LocationTable.TIME, time);
 
 		db.insert(PeoplesDB.LOCATION_TABLE_NAME, null, values);

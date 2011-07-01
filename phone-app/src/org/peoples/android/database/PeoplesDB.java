@@ -79,6 +79,7 @@ public class PeoplesDB extends SQLiteOpenHelper
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
         public static final String LONGITUDE = "longitude";
         public static final String LATITUDE = "latitude";
+        public static final String ACCURACY = "accuracy";
         public static final String TIME = "time";
 
         private static String createSql() {
@@ -86,6 +87,7 @@ public class PeoplesDB extends SQLiteOpenHelper
         	+ LocationTable._ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + LocationTable.LONGITUDE	+ " DOUBLE,"
             + LocationTable.LATITUDE		+ " DOUBLE,"
+            + LocationTable.ACCURACY		+ " DOUBLE,"
             + LocationTable.TIME			+ " INTEGER"
             						+ " );";
         }

@@ -16,21 +16,21 @@ import android.util.Log;
 /**
  * Tracks the subject's location and writes location data points to the
  * database.
- * 
+ *
  * @author Austin Walker
  */
 public class LocationTracker implements LocationListener
 {
 	//application context
 	private final Context ctxt;
-	
+
 	//logging tag
 	private static final String TAG = "LocationTracker";
 
 	/**
 	 * Constructor.  Typically only one instance of this class should be
 	 * created; it can be given to the location manager.
-	 * 
+	 *
 	 * @param ctxt - the application context
 	 */
 	public LocationTracker(Context ctxt)
@@ -47,7 +47,7 @@ public class LocationTracker implements LocationListener
 			TrackingDBHandler tdbh = new TrackingDBHandler(ctxt);
 			tdbh.openWrite();
 			tdbh.writeLocation(
-					loc.getLatitude(), loc.getLongitude(), loc.getTime());
+					loc.getLatitude(), loc.getLongitude(), loc.getAccuracy(), loc.getTime());
 			tdbh.close();
 		}
 	}
@@ -56,7 +56,7 @@ public class LocationTracker implements LocationListener
 	public void onProviderDisabled(String provider)
 	{
 		Log.i(TAG, "GPS disabled!");
-		/* 
+		/*
 		 * Turns out, it's actually not possible to turn on the GPS
 		 * programatically without exploiting some pretty serious security
 		 * flaws in the Android system.  Since it's probably not a good idea
@@ -74,6 +74,6 @@ public class LocationTracker implements LocationListener
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras)
 	{
-		
+
 	}
 }

@@ -185,6 +185,9 @@ public class Push extends WebClient
                 loc.put(PeoplesDB.LocationTable.LATITUDE, locations.getDouble(
                 		locations.getColumnIndexOrThrow(
                 				PeoplesDB.LocationTable.LATITUDE)));
+                loc.put(PeoplesDB.LocationTable.ACCURACY, locations.getDouble(
+                		locations.getColumnIndexOrThrow(
+                				PeoplesDB.LocationTable.ACCURACY)));
                 loc.put(PeoplesDB.LocationTable.TIME, locations.getLong(
                 		locations.getColumnIndexOrThrow(
                 				PeoplesDB.LocationTable.TIME)));
