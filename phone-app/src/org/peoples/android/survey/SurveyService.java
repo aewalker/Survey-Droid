@@ -46,7 +46,7 @@ public class SurveyService extends Service
 		"org.peoples.android.survey.ACTION_SHOW_SURVEY";
 	
 	/**
-	 * Submit all live answers for this survey and stop. Should only be
+	 * Submit all live answers for this survey. Should only be
 	 * sent after {@link ACTION_SURVEY_READY}, otherwise the survey will not
 	 * be built and an exception will be thrown.
 	 */
@@ -177,7 +177,6 @@ public class SurveyService extends Service
 			else if (action.equals(ACTION_SUBMIT_ANSWERS))
 			{
 				survey.submit();
-				stopSelf();
 			}
 			else
 			{

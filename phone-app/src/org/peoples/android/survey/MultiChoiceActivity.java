@@ -62,7 +62,7 @@ public class MultiChoiceActivity extends QuestionActivity
 		//getCheckedItemIds if we move up
 		
 		//ignore the dead code warning for now
-		if (Config.ALLOW_NO_CHOICES && listView.getCheckItemIds().length == 0)
+		if (!Config.ALLOW_NO_CHOICES && listView.getCheckItemIds().length == 0)
 			return false;
 		return true;
 	}

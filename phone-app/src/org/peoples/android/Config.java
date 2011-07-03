@@ -7,6 +7,7 @@ package org.peoples.android;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.MediaRecorder;
 
 /**
  * Holds static information about the current configuration, such as whether or
@@ -79,6 +80,15 @@ public class Config
 	/** Should the name/title of a survey be shown? */
 	public static final boolean SHOW_SURVEY_NAME = true;
 	
+	/** What format should voice be recorded int */
+	public static final int VOICE_FORMAT =
+		MediaRecorder.OutputFormat.MPEG_4;
+		//MediaRecorder.OutputFormat.THREE_GPP;
+	
+	/** Directory where this application's files should go */
+	public static final String APP_DIR =
+		"/Android/data/org.peoples.android/files/";
+	
 	/**
 	 * Should full resolution photos (that are possibly/likely quite large) be
 	 * sent to the server when the user takes a photo with their survey? 
@@ -87,7 +97,7 @@ public class Config
 	 * possible that that low resolution photos will be sent even if this is
 	 * turned on.
 	 */
-	public static final boolean USE_FULL_RES_PHOTOS = true;
+	public static final boolean USE_FULL_RES_PHOTOS = false;
 	
 	/**
 	 * Initialize the setting object.  Settings are available application-wide.

@@ -10,7 +10,8 @@
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />	
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 	
 	<!--
 	Doesn't use these yet, but may want/need to in future
@@ -82,6 +83,7 @@
 		<activity android:label="PEOPLES Survey" android:name=".survey.ImgScaleActivity"></activity>
 		<activity android:label="PEOPLES Survey" android:name=".survey.FreeResponseActivity"></activity>
 		<activity android:label="PEOPLES Survey" android:name=".survey.ConfirmSubmitActivity"></activity>
+		<activity android:label="PEOPLES Survey" android:name=".survey.SurveyExtrasActivity"></activity>
 		<activity android:label="PEOPLES" android:name="MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
