@@ -17,14 +17,15 @@
     <TextView
     	android:layout_width="wrap_content"
     	android:id="@+id/text_scale_lowText"
+    	android:text="low"
     	android:layout_height="wrap_content"></TextView>
     <TextView
     	android:layout_width="wrap_content"
+    	android:text="high"
     	android:id="@+id/text_scale_highText"
     	android:layout_height="wrap_content"></TextView>
 	<SeekBar
 		android:id="@+id/text_scale_slider"
-		android:layout_weight="1"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
 		android:progress="50"></SeekBar>
@@ -40,12 +41,14 @@
         	android:text="@string/question_backButton"
         	android:layout_height="wrap_content"
         	android:layout_width="100dip"
+        	android:layout_weight="1"
         	android:layout_gravity="center"></Button>
         <Button
         	android:id="@+id/text_scale_nextButton"
         	android:text="@string/question_nextButton"
         	android:layout_height="wrap_content"
         	android:layout_width="100dip"
+        	android:layout_weight="1"
         	android:layout_gravity="center"></Button>
     </LinearLayout>
 </LinearLayout>

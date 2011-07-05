@@ -9,7 +9,10 @@ package org.peoples.android.survey;
 
 import org.peoples.android.R;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -25,8 +28,21 @@ public class TextScaleActivity extends QuestionActivity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		//FIXME set based on orientation when better layouts are written
-		setContentView(R.layout.text_scale);
+		
+		//setting the layout of the activity
+        Display display = ((WindowManager)
+        		getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        //check what orientation the phone is in
+        //getOrientation() is depreciated as of API 8, but we're targeting
+        //API 7, so we have to use it
+        if (display.getOrientation() == Configuration.ORIENTATION_PORTRAIT)
+        {
+        	setContentView(R.layout.text_scale_horiz);
+        }
+        else
+        {
+        	setContentView(R.layout.text_scale_vert);
+        }
 		
 		//set the buttons up
 		findViewById(

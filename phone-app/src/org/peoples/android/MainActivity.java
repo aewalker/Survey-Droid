@@ -4,7 +4,6 @@
  * User control panel with buttons to adjust settings, show a sample survey, *
  * get the phone's id, and exit.                                             *
  *---------------------------------------------------------------------------*/
-//TODO add a button to call Naomi
 //TODO add an indication of what percentage of surveys have been completed
 package org.peoples.android;
 
@@ -70,14 +69,13 @@ public class MainActivity extends Activity
         
         //add the survey progress bar
         //XXX this isn't working!
-        VerticalProgressBar vpb = new VerticalProgressBar(this);
-        vpb.setHorizontalScrollBarEnabled(true);
-        vpb.setMax(100);
-        //FIXME change to use some database lookup
-        vpb.setProgress(75);
-        LinearLayout PBLayout =
-        	(LinearLayout) findViewById(R.id.main_progressBarLayout);
-        PBLayout.addView(vpb);
+//        VerticalProgressBar vpb = new VerticalProgressBar(this);
+//        vpb.setMax(100);
+//        //FIXME change to use some database lookup
+//        vpb.setProgress(75);
+//        LinearLayout PBLayout =
+//        	(LinearLayout) findViewById(R.id.main_progressBarLayout);
+//        PBLayout.addView(vpb);
         
         //go to settings button
         Button settings = (Button) findViewById(R.id.main_settingsButton);
