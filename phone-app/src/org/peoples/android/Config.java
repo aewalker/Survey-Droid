@@ -27,7 +27,7 @@ public class Config
 	public static final boolean D = true;
 
 	/** Is https enabled? */
-	public static final boolean https = true;
+	public static final boolean HTTPS = true;
 
 	/** Format of survey times. */
 	public static final String TIME_FORMAT = "HHmm";
@@ -94,8 +94,8 @@ public class Config
 	 * sent to the server when the user takes a photo with their survey? 
 	 * 
 	 * Note that due to an old bug on a small number of Android devices, it is
-	 * possible that that low resolution photos will be sent even if this is
-	 * turned on.
+	 * possible that that photos will not be able to be sent if this is turned
+	 * on.  Make sure to test on the device in use.
 	 */
 	public static final boolean USE_FULL_RES_PHOTOS = false;
 	
@@ -169,7 +169,7 @@ public class Config
      * @return uri protocol to be used
      */
     public static String getComProtocol() {
-    	if (https)
+    	if (HTTPS)
     		return "https";
     	return "http";
     }
