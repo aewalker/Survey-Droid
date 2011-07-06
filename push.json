@@ -9,11 +9,13 @@
     "deviceId" : "", // phone's serial number or something that would allow the subject to be uniquely identified.
     "answers": [
         {
-            //"id": 0,
+        	"ans_type": 1, //can be one of 0 (choice(s)), 1 (value (an int)), or 2 (text)
             "question_id": 0,
-            "choice_id": 0,
-            "answer_text": "",
-            "created": 0
+            "created": 0,
+            //one of the following:
+            "choice_ids": "1,3,4"
+            "ans_value": 21
+            "ans_text": "Hello, World!"
         }, {
             ...
         }, {
@@ -22,7 +24,6 @@
     ],
     "locations": [
         {
-            //"id": 0,
             "long": 0,
             "lat": 0,
             "created": 0
@@ -34,8 +35,7 @@
     ],
     "calls": [
         {
-            //"id": 0,
-            "contact_id": 0,
+            "contact_id": "0004KX9ADSKFG9-AV93OASDV093",
             "type": 0, // enum {outgoing calll 0, incoming call 1, outgoing text 2, incoming text 3, missed call 4}
             "duration": 0 // null for text, 0 for missed calls,  # of seconds for calls
             "created": 0 // unix timestamp again, in fact all created are unix.
@@ -58,3 +58,4 @@
         }
     ]
 }
+

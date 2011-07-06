@@ -27,9 +27,16 @@
     ],
     "questions": [
         {
-            "id": 0,
-            "survey_id": 0,
-            "q_text": ""
+            "id": 1,
+            "survey_id": 1,
+            "q_type": 1 //can be 0 (single choice), 1 (multi choice), 2 (text scale), 3 (image scale), or 4 (free response)
+            "q_text": "How are you?",
+            //for an image scale question
+            "q_img_low": "asdv03klaesvqa923jkt23fdf0asef...", //base 64
+            "q_img_high": "aw09loi23j45v98wjergoisjdfa0v..." //base 64
+            //for a text scale question
+            "q_text_low": "low",
+            "q_text_high": "high"
         }, {
             ...
         }, {
@@ -63,8 +70,11 @@
     "choices": [
         {
             "id": 0,
-            "choice_test": "",
-            "question_id": 0
+            "choie_type": 0, //can be 0 (text choice), or 1 (image choice)
+            "question_id": 0,
+            //depending on the question type:
+            "choice_text": "Linux"
+            "choice_img": "aw3lkfmaw 9aas3avbd34twe5tb5yue45hemwv3..." //base 64
         }, {
             ...
         }, {
@@ -72,8 +82,6 @@
         }
     ],
     "config": {
-    		"ADMIN_PHONE_NUMBER": 765295146,
-    		"ADMIN_NAME": "Austin", 
     		"device_enabled": true,
     		"features_enabled" : {
     		    	"survey": true,
@@ -95,20 +103,28 @@
     		}, ],
     		"time_tracked" : [{
     		    	start: 1120,
-    		    	end: 1130,
-    		    	timezone: "EST"
+    		    	end: 1130
     		}, {
     		    	start: 1550,
-    		    	end: 2130,
-    		    	timezone: "EST"
+    		    	end: 2130
     		}, {
     		    	start: 1120,
-    		    	end: 1130,
-    		    	timezone: "EST"
+    		    	end: 1130
     		}, {
     		    	start: 1120,
-    		    	end: 1130,
-    		    	timezone: "EST"
-    		}]
+    		    	end: 1130
+    		}],
+    		"https" : 1, //use 1 = true, 0 = false
+    		"scheduler_interval" : 1440, //in minutes
+    		"push_interval" : 1440,
+    		"pull_interval" : 1440,
+    		"sever" : "50.19.254.168",
+    		"location_interval" : 15,
+    		"admin_phone_number" : 5555555555,
+    		"admin_name" : "Naomi"
+    		"allow_blank_free_response" : 1,
+    		"allow_no_choices" : 0,
+    		"show_survey_name" : 1,
+    		"voice_format" : mpeg4 //or 3gp
     ]
 }

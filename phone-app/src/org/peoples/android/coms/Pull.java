@@ -120,18 +120,25 @@ public class Pull extends WebClient
 	    		values.put(QuestionTable._ID, survey.getInt("id"));
 	    		values.put(QuestionTable.SURVEY_ID,
 	    				survey.getInt(QuestionTable.SURVEY_ID));
-	    		values.put(QuestionTable.Q_TYPE,
-	    				survey.getInt(QuestionTable.Q_TYPE));
 	    		values.put(QuestionTable.Q_TEXT,
 	    				survey.getString(QuestionTable.Q_TEXT));
-	    		values.put(QuestionTable.Q_SCALE_IMG_LOW,
-	    				survey.getString(QuestionTable.Q_SCALE_IMG_LOW));
-	    		values.put(QuestionTable.Q_SCALE_IMG_HIGH,
-	    				survey.getString(QuestionTable.Q_SCALE_IMG_HIGH));
-	    		values.put(QuestionTable.Q_SCALE_TEXT_LOW,
-	    				survey.getString(QuestionTable.Q_SCALE_TEXT_LOW));
-	    		values.put(QuestionTable.Q_SCALE_TEXT_HIGH,
-	    				survey.getString(QuestionTable.Q_SCALE_TEXT_HIGH));
+	    		int type = survey.getInt(QuestionTable.Q_TYPE);
+	    		values.put(QuestionTable.Q_TYPE, type);
+	    		switch (type)
+	    		{
+	    		case PeoplesDB.QuestionTable.SCALE_IMG:
+	    			values.put(QuestionTable.Q_SCALE_IMG_LOW,
+		    				survey.getString(QuestionTable.Q_SCALE_IMG_LOW));
+		    		values.put(QuestionTable.Q_SCALE_IMG_HIGH,
+		    				survey.getString(QuestionTable.Q_SCALE_IMG_HIGH));
+	    			break;
+	    		case PeoplesDB.QuestionTable.SCALE_TEXT:
+	    			values.put(QuestionTable.Q_SCALE_TEXT_LOW,
+		    				survey.getString(QuestionTable.Q_SCALE_TEXT_LOW));
+		    		values.put(QuestionTable.Q_SCALE_TEXT_HIGH,
+		    				survey.getString(QuestionTable.Q_SCALE_TEXT_HIGH));
+	    			break;
+	    		}
 	    		if (db.replace(QUESTION_TABLE_NAME, null, values) == -1 )
 				{
 					throw new RuntimeException("Database replace error");
@@ -207,12 +214,19 @@ public class Pull extends WebClient
 	    		values.put(ChoiceTable._ID, survey.getInt("id"));
 	    		values.put(ChoiceTable.QUESTION_ID,
 	    				survey.getInt(ChoiceTable.QUESTION_ID));
-	    		values.put(ChoiceTable.CHOICE_TEXT,
-	    				survey.getString(ChoiceTable.CHOICE_TEXT));
-	    		values.put(ChoiceTable.CHOICE_IMG,
-	    				survey.getString(ChoiceTable.CHOICE_IMG));
-	    		values.put(ChoiceTable.CHOICE_TYPE,
-	    				survey.getInt(ChoiceTable.CHOICE_TYPE));
+	    		int type = survey.getInt(ChoiceTable.CHOICE_TYPE);
+	    		switch (type)
+	    		{
+	    		case PeoplesDB.ChoiceTable.TEXT_CHOICE:
+	    			values.put(ChoiceTable.CHOICE_TEXT,
+		    				survey.getString(ChoiceTable.CHOICE_TEXT));
+	    			break;
+	    		case PeoplesDB.ChoiceTable.IMG_CHOICE:
+	    			values.put(ChoiceTable.CHOICE_IMG,
+		    				survey.getString(ChoiceTable.CHOICE_IMG));
+	    			break;
+	    		}
+	    		values.put(ChoiceTable.CHOICE_TYPE, type);
 	    		if (db.replace(CHOICE_TABLE_NAME, null, values) == -1 )
 				{
 					throw new RuntimeException("Database replace error");

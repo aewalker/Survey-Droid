@@ -35,7 +35,6 @@ public class Config
 	/** Format of survey days. */
 	public static final String DAY_FORMAT = "EE";
 
-
 	//TODO convert these to use shared preferences
 	/** Frequency with which to run the survey scheduler (in minutes) */
 	public static final long SCHEDULER_INTERVAL = 20;
@@ -59,7 +58,11 @@ public class Config
 	/** Approximate time between location updates, in minutes */
 	public static int LOCATION_INTERVAL = 15;
 
-	/** Time to vibrate to warn user that a survey is ready in milliseconds. */
+	/**
+	 * Time to vibrate to warn user that a survey is ready in milliseconds.
+	 * 
+	 * @deprecated Use the built in constants.
+	 */
     public static final long VIBRATION_TIME = 2000;
 
     /** Time to delay a survey for in minutes if the user chooses to. */
@@ -84,10 +87,6 @@ public class Config
 	public static final int VOICE_FORMAT =
 		MediaRecorder.OutputFormat.MPEG_4;
 		//MediaRecorder.OutputFormat.THREE_GPP;
-	
-	/** Directory where this application's files should go */
-	public static final String APP_DIR =
-		"/Android/data/org.peoples.android/files/";
 	
 	/**
 	 * Should full resolution photos (that are possibly/likely quite large) be

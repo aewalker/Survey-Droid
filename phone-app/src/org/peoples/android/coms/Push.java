@@ -65,9 +65,10 @@ public class Push extends WebClient
             while (!answers.isAfterLast())
             {
                 JSONObject ans = new JSONObject();
-                ans.put(PeoplesDB.AnswerTable._ID, answers.getInt(
-                		answers.getColumnIndexOrThrow(
-                				PeoplesDB.AnswerTable._ID)));
+                //don't actually need the id since the server assigns a new one
+//                ans.put(PeoplesDB.AnswerTable._ID, answers.getInt(
+//                		answers.getColumnIndexOrThrow(
+//                				PeoplesDB.AnswerTable._ID)));
                 ans.put(PeoplesDB.AnswerTable.ANS_TYPE, answers.getInt(
                 		answers.getColumnIndexOrThrow(
                 				PeoplesDB.AnswerTable.ANS_TYPE)));
