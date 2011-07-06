@@ -11,14 +11,20 @@ package org.peoples.android.survey;
 
 import java.util.Calendar;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 //import android.content.Context;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
 import org.peoples.android.Config;
+import org.peoples.android.R;
 //import org.peoples.android.coms.ComsService;
 
 /**
@@ -64,7 +70,11 @@ public class SurveyService extends Service
 	public static final String EXTRA_SURVEY_ID =
 		"org.peoples.android.survey.EXTRA_SURVEY_ID";
 
-	/** Name/title of the current survey */
+	/**
+	 * Name/title of the current survey
+	 * 
+	 * @deprecated Only used by NotificationActivity, which is deprecated
+	 */
 	public static final String EXTRA_SURVEY_NAME =
 		"org.peoples.android.survey.EXTRA_SURVEY_NAME";
 	
@@ -100,6 +110,9 @@ public class SurveyService extends Service
 			{
 				if (active)
 				{
+					//TODO now that we are using notifications, we can probably
+					//do a much better job dealing with concurent surveys
+					
 					//another survey is already running, so delay the new one
 					Intent delayIntent =
 						new Intent(this, SurveyScheduler.class);
@@ -145,11 +158,51 @@ public class SurveyService extends Service
 				survey = new Survey(this);
 			else survey = new Survey(surveyID, this);
 			
-			Intent notificationIntent =
-				new Intent(this, NotificationActivity.class);
-			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			notificationIntent.putExtra(EXTRA_SURVEY_NAME, survey.getName());
-			startActivity(notificationIntent);
+//			Intent notificationIntent =
+//				new Intent(this, NotificationActivity.class);
+//			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			notificationIntent.putExtra(EXTRA_SURVEY_NAME, survey.getName());
+//			startActivity(notificationIntent);
+			
+			//set up the notification content
+			int icon = R.drawable.blue_survey_small;
+			String tickerText = "New Survey Awaiting";
+			long when = System.currentTimeMillis();
+			Context context = getApplicationContext();
+			String contentTitle = "PEOPLES";
+			String contentText = "You have a new survey awaiting";
+			if (Config.SHOW_SURVEY_NAME)
+				contentText = contentText + ": " + survey.getName();
+			
+			//create the notification
+			Intent notificationIntent = new Intent(this,
+					QuestionActivity.getNextQusetionClass(
+							survey.getQuestionType()));
+			PendingIntent contentIntent =
+				PendingIntent.getActivity(this, 0, notificationIntent, 0);
+			Notification notification =
+				new Notification(icon, tickerText, when);
+			notification.setLatestEventInfo(
+					context, contentTitle, contentText, contentIntent);
+			
+			//add some extra things
+			AudioManager am = (AudioManager)
+				getSystemService(Context.AUDIO_SERVICE);
+			if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL)
+			{ //sound is on; play a sound
+				notification.defaults |= Notification.DEFAULT_SOUND;
+			}
+			else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE)
+			{ //sound is off; just vibrate
+				notification.defaults |= Notification.DEFAULT_VIBRATE;
+			} //if the mode is silent, don't do anything special
+			//the notification should go away once the user clicks on it
+			notification.flags |= Notification.FLAG_AUTO_CANCEL;
+			
+			//send it
+			NotificationManager nm = (NotificationManager)
+				getSystemService(Context.NOTIFICATION_SERVICE);
+			nm.notify(0 /* <- doesn't matter */, notification);
 		}
 		else if (action.equals(ACTION_END_SURVEY))
 		{

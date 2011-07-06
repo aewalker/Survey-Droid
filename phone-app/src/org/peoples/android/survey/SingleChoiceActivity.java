@@ -10,10 +10,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.peoples.android.Config;
+import org.peoples.android.ImageOrTextAdapter;
 import org.peoples.android.R;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,8 +39,21 @@ public class SingleChoiceActivity extends QuestionActivity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		//FIXME set to proper views once we get horizontal/vertical ones made
-		setContentView(R.layout.multiple_choice);
+
+		//setting the layout of the activity
+        Display display = ((WindowManager)
+        		getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        //check what orientation the phone is in
+        //getOrientation() is depreciated as of API 8, but we're targeting
+        //API 7, so we have to use it
+        if (display.getOrientation() == Configuration.ORIENTATION_PORTRAIT)
+        {
+        	setContentView(R.layout.multiple_choice_horiz);
+        }
+        else
+        {
+        	setContentView(R.layout.multiple_choice_vert);
+        }
 		
 		//set the buttons up
 		findViewById(R.id.multiple_choice_backButton).setOnClickListener(
@@ -61,7 +78,8 @@ public class SingleChoiceActivity extends QuestionActivity
 		}
 		//FIXME still doesn't look like items are selected
 		listView = (ListView) findViewById(android.R.id.list);
-		listView.setAdapter(new ImageOrTextAdapter(this, list));
+		listView.setAdapter(new ImageOrTextAdapter(this,
+				ListView.CHOICE_MODE_SINGLE, list, this));
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}
 	
@@ -70,8 +88,11 @@ public class SingleChoiceActivity extends QuestionActivity
 	{
 		Collection<Choice> answer = new ArrayList<Choice>();
 		Choice[] choices = survey.getChoices();
-		answer.add(choices[listView.getCheckedItemPosition()]);
+		//answer.add(choices[listView.getCheckedItemPosition()]);
+		answer.add(choices[(Integer) getSelected().toArray()[0]]);
 		survey.answer(answer);
+		if (Config.D) Log.d(TAG, "answered with: "
+				+ answer.toArray()[0].toString());
 	}
 
 	@Override
@@ -79,7 +100,10 @@ public class SingleChoiceActivity extends QuestionActivity
 	{
 		if (Config.D)
 			Log.d(TAG, "Answer index: " + listView.getCheckedItemPosition());
-		if (listView.getCheckedItemPosition() == ListView.INVALID_POSITION)
+		//if (listView.getCheckedItemPosition() == ListView.INVALID_POSITION)
+		if (getSelected().size() == 0)
+			return false;
+		if (getSelected().size() > 1)
 			return false;
 		return true;
 	}
@@ -87,6 +111,8 @@ public class SingleChoiceActivity extends QuestionActivity
 	@Override
 	protected String getInvalidAnswerMsg()
 	{
-		return "You must select a choice";
+		if (getSelected().size() == 0)
+			return "You must select a choice";
+		else return "You can only select one choice";
 	}
 }

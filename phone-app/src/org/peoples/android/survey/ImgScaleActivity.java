@@ -7,9 +7,14 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
+import org.peoples.android.Config;
 import org.peoples.android.R;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -26,8 +31,21 @@ public class ImgScaleActivity extends QuestionActivity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		//FIXME set based on orientation when better layouts are written
-		setContentView(R.layout.img_scale);
+		
+		//setting the layout of the activity
+        Display display = ((WindowManager)
+        		getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        //check what orientation the phone is in
+        //getOrientation() is depreciated as of API 8, but we're targeting
+        //API 7, so we have to use it
+        if (display.getOrientation() == Configuration.ORIENTATION_PORTRAIT)
+        {
+        	setContentView(R.layout.img_scale_horiz);
+        }
+        else
+        {
+        	setContentView(R.layout.img_scale_vert);
+        }
 		
 		//set the buttons up
 		findViewById(
@@ -42,9 +60,10 @@ public class ImgScaleActivity extends QuestionActivity
 		SeekBar input = (SeekBar) findViewById(R.id.img_scale_slider);
 		int ans = input.getProgress();
 		ans++; //because SeekBar starts at 0
-		ans *= (99 / input.getMax()); //have to scale the answer
+		ans *= (100.0 / (input.getMax() + 1)); //have to scale the answer
 		
 		survey.answer(ans);
+		if (Config.D) Log.d(TAG, "answering with " + ans);
 	}
 
 	@Override
@@ -71,5 +90,10 @@ public class ImgScaleActivity extends QuestionActivity
 		ImageView highImg = (ImageView) findViewById(R.id.img_scale_highImg);
 		lowImg.setImageBitmap(survey.getLowImg());
 		highImg.setImageBitmap(survey.getHighImg());
+		SeekBar slider = (SeekBar) findViewById(R.id.img_scale_slider);
+		if (survey.getAnswerValue() == -1)
+			slider.setProgress(slider.getMax() / 2);
+		else slider.setProgress((int) ((survey.getAnswerValue() - 1)
+				* (100.0 / (slider.getMax() + 1)))); //98% sure this is right
 	}
 }

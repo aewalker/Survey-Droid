@@ -7,10 +7,12 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
+import org.peoples.android.Config;
 import org.peoples.android.R;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.SeekBar;
@@ -57,9 +59,10 @@ public class TextScaleActivity extends QuestionActivity
 		SeekBar input = (SeekBar) findViewById(R.id.text_scale_slider);
 		int ans = input.getProgress();
 		ans++; //because SeekBar starts at 0
-		ans *= (99 / input.getMax()); //have to scale the answer
+		ans *= (100.0 / (input.getMax() + 1)); //have to scale the answer
 		
 		survey.answer(ans);
+		if (Config.D) Log.d(TAG, "answering with " + ans);
 	}
 
 	@Override
@@ -86,5 +89,10 @@ public class TextScaleActivity extends QuestionActivity
 		TextView highText = (TextView) findViewById(R.id.text_scale_highText);
 		lowText.setText(survey.getLowText());
 		highText.setText(survey.getHighText());
+		SeekBar slider = (SeekBar) findViewById(R.id.text_scale_slider);
+		if (survey.getAnswerValue() == -1)
+			slider.setProgress(slider.getMax() / 2);
+		else slider.setProgress((int) ((survey.getAnswerValue() - 1)
+				* (100.0 / (slider.getMax() + 1)))); //98% sure this is right
 	}
 }

@@ -5,6 +5,9 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -30,7 +33,7 @@ import org.peoples.android.survey.SurveyService.SurveyBinder;
 public abstract class QuestionActivity extends Activity
 {	
 	//logging tag
-	private static final String TAG = "QuestionActivity";
+	protected static final String TAG = "QuestionActivity";
 	
 	/**
 	 * The survey being ran.  Note that this should not be used until
@@ -40,6 +43,9 @@ public abstract class QuestionActivity extends Activity
 	
 	//has the next question activity been started?
 	private boolean isDone = false;
+	
+	//FIXME remove later
+	private Collection<Integer> selected = new ArrayList<Integer>();
 	
 	//connection to the SurveyService
 	private ServiceConnection connection = new ServiceConnection()
@@ -158,6 +164,24 @@ public abstract class QuestionActivity extends Activity
 	{
 		super.onDestroy();
 		unbindService(connection);
+	}
+	
+	//FIXME remove later
+	public void add(int i)
+	{
+		selected.add(i);
+	}
+	
+	//FIXME remove later
+	public void remove(int i)
+	{
+		selected.remove(i);
+	}
+	
+	//FIXME remove later
+	protected Collection<Integer> getSelected()
+	{
+		return selected;
 	}
 	
 	/**

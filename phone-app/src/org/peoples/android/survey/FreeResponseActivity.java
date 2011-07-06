@@ -10,6 +10,7 @@ import org.peoples.android.Config;
 import org.peoples.android.R;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -43,6 +44,8 @@ public class FreeResponseActivity extends QuestionActivity
 	protected void answer()
 	{
 		survey.answer(input.getText().toString());
+		if (Config.D) Log.d(TAG, "answered with \""
+				+ input.getText().toString() + "\"");
 	}
 
 	@Override
@@ -66,5 +69,7 @@ public class FreeResponseActivity extends QuestionActivity
 		//set the question text
 		TextView qText = (TextView) findViewById(R.id.free_response_question);
 		qText.setText(survey.getText());
+		EditText tEdit = (EditText) findViewById(R.id.free_response_textEntry);
+		tEdit.setText(survey.getAnswerText());
 	}
 }

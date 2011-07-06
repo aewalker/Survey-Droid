@@ -31,6 +31,8 @@ import org.peoples.android.R;
  * 
  * @author Austin Walker
  * @author Henry Liu
+ * 
+ * @deprecated Use {@link Notification}s instead
  */
 public class NotificationActivity extends Activity
 {
