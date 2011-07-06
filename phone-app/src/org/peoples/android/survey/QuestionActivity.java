@@ -167,18 +167,21 @@ public abstract class QuestionActivity extends Activity
 	}
 	
 	//FIXME remove later
+	/** @deprecated */
 	public void add(int i)
 	{
 		selected.add(i);
 	}
 	
 	//FIXME remove later
+	/** @deprecated */
 	public void remove(int i)
 	{
 		selected.remove(i);
 	}
 	
 	//FIXME remove later
+	/** @deprecated */
 	protected Collection<Integer> getSelected()
 	{
 		return selected;

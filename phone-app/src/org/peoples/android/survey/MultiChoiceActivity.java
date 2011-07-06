@@ -135,9 +135,11 @@ public class MultiChoiceActivity extends QuestionActivity
 			list[i][ImageOrTextAdapter.STRING_POS] = choices[i].getText();
 		}
 		listView = (ListView) findViewById(android.R.id.list);
-		listView.setAdapter(new ImageOrTextAdapter(this,
-				ListView.CHOICE_MODE_MULTIPLE, list, this));
-		listView.setItemsCanFocus(false);
+		ImageOrTextAdapter iotr = new ImageOrTextAdapter(this,
+				ListView.CHOICE_MODE_MULTIPLE, list, this);
+		listView.setAdapter(iotr);
+		if (survey.getAnswerChoices() != null)
+			iotr.setChecked(survey.getAnswerChoices());
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 	}
 }

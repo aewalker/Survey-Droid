@@ -78,8 +78,11 @@ public class SingleChoiceActivity extends QuestionActivity
 		}
 		//FIXME still doesn't look like items are selected
 		listView = (ListView) findViewById(android.R.id.list);
-		listView.setAdapter(new ImageOrTextAdapter(this,
-				ListView.CHOICE_MODE_SINGLE, list, this));
+		ImageOrTextAdapter iotr = new ImageOrTextAdapter(this,
+				ListView.CHOICE_MODE_SINGLE, list, this);
+		listView.setAdapter(iotr);
+		if (survey.getAnswerChoices() != null)
+			iotr.setChecked(survey.getAnswerChoices());
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}
 	

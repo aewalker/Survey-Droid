@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     	xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/free_response_topLayout"
+	    android:id="@+id/multiple_choice_topLayout"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:orientation="vertical"
@@ -10,31 +10,30 @@
 	    android:text="@string/question_loading_text"
 	    android:textAppearance="?android:attr/textAppearanceLarge"
 	    android:layout_height="wrap_content"
-	    android:id="@+id/free_response_question"
+	    android:id="@+id/multiple_choice_question"
 	    android:layout_width="wrap_content"
-	    android:layout_gravity="center"
-	    android:layout_weight="1"></TextView>
-    <EditText
-    	android:id="@+id/free_response_textEntry"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content" android:layout_weight="30">
-        <requestFocus></requestFocus>
-    </EditText>
+	    android:layout_gravity="center"></TextView>
+	<ListView
+		android:layout_weight="1"
+		android:id="@android:id/list"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent">
+	</ListView>
     <LinearLayout
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
-    	android:id="@+id/free_response_buttonsLayout"
+    	android:id="@+id/multiple_choice_buttonsLayout"
     	android:layout_weight="1"
     	android:layout_gravity="center">
         <Button
-        	android:id="@+id/free_response_backButton"
+        	android:id="@+id/multiple_choice_backButton"
         	android:text="@string/question_backButton"
         	android:layout_height="wrap_content"
         	android:layout_width="100dip"
         	android:layout_weight="1"
         	android:layout_gravity="center"></Button>
         <Button
-        	android:id="@+id/free_response_nextButton"
+        	android:id="@+id/multiple_choice_nextButton"
         	android:text="@string/question_nextButton"
         	android:layout_height="wrap_content"
         	android:layout_width="100dip"

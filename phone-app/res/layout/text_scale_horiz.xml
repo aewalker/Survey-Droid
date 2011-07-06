@@ -28,7 +28,6 @@
 		    <TextView
 		    	android:layout_width="wrap_content"
 		    	android:id="@+id/text_scale_lowText"
-		    	android:text="low"
 		    	android:layout_height="wrap_content"></TextView>
 		</LinearLayout>
 		<LinearLayout
@@ -39,7 +38,6 @@
 			android:gravity="right">
 		    <TextView
 		    	android:layout_width="wrap_content"
-		    	android:text="high"
 		    	android:id="@+id/text_scale_highText"
 		    	android:layout_height="wrap_content"></TextView>
 		</LinearLayout>

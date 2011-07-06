@@ -565,21 +565,21 @@ public class Survey
 		if (choices != null) //multiple choice
 		{
 			int[] toReturn = new int[choices.size()];
-			int i = 0; //position in return array
-			int cInd = 0; //position in choice array
+			int returnInd = 0; //position in return array
 			ChoiceQuestion q = (ChoiceQuestion) currentQ;
 			for (Choice c1 : choices)
 			{
+				int i = 0;
 				for (Choice c2 : q.getChoices())
 				{
 					if (c1.equals(c2))
 					{
-						toReturn[i] = cInd;
-						i++;
+						toReturn[returnInd] = i;
+						returnInd++;
 						break;
 					}
+					i++;
 				}
-				cInd++;
 			}
 			return toReturn;
 		}
