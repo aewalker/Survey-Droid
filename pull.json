@@ -71,13 +71,39 @@
             ...
         }
     ],
-    "config": [
-    	{
-    		"ADMIN_PHONE_NUMBER": 765295146
-    	}, {
-    		"ADMIN_NAME": "Austin"
-    	}, {
-    		...
-    	}
+    "config": {
+    		"ADMIN_PHONE_NUMBER": 765295146,
+    		"ADMIN_NAME": "Austin", 
+    		"device_enabled": true, 
+    		"location_tracked": [{
+    		    	"long" : 22.22,
+    		    	"lat": 22.22,
+    		    	"radius" : 22, (kilometers)
+    		}, {
+    		    	"long" : 22.22,
+    		    	"lat": 22.22,
+    		    	"radius" : 22, (kilometers)
+    		}, {
+    		    	"long" : 22.22,
+    		    	"lat": 22.22,
+    		    	"radius" : 22, (kilometers)
+    		}, ],
+    		"time_tracked" : [{
+    		    	start: 1120,
+    		    	end: 1130,
+    		    	timezone: "EST"
+    		}, {
+    		    	start: 1550,
+    		    	end: 2130,
+    		    	timezone: "EST"
+    		}, {
+    		    	start: 1120,
+    		    	end: 1130,
+    		    	timezone: "EST"
+    		}, {
+    		    	start: 1120,
+    		    	end: 1130,
+    		    	timezone: "EST"
+    		}]
     ]
 }
