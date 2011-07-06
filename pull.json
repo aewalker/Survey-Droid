@@ -74,7 +74,12 @@
     "config": {
     		"ADMIN_PHONE_NUMBER": 765295146,
     		"ADMIN_NAME": "Austin", 
-    		"device_enabled": true, 
+    		"device_enabled": true,
+    		"features_enabled" : {
+    		    	"survey": true,
+    		    	"calllog": true,
+    		    	"location": true 
+    		}, 
     		"location_tracked": [{
     		    	"long" : 22.22,
     		    	"lat": 22.22,
