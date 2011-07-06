@@ -3,6 +3,9 @@
  *                                                                           *
  * A mock JSON file showing the format of the servers response to a pull     *
  * request.  For reference only.                                             *
+ *---------------------------------------------------------------------------*
+ * Note: the deviceID of the phone gets sent in the url request:             *
+ * https://server.com/answers/pull?deviceid=00030OG9M8WE4G0                  *
  *---------------------------------------------------------------------------*/
 
 {
@@ -74,7 +77,7 @@
             "question_id": 0,
             //depending on the question type:
             "choice_text": "Linux"
-            "choice_img": "aw3lkfmaw 9aas3avbd34twe5tb5yue45hemwv3..." //base 64
+            "choice_img": "aw3lkfmawf9aas3avbd34twe5tb5yue45hemwv3..." //base 64
         }, {
             ...
         }, {

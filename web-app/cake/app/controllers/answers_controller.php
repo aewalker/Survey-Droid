@@ -24,7 +24,8 @@ class AnswersController extends AppController
 	var $name = 'Answers';
 	
 	//this controller is associated with all the models that the phones use
-	var $uses = array('Survey', 'Answer', 'Location', 'StatusChange', 'Call', 'Subject');
+	var $uses = array('Survey', 'Answer', 'Location', 'StatusChange', 'Call',
+		'Subject', 'Configuration');
 	var $helpers = array('Js' => 'jquery');
 	var $layout = 'json';
 	
@@ -38,15 +39,23 @@ class AnswersController extends AppController
 	/**
 	 * Pull survey data from the database and convert to JSON.
 	 */
-	function pull()
+	function pull($deviceid)
 	{
+		$subjectid = getID($deviceid, $message, $worked);
+		if ($worked = false)
+		{
+			$this->set('result', $worked)
+			$this->set('message', $message);
+			return;
+		}
 		$results = array
 		(
 			'surveys' => array(),
 			'questions' => array(),
 			'choices' => array(),
 			'branches' => array(),
-			'conditions' => array()
+			'conditions' => array(),
+			'config' => array()
 		);
 		foreach (array('surveys', 'questions', 'choices', 'branches', 'conditions') as $table)
 		{
@@ -64,6 +73,16 @@ class AnswersController extends AppController
 				$results[$table] = array_merge($results[$table], array($item[$table]));
 			}
 		}
+		//config is a bit different, so do that here:
+		$result = $this->Configuration->query("SELECT key,value from configurations");
+		foreach ($result as $item)
+		{
+			foreach ($item['configuration'] as $field => $value)
+			{
+				$results['config'] = array_merge($results['config'], array($field => $value));
+			}
+		}
+		$this->set('result', true);
 		$this->set('results', $results);
 	}
 	
@@ -72,7 +91,7 @@ class AnswersController extends AppController
 	 * statuschanges, and calls and attepmts to parse that data and put it into
 	 * the database.
 	 */
-	function push()
+	function push($deviceid)
 	{
 		//since the JSON object is in the body of the request, get the whole request text
 		$info = file_get_contents('php://input');
@@ -94,70 +113,48 @@ class AnswersController extends AppController
 		{
 			$result = false;
 			$message = 'Invalid JSON';
+			return;
+		}
+		$subjectid = getID($deviceid, $message, $worked);
+		if ($worked = false)
+		{
+			$this->set('result', $worked)
+			$this->set('message', $message);
+			return;
 		}
 		else
 		{
-			//first, make sure that there is a deviceId
-			$subjectid = NULL;
-			if (!isset($info['deviceId']))
+			//now, go through the rest of the data
+			foreach ($info as $table => $items)
 			{
-				$result = false;
-				$message = 'no device id given';
-			}
-			else
-			{
-				/*----------------------------*/
-				//testing only!!!!
-				//$info['deviceId'] = 'phone1';
-				/*----------------------------*/
-				
-				//now, make sure the given deviceId is registered to a subject
-				$subjectid = $this->Subject->find('first', array
-				(
-					'conditions' => array('device_id' => $info['deviceId']),
-					'fields' => array('id')
-				));
-				$subjectid = $subjectid['Subject']['id'];
-				if ($subjectid == NULL)
-				{
-					$result = false;
-					$message = 'invalid or unregistered device id';
-				}
-				else
-				{
-					//now, go through the rest of the data
-					foreach ($info as $table => $items)
+				foreach ($models as $json_name => $cake_name)
+				{ //TODO this can be more efficent
+					if ($table == $json_name)
 					{
-						foreach ($models as $json_name => $cake_name)
-						{ //TODO this can be more efficent
-							if ($table == $json_name)
+						foreach ($items as $item)
+						{
+							$toSave = array();
+							foreach ($item as $key => $val)
 							{
-								foreach ($items as $item)
-								{
-									$toSave = array();
-									foreach ($item as $key => $val)
-									{
-										//turn Unix timestamps into MySQL DATETIME format
-										if ($key == 'created' || $key == 'modified' || $key == 'updated')
-											// From http://snippets.dzone.com/posts/show/1455
-											$val = gmdate('Y-m-d H:i:s', $val);
-										
-										//add the deviceId to the contact_id to create an anonomyous and
-										//unique number in place of the real phone number:
-										if ($key == 'contact_id')
-											$val = $info['deviceId'].$val;
-										
-										$toSave[$cake_name][$key] = $val;
-									}
-									//set the subject_id for all data based on deviceID
-									$toSave[$cake_name]['subject_id'] = $subjectid;
-									$this->$cake_name->create();
-									if (!$this->$cake_name->save($toSave))
-									{
-										$result = false;
-										$message = $this->$cake_name->validationErrors;
-									}
-								}
+								//turn Unix timestamps into MySQL DATETIME format
+								if ($key == 'created' || $key == 'modified' || $key == 'updated')
+									// From http://snippets.dzone.com/posts/show/1455
+									$val = gmdate('Y-m-d H:i:s', $val);
+								
+								//add the deviceId to the contact_id to create an anonomyous and
+								//unique number in place of the real phone number:
+								if ($key == 'contact_id')
+									$val = $info['deviceId'].$val;
+								
+								$toSave[$cake_name][$key] = $val;
+							}
+							//set the subject_id for all data based on deviceID
+							$toSave[$cake_name]['subject_id'] = $subjectid;
+							$this->$cake_name->create();
+							if (!$this->$cake_name->save($toSave))
+							{
+								$result = false;
+								$message = $this->$cake_name->validationErrors;
 							}
 						}
 					}
@@ -175,5 +172,38 @@ class AnswersController extends AppController
 	 * 
 	 * DATETIME <=> Unix timestamp => see http://snippets.dzone.com/posts/show/1455
 	 */
+	
+	/**
+	 * Returns the subject id if one can be found for the given device id. Sets
+	 * message to be the error message if an error occurs and sets worked to
+	 * false if an error occurs or true if not.
+	 */
+	function getId($deviceid, &$message, &$worked)
+	{
+		$worked = true;
+		$message = NULL;
+		if (!isset($deviceid)
+		{
+			$worked = false;
+			$message = 'no device id given';
+			return NULL;
+		}
+		else
+		{
+			//now, make sure the given deviceId is registered to a subject
+			$subjectid = $this->Subject->find('first', array
+			(
+				'conditions' => array('device_id' => $deviceid),
+				'fields' => array('id')
+			));
+			$subjectid = $subjectid['Subject']['id'];
+			if ($subjectid == NULL)
+			{
+				$worked = false;
+				$message = 'invalid or unregistered device id';
+			}
+			return $subjectid;
+		}
+	}
 }
 ?>

@@ -33,7 +33,12 @@ CREATE TABLE surveys (
 CREATE TABLE questions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	survey_id INT UNSIGNED NOT NULL,
-	q_text TEXT);
+	q_type TINYINT NOT NULL,
+	q_text TEXT NOT NULL,
+	q_img_low TEXT,
+	q_img_high TEXT,
+	q_text_low TEXT,
+	q_text_high TEXT);
 	
 CREATE TABLE branches (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -56,15 +61,18 @@ CREATE TABLE conditions (
 	
 CREATE TABLE choices (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	choice_type TINYINT NOT NULL,
 	choice_text VARCHAR(255),
+	choice_img TEXT,
 	question_id INT UNSIGNED);
 	
 CREATE TABLE answers (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	question_id INT UNSIGNED NOT NULL,
 	subject_id INT UNSIGNED NOT NULL,
-	choice_id INT UNSIGNED,
+	choice_ids VARCHAR(255),
 	ans_text TEXT,
+	and_value INT,
 	created DATETIME);
 	
 	
@@ -94,3 +102,10 @@ CREATE TABLE status_changes (
 	status TINYINT NOT NULL,
 	/* gps 0, call log, 1, text log 2, whole app 3 */
 	feature TINYINT NOT NULL);
+
+/* This is actually a pretty common way to set up config (used by, eg., freeradius). */
+CREATE TABLE configurations (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	opt TINYTEXT NOT NULL DEFAULT "==", /* We might need this later. */
+	key TEXT NOT NULL,
+	value TEXT NOT NULL);

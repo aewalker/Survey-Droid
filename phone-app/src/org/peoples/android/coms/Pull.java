@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.peoples.android.Config;
@@ -34,8 +35,8 @@ public class Pull extends WebClient
 	private static final String TAG = "Pull";
 
 	//pull address
-    private static final String PULL_URL =
-    	Config.getComProtocol() + "://" + Config.SERVER + "/answers/pull/";
+    private static final String PULL_URL = Config.getComProtocol() + "://"
+    		+ Config.SERVER + "/answers/pull/";
 
     /**
      * Syncs surveys, questions, choices, branches, and conditions with the
@@ -47,7 +48,11 @@ public class Pull extends WebClient
     {
     	try
     	{
-            JSONObject json = new JSONObject(getUrlContent(ctxt, PULL_URL));
+    		TelephonyManager tManager =
+            	(TelephonyManager) ctxt.getSystemService(
+            			Context.TELEPHONY_SERVICE);
+            JSONObject json = new JSONObject(getUrlContent(ctxt,
+            		PULL_URL + tManager.getDeviceId()));
             PeoplesDB pdb = new PeoplesDB(ctxt);
             SQLiteDatabase sdb = pdb.getWritableDatabase();
             syncSurveys(sdb, json.getJSONArray("surveys"));

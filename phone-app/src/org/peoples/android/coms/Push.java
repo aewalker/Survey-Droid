@@ -119,10 +119,11 @@ public class Push extends WebClient
             			Context.TELEPHONY_SERVICE);
         	String uid = tManager.getDeviceId();
 
-            data.put("deviceId", uid);
+            //data.put("deviceId", uid); //moved to url
             data.put("answers", answersJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(ctx, PUSH_URL, data.toString());
+            boolean success =
+            	postJsonToUrl(ctx, PUSH_URL + uid, data.toString());
 
             // mark answers as uploaded if appropriate
             if (success)

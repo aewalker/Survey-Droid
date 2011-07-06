@@ -4,5 +4,11 @@
  *                                                                           *
  * Lets phones pull survey data from the webserver.                          *
  *---------------------------------------------------------------------------*/
-echo $this->Js->value($results); //convert to JSON and strip whitespace
+//convert to JSON and strip whitespace
+if ($result === true) echo $this->Js->value($results);
+else
+{
+	$this->error(400, 'Bad Request', "failure: $message");
+	exit;
+}
 ?>
