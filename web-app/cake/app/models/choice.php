@@ -45,8 +45,9 @@ class Choice extends AppModel
 	{
 		if (empty($id)) //safe because we never use 0 as an id
 		{
-			if (empty($this->getID())) return false;
-			$id = $this->getID();
+			$currentID = $this->getID());
+			if (empty($currentID) return false;
+			$id = $currentID;
 		}
 		$result = $this->find('first', array(
 			'conditions' => array('id' => $id)),
