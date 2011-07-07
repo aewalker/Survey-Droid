@@ -111,8 +111,8 @@ class AnswersController extends AppController
 		$info = json_decode($info, true);
 		if ($info == NULL)
 		{
-			$result = false;
-			$message = 'Invalid JSON';
+			$this->set('result', false);
+			$this->set('message', 'Invalid JSON');
 			return;
 		}
 		$subjectid = getID($deviceid, $message, $worked);
