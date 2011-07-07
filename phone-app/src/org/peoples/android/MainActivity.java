@@ -18,7 +18,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.peoples.android.survey.SurveyService;
@@ -47,10 +46,6 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
 
         if (Config.D) Log.d(TAG, "starting mainActivity");
-        
-        //FIXME TESTING ONLY!
-        BootIntentReceiver bir = new BootIntentReceiver();
-        bir.startup(getApplicationContext());
         
         //setting the layout of the activity
         Display display = ((WindowManager)

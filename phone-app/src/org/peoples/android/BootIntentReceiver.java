@@ -52,23 +52,23 @@ public class BootIntentReceiver extends BroadcastReceiver
     	Log.i(TAG, "+++Starting PEOPLES+++");
         
         //start the coms service pulling
-//        if (Config.D) Log.d(TAG, "Starting pull service");
-//        Intent comsPullIntent = new Intent(context, ComsService.class);
-//        comsPullIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
-//        comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
-//        		Calendar.getInstance().getTimeInMillis());
-//        comsPullIntent.putExtra(ComsService.EXTRA_REPEATING, true);
-//        context.startService(comsPullIntent);
+        if (Config.D) Log.d(TAG, "Starting pull service");
+        Intent comsPullIntent = new Intent(context, ComsService.class);
+        comsPullIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
+        comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
+        		Calendar.getInstance().getTimeInMillis());
+        comsPullIntent.putExtra(ComsService.EXTRA_REPEATING, true);
+        context.startService(comsPullIntent);
         
         //start the coms service pushing
-//        if (Config.D) Log.d(TAG, "Starting push service");
-//        Intent comsPushIntent = new Intent(context, ComsService.class);
-//        comsPushIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
-//        comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
-//        		Calendar.getInstance().getTimeInMillis());
-//        Log.d(TAG, "TIME: " + Calendar.getInstance().getTimeInMillis());
-//        comsPushIntent.putExtra(ComsService.EXTRA_REPEATING, true);
-//        context.startService(comsPushIntent);
+        if (Config.D) Log.d(TAG, "Starting push service");
+        Intent comsPushIntent = new Intent(context, ComsService.class);
+        comsPushIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+        comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
+        		Calendar.getInstance().getTimeInMillis());
+        Log.d(TAG, "TIME: " + Calendar.getInstance().getTimeInMillis());
+        comsPushIntent.putExtra(ComsService.EXTRA_REPEATING, true);
+        context.startService(comsPushIntent);
         
         //start call monitoring
         if (Config.D) Log.d(TAG, "Starting call monitoring");

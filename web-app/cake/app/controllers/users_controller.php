@@ -53,6 +53,8 @@ class UsersController extends AppController
     {
     	//TODO there has got to be a more secure way to do this...
     	//chek to see if this is the first run.  If so, make the root user.
+    	//TODO need to check that at least one user is an admin; if not, make
+    	//the root user again
     	if (!$this->User->hasAny())
     	{
     		$this->User->create();
