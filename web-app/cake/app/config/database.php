@@ -79,7 +79,7 @@ class DATABASE_CONFIG {
 		'host' => 'localhost',
 		'login' => 'cake',
 		'password' => 'caketemppass',
-		'database' => 'socioapp',
+		'database' => 'peoples',
 		'prefix' => '',
 	);
 }
