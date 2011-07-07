@@ -118,7 +118,7 @@ class AnswersController extends AppController
 		$subjectid = getID($deviceid, $message, $worked);
 		if ($worked = false)
 		{
-			$this->set('result', $worked)
+			$this->set('result', $worked);
 			$this->set('message', $message);
 			return;
 		}
@@ -189,7 +189,7 @@ class AnswersController extends AppController
 	{
 		$worked = true;
 		$message = NULL;
-		if (!isset($deviceid)
+		if (!isset($deviceid))
 		{
 			$worked = false;
 			$message = 'no device id given';
