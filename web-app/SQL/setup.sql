@@ -1,5 +1,6 @@
-/* SQL to set up the Databse */
+/* SQL to set up or upgrade the Databse */
 
+DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	username VARCHAR(20) NOT NULL UNIQUE,
@@ -8,14 +9,16 @@ CREATE TABLE users (
 	first_name VARCHAR(255),
 	last_name VARCHAR(255),
 	admin TINYINT(1) DEFAULT 0);
-	
+
+DROP TABLE IF EXISTS subjects;	
 CREATE TABLE subjects (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	phone_num VARCHAR(13),
 	first_name VARCHAR(255),
 	last_name VARCHAR(255),
 	device_id VARCHAR(255) /* serial number of the phone */);
-	
+
+DROP TABLE IF EXISTS surveys;
 CREATE TABLE surveys (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(255),
@@ -29,7 +32,8 @@ CREATE TABLE surveys (
 	fr VARCHAR(255),
 	sa VARCHAR(255),
 	su VARCHAR(255));
-	
+
+DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	survey_id INT UNSIGNED NOT NULL,
@@ -39,14 +43,16 @@ CREATE TABLE questions (
 	q_img_high TEXT,
 	q_text_low TEXT,
 	q_text_high TEXT);
-	
+
+DROP TABLE IF EXISTS branches;
 CREATE TABLE branches (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	/* parent question */
 	question_id INT UNSIGNED NOT NULL, /*foreign keys*/
 	/* child question */
 	next_q INT UNSIGNED NOT NULL);
-	
+
+DROP TABLE IF EXISTS conditions;
 CREATE TABLE conditions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	/* branch this condition belongs to */
@@ -58,14 +64,16 @@ CREATE TABLE conditions (
 	/* type of condition: 0 for answer given in current survey, 1 for answer given at some time in a previous
 	   survey, and 2 for an answer never given in a previous survey. */
 	type TINYINT UNSIGNED NOT NULL);
-	
+
+DROP TABLE IF EXISTS choices;
 CREATE TABLE choices (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	choice_type TINYINT NOT NULL,
 	choice_text VARCHAR(255),
 	choice_img TEXT,
 	question_id INT UNSIGNED);
-	
+
+DROP TABLE IF EXISTS answers;
 CREATE TABLE answers (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	question_id INT UNSIGNED NOT NULL,
@@ -75,14 +83,15 @@ CREATE TABLE answers (
 	and_value INT,
 	created DATETIME);
 	
-	
+DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	subject_id INT UNSIGNED NOT NULL,
 	created DATETIME NOT NULL,
 	longitude DOUBLE NOT NULL,
 	latitude DOUBLE NOT NULL);
-	
+
+DROP TABLE IF EXISTS calls;
 CREATE TABLE calls (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	subject_id INT UNSIGNED NOT NULL,
@@ -93,7 +102,8 @@ CREATE TABLE calls (
 	type TINYINT NOT NULL,
 	/* call duration in seconds, NULL for texts, missed calls */
 	duration SMALLINT UNSIGNED);
-	
+
+DROP TABLE IF EXISTS status_changes;
 CREATE TABLE status_changes (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	subject_id INT UNSIGNED NOT NULL,
@@ -104,8 +114,9 @@ CREATE TABLE status_changes (
 	feature TINYINT NOT NULL);
 
 /* This is actually a pretty common way to set up config (used by, eg., freeradius). */
+DROP TABLE IF EXISTS configurations;
 CREATE TABLE configurations (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	opt TINYTEXT NOT NULL DEFAULT "==", /* We might need this later. */
-	key TEXT NOT NULL,
-	value TEXT NOT NULL);
+	opt TINYTEXT NOT NULL, /* We might need this later. */
+	c_key TEXT NOT NULL, /* because key and value are reserved... */
+	c_value TEXT NOT NULL);

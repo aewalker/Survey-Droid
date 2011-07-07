@@ -62,7 +62,7 @@ class UsersController extends AppController
     			'password_copy' => 'peoplespass',
     			'password_confirm' => 'peoplespass',
     			'email' => 'noemail@nohost.com',
-    			'admin' => true,
+    			'admin' => 1,
     			'first_name' => 'PEOPLES',
     			'last_name' => 'Administrator'
     		)));
