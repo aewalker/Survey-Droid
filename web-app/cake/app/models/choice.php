@@ -50,9 +50,9 @@ class Choice extends AppModel
 			$id = $currentID;
 		}
 		$result = $this->find('first', array(
-			'conditions' => array('id' => $id)),
+			'conditions' => array('id' => $id),
 			'fields' => array('choice_type')
-		);
+		));
 		if (empty($result)) return false;
 		return $result['Choice']['choice_type'];
 	}
