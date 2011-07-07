@@ -6,10 +6,10 @@
  *---------------------------------------------------------------------------*/
 //question types ("QT"s) - used in questions
 define('QT_SINGLE_CHOICE', 0);
-deinfe('QT_MULTI_CHOCIE', 1);
-deinfe('QT_SCALE_TEXT', 2);
-deinfe('QT_SCALE_IMG', 3);
-deinfe('QT_FREE_RESPONSE', 4);
+define('QT_MULTI_CHOCIE', 1);
+define('QT_SCALE_TEXT', 2);
+define('QT_SCALE_IMG', 3);
+define('QT_FREE_RESPONSE', 4);
 
 //choie types ("CHT"s) - used in choices
 define('CHT_TEXT', 0);
@@ -21,11 +21,11 @@ define('AT_VALUE', 1);
 define('AT_TEXT', 2);
 
 //call types ("CLT"s) - used in calls
-deinfe('CLT_OUTGOING_CALL', 0);
-deinfe('CLT_INCOMING_CALL', 1);
-deinfe('CLT_OUTGOING_TEXT', 2);
-deinfe('CLT_INCOMING_CALL', 3);
-deinfe('CLT_MISSED_CALL', 4);
+define('CLT_OUTGOING_CALL', 0);
+define('CLT_INCOMING_CALL', 1);
+define('CLT_OUTGOING_TEXT', 2);
+define('CLT_INCOMING_CALL', 3);
+define('CLT_MISSED_CALL', 4);
 
 //status types ("ST"s) - used for status_changes
 define('ST_ENABLED', 1);
