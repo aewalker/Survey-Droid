@@ -24,7 +24,7 @@ define('AT_TEXT', 2);
 define('CLT_OUTGOING_CALL', 0);
 define('CLT_INCOMING_CALL', 1);
 define('CLT_OUTGOING_TEXT', 2);
-define('CLT_INCOMING_CALL', 3);
+define('CLT_INCOMING_TEXT', 3);
 define('CLT_MISSED_CALL', 4);
 
 //status types ("ST"s) - used for status_changes

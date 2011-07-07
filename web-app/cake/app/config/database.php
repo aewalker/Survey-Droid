@@ -78,7 +78,7 @@ class DATABASE_CONFIG {
 		'persistent' => false,
 		'host' => 'localhost',
 		'login' => 'cake',
-		'password' => 'caketemppass',
+		'password' => 'peoplescake', //change this to caketemppass for production
 		'database' => 'peoples',
 		'prefix' => '',
 	);
