@@ -21,6 +21,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 include_once 'config.php'; //the main user config file
+require_once 'constants.php'; //defines all the needed constants
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.

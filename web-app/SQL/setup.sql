@@ -37,6 +37,7 @@ DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	survey_id INT UNSIGNED NOT NULL,
+	/* SINGLE_CHOICE = 0, MULTI_CHOICE = 1, SCALE_TEXT = 2, SCALE_IMG = 3, FREE_RESPONSE = 4 */
 	q_type TINYINT NOT NULL,
 	q_text TEXT NOT NULL,
 	q_img_low TEXT,
@@ -68,7 +69,7 @@ CREATE TABLE conditions (
 DROP TABLE IF EXISTS choices;
 CREATE TABLE choices (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	choice_type TINYINT NOT NULL,
+	choice_type TINYINT NOT NULL, /* text = 0, image = 1 */
 	choice_text VARCHAR(255),
 	choice_img TEXT,
 	question_id INT UNSIGNED);
@@ -78,10 +79,17 @@ CREATE TABLE answers (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	question_id INT UNSIGNED NOT NULL,
 	subject_id INT UNSIGNED NOT NULL,
-	choice_ids VARCHAR(255),
+	ans_type TINYINT NOT NULL, /* CHOICE = 0, VALUE = 1, TEXT = 2 */
 	ans_text TEXT,
 	and_value INT,
 	created DATETIME);
+
+/* join table between asnwers and choices: the two have a HABTM relationship */
+DROP TABLE IF EXISTS answers_choices;
+CREATE TABLE answers_choices (
+	answer_id INT UNSIGNED NOT NULL,
+	choice_id INT UNSIGNED NOT NULL);
+	
 	
 DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (

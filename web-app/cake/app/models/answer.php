@@ -14,13 +14,32 @@ class Answer extends AppModel
 	//for php4
 	var $name = 'Answer';
 	
-	var $belongsTo = array('Subject', 'Question', 'Choice' => array
+	var $belongsTo = array('Subject', 'Question');
+	var $hasAndBelongsToMany = array('Choice' => array
 	(
-		'className' => 'Choice',
-		//only associate a choice with an answer if Answer.text is NULL because
-		//either a question is multiple choice (so an answer will have a
-		//choice), or it is freeresponse, meaning that it's ans_text field will
-		//contain content.
-		'conditions' => array('Choice.choice_text' => NULL)
+		'className' => 'Choice'
 	));
+	
+	//TODO probably don't need this; we'll see
+	/**
+	 * Convinence method to get the type of an answer.
+	 * 
+	 * Returns the type of the answer with id $id (or the current model id if
+	 * $id is not set).  See the constants.php file for detials on what the
+	 * return values mean.  Returns false if something didn't work.
+	 */
+	function getType($id)
+	{
+		if (empty($id)) //safe because we never use 0 as an id
+		{
+			if (empty($this->getID())) return false;
+			$id = $this->getID();
+		}
+		$result = $this->find('first', array(
+			'conditions' => array('id' => $id)),
+			'fields' => array('ans_type')
+		);
+		if (empty($result)) return false;
+		return $result['Answer']['ans_type'];
+	}
 }

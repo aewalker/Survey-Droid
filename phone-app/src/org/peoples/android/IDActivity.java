@@ -41,7 +41,7 @@ public class IDActivity extends Activity
         if (display.getOrientation() == Configuration.ORIENTATION_PORTRAIT)
         {
         	setContentView(R.layout.id_activity_horiz);
-        	IDSpacer = ' ';
+        	IDSpacer = '-';
         }
         else
         {
@@ -66,7 +66,7 @@ public class IDActivity extends Activity
 		{
 			StringBuilder formatedDevID =
 				new StringBuilder(devID.substring(0, CHARS_PER_SEC));
-			int i = 0;
+			int i = 4;
 			for (;i + (CHARS_PER_SEC - 1) < devID.length(); i += CHARS_PER_SEC)
 			{
 				formatedDevID.append(IDSpacer);

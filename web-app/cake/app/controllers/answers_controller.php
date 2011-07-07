@@ -44,7 +44,7 @@ class AnswersController extends AppController
 		$subjectid = getID($deviceid, $message, $worked);
 		if ($worked = false)
 		{
-			$this->set('result', $worked)
+			$this->set('result', $worked);
 			$this->set('message', $message);
 			return;
 		}
@@ -62,14 +62,14 @@ class AnswersController extends AppController
 			$result = $this->Survey->query("SELECT * from $table");
 			foreach ($result as &$item)
 			{
-				// Parse the String into a new UNIX Timestamp
+				//deal with special fields here
 				foreach ($item[$table] as $field => &$value)
 				{
+					//Parse the String into a new UNIX Timestamp
 					if ($field == 'created' || $field == 'modified' || $field == 'updated')
 						// From http://snippets.dzone.com/posts/show/1455
 						$value = strtotime($value . ' GMT');
 				}
-				
 				$results[$table] = array_merge($results[$table], array($item[$table]));
 			}
 		}
@@ -146,7 +146,14 @@ class AnswersController extends AppController
 								if ($key == 'contact_id')
 									$val = $info['deviceId'].$val;
 								
-								$toSave[$cake_name][$key] = $val;
+								//deal with choice_ids, which uses HABTM
+								if ($key == 'choice_ids')
+								{
+									$ids = explode(',', $val);
+									if (!empty($ids))
+										$toSave['Choice']['Choice'] = $ids;
+								}
+								else $toSave[$cake_name][$key] = $val;
 							}
 							//set the subject_id for all data based on deviceID
 							$toSave[$cake_name]['subject_id'] = $subjectid;

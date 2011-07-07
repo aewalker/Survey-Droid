@@ -28,5 +28,7 @@ class Question extends AppModel
 			)
 		)
 	);
+	
+	function 
 }
 ?>
