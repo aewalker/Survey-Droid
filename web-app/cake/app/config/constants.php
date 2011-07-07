@@ -38,7 +38,7 @@ define('FC_TEXT_LOG', 2);
 define('FC_WHOLE_APP', 3);
 
 //condition types ("CDT"s) - used for conditions
-define('CDT_JUST_WAS', 0),
+define('CDT_JUST_WAS', 0);
 define('CDT_HAS_EVER_BEEN', 1);
 define('CDT_HAS_NEVER_BEEN', 2);
 ?>
