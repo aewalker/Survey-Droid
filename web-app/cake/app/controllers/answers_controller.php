@@ -90,7 +90,7 @@ class AnswersController extends AppController
 	/**
 	 * Pull survey data from the database and convert to JSON.
 	 */
-	function pull($deviceid)
+	function pull($deviceid = NULL)
 	{
 		$subjectid = $this->getSubjectID($deviceid, $message, $worked);
 		if ($worked == false)
@@ -141,7 +141,7 @@ class AnswersController extends AppController
 	 * statuschanges, and calls and attepmts to parse that data and put it into
 	 * the database.
 	 */
-	function push($deviceid)
+	function push($deviceid = NULL)
 	{
 		//since the JSON object is in the body of the request, get the whole request text
 		$info = file_get_contents('php://input');
