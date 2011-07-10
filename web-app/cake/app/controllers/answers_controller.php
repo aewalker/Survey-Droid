@@ -131,7 +131,7 @@ class AnswersController extends AppController
 		{
 			//TODO support the dot character in the names using '\.'
 			$names = explode('.', $item['configurations']['c_key']);
-			$results['config'] = $this->array_inflate($results['config'], $names, ($item['configurations']['c_value']);
+			$results['config'] = $this->array_inflate($results['config'], $names, $item['configurations']['c_value']);
 		}
 		$this->set('result', true);
 		$this->set('results', $results);
