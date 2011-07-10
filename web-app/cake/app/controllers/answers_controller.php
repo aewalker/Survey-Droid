@@ -93,7 +93,7 @@ class AnswersController extends AppController
 	function pull($deviceid)
 	{
 		$subjectid = $this->getSubjectID($deviceid, $message, $worked);
-		if ($worked = false)
+		if ($worked == false)
 		{
 			$this->set('result', $worked);
 			$this->set('message', $message);
@@ -166,7 +166,7 @@ class AnswersController extends AppController
 			return;
 		}
 		$subjectid = $this->getSubjectID($deviceid, $message, $worked);
-		if ($worked = false)
+		if ($worked == false)
 		{
 			$this->set('result', $worked);
 			$this->set('message', $message);
