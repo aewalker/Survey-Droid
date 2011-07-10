@@ -37,11 +37,63 @@ class AnswersController extends AppController
 	));
 	
 	/**
+	 * Returns the subject id if one can be found for the given device id. Sets
+	 * message to be the error message if an error occurs and sets worked to
+	 * false if an error occurs or true if not.
+	 */
+	function getSubjectId($deviceid, &$message, &$worked)
+	{
+		$worked = true;
+		$message = NULL;
+		if (!isset($deviceid))
+		{
+			$worked = false;
+			$message = 'no device id given';
+			return NULL;
+		}
+		else
+		{
+			//now, make sure the given deviceId is registered to a subject
+			$subjectid = $this->Subject->find('first', array
+			(
+				'conditions' => array('device_id' => $deviceid),
+				'fields' => array('id')
+			));
+			$subjectid = $subjectid['Subject']['id'];
+			if ($subjectid == NULL)
+			{
+				$worked = false;
+				$message = 'invalid or unregistered device id';
+			}
+			return $subjectid;
+		}
+	}
+	
+	/**
+	 * Inflates an array.  Things to know:
+	 * 1.) $names cannot be empty
+	 * 2.) $names cannot contain numbers
+	 * 3.) $restult must be array
+	 */
+	function array_inflate($result, $names, $value)
+	{
+		if (empty($names)) return $value;
+		
+		if (!isset($result[$names[0]]))
+			return array_merge($result, array($names[0] => array_inflate(array(), array_slice($names, 1), $value)));
+		else
+		{
+			$result[$names[0]] = array_inflate($result[$names[0]], array_slice($names, 1), $value);
+			return $result;
+		}
+	}
+	
+	/**
 	 * Pull survey data from the database and convert to JSON.
 	 */
 	function pull($deviceid)
 	{
-		$subjectid = getID($deviceid, $message, $worked);
+		$subjectid = getSubjectID($deviceid, $message, $worked);
 		if ($worked = false)
 		{
 			$this->set('result', $worked);
@@ -89,25 +141,6 @@ class AnswersController extends AppController
 	}
 	
 	/**
-	 * Inflates an array.  Things to know:
-	 * 1.) $names cannot be empty
-	 * 2.) $names cannot contain numbers
-	 * 3.) $restult must be array
-	 */
-	function array_inflate($result, $names, $value)
-	{
-		if (empty($names)) return $value;
-		
-		if (!isset($result[$names[0]]))
-			return array_merge($result, array($names[0] => array_inflate(array(), array_slice($names, 1), $value)));
-		else
-		{
-			$result[$names[0]] = array_inflate($result[$names[0]], array_slice($names, 1), $value);
-			return $result;
-		}
-	}
-	
-	/**
 	 * Accepts a request continaing a JSON object with answers, locations,
 	 * statuschanges, and calls and attepmts to parse that data and put it into
 	 * the database.
@@ -136,7 +169,7 @@ class AnswersController extends AppController
 			$this->set('message', 'Invalid JSON');
 			return;
 		}
-		$subjectid = getID($deviceid, $message, $worked);
+		$subjectid = getSubjectID($deviceid, $message, $worked);
 		if ($worked = false)
 		{
 			$this->set('result', $worked);
@@ -200,38 +233,5 @@ class AnswersController extends AppController
 	 * 
 	 * DATETIME <=> Unix timestamp => see http://snippets.dzone.com/posts/show/1455
 	 */
-	
-	/**
-	 * Returns the subject id if one can be found for the given device id. Sets
-	 * message to be the error message if an error occurs and sets worked to
-	 * false if an error occurs or true if not.
-	 */
-	function getId($deviceid, &$message, &$worked)
-	{
-		$worked = true;
-		$message = NULL;
-		if (!isset($deviceid))
-		{
-			$worked = false;
-			$message = 'no device id given';
-			return NULL;
-		}
-		else
-		{
-			//now, make sure the given deviceId is registered to a subject
-			$subjectid = $this->Subject->find('first', array
-			(
-				'conditions' => array('device_id' => $deviceid),
-				'fields' => array('id')
-			));
-			$subjectid = $subjectid['Subject']['id'];
-			if ($subjectid == NULL)
-			{
-				$worked = false;
-				$message = 'invalid or unregistered device id';
-			}
-			return $subjectid;
-		}
-	}
 }
 ?>
