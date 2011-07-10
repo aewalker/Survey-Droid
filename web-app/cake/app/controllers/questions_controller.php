@@ -110,8 +110,7 @@ class QuestionsController extends AppController
 		
 		$result = $this->Question->find('first', array
 		(
-			'conditions' => array('Question.id' => $questionid),
-			'fields' => array('q_text','survey_id')
+			'conditions' => array('Question.id' => $questionid)
 		));
 		if (isset($result['Question']))
 		{
