@@ -130,7 +130,7 @@ class AnswersController extends AppController
 		foreach ($result as $item)
 		{
 			//TODO support the dot character in the names using '\.'
-			$names = explode('.', ($item['configurations']['c_key']);
+			$names = explode('.', $item['configurations']['c_key']);
 			$results['config'] = $this->array_inflate($results['config'], $names, ($item['configurations']['c_value']);
 		}
 		$this->set('result', true);
