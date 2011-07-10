@@ -129,7 +129,7 @@ class AnswersController extends AppController
 		$result = $this->Configuration->query("SELECT c_key, c_value from configurations");
 		foreach ($result as $item)
 		{
-			foreach ($item['configurations'] $option)
+			foreach ($item['configurations'] as $option)
 			{
 				//TODO support the dot character in the names using '\.'
 				$names = explode('.', $option['c_key']);
