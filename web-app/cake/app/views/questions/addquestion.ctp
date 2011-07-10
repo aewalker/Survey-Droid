@@ -28,8 +28,8 @@ echo $form->create('Question', array(
 	'action' => "addquestion/$surveyid",
 	'default' => false));
 echo '<p>Question text</p>';
-echo $form->input('q_text');
-echo $form->input('q_type', array('type' => 'select', 'options' => array
+echo $form->input('q_text', array('label' => 'Question Text'));
+echo $form->input('q_type', array('label' => 'Question Type', 'type' => 'select', 'options' => array
 (
 	QT_SINGLE_CHOICE => 'Sinlge Choice',
 	QT_MULTI_CHOICE => 'Multi Choice',
@@ -38,21 +38,13 @@ echo $form->input('q_type', array('type' => 'select', 'options' => array
 	QT_FREE_RESPONSE => 'Free Response'
 )));
 //TODO use some jQuery to only show these if the proper type is selected
-echo '<p>For text-based scale questions:</p>';
-echo '<p>Low-end text</p>';
-echo $form->input('q_text_low');
-echo '<p>High-end text</p>';
-echo $form->input('q_text_high');
-echo '<p>For image-based scale questions:';
-echo '<p>Low-end image</p>';
-echo $form->input('q_img_low', array('type' => 'file'));
-echo '<p>High-end image</p>';
-echo $form->input('q_img_high', array('type' => 'file'));
+echo $form->input('q_text_low', array('label' => 'Low-end Text (for text scale only)'));
+echo $form->input('q_text_high', array('label' => 'High-end Text (for text scale only)'));
+echo $form->input('q_img_low', array('type' => 'file', 'label' => 'Low-end Image (for image scale only)'));
+echo $form->input('q_img_high', array('type' => 'file', 'label' => 'High-end Image (for image scale only)'));
 
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
-echo $form->input('survey_id', array(
-	'type' => 'hidden',
-	'value' => $surveyid));
+echo $form->input('survey_id', array('type' => 'hidden', 'value' => $surveyid));
 echo $this->Js->submit('Add', array(
 	'action' => "addquestion/$surveyid",
 	'update' => '#questions_space'));

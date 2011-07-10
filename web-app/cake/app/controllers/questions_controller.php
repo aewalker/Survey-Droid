@@ -41,7 +41,7 @@ class QuestionsController extends AppController
     /**
      * Add a new question to a survey.
      * 
-     * @param surveyid - if of the Question to which a branch should be added
+     * @param surveyid - id of the Question to which a branch should be added
      */
     function addquestion($surveyid)
     {

@@ -6,7 +6,7 @@
  *---------------------------------------------------------------------------*/
 //question types ("QT"s) - used in questions
 define('QT_SINGLE_CHOICE', 0);
-define('QT_MULTI_CHOCIE', 1);
+define('QT_MULTI_CHOICE', 1);
 define('QT_SCALE_TEXT', 2);
 define('QT_SCALE_IMG', 3);
 define('QT_FREE_RESPONSE', 4);
