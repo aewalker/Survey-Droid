@@ -93,7 +93,7 @@ class AnswersController extends AppController
 	 */
 	function pull($deviceid)
 	{
-		$subjectid = getSubjectID($deviceid, $message, $worked);
+		$subjectid = $this->getSubjectID($deviceid, $message, $worked);
 		if ($worked = false)
 		{
 			$this->set('result', $worked);
@@ -133,7 +133,7 @@ class AnswersController extends AppController
 			{
 				//TODO support the dot character in the names using '\.'
 				$names = explode('.', $field);
-				$results['config'] = array_inflate($results['config'], $names, $value);
+				$results['config'] = $this->array_inflate($results['config'], $names, $value);
 			}
 		}
 		$this->set('result', true);
@@ -169,7 +169,7 @@ class AnswersController extends AppController
 			$this->set('message', 'Invalid JSON');
 			return;
 		}
-		$subjectid = getSubjectID($deviceid, $message, $worked);
+		$subjectid = $this->getSubjectID($deviceid, $message, $worked);
 		if ($worked = false)
 		{
 			$this->set('result', $worked);
