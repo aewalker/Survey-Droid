@@ -126,7 +126,7 @@ class AnswersController extends AppController
 			}
 		}
 		//config is a bit different, so do that here:
-		$result = $this->Configuration->query("SELECT key,value from configurations");
+		$result = $this->Configuration->query("SELECT c_key, c_value from configurations");
 		foreach ($result as $item)
 		{
 			foreach ($item['Configuration'] as $field => $value)
