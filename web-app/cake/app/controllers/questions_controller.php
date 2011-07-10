@@ -54,10 +54,12 @@ class QuestionsController extends AppController
     	if ($this->data['Question']['confirm'] == true)
 		{
 			//first do the base64 transform
-			$this->data['Question']['q_img_low'] =
-				base64_encode(file_get_contents($this->data['Qustion']['q_img_low']['tmp_name']));
-			$this->data['Question']['q_img_high'] =
-				base64_encode($this->data['Qustion']['q_img_high']);
+			if (!empty($this->data['Question']['q_img_low']))
+				$this->data['Question']['q_img_low'] =
+					base64_encode(file_get_contents($this->data['Qustion']['q_img_low']['tmp_name']));
+			if (!empty($this->data['Question']['q_img_high']))
+				$this->data['Question']['q_img_high'] =
+					base64_encode(file_get_contents($this->data['Qustion']['q_img_high']['tmp_name']));
 			
 			//then save
 	    	$this->Question->create();
@@ -89,6 +91,14 @@ class QuestionsController extends AppController
     	}
 		if ($this->data['Question']['confirm'] == true)
 		{
+			//first do the base64 transform
+			if (!empty($this->data['Question']['q_img_low']))
+				$this->data['Question']['q_img_low'] =
+					base64_encode(file_get_contents($this->data['Qustion']['q_img_low']['tmp_name']));
+			if (!empty($this->data['Question']['q_img_high']))
+				$this->data['Question']['q_img_high'] =
+					base64_encode(file_get_contents($this->data['Qustion']['q_img_high']['tmp_name']));
+			
 			if ($this->Question->save($this->data))
 			{
 				$this->Session->setFlash('Question edited!');
@@ -105,6 +115,11 @@ class QuestionsController extends AppController
 		));
 		if (isset($result['Question']))
 		{
+			$this->set('q_type', $result['Question']['q_type']);
+			$this->set('q_text_low', $result['Question']['q_text_low']);
+			$this->set('q_text_high', $result['Question']['q_text_high']);
+			$this->set('q_img_low', $result['Question']['q_img_low']);
+			$this->set('q_img_high', $result['Question']['q_img_high']);
 			$this->set('q_text', $result['Question']['q_text']);
 			$this->set('questionid', $questionid);
 			$this->set('surveyid', $result['Question']['survey_id']);

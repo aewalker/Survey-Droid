@@ -27,7 +27,6 @@ echo $form->create('Question', array(
 	'enctype' => 'multipart/form-data', //to allow file uploads
 	'action' => "addquestion/$surveyid",
 	'default' => false));
-echo '<p>Question text</p>';
 echo $form->input('q_text', array('label' => 'Question Text'));
 echo $form->input('q_type', array('label' => 'Question Type', 'type' => 'select', 'options' => array
 (
