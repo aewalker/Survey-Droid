@@ -26,16 +26,19 @@ public class Config
 	/** Is debugging enabled? */
 	public static final boolean D = true;
 
-	/** Is https enabled? */
-	public static final boolean HTTPS = true;
-
 	/** Format of survey times. */
 	public static final String TIME_FORMAT = "HHmm";
 
 	/** Format of survey days. */
 	public static final String DAY_FORMAT = "EE";
+	
+	
 
 	//TODO convert these to use shared preferences
+	
+	/** Is https enabled? */
+	public static final boolean HTTPS = true;
+	
 	/** Frequency with which to run the survey scheduler (in minutes) */
 	public static final long SCHEDULER_INTERVAL = 20;
 	//public static final int SCHEDULER_INTERVAL = 60 * 24;

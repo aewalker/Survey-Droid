@@ -77,13 +77,34 @@ class AnswersController extends AppController
 		$result = $this->Configuration->query("SELECT key,value from configurations");
 		foreach ($result as $item)
 		{
-			foreach ($item['configuration'] as $field => $value)
+			foreach ($item['Configuration'] as $field => $value)
 			{
-				$results['config'] = array_merge($results['config'], array($field => $value));
+				//TODO support the dot character in the names using '\.'
+				$names = explode('.', $field);
+				$results['config'] = array_inflate($results['config'], $names, $value);
 			}
 		}
 		$this->set('result', true);
 		$this->set('results', $results);
+	}
+	
+	/**
+	 * Inflates an array.  Things to know:
+	 * 1.) $names cannot be empty
+	 * 2.) $names cannot contain numbers
+	 * 3.) $restult must be array
+	 */
+	function array_inflate($result, $names, $value)
+	{
+		if (empty($names)) return $value;
+		
+		if (!isset($result[$names[0]]))
+			return array_merge($result, array($names[0] => array_inflate(array(), array_slice($names, 1), $value)));
+		else
+		{
+			$result[$names[0]] = array_inflate($result[$names[0]], array_slice($names, 1), $value);
+			return $result;
+		}
 	}
 	
 	/**

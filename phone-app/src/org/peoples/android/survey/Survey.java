@@ -371,14 +371,14 @@ public class Survey
 				break;
 			case 2:
 				Bitmap lowImg = BitmapFactory.decodeResource(
-						ctxt.getResources(), R.drawable.blue_back_medium);
+						ctxt.getResources(), R.drawable.sad);
 				Bitmap highImg = BitmapFactory.decodeResource(
-						ctxt.getResources(), R.drawable.red_back_medium);
+						ctxt.getResources(), R.drawable.happy);
 				ByteArrayOutputStream baosLow = new ByteArrayOutputStream();
 				ByteArrayOutputStream baosHigh = new ByteArrayOutputStream();
 				lowImg.compress(Bitmap.CompressFormat.PNG, 100, baosLow);
 				highImg.compress(Bitmap.CompressFormat.PNG, 100, baosHigh);
-				prevQ = new SlidingScaleImgQuestion("How awesome is today?", i,
+				prevQ = new SlidingScaleImgQuestion("How are you today?", i,
 						branches, Base64Coder.encode(baosLow.toByteArray()),
 						Base64Coder.encode(baosHigh.toByteArray()), ctxt);
 				break;

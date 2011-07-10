@@ -87,9 +87,9 @@
     "config": {
     		"device_enabled": true,
     		"features_enabled" : {
-    		    	"survey": true,
-    		    	"calllog": true,
-    		    	"location": true 
+    		    	"survey": 1,
+    		    	"calllog": 1,
+    		    	"location": 1 
     		}, 
     		"location_tracked": [{
     		    	"long" : 22.22,

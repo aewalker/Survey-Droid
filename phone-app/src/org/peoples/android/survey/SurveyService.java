@@ -186,17 +186,10 @@ public class SurveyService extends Service
 					context, contentTitle, contentText, contentIntent);
 			
 			//add some extra things
-			AudioManager am = (AudioManager)
-				getSystemService(Context.AUDIO_SERVICE);
-			if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL)
-			{ //sound is on; play a sound
-				notification.defaults |= Notification.DEFAULT_SOUND;
-			}
-			else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE)
-			{ //sound is off; just vibrate
-				notification.defaults |= Notification.DEFAULT_VIBRATE;
-			} //if the mode is silent, don't do anything special
-			//the notification should go away once the user clicks on it
+			//the system policy will determine if either of these will actually
+			//happen, so don't need to worry about it
+			notification.defaults |= Notification.DEFAULT_SOUND;
+			notification.defaults |= Notification.DEFAULT_VIBRATE;
 			notification.flags |= Notification.FLAG_AUTO_CANCEL;
 			
 			//send it

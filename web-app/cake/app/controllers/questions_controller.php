@@ -53,6 +53,13 @@ class QuestionsController extends AppController
     	}
     	if ($this->data['Question']['confirm'] == true)
 		{
+			//first do the base64 transform
+			$this->data['Question']['q_img_low'] =
+				base64_encode(file_get_contents($this->data['Qustion']['q_img_low']['tmp_name']));
+			$this->data['Question']['q_img_high'] =
+				base64_encode($this->data['Qustion']['q_img_high']);
+			
+			//then save
 	    	$this->Question->create();
 			if ($this->Question->save($this->data))
 	        {
