@@ -57,6 +57,7 @@ class QuestionsController extends AppController
 			if (!empty($this->data['Question']['q_img_low']))
 			{
 				$file = $this->data['Qustion']['q_img_low']['tmp_name'];
+				echo "<img src=\"data:image/png;base64,".base64_encode(fread(fopen($file, 'r'), filesize($file)))."\" />";
 				$this->data['Question']['q_img_low'] =
 					base64_encode(fread(fopen($file, 'r'), filesize($file)));
 			}
