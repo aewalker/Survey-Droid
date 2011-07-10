@@ -83,7 +83,7 @@ class AnswersController extends AppController
 			return array_merge($result, array($names[0] => $this->array_inflate(array(), array_slice($names, 1), $value)));
 		else
 		{
-			$result[$names[0]] = array_inflate($result[$names[0]], array_slice($names, 1), $value);
+			$result[$names[0]] = $this->array_inflate($result[$names[0]], array_slice($names, 1), $value);
 			return $result;
 		}
 	}
