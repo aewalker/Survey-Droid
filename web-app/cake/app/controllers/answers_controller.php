@@ -73,6 +73,8 @@ class AnswersController extends AppController
 	 * Inflates an array.  Things to know:
 	 * 1.) $names cannot be empty
 	 * 2.) $restult must be array
+	 * 3.) if using numeric keys (ie you want a JSON array), the items must be
+	 * in the database in the opposite order for some reason
 	 */
 	function array_inflate($result, $names, $value)
 	{
