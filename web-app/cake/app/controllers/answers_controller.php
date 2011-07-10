@@ -127,14 +127,13 @@ class AnswersController extends AppController
 		}
 		//config is a bit different, so do that here:
 		$result = $this->Configuration->query("SELECT c_key, c_value from configurations");
-		print_r($result);
 		foreach ($result as $item)
 		{
-			foreach ($item['configurations'] as $field => $value)
+			foreach ($item['configurations'] $option)
 			{
 				//TODO support the dot character in the names using '\.'
-				$names = explode('.', $field);
-				$results['config'] = $this->array_inflate($results['config'], $names, $value);
+				$names = explode('.', $option['c_key']);
+				$results['config'] = $this->array_inflate($results['config'], $names, $option['c_value']);
 			}
 		}
 		$this->set('result', true);
