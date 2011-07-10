@@ -72,20 +72,17 @@ class AnswersController extends AppController
 	/**
 	 * Inflates an array.  Things to know:
 	 * 1.) $names cannot be empty
-	 * 2.) $names cannot contain numbers
-	 * 3.) $restult must be array
+	 * 2.) $restult must be array
 	 */
 	function array_inflate($result, $names, $value)
 	{
 		if (empty($names)) return $value;
 		
-		if (!isset($result[$names[0]]))
-			return array_merge($result, array($names[0] => $this->array_inflate(array(), array_slice($names, 1), $value)));
+		if (!array_key_exists($names[0], $result))
+			$result[$names[0]] = $this->array_inflate(array(), array_slice($names, 1), $value);
 		else
-		{
 			$result[$names[0]] = $this->array_inflate($result[$names[0]], array_slice($names, 1), $value);
-			return $result;
-		}
+		return $result;
 	}
 	
 	/**
