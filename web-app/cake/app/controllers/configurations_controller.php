@@ -20,11 +20,11 @@ class ConfigurationsController extends AppController
 	{
 		if($this->data['Configuration']['confirm'] == true)
     	{
-			if ($this->Configuration->fromKeyVal($this->data))
-	        {
-	         	$this->Session->setFlash('Configuration settings saved!');
-	        	$this->redirect('/configurations/');
-	    	}
+    		print_r($this->data)
+//			if ($this->Configuration->fromKeyVal($this->data))
+//	        {
+//	         	$this->Session->setFlash('Configuration settings saved!');
+//	    	}
     	}
     	else
     	{
