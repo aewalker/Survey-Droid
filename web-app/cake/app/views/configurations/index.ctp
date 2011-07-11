@@ -9,7 +9,7 @@ echo $this->Session->flash();
 <h3>Welcome to the settings configuration page.</h3>
 <p>Here, you can view and modify the way that many different application features work on active phones.  Just edit the settings on this page and press "Save" when you are done.  If you navigate away from this page without saving, then the previous settings will be preserved.</p>
 <?php
-echo $form->create('Configuration', array('action' => 'index'));
+echo $form->create(false, array('action' => 'index'));
 echo $form->input('confirm', array('type' => 'hidden', 'value' => 'true'));
 ?>
 <h4>General</h4>
@@ -34,8 +34,13 @@ echo $form->input('show_survey_name', array('type' => 'checkbox', 'checked'  => 
 ?>
 <h4>Tracking</h4>
 <?php
-//locatios tracked
+//locations tracked
+echo $form->input('location_tracked.0.long', array('value' => $data['location_tracked'][0]['long'], 'label' => 'Tracking area center longitude'));
+echo $form->input('location_tracked.0.lat', array('value' => $data['location_tracked'][0]['lat'], 'label' => 'Tracking area center latitude'));
+echo $form->input('location_tracked.0.radius', array('value' => $data['location_tracked'][0]['radius'], 'label' => 'Tracking area radius (in kilometers)'));
 //times tracked
+echo $form->input('time_tracked.0.start', array('value' => $data['time_tracked'][0]['start'], 'label' => 'Start of time tracked (hhmm)'));
+echo $form->input('time_tracked.0.end', array('value' => $data['time_tracked'][0]['end'], 'label' => 'End of time tracked (hhmm)'));
 //location interval
 echo $form->input('location_interval', array('value' => $data['location_interval'], 'label' => 'How often (in minutes) should location information be collected'));
 ?>

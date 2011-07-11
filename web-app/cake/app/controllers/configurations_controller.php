@@ -18,9 +18,9 @@ class ConfigurationsController extends AppController
 	 */
 	function index()
 	{
-		if ($this->data['Configuration']['confirm'] == true)
+		if ($this->data['confirm'] == true)
     	{
-    		unset($this->data['Configuration']['confirm']); //very important!
+    		unset($this->data['confirm']); //very important!
     		print_r($this->data);
 //			if ($this->Configuration->fromKeyVal($this->data))
 //	        {

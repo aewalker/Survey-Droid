@@ -106,17 +106,17 @@
     		    	"radius" : 22, (kilometers)
     		}, ],
     		"time_tracked" : [{
-    		    	start: 1120,
-    		    	end: 1130
+    		    	"start": 1120,
+    		    	"end": 1130
     		}, {
-    		    	start: 1550,
-    		    	end: 2130
+    		    	"start": 1550,
+    		    	"end": 2130
     		}, {
-    		    	start: 1120,
-    		    	end: 1130
+    		    	"start": 1120,
+    		    	"end": 1130
     		}, {
-    		    	start: 1120,
-    		    	end: 1130
+    		    	"start": 1120,
+    		    	"end": 1130
     		}],
     		"https" : 1, //use 1 = true, 0 = false
     		"scheduler_interval" : 1440, //in minutes
