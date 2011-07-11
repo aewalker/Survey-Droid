@@ -60,7 +60,7 @@ echo $form->input('scheduler_interval', array('value' => $data['scheduler_interv
 //server ip/domain name
 echo $form->input('server', array('value' => $data['server'], 'label' => 'Server name/ip (WARNING: DO NOT CHANGE UNLESS YOU KNOW WHAT YOU\'RE DOING)'));
 //voice recording format
-echo $form->input('voice_format', array('type' => 'select', 'options' => array('mpeg4', '3gp'), 'value' => $data['voice_format'], 'label' => 'Format for recored audio'));
+echo $form->input('voice_format', array('type' => 'select', 'options' => array('mpeg4' => 'mpeg4', '3gp' => '3gp'), 'value' => $data['voice_format'], 'label' => 'Format for recored audio'));
 echo $form->end('Save');
 echo $form->create(false, array('url' => '/'));
 echo $form->end('Cancel');

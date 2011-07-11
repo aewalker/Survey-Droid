@@ -72,9 +72,10 @@ class Configuration extends AppModel
 		$data = $this->array_flatten($data);
 		foreach ($data as $key => $val)
 		{
-			if ($this->find('first', array('conditions' => array('c_key' => $key)))) {}
-			else { $this->create(); }
-			$this->save(array($this->name => array('c_key' => $key, 'c_value' => $val, 'opt' => '==')));
+			if ($this->find('first', array('conditions' => array('c_key' => $key))) == false)
+				$this->create();
+			if ($this->save(array($this->name => array('c_key' => $key, 'c_value' => $val, 'opt' => '=='))) == false)
+				echo 'SAVE ERROR';
 		}
 	}
 }
