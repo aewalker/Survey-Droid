@@ -13,7 +13,7 @@ echo '<p>You may wish to allow phone users to start this survey whenever they wa
 echo $form->input('subject_init', array
 (
 	'type' => 'checkbox',
-	'value' => $subject_init,
+	'selected' => $subject_init,
 	'label' => 'Allow subject initiation'
 ));
 echo '<p>To set when this survey should be administered to subjects, enter'.
