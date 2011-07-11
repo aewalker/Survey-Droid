@@ -18,9 +18,9 @@ class ConfigurationsController extends AppController
 	 */
 	function index()
 	{
-		if($this->data['Configuration']['confirm'] == true)
+		if ($this->data['Configuration']['confirm'] == true)
     	{
-    		print_r($this->data)
+    		print_r($this->data);
 //			if ($this->Configuration->fromKeyVal($this->data))
 //	        {
 //	         	$this->Session->setFlash('Configuration settings saved!');
