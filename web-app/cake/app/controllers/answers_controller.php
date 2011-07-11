@@ -70,24 +70,6 @@ class AnswersController extends AppController
 	}
 	
 	/**
-	 * Inflates an array.  Things to know:
-	 * 1.) $names cannot be empty
-	 * 2.) $restult must be array
-	 * 3.) if using numeric keys (ie you want a JSON array), the items must be
-	 * in the database in the opposite order for some reason
-	 */
-	function array_inflate($result, $names, $value)
-	{
-		if (empty($names)) return $value;
-		
-		if (!array_key_exists($names[0], $result))
-			$result[$names[0]] = $this->array_inflate(array(), array_slice($names, 1), $value);
-		else
-			$result[$names[0]] = $this->array_inflate($result[$names[0]], array_slice($names, 1), $value);
-		return $result;
-	}
-	
-	/**
 	 * Pull survey data from the database and convert to JSON.
 	 */
 	function pull($deviceid = NULL)
@@ -130,7 +112,7 @@ class AnswersController extends AppController
 		{
 			//TODO support the dot character in the names using '\.'
 			$names = explode('.', $item['configurations']['c_key']);
-			$results['config'] = $this->array_inflate($results['config'], $names, $item['configurations']['c_value']);
+			$results['config'] = $this->Configuration->array_inflate($results['config'], $names, $item['configurations']['c_value']);
 		}
 		$this->set('result', true);
 		$this->set('results', $results);
