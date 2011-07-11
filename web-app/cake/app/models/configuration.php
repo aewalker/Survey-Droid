@@ -57,8 +57,8 @@ class Configuration extends AppModel
 		$toReturn = array();
 		foreach ($data as $item)
 		{
-			$names = explode('.', $item[$name]['c_key']);
-			$toReturn = $this->array_inflate($toReturn, $names, $item[$name]['c_value']);
+			$names = explode('.', $item[$this->name]['c_key']);
+			$toReturn = $this->array_inflate($toReturn, $names, $item[$this->name]['c_value']);
 		}
 		return $toReturn;
 	}
@@ -68,13 +68,13 @@ class Configuration extends AppModel
 	 */
 	function fromKeyVal($data)
 	{
-		if (array_key_exists($name, $data)) $data = $data[$name];
+		if (array_key_exists($this->name, $data)) $data = $data[$this->name];
 		$data = array_flatten($data);
 		foreach ($data as $key => $val)
 		{
 			if ($this->find('first', array('conditions' => array('c_key' => $key)))) {}
 			else { $this->create(); }
-			$this->save(array($name => array('c_key' => $key, 'c_value' => $val, 'opt' => '==')));
+			$this->save(array($this->name => array('c_key' => $key, 'c_value' => $val, 'opt' => '==')));
 		}
 	}
 }

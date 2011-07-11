@@ -35,6 +35,7 @@
 				echo $html->link('Control Panel', array('controller' => 'users', 'action' => 'index'));
 			echo $html->link('Data Collection', array('controller' => 'datas', 'action' => 'index'));
 			echo $html->link('Surveys', array('controller' => 'surveys', 'action' => 'index'));
+			echo $html->link('Settings', array('controller' => 'configurations', 'action' => 'index'));
 		}
 		?>
 	</div>
