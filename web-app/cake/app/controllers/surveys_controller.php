@@ -107,7 +107,9 @@ class SurveysController extends AppController
 					$days_result[$day] = $result['Survey'][$day];
 				}
 				$this->set('days', $days_result);
-				$this->set('subject_init', $result['Survey']['subject_init']);
+				if ($result['Survey']['subject_init'] == 1)
+					$this->set('subject_init', true);
+				else $this->set('subject_init', false);
 				$this->set('testing', $result);
 			}
 			else
