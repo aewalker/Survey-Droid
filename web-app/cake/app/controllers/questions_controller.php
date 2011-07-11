@@ -104,13 +104,13 @@ class QuestionsController extends AppController
 			//first do the base64 transform
 			if (!empty($this->data['Question']['q_img_low']))
 			{
-				$file = $this->data['Qustion']['q_img_low']['tmp_name'];
+				$file = $this->data['Question']['q_img_low']['tmp_name'];
 				$this->data['Question']['q_img_low'] =
 					base64_encode(fread(fopen($file, 'r'), filesize($file)));
 			}
 			if (!empty($this->data['Question']['q_img_high']))
 			{
-				$file = $this->data['Qustion']['q_img_high']['tmp_name'];
+				$file = $this->data['Question']['q_img_high']['tmp_name'];
 				$this->data['Question']['q_img_high'] =
 					base64_encode(fread(fopen($file, 'r'), filesize($file)));
 			}

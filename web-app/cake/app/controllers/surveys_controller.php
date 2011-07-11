@@ -74,7 +74,7 @@ class SurveysController extends AppController
     }
     
     /**
-     * Edit the name, first question, and times of a particular survey.
+     * Edit the name, first question, type, and times of a particular survey.
      * 
      * @param surveyid - id of the survey to edit
      */
@@ -88,17 +88,12 @@ class SurveysController extends AppController
 				$this->Session->setFlash('Survey edited!');
 				$this->redirect('/surveys');
 			}
-			else
-			{
-				
-			}
 		}
 		else
 		{
 			$result = $this->Survey->find('first', array
 			(
-				'conditions' => array('Survey.id' => $surveyid),
-				'fields' => array_merge(array('name', 'question_id'), $this->days)
+				'conditions' => array('Survey.id' => $surveyid)
 			));
 			
 			if (isset($result['Survey']))
@@ -112,6 +107,7 @@ class SurveysController extends AppController
 					$days_result[$day] = $result['Survey'][$day];
 				}
 				$this->set('days', $days_result);
+				$this->set('subject_init', $result['Survey']['subject_init']);
 				$this->set('testing', $result);
 			}
 			else

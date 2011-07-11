@@ -5,7 +5,7 @@
  * request.  For reference only.                                             *
  *---------------------------------------------------------------------------*
  * Note: the deviceID of the phone gets sent in the url request:             *
- * https://server.com/answers/pull?deviceid=00030OG9M8WE4G0                  *
+ * https://server.com/answers/00030OG9M8WE4G0                                *
  *---------------------------------------------------------------------------*/
 
 {
@@ -15,6 +15,7 @@
             "name": "",
             "created": 0, //unix timestamp
             "question_id": 0,
+            "subject_init": 0, //allow subjects to start the survey whenver they want?
             "mo": "",
             "tu": "", 
             "we": "",

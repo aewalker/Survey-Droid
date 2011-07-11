@@ -3,6 +3,9 @@
  *                                                                           *
  * A mock JSON file showing the format of a push request from a phone.  For  *
  * reference only.                                                           *
+ *---------------------------------------------------------------------------*
+ * Note: the deviceID of the phone gets sent in the url request:             *
+ * https://server.com/answers/00030OG9M8WE4G0                                *
  *---------------------------------------------------------------------------*/
 
 {
