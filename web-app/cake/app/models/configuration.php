@@ -34,7 +34,7 @@ class Configuration extends AppModel
 		{
 			if (is_array($val))
 			{
-				$sub = array_flatten($val);
+				$sub = $this->array_flatten($val);
 				foreach ($sub as $subkey => $subval)
 				{
 					$toReturn = array_merge($toReturn, array("$key.$subkey" => $subval));
