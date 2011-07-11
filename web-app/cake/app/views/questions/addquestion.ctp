@@ -25,8 +25,7 @@ if (isset($result)) //if result is set, then the user has already submitted
 //main form
 echo $form->create('Question', array(
 	'enctype' => 'multipart/form-data', //to allow file uploads
-	'action' => "addquestion/$surveyid",
-	'default' => false));
+	'action' => "addquestion/$surveyid");
 echo $form->input('q_text', array('label' => 'Question Text'));
 echo $form->input('q_type', array('label' => 'Question Type', 'type' => 'select', 'options' => array
 (
@@ -44,9 +43,7 @@ echo $form->input('q_img_high', array('type' => 'file', 'label' => 'High-end Ima
 
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 echo $form->input('survey_id', array('type' => 'hidden', 'value' => $surveyid));
-echo $this->Js->submit('Add', array(
-	'action' => "addquestion/$surveyid",
-	'update' => '#questions_space'));
+echo $form->submit('Add');
 echo $form->end();
 
 //cancel button

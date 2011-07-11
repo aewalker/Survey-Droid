@@ -54,11 +54,9 @@ class QuestionsController extends AppController
     	if ($this->data['Question']['confirm'] == true)
 		{
 			//first do the base64 transform
-			print_r($this->data);
 			if (!empty($this->data['Question']['q_img_low']))
 			{
 				$file = $this->data['Qustion']['q_img_low']['tmp_name'];
-				echo "<img src=\"data:image/png;base64,".base64_encode(fread(fopen($file, 'r'), filesize($file)))."\" />";
 				$this->data['Question']['q_img_low'] =
 					base64_encode(fread(fopen($file, 'r'), filesize($file)));
 			}
@@ -74,8 +72,12 @@ class QuestionsController extends AppController
 			if ($this->Question->save($this->data))
 	        {
 	         	$this->Session->setFlash('New question created!');
-	         	$this->set('result', true);
 	    	}
+	    	else
+	    	{
+	    		$this->Session->setFlash('There were errors');
+	    	}
+	        $this->redirect('/surveys/viewsurvey/'.$this->data['Question']['survey_id']);
 		}		
     }
     
