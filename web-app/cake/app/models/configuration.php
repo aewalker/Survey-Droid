@@ -69,7 +69,7 @@ class Configuration extends AppModel
 	function fromKeyVal($data)
 	{
 		if (array_key_exists($this->name, $data)) $data = $data[$this->name];
-		$data = array_flatten($data);
+		$data = $this->array_flatten($data);
 		foreach ($data as $key => $val)
 		{
 			if ($this->find('first', array('conditions' => array('c_key' => $key)))) {}
