@@ -25,8 +25,7 @@ echo '<br /><br />';
 
 //main form
 echo $form->create('Question', array(
-	'url' => "editquestion/$questionid",
-	'default' => false));
+	'url' => "editquestion/$questionid"));
 echo $form->input('q_text', array('value' => $q_text, 'label' => 'Question Text'));
 echo $form->input('q_type', array('value' => $q_type, 'label' => 'Question Type', 'type' => 'select', 'options' => array
 (
@@ -46,9 +45,7 @@ echo $form->input('q_img_high', array('type' => 'file', 'label' => 'High-end Ima
 
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 echo $form->input('survey_id', array('type' => 'hidden', 'value' => $surveyid));
-echo $this->Js->submit('Edit', array(
-	'action' => "editquestion/$questionid",
-	'update' => "#question_space_$questionid"));
+echo $form->submit('Edit');
 echo $form->end();
 
 
