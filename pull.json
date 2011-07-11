@@ -122,7 +122,7 @@
     		"scheduler_interval" : 1440, //in minutes
     		"push_interval" : 1440,
     		"pull_interval" : 1440,
-    		"sever" : "50.19.254.168",
+    		"server" : "50.19.254.168",
     		"location_interval" : 15,
     		"admin_phone_number" : 5555555555,
     		"admin_name" : "Naomi"

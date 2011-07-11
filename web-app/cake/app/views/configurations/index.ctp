@@ -15,9 +15,9 @@ echo $form->input('confirm', array('type' => 'hidden', 'value' => 'true'));
 <h4>General</h4>
 <?php
 //featues enable/disable
-//echo $form->input('features_enabled.location', array('type' => 'checkbox', 'checked' => $data['features_enabled']['location'], 'label' => 'Location tracking enabled'));
-//echo $form->input('features_enabled.callog', array('type' => 'checkbox', 'checked' => $data['features_enabled']['callog'], 'label' => 'Call/text logging enabled'));
-//echo $form->input('features_enabled.survey', array('type' => 'checkbox', 'checked' => $data['features_enabled']['survey'], 'label' => 'Surveys enabled'));
+echo $form->input('features_enabled.location', array('type' => 'checkbox', 'checked' => $data['features_enabled']['location'], 'label' => 'Location tracking enabled'));
+echo $form->input('features_enabled.callog', array('type' => 'checkbox', 'checked' => $data['features_enabled']['callog'], 'label' => 'Call/text logging enabled'));
+echo $form->input('features_enabled.survey', array('type' => 'checkbox', 'checked' => $data['features_enabled']['survey'], 'label' => 'Surveys enabled'));
 //admin name
 echo $form->input('admin_name', array('value' => $data['admin_name'], 'label' => 'Study contact\'s name'));
 //admin phone number

@@ -3,7 +3,7 @@ insert into configurations (c_key, opt, c_value) values
 	("scheduler_interval", "==", "1440"),
 	("push_interval", "==", "20"),
 	("pull_interval", "==", "1440"),
-	("sever", "==", "50.19.254.168"),
+	("server", "==", "50.19.254.168"),
 	("device_enabled", "==", "1"),
 	("location_interval", "==", "15"),
 	("admin_phone_number", "==", "7652996509"),
