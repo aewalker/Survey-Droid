@@ -25,7 +25,7 @@ if (isset($result)) //if result is set, then the user has already submitted
 //main form
 echo $form->create('Question', array(
 	'enctype' => 'multipart/form-data', //to allow file uploads
-	'action' => "addquestion/$surveyid");
+	'action' => "addquestion/$surveyid"));
 echo $form->input('q_text', array('label' => 'Question Text'));
 echo $form->input('q_type', array('label' => 'Question Type', 'type' => 'select', 'options' => array
 (
