@@ -70,7 +70,6 @@ class Configuration extends AppModel
 	{
 		if (array_key_exists($this->name, $data)) $data = $data[$this->name];
 		$data = $this->array_flatten($data);
-		print_r($data);
 		foreach ($data as $key => $val)
 		{
 			$result = $this->find('first', array('conditions' => array('c_key' => $key))); 
