@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaRecorder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -34,9 +35,8 @@ public class Pull extends WebClient
 	//logging tag
 	private static final String TAG = "Pull";
 
-	//pull address
-    private static final String PULL_URL = Config.getComProtocol() + "://"
-    		+ Config.SERVER + "/answers/pull/";
+	//pull address to be appended to the server
+    private static final String PULL_URL = "/answers/pull/";
 
     /**
      * Syncs surveys, questions, choices, branches, and conditions with the
@@ -51,8 +51,14 @@ public class Pull extends WebClient
     		TelephonyManager tManager =
             	(TelephonyManager) ctxt.getSystemService(
             			Context.TELEPHONY_SERVICE);
-            JSONObject json = new JSONObject(getUrlContent(ctxt,
-            		PULL_URL + tManager.getDeviceId()));
+    		String url = "";
+    		if (Config.getSetting(ctxt, Config.HTTPS, Config.HTTPS_DEFAULT))
+    			url = url + "https://";
+    		else
+    			url = url + "http://";
+            JSONObject json = new JSONObject(getUrlContent(ctxt, url +
+            	Config.getSetting(ctxt, Config.SERVER, Config.SERVER_DEFAULT)
+            	+ PULL_URL + tManager.getDeviceId()));
             PeoplesDB pdb = new PeoplesDB(ctxt);
             SQLiteDatabase sdb = pdb.getWritableDatabase();
             syncSurveys(sdb, json.getJSONArray("surveys"));
@@ -60,6 +66,7 @@ public class Pull extends WebClient
             syncChocies(sdb, json.getJSONArray("choices"));
             syncBranches(sdb, json.getJSONArray("branches"));
             syncConditions(sdb, json.getJSONArray("conditions"));
+            syncConfig(sdb, json.getJSONObject("config"), ctxt);
             sdb.close();
             pdb.close();
         }
@@ -242,5 +249,131 @@ public class Pull extends WebClient
     	{
 			Log.e(TAG, e.getMessage());
 		}
+    }
+    
+    private static void syncConfig(SQLiteDatabase db, JSONObject config, Context ctxt)
+    {
+    	Log.i(TAG, "Updating configuration values");
+    	try
+    	{
+    		//do the special keys first
+    		
+    		//application features
+    		JSONObject features = config.getJSONObject("features_enabled");
+    		if (features.optInt("survey", 0) == 1)
+    			Config.putSetting(ctxt, Config.SURVEYS_SERVER, true);
+    		else
+    			Config.putSetting(ctxt, Config.SURVEYS_SERVER, false);
+    		if (features.optInt("callog", 0) == 1)
+    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, true);
+    		else
+    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, false);
+    		if (features.optInt("location", 0) == 1)
+    			Config.putSetting(ctxt, Config.TRACKING_SERVER, true);
+    		else
+    			Config.putSetting(ctxt, Config.TRACKING_SERVER, false);
+    		config.remove("features_enabled");
+    		
+    		//location tracked
+    		JSONArray locations = config.getJSONArray("location_tracked");
+    		Config.putSetting(ctxt, Config.NUM_LOCATIONS_TRACKED,
+    				locations.length());
+    		for (int i = 0; i < locations.length(); i++)
+    		{
+    			JSONObject location = locations.getJSONObject(i);
+    			Config.putSetting(ctxt, Config.TRACKED_LONG + i,
+    					(float) location.optDouble("long", 0.0));
+    			Config.putSetting(ctxt, Config.TRACKED_LAT + i,
+    					(float) location.optDouble("lat", 0.0));
+    			Config.putSetting(ctxt, Config.TRACKED_RADIUS + i,
+    					(float) location.optDouble("radius", 0.0));
+    		}
+    		config.remove("location_tracked");
+    		
+    		//times tracked
+    		JSONArray times = config.getJSONArray("time_tracked");
+    		Config.putSetting(ctxt, Config.NUM_TIMES_TRACKED,
+    				locations.length());
+    		for (int i = 0; i < times.length(); i++)
+    		{
+    			JSONObject time = locations.getJSONObject(i);
+    			Config.putSetting(ctxt, Config.TRACKED_START + i,
+    					"" + time.optInt("long", 0));
+    			Config.putSetting(ctxt, Config.TRACKED_END + i,
+    					"" + time.optInt("lat", 0));
+    		}
+    		config.remove("time_tracked");
+    		
+    		//voice_format (because it needs to be converted
+    		String format = config.optString("voice_format");
+    		if (format.equals("mpeg4"))
+    			Config.putSetting(ctxt, Config.VOICE_FORMAT,
+    					MediaRecorder.OutputFormat.MPEG_4);
+    		else if (format.equals("3gp"))
+    			Config.putSetting(ctxt, Config.VOICE_FORMAT,
+    					MediaRecorder.OutputFormat.THREE_GPP);
+    		config.remove("voice_format");
+    		
+    		//now do the standard ones
+    		//note that this requires the keys in the incoming JSON
+    		//to be the same as those defined in Config.java
+    		JSONArray cNames = config.names();
+    		for (int i = 0; i < cNames.length(); i++)
+    		{
+    			boolean done = false;
+    			String key = config.getString(cNames.getString(i));
+    			Object val = config.get(key);
+    			
+    			//check for a string value
+    			for (String k : Config.STRINGS)
+    			{
+    				if (key.equals(k))
+    				{
+    					Config.putSetting(ctxt, key, (String) val);
+    					done = true;
+    					break;
+    				}
+    			}
+    			if (done) continue;
+    			
+    			//check for an integer value
+    			for (String k : Config.INTS)
+    			{
+    				if (key.equals(k))
+    				{
+    					Config.putSetting(ctxt, key, (Integer) val);
+    					done = true;
+    					break;
+    				}
+    			}
+    			if (done) continue;
+    			
+    			//check for a boolean value
+    			for (String k : Config.BOOLEANS)
+    			{
+    				if (key.equals(k))
+    				{
+    					Config.putSetting(ctxt, key, (Boolean) val);
+    					done = true;
+    					break;
+    				}
+    			}
+    			if (done) continue;
+    			
+    			//check for a float value
+    			for (String k : Config.FLOATS)
+    			{
+    				if (key.equals(k))
+    				{
+    					Config.putSetting(ctxt, key, (Float) val);
+    					break;
+    				}
+    			}
+    		}
+    	}
+    	catch (JSONException e)
+    	{
+    		Log.e(TAG, e.toString());
+    	}
     }
 }

@@ -144,12 +144,14 @@ public class ComsService extends IntentService
 			if (intent.getAction().equals(ACTION_UPLOAD_DATA))
 			{
 				comsIntent.putExtra(EXTRA_RUNNING_TIME,
-						time + (Config.PUSH_INTERVAL * 60 * 1000));
+						time + (Config.getSetting(this, Config.PUSH_INTERVAL,
+								Config.PUSH_INTERVAL_DEFAULT) * 60 * 1000));
 			}
 			else
 			{
 				comsIntent.putExtra(EXTRA_RUNNING_TIME,
-						time + (Config.PULL_INTERVAL * 60 * 1000));
+						time + (Config.getSetting(this, Config.PULL_INTERVAL,
+								Config.PULL_INTERVAL_DEFAULT) * 60 * 1000));
 			}
 			PendingIntent pendingComs = PendingIntent.getService(
 					getApplicationContext(), 0, comsIntent,

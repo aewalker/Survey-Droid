@@ -10,6 +10,7 @@ package org.peoples.android.survey;
 import java.util.Calendar;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,7 +66,7 @@ public class NotificationActivity extends Activity
 		//vibrate the phone
 		Vibrator vibrator =
 			(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		vibrator.vibrate(Config.VIBRATION_TIME);
+		vibrator.vibrate(Notification.DEFAULT_VIBRATE);
 		
 		wl.release();
 		
@@ -129,7 +130,8 @@ public class NotificationActivity extends Activity
 			postponeIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_ID, id);
 			postponeIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_TIME,
 					Calendar.getInstance().getTimeInMillis()
-					+ (Config.SURVEY_DELAY * 60 * 1000));
+					+ (Config.getSetting(this, Config.SURVEY_DELAY,
+							(int) Config.SURVEY_DELAY_DEFAULT)  * 60 * 1000));
 			startService(postponeIntent);
 			
 			//tell the survey service to shut down

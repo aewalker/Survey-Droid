@@ -18,7 +18,6 @@ import android.app.Service;
 //import android.content.Context;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -121,14 +120,17 @@ public class SurveyService extends Service
 							intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID));
 					delayIntent.putExtra(SurveyScheduler.EXTRA_SURVEY_TIME,
 							Calendar.getInstance().getTimeInMillis()
-							+ (Config.SURVEY_DELAY * 60 * 1000));
+							+ (Config.getSetting(this, Config.SURVEY_DELAY,
+									(int) Config.SURVEY_DELAY_DEFAULT)
+									* 60 * 1000));
 					startService(delayIntent);
 					return START_STICKY;
 				}
 			
 				//check that surveys are enabled
-				Config cfg = new Config(this);
-				if (!cfg.isSurveyEnabled())
+				if (!Config.getSetting(this, Config.SURVEYS_LOCAL, true) ||
+					!Config.getSetting(this, Config.SURVEYS_SERVER,
+							Config.SURVEYS_SERVER_DEFAULT))
 				{
 					//if the user is already taking a survey, then we don't want
 					//to stop it, even if s/he disables surveys during it
@@ -171,7 +173,8 @@ public class SurveyService extends Service
 			Context context = getApplicationContext();
 			String contentTitle = "PEOPLES";
 			String contentText = "You have a new survey awaiting";
-			if (Config.SHOW_SURVEY_NAME)
+			if (Config.getSetting(this, Config.SHOW_SURVEY_NAME,
+					Config.SHOW_SURVEY_NAME_DEFAULT))
 				contentText = contentText + ": " + survey.getName();
 			
 			//create the notification

@@ -59,7 +59,8 @@ public abstract class QuestionActivity extends Activity
 			if (Config.D) Log.d(TAG, "service connected");
 			
 			//set the title if desired
-			if (Config.SHOW_SURVEY_NAME)
+			if (Config.getSetting(getThis(), Config.SHOW_SURVEY_NAME,
+					Config.SHOW_SURVEY_NAME_DEFAULT))
 				setTitle(survey.getName());
 		}
 		

@@ -7,7 +7,6 @@
 package org.peoples.android;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -45,7 +44,6 @@ public class SettingsActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        final Context ctxt = this;
 
         if (Config.D) Log.d(TAG, "Starting settings activity");
 
@@ -63,45 +61,46 @@ public class SettingsActivity extends Activity
         {
         	setContentView(R.layout.settings_activity_vert);
         }
-
-        final Config settings = new Config(ctxt);
         
         //checkboxes for each of the three settings
         final ToggleButton locationCheckbox =
         	(ToggleButton) findViewById(R.id.settings_locationSettingToggle);
-        locationCheckbox.setChecked(settings.isLocationEnabled());
+        locationCheckbox.setChecked(
+        		Config.getSetting(this, Config.TRACKING_LOCAL, true));
         locationCheckbox.setOnCheckedChangeListener(
         		new OnCheckedChangeListener()
         {
 			@Override
 			public void onCheckedChanged(CompoundButton button, boolean check)
 			{
-				settings.setLocationService(!settings.isLocationEnabled());
+				Config.putSetting(getThis(), Config.TRACKING_LOCAL, check);
 			}
         });
         
         final ToggleButton callLogCheckbox =
         	(ToggleButton) findViewById(R.id.settings_loggingSettingsToggle);
-        callLogCheckbox.setChecked(settings.isCallLogEnabled());
+        callLogCheckbox.setChecked(
+        		Config.getSetting(this, Config.CALL_LOG_LOCAL, true));
         callLogCheckbox.setOnCheckedChangeListener(
         		new OnCheckedChangeListener()
         {
 			@Override
 			public void onCheckedChanged(CompoundButton button, boolean check)
 			{
-				settings.setCallLogService(!settings.isCallLogEnabled());
+				Config.putSetting(getThis(), Config.CALL_LOG_LOCAL, check);
 			}
         });
         
         final ToggleButton surveyCheckbox =
         	(ToggleButton) findViewById(R.id.settings_surveysSettingToggle);
-        surveyCheckbox.setChecked(settings.isSurveyEnabled());
+        surveyCheckbox.setChecked(
+        		Config.getSetting(this, Config.SURVEYS_LOCAL, true));
         surveyCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener()
         {
 			@Override
 			public void onCheckedChanged(CompoundButton button, boolean check)
 			{
-				settings.setSurveyService(!settings.isSurveyEnabled());
+				Config.putSetting(getThis(), Config.SURVEYS_LOCAL, check);
 			}
         });
         
@@ -128,15 +127,19 @@ public class SettingsActivity extends Activity
             	StringBuilder info = new StringBuilder();
             	
             	info.append("Location tracking is " +
-            			(settings.isLocationEnabled() ?
+            			(Config.getSetting(getThis(),
+            					Config.TRACKING_LOCAL, true) ?
             					"enabled\n" : "disabled\n"));
             	
             	info.append("Call logging is " +
-            			(settings.isCallLogEnabled() ?
+            			(Config.getSetting(getThis(),
+            					Config.CALL_LOG_LOCAL, true) ?
             					"enabled\n" : "disabled\n"));
             	
             	info.append("Surveys are " +
-            			(settings.isSurveyEnabled() ? "enabled" : "disabled"));
+            			(Config.getSetting(getThis(),
+            					Config.SURVEYS_LOCAL, true) ?
+            					"enabled" : "disabled"));
 
             	Toast.makeText(getApplicationContext(), info.toString(),
                         Toast.LENGTH_SHORT).show();

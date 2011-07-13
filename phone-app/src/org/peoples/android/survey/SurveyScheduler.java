@@ -158,7 +158,9 @@ public class SurveyScheduler extends IntentService
 		
 		surveys.moveToFirst();
 		String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-		long nextRun = runningTime + (Config.SCHEDULER_INTERVAL * 60 * 1000);
+		long nextRun = runningTime + (Config.getSetting(this,
+				Config.SCHEDULER_INTERVAL, Config.SCHEDULER_INTERVAL_DEFAULT)
+				* 60 * 1000);
 		if (Config.D)
 		{
 			Log.v(TAG, "Current run time: "

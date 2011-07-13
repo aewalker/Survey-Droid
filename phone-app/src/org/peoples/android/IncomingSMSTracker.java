@@ -30,8 +30,9 @@ public class IncomingSMSTracker extends BroadcastReceiver {
     @Override
     public void onReceive(Context ctxt, Intent intent) {
     	// make sure the functionality is enabled
-    	Config cfg = new Config(ctxt);
-		if (!cfg.isCallLogEnabled()) return;
+    	if (!Config.getSetting(ctxt, Config.CALL_LOG_LOCAL, false) ||
+				!Config.getSetting(ctxt, Config.CALL_LOG_SERVER,
+						Config.CALL_LOG_SERVER_DEFAULT)) return;
 
         // Make sure sms messages are available
 		if (!ACTION_SMS_RECEIVED.equals(intent.getAction()))

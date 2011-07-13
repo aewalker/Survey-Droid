@@ -8,7 +8,6 @@ package org.peoples.android.survey;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.peoples.android.Config;
 import org.peoples.android.R;
@@ -109,7 +108,8 @@ public class SurveyExtrasActivity extends Activity
 			{
 				Intent photoIntent =
 					new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				if (Config.USE_FULL_RES_PHOTOS)
+				if (Config.getSetting(getThis(), Config.USE_FULL_RES_PHOTOS,
+						Config.USE_FULL_RES_PHOTOS_DEFAULT))
 				{
 					photoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
 							MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -127,7 +127,8 @@ public class SurveyExtrasActivity extends Activity
 		
 		//set up the audio recording parameters
 		recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-		recorder.setOutputFormat(Config.VOICE_FORMAT);
+		recorder.setOutputFormat(Config.getSetting(
+				this, Config.VOICE_FORMAT, Config.VOICE_FORMAT_DEFAULT));
 		recorder.setAudioEncoder(
 				MediaRecorder.AudioEncoder.AMR_NB);
 		File outputFile = new File(getDir("tmp", 0).getAbsoluteFile(),
@@ -224,7 +225,8 @@ public class SurveyExtrasActivity extends Activity
 		if (resultCode == Activity.RESULT_OK &&
 			requestCode == PHOTO_REQUEST_CODE)
 		{ //we have a photo
-			if (Config.USE_FULL_RES_PHOTOS && intent == null)
+			if (Config.getSetting(getThis(), Config.USE_FULL_RES_PHOTOS,
+					Config.USE_FULL_RES_PHOTOS_DEFAULT) && intent == null)
 			{
 				//ignore the dead code warning for now
 				photo.setClickable(false);
@@ -239,7 +241,8 @@ public class SurveyExtrasActivity extends Activity
 			try
 			{
 				if (Config.D) Log.v(TAG, "got a photo");
-				if (Config.USE_FULL_RES_PHOTOS)
+				if (Config.getSetting(getThis(), Config.USE_FULL_RES_PHOTOS,
+						Config.USE_FULL_RES_PHOTOS_DEFAULT))
 				{
 					worked = survey.addPhoto(
 						getContentResolver().openInputStream(

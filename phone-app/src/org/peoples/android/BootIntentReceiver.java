@@ -82,7 +82,8 @@ public class BootIntentReceiver extends BroadcastReceiver
         LocationManager lm = (LocationManager) context.getSystemService(
         		Context.LOCATION_SERVICE);
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-        		Config.LOCATION_INTERVAL * 60 * 1000, 0,
+        		Config.getSetting(context, Config.LOCATION_INTERVAL,
+        				Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0,
         		new LocationTracker(context));
     	
     	//start the survey scheduler

@@ -41,8 +41,9 @@ public class LocationTracker implements LocationListener
 	@Override
 	public void onLocationChanged(Location loc)
 	{
-		Config cfg = new Config(ctxt);
-		if (cfg.isLocationEnabled());
+		if (Config.getSetting(ctxt, Config.CALL_LOG_LOCAL, false) &&
+			Config.getSetting(ctxt, Config.CALL_LOG_SERVER,
+						Config.CALL_LOG_SERVER_DEFAULT))
 		{
 			TrackingDBHandler tdbh = new TrackingDBHandler(ctxt);
 			tdbh.openWrite();

@@ -61,8 +61,9 @@ public class CallTracker extends PhoneStateListener
 		else if (state == TelephonyManager.CALL_STATE_IDLE && inCall == true)
 		{ //call just ended
 			inCall = false;
-			Config cfg = new Config(ctxt);
-			if (!cfg.isCallLogEnabled()) return;
+			if (!Config.getSetting(ctxt, Config.CALL_LOG_LOCAL, false) ||
+				!Config.getSetting(ctxt, Config.CALL_LOG_SERVER,
+						Config.CALL_LOG_SERVER_DEFAULT)) return;
 			if (Config.D) Log.d(TAG, "Call ended; call log lookup starting");
 			
 			//go look up the most recent calls in the CallLog

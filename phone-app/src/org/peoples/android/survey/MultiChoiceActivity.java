@@ -107,8 +107,11 @@ public class MultiChoiceActivity extends QuestionActivity
 		//getCheckedItemIds if we move up
 		
 		//ignore the dead code warning for now
-		//if (!Config.ALLOW_NO_CHOICES && listView.getCheckItemIds().length == 0)
-		if (!Config.ALLOW_NO_CHOICES && getSelected().size() == 0)
+		//if (!Config.getSetting(this, Config.ALLOW_NO_CHOICES,
+		//		Config.ALLOW_NO_CHOICES_DEFAULT) &&
+		//		listView.getCheckItemIds().length == 0)
+		if (!Config.getSetting(this, Config.ALLOW_NO_CHOICES,
+				Config.ALLOW_NO_CHOICES_DEFAULT) && getSelected().size() == 0)
 			return false;
 		return true;
 	}

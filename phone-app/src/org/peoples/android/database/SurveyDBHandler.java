@@ -283,7 +283,8 @@ public class SurveyDBHandler extends PeoplesDBHandler
 		StringBuilder ids;
 		if (c_ids == null || c_ids.length == 0)
 		{
-			if (!Config.ALLOW_NO_CHOICES)
+			if (!Config.getSetting(contx, Config.ALLOW_NO_CHOICES,
+					Config.ALLOW_NO_CHOICES_DEFAULT))
 				throw new RuntimeException("No choices given in answer");
 			else
 			{

@@ -28,8 +28,7 @@ public class Push extends WebClient
 	//logging tag
 	private static final String TAG = "Push";
 
-	private static final String PUSH_URL =
-		Config.getComProtocol() + "://" + Config.SERVER + "/answers/push/";
+	private static final String PUSH_URL = "/answers/push/";
 
     /**
      * Push all un-uploaded survey answers in the phone database to the server.
@@ -40,12 +39,12 @@ public class Push extends WebClient
      *
      * @return true if all the answers has been successfully pushed
      */
-    public static boolean pushAnswers(Context ctx)
+    public static boolean pushAnswers(Context ctxt)
     {
         Log.i(TAG, "Pushing answers to server");
         try
         {
-        	ComsDBHandler cdbh = new ComsDBHandler(ctx);
+        	ComsDBHandler cdbh = new ComsDBHandler(ctxt);
             cdbh.openRead();
             Cursor answers = cdbh.getNewAnswers();
 
@@ -115,15 +114,21 @@ public class Push extends WebClient
             JSONObject data = new JSONObject();
 
             TelephonyManager tManager =
-            	(TelephonyManager) ctx.getSystemService(
+            	(TelephonyManager) ctxt.getSystemService(
             			Context.TELEPHONY_SERVICE);
         	String uid = tManager.getDeviceId();
 
             //data.put("deviceId", uid); //moved to url
             data.put("answers", answersJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success =
-            	postJsonToUrl(ctx, PUSH_URL + uid, data.toString());
+            String url = "";
+    		if (Config.getSetting(ctxt, Config.HTTPS, Config.HTTPS_DEFAULT))
+    			url = url + "https://";
+    		else
+    			url = url + "http://";
+            boolean success = postJsonToUrl(ctxt,url +
+            	Config.getSetting(ctxt, Config.SERVER, Config.SERVER_DEFAULT)
+            	+ PUSH_URL + uid, data.toString());
 
             // mark answers as uploaded if appropriate
             if (success)

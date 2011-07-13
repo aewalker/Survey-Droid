@@ -51,7 +51,8 @@ public class FreeResponseActivity extends QuestionActivity
 	@Override
 	protected boolean isAnswered()
 	{ //ignore the dead code warning here for now
-		if (!Config.ALLOW_BLANK_FREE_RESPONSE &&
+		if (!Config.getSetting(this, Config.ALLOW_BLANK_FREE_RESPONSE,
+				Config.ALLOW_BLANK_FREE_RESPONSE_DEFAULT) &&
 			input.getText().toString().equals(""))
 			return false;
 		return true;
