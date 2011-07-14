@@ -51,6 +51,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     private static final int DATABASE_VERSION = 4;
 
     //table names
+    public static final String TAKEN_TABLE_NAME = "survyesTaken";
     public static final String STATUS_TABLE_NAME = "statusChanges";
     public static final String LOCATION_TABLE_NAME = "locations";
     public static final String CALLLOG_TABLE_NAME = "calls";
@@ -87,6 +88,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	tables.add(SurveyTable.class);
     	tables.add(ExtrasTable.class);
     	tables.add(StatusTable.class);
+    	tables.add(TakenTable.class);
     	return tables;
     }
     
@@ -113,6 +115,43 @@ public class PeoplesDB extends SQLiteOpenHelper
 		private static String createSql() {
 			return null;
 		}
+    }
+    
+    /**
+     * Table holding information about each instance where a survey was taken
+     * by or displayed to a user.
+     * 
+     * @author Austin Walker
+     */
+    public static final class TakenTable extends PEOPLESTable {
+    	public static final String CREATED = "created";
+    	public static final String SURVEY_ID = "survey_id";
+    	public static final String STATUS = "status";
+    	public static final String UPLOADED = "uploaded";
+    	
+    	//status types
+    	public static final int SURVEYS_DISABLED_LOCALLY = 0;
+    	public static final int SURVEYS_DISABLED_SERVER = 1;
+    	public static final int USER_INITIATED_FINISHED = 2;
+    	public static final int USER_INITIATED_UNFINISHED = 3;
+    	public static final int SCHEDULED_FINISHED = 4;
+    	public static final int SCHEDULED_UNFINISHED = 5;
+    	public static final int SCHEDULED_DISMISSED = 6;
+    	public static final int SCHEDULED_IGNORED = 7;
+    	public static final int RANDOM_FINISHED = 8;
+    	public static final int RANDOM_UNFINISHED = 9;
+    	public static final int RANDOM_DISMISSED = 10;
+    	public static final int RANDOM_IGNORED = 11;
+    	
+    	@SuppressWarnings("unused")
+		private static String createSql() {
+    		return "CREATE TABLE " + TAKEN_TABLE_NAME + " ("
+    		+ TakenTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+    		+ TakenTable.SURVEY_ID + " INTEGER,"
+    		+ TakenTable.STATUS + " INTEGER,"
+    		+ TakenTable.UPLOADED + " INTEGER DEFAULT 0,"
+    		+ TakenTable.CREATED + " INTEGER);";
+    	}
     }
     
     /**

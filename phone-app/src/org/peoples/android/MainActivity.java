@@ -18,8 +18,11 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.peoples.android.database.TakenDBHandler;
 import org.peoples.android.survey.SurveyService;
 
 /**
@@ -63,14 +66,18 @@ public class MainActivity extends Activity
         }
         
         //add the survey progress bar
-        //XXX this isn't working!
-//        VerticalProgressBar vpb = new VerticalProgressBar(this);
-//        vpb.setMax(100);
-//        //FIXME change to use some database lookup
-//        vpb.setProgress(75);
-//        LinearLayout PBLayout =
-//        	(LinearLayout) findViewById(R.id.main_progressBarLayout);
-//        PBLayout.addView(vpb);
+        //TODO change to using some type of vertical progress bar
+        TakenDBHandler tdbh = new TakenDBHandler(this);
+        tdbh.openRead();
+        int p = tdbh.getCompletionRate();
+        tdbh.close();
+        TextView progress = new TextView(this);
+//        VerticalProgressBar progress = new VerticalProgressBar(this);
+//        progress.setMax(100);
+        progress.setText(p);
+        LinearLayout PBLayout =
+        	(LinearLayout) findViewById(R.id.main_progressBarLayout);
+        PBLayout.addView(progress);
         
         //go to settings button
         Button settings = (Button) findViewById(R.id.main_settingsButton);

@@ -101,6 +101,7 @@ public class ComsService extends IntentService
 			{
 			case SURVEY_DATA:
 				Push.pushAnswers(this);
+				Push.pushCompletionData(this);
 				break;
 			case LOCATION_DATA:
 				Push.pushLocations(this);
@@ -112,6 +113,7 @@ public class ComsService extends IntentService
 				Push.pushStatusData(this);
 			default:
 				Push.pushAnswers(this);
+				Push.pushCompletionData(this);
 				Push.pushLocations(this);
 				Push.pushCallLog(this);
 				Push.pushStatusData(this);

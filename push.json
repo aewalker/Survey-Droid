@@ -49,7 +49,6 @@
     ],
     "statusChanges": [
         {
-            //"id": 0,
             "status": 0, // 1 for enabling, or turning on, 0 for turning off or disabling a feature
             "type": 0, // enum {gps, calllog, textlog, app} - what is being enabled / disabled
             "created": 0 // unix timestamp again, in fact all "created" are unix.
@@ -58,6 +57,15 @@
         }, {
             ...
         }
+    ],
+    "surveysTaken" : [
+	{
+	    "survey_id": 1,
+	    "status" : 4,
+	    "created" : 0 //unix timestamp
+	}, {
+	    ...
+	}
     ]
 }
 

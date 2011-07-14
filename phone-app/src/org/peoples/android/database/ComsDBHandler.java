@@ -63,6 +63,28 @@ public class ComsDBHandler extends PeoplesDBHandler
 	}
 	
 	/**
+	 * Get all survey completion data that haven't yet been uploaded.
+	 * 
+	 * @return a cursor with the data
+	 */
+	public Cursor getNewCompletionData()
+	{
+		if (Config.D) Log.d(TAG, "Fetching new survey completion data");
+		
+		//set up the query
+		String    table    = PeoplesDB.TAKEN_TABLE_NAME;
+		String[]  cols     = null;
+		String    selc     = PeoplesDB.TakenTable.UPLOADED + " =  ?";
+		String[]  selcArgs = {"0"};
+		String    group    = null;
+		String    having   = null;
+		String    orderBy  = PeoplesDB.TakenTable.CREATED;
+		
+		//run it
+		return db.query(table, cols, selc, selcArgs, group, having, orderBy);
+	}
+	
+	/**
 	 * Get all the locations.  The results are ordered by time so that older
 	 * older data is sent first.
 	 * 
@@ -152,6 +174,41 @@ public class ComsDBHandler extends PeoplesDBHandler
 		String[] whereArgs = {"" + id};
 		
 		db.update(PeoplesDB.ANSWER_TABLE_NAME, values, whereClause, whereArgs);
+	}
+	
+	/**
+	 * Marks the survey completion record with id as having been uploaded.
+	 * 
+	 * @param id - id of the answer to mark
+	 */
+	public void updateCompletionRecord(int id)
+	{
+		if (Config.D) Log.d(TAG, "Marking record " + id + " as uploaded");
+		
+		ContentValues values = new ContentValues();
+		
+		//set up the query
+		values.put(PeoplesDB.TakenTable.UPLOADED, 1);
+		String whereClause = PeoplesDB.TakenTable._ID + " = ?";
+		String[] whereArgs = {"" + id};
+		
+		db.update(PeoplesDB.ANSWER_TABLE_NAME, values, whereClause, whereArgs);
+	}
+	
+	/**
+	 * Delete a survey completion record from the database.
+	 * 
+	 * @param id - the id of the record to delete
+	 */
+	public void delCompletionRecord(int id)
+	{
+		if (Config.D) Log.d(TAG, "Deleting record " + id);
+		
+		//set up the query
+		String whereClause = PeoplesDB.TakenTable._ID + " = ?";
+		String[] whereArgs = {"" + id};
+		
+		db.delete(PeoplesDB.TAKEN_TABLE_NAME, whereClause, whereArgs);
 	}
 	
 	/**

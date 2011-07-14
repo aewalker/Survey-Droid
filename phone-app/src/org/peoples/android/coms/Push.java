@@ -139,6 +139,99 @@ public class Push extends WebClient
         }
         return false;
     }
+    
+    /**
+     * Push all data about survey completion in the phone's database to the
+     * server.  Once this is done, some of the data may be deleted.  The amount
+     * deleted is determined by {@link Config.COMPLETION_SAMPLE}; enough will
+     * be kept to fulfill that sample size.
+     * 
+     * @param ctx - the current context
+     * @return true on success
+     */
+    public static boolean pushCompletionData(Context ctx)
+    {
+    	Log.i(TAG, "Pushing survey completion data to server");
+        try
+        {
+            ComsDBHandler cdbh = new ComsDBHandler(ctx);
+            cdbh.openRead();
+            Cursor compData = cdbh.getNewCompletionData();
+
+            JSONArray recordsJSON = new JSONArray();
+
+            if (Config.D) Log.d("Push", "# of results to push : "
+            		+ compData.getCount());
+
+            if (compData.getCount() == 0)
+            {
+            	compData.close();
+                cdbh.close();
+            	return true;
+            }
+
+            compData.moveToFirst();
+            int numRecords = 0;
+            while (!compData.isAfterLast())
+            {
+                JSONObject item = new JSONObject();
+                item.put(PeoplesDB.TakenTable.SURVEY_ID, compData.getDouble(
+                		compData.getColumnIndexOrThrow(
+                				PeoplesDB.TakenTable.SURVEY_ID)));
+                item.put(PeoplesDB.TakenTable.STATUS, compData.getDouble(
+                		compData.getColumnIndexOrThrow(
+                				PeoplesDB.TakenTable.STATUS)));
+                item.put(PeoplesDB.TakenTable.CREATED, compData.getDouble(
+                		compData.getColumnIndexOrThrow(
+                				PeoplesDB.TakenTable.CREATED)));
+                recordsJSON.put(item);
+                compData.moveToNext();
+                numRecords++;
+            }
+            compData.close();
+            cdbh.close();
+
+            // now send to actual server
+            JSONObject data = new JSONObject();
+
+            TelephonyManager tManager =
+            	(TelephonyManager) ctx.getSystemService(
+            			Context.TELEPHONY_SERVICE);
+        	String uid = tManager.getDeviceId();
+
+            data.put("surveysTaken", recordsJSON);
+            if (Config.D) Log.d(TAG, data.toString());
+            boolean success = postJsonToUrl(ctx, getPushURL(ctx)
+            		+ uid, data.toString());
+
+            // delete records if appropriate
+            if (success)
+            {
+            	//get the number of records to keep
+            	int size = Config.getSetting(ctx, Config.COMPLETION_SAMPLE,
+            			Config.COMPLETION_SAMPLE_DEFAULT);
+            	
+            	cdbh.openWrite();
+                for (int i = recordsJSON.length() - 1; i >= 0; i--)
+                { //remember: these are in reverse order by creation date
+                    JSONObject item = recordsJSON.getJSONObject(i);
+                    if (i >= size)
+                    	cdbh.updateCompletionRecord(
+                    			item.getInt(PeoplesDB.TakenTable._ID));
+                    else
+                    	cdbh.delCompletionRecord(
+                    			item.getInt(PeoplesDB.TakenTable._ID));
+                }
+                cdbh.close();
+            }
+            return success;
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage());
+        }
+        return false;
+    }
 
     /**
      * Push all GPS Locations in the phone database to the server. Once

@@ -11,7 +11,7 @@
 {
     "surveys": [
         {
-            "id": 0,
+            "id": 1,
             "name": "",
             "created": 0, //unix timestamp
             "question_id": 0,
@@ -129,6 +129,7 @@
     		"allow_blank_free_response" : 1,
     		"allow_no_choices" : 0,
     		"show_survey_name" : 1,
-    		"voice_format" : mpeg4 //or 3gp
+    		"voice_format" : "mpeg4", //or 3gp
+		"completion_sample": 10
     ]
 }

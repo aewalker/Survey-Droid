@@ -173,6 +173,14 @@ public class Config
 	 */
 	public static final String TRACKED_END = "tt_end";
 	
+	/**
+	 * The number of recent surveys to look at to determine the current survey
+	 * completion rate.
+	 */
+	public static final String COMPLETION_SAMPLE = "completion_sample";
+	public static final int COMPLETION_SAMPLE_DEFAULT = 10;
+	
+	//settings by type
 	/** List of settings which are strings */
 	public static final String[] STRINGS =
 		{SERVER, SALT, ADMIN_PHONE_NUMBER, ADMIN_NAME, TRACKED_START,
@@ -187,7 +195,8 @@ public class Config
 	/** List of settings which are ints */
 	public static final String[] INTS =
 		{SCHEDULER_INTERVAL, PUSH_INTERVAL, PULL_INTERVAL, LOCATION_INTERVAL,
-		SURVEY_DELAY, VOICE_FORMAT, NUM_LOCATIONS_TRACKED, NUM_TIMES_TRACKED};
+		SURVEY_DELAY, VOICE_FORMAT, NUM_LOCATIONS_TRACKED, NUM_TIMES_TRACKED,
+		COMPLETION_SAMPLE};
 	
 	/** List of settings which are floats */
 	public static final String[] FLOATS =
@@ -224,7 +233,7 @@ public class Config
 	/**
 	 * Get the setting associated with a certain key.
 	 * 
-	 * @paarm ctxt - the current context
+	 * @param ctxt - the current context
 	 * @param key - the setting to get
 	 * @param ifNotFound - the value to return if the settings isn't found
 	 * @return true or false if the setting was found, or the value of
