@@ -101,14 +101,16 @@ public class MainActivity extends Activity
         
         //call survey admin button
         Button call = (Button) findViewById(R.id.main_callButton);
-        call.setText(call.getText() + Config.ADMIN_NAME);
+        call.setText(call.getText() + Config.getSetting(this,
+        		Config.ADMIN_NAME, Config.ADMIN_NAME_DEFAULT));
         call.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View view)
             {
             	Intent callIntent = new Intent(Intent.ACTION_CALL);
             	callIntent.setData(Uri.parse("tel:"
-            			+ Config.ADMIN_PHONE_NUMBER));
+            			+ Config.getSetting(getThis(), Config.ADMIN_PHONE_NUMBER,
+            					Config.ADMIN_PHONE_NUMBER_DEFAULT)));
             	try
             	{
             		startActivity(callIntent);

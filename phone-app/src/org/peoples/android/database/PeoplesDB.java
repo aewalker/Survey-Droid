@@ -48,7 +48,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     //Change the version number here to force the database to
     //update itself.  This throws out all data.
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     //table names
     public static final String STATUS_TABLE_NAME = "statusChanges";
@@ -86,12 +86,9 @@ public class PeoplesDB extends SQLiteOpenHelper
     	tables.add(QuestionTable.class);
     	tables.add(SurveyTable.class);
     	tables.add(ExtrasTable.class);
+    	tables.add(StatusTable.class);
     	return tables;
     }
-    	
-
-    //needed for creating the call log
-    //private Context context;
     
     /**
      * Class from which all the other tables in this class should inherit
@@ -499,8 +496,6 @@ public class PeoplesDB extends SQLiteOpenHelper
 						(Class<?>) null).invoke(null, (Object) null));
         	}
 
-            //buildInitialCallLog(db);
-
             db.setTransactionSuccessful();
         } catch (Exception e) {
         	Log.e(TAG, e.getMessage());
@@ -521,53 +516,13 @@ public class PeoplesDB extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    //check the phone's call records and copy them into the PEOPLES database
-    //TODO evaluate the usefulness of this
-//    private void buildInitialCallLog(SQLiteDatabase db) {
-//        Cursor c = context.getContentResolver().query(android.provider.CallLog.Calls.CONTENT_URI,
-//                                                      null, null, null,
-//                                                      android.provider.CallLog.Calls.DATE);
-//
-//        // Retrieve the column-indices of phoneNumber, date and calltype
-//        int numberColumn = c.getColumnIndex(android.provider.CallLog.Calls.NUMBER);
-//        int dateColumn = c.getColumnIndex(android.provider.CallLog.Calls.DATE);
-//
-//        // type can be: Incoming, Outgoing or Missed
-//        int typeColumn = c.getColumnIndex(android.provider.CallLog.Calls.TYPE);
-//
-//        // Loop through all entries the cursor provides to us.
-//        if (c.moveToFirst()) {
-//            do {
-//                String callerPhoneNumber = c.getString(numberColumn);
-//                String callDate = c.getString(dateColumn);
-//                int callType = c.getInt(typeColumn);
-//                String stringCallType;
-//
-//                ContentValues call = new ContentValues();
-//
-//                stringCallType = CallLogTable.getCallTypeString(callType);
-//
-//                call.put(CallLogTable.PHONE_NUMBER, callerPhoneNumber);
-//                call.put(CallLogTable.CALL_TYPE, stringCallType);
-//                call.put(CallLogTable.TIME, callDate);
-//
-//                db.insert(CALLLOG_TABLE_NAME, null, call);
-//
-//            } while (c.moveToNext());
-//        }
-//
-//        c.close();
-//    }
-
-
     /**
      * Create the database object.
      *
      * @param context - Android Context; needed to create the call log
      */
-    public PeoplesDB(Context context){
+    public PeoplesDB(Context context) {
     	super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        //this.context = context;
         Log.d(TAG, "in constructor");
     }
 

@@ -21,6 +21,7 @@ import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import org.peoples.android.R;
+import org.peoples.android.coms.ComsService;
 import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.StatusDBHandler;
 
@@ -163,6 +164,7 @@ public class SettingsActivity extends Activity
     @Override
     protected void onStop()
     {
+    	super.onStop();
     	//check to see if any of the settings have been changed
     	//if they have, update the database
     	if (surveyChanged || locationChanged || calllogChanged)
@@ -198,6 +200,12 @@ public class SettingsActivity extends Activity
         	}
         	
         	sdbh.close();
+        	
+        	Intent comsIntent = new Intent(this, ComsService.class);
+        	comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+        	comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
+        			ComsService.STATUS_DATA);
+        	startService(comsIntent);
     	}
     }
 }
