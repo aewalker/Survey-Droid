@@ -119,7 +119,7 @@ CREATE TABLE status_changes (
 	created DATETIME NOT NULL,
 	/* 1 for enabled, 0 for disabled */
 	status TINYINT NOT NULL,
-	/* gps 0, call log, 1, text log 2, whole app 3 */
+	/* gps 0, call log, 1, text log 2, surveys 3 */
 	feature TINYINT NOT NULL);
 
 /* This is actually a pretty common way to set up config (used by, eg., freeradius). */

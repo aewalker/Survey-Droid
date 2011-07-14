@@ -64,10 +64,6 @@ public class Push extends WebClient
             while (!answers.isAfterLast())
             {
                 JSONObject ans = new JSONObject();
-                //don't actually need the id since the server assigns a new one
-//                ans.put(PeoplesDB.AnswerTable._ID, answers.getInt(
-//                		answers.getColumnIndexOrThrow(
-//                				PeoplesDB.AnswerTable._ID)));
                 ans.put(PeoplesDB.AnswerTable.ANS_TYPE, answers.getInt(
                 		answers.getColumnIndexOrThrow(
                 				PeoplesDB.AnswerTable.ANS_TYPE)));
@@ -121,14 +117,8 @@ public class Push extends WebClient
             //data.put("deviceId", uid); //moved to url
             data.put("answers", answersJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            String url = "";
-    		if (Config.getSetting(ctxt, Config.HTTPS, Config.HTTPS_DEFAULT))
-    			url = url + "https://";
-    		else
-    			url = url + "http://";
-            boolean success = postJsonToUrl(ctxt,url +
-            	Config.getSetting(ctxt, Config.SERVER, Config.SERVER_DEFAULT)
-            	+ PUSH_URL + uid, data.toString());
+            boolean success = postJsonToUrl(ctxt, getPushURL(ctxt)
+            		+ uid, data.toString());
 
             // mark answers as uploaded if appropriate
             if (success)
@@ -183,9 +173,6 @@ public class Push extends WebClient
             while (!locations.isAfterLast())
             {
                 JSONObject loc = new JSONObject();
-                loc.put(PeoplesDB.LocationTable._ID, locations.getInt(
-                		locations.getColumnIndexOrThrow(
-                				PeoplesDB.LocationTable._ID)));
                 loc.put(PeoplesDB.LocationTable.LONGITUDE, locations.getDouble(
                 		locations.getColumnIndexOrThrow(
                 				PeoplesDB.LocationTable.LONGITUDE)));
@@ -211,11 +198,11 @@ public class Push extends WebClient
             	(TelephonyManager) ctx.getSystemService(
             			Context.TELEPHONY_SERVICE);
         	String uid = tManager.getDeviceId();
-            data.put("deviceId", uid);
 
             data.put("locations", locationsJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(ctx, PUSH_URL, data.toString());
+            boolean success = postJsonToUrl(ctx, getPushURL(ctx)
+            		+ uid, data.toString());
 
             // delete locations if appropriate
             if (success)
@@ -240,7 +227,7 @@ public class Push extends WebClient
     /**
      * Push all un-uploaded call logs in the phone database to the server
      * Phone number is hashed before sending to the server to preserve privacy
-     * Once successful, each call log will be marked as uploaded in the database
+     * Once successful, each call log will be deleted from the database.
      *
      * @param ctxt - the current Context
      *
@@ -270,9 +257,6 @@ public class Push extends WebClient
             while (!calls.isAfterLast())
             {
                 JSONObject log = new JSONObject();
-                log.put(PeoplesDB.CallLogTable._ID, calls.getInt(
-                		calls.getColumnIndexOrThrow(
-                				PeoplesDB.CallLogTable._ID)));
                 log.put(PeoplesDB.CallLogTable.CALL_TYPE, calls.getString(
                 		calls.getColumnIndexOrThrow(
                 				PeoplesDB.CallLogTable.CALL_TYPE)));
@@ -284,7 +268,7 @@ public class Push extends WebClient
                 				PeoplesDB.CallLogTable.TIME)));
                 log.put("contact_id", hash(calls.getString(
                 		calls.getColumnIndexOrThrow(
-                				PeoplesDB.CallLogTable.PHONE_NUMBER))));
+                				PeoplesDB.CallLogTable.PHONE_NUMBER)), ctx));
                 callsJSON.put(log);
                 calls.moveToNext();
             }
@@ -298,11 +282,11 @@ public class Push extends WebClient
             	(TelephonyManager) ctx.getSystemService(
             			Context.TELEPHONY_SERVICE);
         	String uid = tManager.getDeviceId();
-            data.put("deviceId", uid);
 
             data.put("calls", callsJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(ctx, PUSH_URL, data.toString());
+            boolean success = postJsonToUrl(ctx, getPushURL(ctx)
+            		+ uid, data.toString());
 
             // delete calls if appropriate
             if (success)
@@ -323,12 +307,107 @@ public class Push extends WebClient
         }
         return false;
     }
+    
+    /**
+     * Push all un-uploaded application status change record to the server.
+     * Once successful, the pushed records are deleted from the database.
+     *
+     * @param ctxt - the current Context
+     *
+     * @return true if push was successful
+     */
+    public static boolean pushStatusData(Context ctx)
+    {
+    	Log.i(TAG, "Pushing status data to server");
+        try
+        {
+            ComsDBHandler cdbh = new ComsDBHandler(ctx);
+            cdbh.openRead();
+            Cursor records = cdbh.getStatusChanges();
+            JSONArray recordsJSON = new JSONArray();
+
+            if (Config.D)
+            	Log.d(TAG, "# of status records to push : "
+            			+ records.getCount());
+
+            if (records.getCount() == 0)
+            {
+            	records.close();
+                cdbh.close();
+            	return true;
+            }
+
+            records.moveToFirst();
+            while (!records.isAfterLast())
+            {
+                JSONObject record = new JSONObject();
+                record.put(PeoplesDB.StatusTable.TYPE, records.getString(
+                		records.getColumnIndexOrThrow(
+                				PeoplesDB.StatusTable.TYPE)));
+                record.put(PeoplesDB.StatusTable.STATUS, records.getInt(
+                		records.getColumnIndexOrThrow(
+                				PeoplesDB.StatusTable.STATUS)));
+                record.put(PeoplesDB.StatusTable.CREATED, records.getLong(
+                		records.getColumnIndexOrThrow(
+                				PeoplesDB.StatusTable.CREATED)));
+                recordsJSON.put(record);
+                records.moveToNext();
+            }
+            records.close();
+            cdbh.close();
+
+            // now send to actual server
+            JSONObject data = new JSONObject();
+
+            TelephonyManager tManager =
+            	(TelephonyManager) ctx.getSystemService(
+            			Context.TELEPHONY_SERVICE);
+        	String uid = tManager.getDeviceId();
+
+            data.put("statusChanges", recordsJSON);
+            if (Config.D) Log.v(TAG, data.toString());
+            boolean success = postJsonToUrl(ctx, getPushURL(ctx)
+            		+ uid, data.toString());
+
+            // delete records if appropriate
+            if (success)
+            {
+            	cdbh.openWrite();
+                for (int i = 0; i < recordsJSON.length(); i++)
+                {
+                    JSONObject log = recordsJSON.getJSONObject(i);
+                    cdbh.delStatusChange(
+                    		log.getInt(PeoplesDB.StatusTable._ID));
+                }
+                cdbh.close();
+            }
+            return success;
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage());
+        }
+        return false;
+    }
+    
+    //get's the full push url
+    private static String getPushURL(Context c)
+    {
+    	StringBuilder url = new StringBuilder();
+    	if (Config.getSetting(c, Config.HTTPS, Config.HTTPS_DEFAULT))
+    		url.append("https://");
+    	else
+    		url.append("http://");
+    	url.append(Config.getSetting(c, Config.SERVER, Config.SERVER_DEFAULT));
+    	url.append(PUSH_URL);
+    	return url.toString();
+    }
 
     //salt and hash (for phone numbers)
-    private static Integer hash(String s)
+    private static Integer hash(String s, Context ctxt)
     {
     	if (s == null) return null;
-    	String salted = s + Config.SALT;
+    	String salted = s + Config.getSetting(ctxt, Config.SALT, 0);
     	return salted.hashCode();
     }
 }

@@ -196,7 +196,7 @@ public class Config
 	/**
 	 * Get the setting associated with a certain key.
 	 * 
-	 * @parm ctxt - the current context
+	 * @param ctxt - the current context
 	 * @param key - the setting to get
 	 * @param ifNotFound - the string to return if the setting isn't found
 	 * @return a string holding that setting, or ifNotFound if that setting
@@ -224,7 +224,7 @@ public class Config
 	/**
 	 * Get the setting associated with a certain key.
 	 * 
-	 * @parm ctxt - the current context
+	 * @paarm ctxt - the current context
 	 * @param key - the setting to get
 	 * @param ifNotFound - the value to return if the settings isn't found
 	 * @return true or false if the setting was found, or the value of
@@ -240,7 +240,7 @@ public class Config
 	/**
 	 * Get the setting associated with a certain key.
 	 * 
-	 * @parm ctxt - the current context
+	 * @param ctxt - the current context
 	 * @param key - the setting to get
 	 * @param ifNotFound - the value to return if the settings isn't found
 	 * @return a float holding the setting, or the value of
@@ -256,7 +256,7 @@ public class Config
 	/**
 	 * Get the setting associated with a certain key.
 	 * 
-	 * @parm ctxt - the current context
+	 * @param ctxt - the current context
 	 * @param key - the setting to get
 	 * @param ifNotFound - the value to return if the setting isn't found
 	 * @return an int holding the setting, or ifNotFound if the setting wasn't
@@ -272,7 +272,7 @@ public class Config
 	/**
 	 * Set the setting of key to val.
 	 * 
-	 * @parm ctxt - the current context
+	 * @param ctxt - the current context
 	 * @param key - the setting to set
 	 * @param val - the String to set it to
 	 * @return true on success
@@ -289,7 +289,7 @@ public class Config
 	/**
 	 * Set the setting of key to val.
 	 * 
-	 * @parm ctxt - the current context
+	 * @param ctxt - the current context
 	 * @param key - the setting to set
 	 * @param val - the boolean to set it to
 	 * @return true on success
@@ -306,7 +306,7 @@ public class Config
 	/**
 	 * Set the setting of key to val.
 	 * 
-	 * @parm ctxt - the current context
+	 * @param ctxt - the current context
 	 * @param key - the setting to set
 	 * @param val - the String to set it to
 	 * @return true on success
@@ -323,7 +323,7 @@ public class Config
 	/**
 	 * Set the setting of key to val.
 	 * 
-	 * @parm ctxt - the current context
+	 * @param ctxt - the current context
 	 * @param key - the setting to set
 	 * @param val - the float to set it to
 	 * @return true on success

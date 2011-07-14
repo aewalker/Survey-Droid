@@ -21,6 +21,8 @@ import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import org.peoples.android.R;
+import org.peoples.android.database.PeoplesDB;
+import org.peoples.android.database.StatusDBHandler;
 
 /**
  * The Activity that triggers toggling the different settings on and off.
@@ -32,6 +34,12 @@ public class SettingsActivity extends Activity
 {
 	//logging tag
     private static final String TAG = "SettingsActivity";
+    
+    //track wether or not each of the settings has been changed
+    //then, when the activity is stopped, notifiy the database
+    private boolean surveyChanged = false;
+    private boolean locationChanged = false;
+    private boolean calllogChanged = false;
     
     //little hack here to get this object (see the id button listener)
     private Activity getThis()
@@ -74,6 +82,7 @@ public class SettingsActivity extends Activity
 			public void onCheckedChanged(CompoundButton button, boolean check)
 			{
 				Config.putSetting(getThis(), Config.TRACKING_LOCAL, check);
+				locationChanged = !locationChanged;
 			}
         });
         
@@ -88,6 +97,7 @@ public class SettingsActivity extends Activity
 			public void onCheckedChanged(CompoundButton button, boolean check)
 			{
 				Config.putSetting(getThis(), Config.CALL_LOG_LOCAL, check);
+				calllogChanged = !calllogChanged;
 			}
         });
         
@@ -101,6 +111,7 @@ public class SettingsActivity extends Activity
 			public void onCheckedChanged(CompoundButton button, boolean check)
 			{
 				Config.putSetting(getThis(), Config.SURVEYS_LOCAL, check);
+				surveyChanged = !surveyChanged;
 			}
         });
         
@@ -147,5 +158,46 @@ public class SettingsActivity extends Activity
             	finish();
             }
         });
+    }
+    
+    @Override
+    protected void onStop()
+    {
+    	//check to see if any of the settings have been changed
+    	//if they have, update the database
+    	if (surveyChanged || locationChanged || calllogChanged)
+    	{
+    		StatusDBHandler sdbh = new StatusDBHandler(this);
+            sdbh.openWrite();
+            
+            if (surveyChanged)
+        	{
+            	boolean enabled =
+            		Config.getSetting(this, Config.SURVEYS_LOCAL, false);
+        		sdbh.statusChanged(PeoplesDB.StatusTable.SURVEYS,
+        				enabled, System.currentTimeMillis());
+        		surveyChanged = false;
+        	}
+        	
+        	if (locationChanged)
+        	{
+        		boolean enabled =
+            		Config.getSetting(this, Config.TRACKING_LOCAL, false);
+        		sdbh.statusChanged(PeoplesDB.StatusTable.LOCATION_TRACKING,
+        				enabled, System.currentTimeMillis());
+        		locationChanged = false;
+        	}
+        	
+        	if (calllogChanged)
+        	{
+        		boolean enabled =
+            		Config.getSetting(this, Config.CALL_LOG_LOCAL, false);
+        		sdbh.statusChanged(PeoplesDB.StatusTable.CALL_LOGGING,
+        				enabled, System.currentTimeMillis());
+        		calllogChanged = false;
+        	}
+        	
+        	sdbh.close();
+    	}
     }
 }

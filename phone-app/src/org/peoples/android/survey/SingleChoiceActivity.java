@@ -76,7 +76,6 @@ public class SingleChoiceActivity extends QuestionActivity
 			list[i][ImageOrTextAdapter.IMG_POS] = choices[i].getImg();
 			list[i][ImageOrTextAdapter.STRING_POS] = choices[i].getText();
 		}
-		//FIXME still doesn't look like items are selected
 		listView = (ListView) findViewById(android.R.id.list);
 		ImageOrTextAdapter iotr = new ImageOrTextAdapter(this,
 				ListView.CHOICE_MODE_SINGLE, list, this);

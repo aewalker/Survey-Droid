@@ -9,10 +9,9 @@
  *---------------------------------------------------------------------------*/
 
 {
-    "deviceId" : "", // phone's serial number or something that would allow the subject to be uniquely identified.
     "answers": [
         {
-        	"ans_type": 1, //can be one of 0 (choice(s)), 1 (value (an int)), or 2 (text)
+            "ans_type": 1, //can be one of 0 (choice(s)), 1 (value (an int)), or 2 (text)
             "question_id": 0,
             "created": 0,
             //one of the following:

@@ -34,7 +34,8 @@ import org.peoples.android.Config;
  * @see ConditionTable
  * @see QuestionTable
  * @see SurveyTable
- * @see ScheduledSurveys
+ * @see ExtrasTable
+ * @see StatusTable
  *
  * @author Diego Vargas
  * @author Vladimir Costescu
@@ -47,9 +48,10 @@ public class PeoplesDB extends SQLiteOpenHelper
     //Change the version number here to force the database to
     //update itself.  This throws out all data.
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     //table names
+    public static final String STATUS_TABLE_NAME = "statusChanges";
     public static final String LOCATION_TABLE_NAME = "locations";
     public static final String CALLLOG_TABLE_NAME = "calls";
     public static final String ANSWER_TABLE_NAME = "answers";
@@ -64,7 +66,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     public static final String[] TABLE_NAMES = {LOCATION_TABLE_NAME,
     	CALLLOG_TABLE_NAME, ANSWER_TABLE_NAME, BRANCH_TABLE_NAME,
     	CHOICE_TABLE_NAME, CONDITION_TABLE_NAME, QUESTION_TABLE_NAME,
-    	SURVEY_TABLE_NAME, EXTRAS_TABLE_NAME};
+    	SURVEY_TABLE_NAME, EXTRAS_TABLE_NAME, STATUS_TABLE_NAME};
     
     /**
      * Returns a Collection of the classes of all the tables here.
@@ -114,6 +116,38 @@ public class PeoplesDB extends SQLiteOpenHelper
 		private static String createSql() {
 			return null;
 		}
+    }
+    
+    /**
+     * Table to hold application status changes that need to be sent up the
+     * server.  Tracks on/off status of surveys, location tracking, and call
+     * logging.
+     * 
+     * @author Austin Walker
+     */
+    public static final class StatusTable extends PEOPLESTable {
+    	public static final String CREATED = "created";
+    	public static final String STATUS = "status";
+    	public static final String TYPE = "type";
+    	
+    	//status types:
+    	public static final int STATUS_ON = 1;
+    	public static final int STATUS_OFF = 0;
+    	
+    	//feature types (for TYPE):
+    	public static final int LOCATION_TRACKING = 0;
+    	public static final int CALL_LOGGING = 1;
+    	public static final int TEXT_LOGGING = 2;
+    	public static final int SURVEYS = 3;
+    	
+    	@SuppressWarnings("unused")
+		private static String createSql() {
+    		return "CREATE TABLE " + STATUS_TABLE_NAME + " ("
+    		+ StatusTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+    		+ StatusTable.TYPE + " INTEGER,"
+    		+ StatusTable.STATUS + " INTEGER,"
+    		+ StatusTable.CREATED + " INTEGER);";
+    	}
     }
 
     /**

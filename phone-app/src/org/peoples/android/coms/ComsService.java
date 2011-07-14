@@ -78,6 +78,9 @@ public class ComsService extends IntentService
 	/** Call data; used for {@link EXTRA_DATA_TYPE}. */
 	public static final int CALL_DATA = 2;
 	
+	/** Application status data; used for {@link EXTRA_DATA_TYPE} */
+	public static final int STATUS_DATA = 3;
+	
 	/**
 	 * Constructor.
 	 */
@@ -97,18 +100,21 @@ public class ComsService extends IntentService
 			switch (intent.getIntExtra(EXTRA_DATA_TYPE, -1))
 			{
 			case SURVEY_DATA:
-				Push.pushAnswers(getApplicationContext());
+				Push.pushAnswers(this);
 				break;
 			case LOCATION_DATA:
-				Push.pushLocations(getApplicationContext());
+				Push.pushLocations(this);
 				break;
 			case CALL_DATA:
-				Push.pushCallLog(getApplicationContext());
+				Push.pushCallLog(this);
 				break;
+			case STATUS_DATA:
+				Push.pushStatusData(this);
 			default:
-				Push.pushAnswers(getApplicationContext());
-				Push.pushLocations(getApplicationContext());
-				Push.pushCallLog(getApplicationContext());
+				Push.pushAnswers(this);
+				Push.pushLocations(this);
+				Push.pushCallLog(this);
+				Push.pushStatusData(this);
 			}
 			
 			reschedule(intent);
@@ -116,14 +122,15 @@ public class ComsService extends IntentService
 		else if (action.equals(ACTION_DOWNLOAD_DATA))
 		{
 			if (Config.D) Log.d(TAG, "Dowloading data");
-			Pull.syncWithWeb(getApplicationContext());
+			Pull.syncWithWeb(this);
 			
 			reschedule(intent);
 		}
 		else
 		{
-			//TODO could just ignore unknown intents...
-			throw new RuntimeException("Unknown action: " + action);
+			Log.w(TAG, "Unknown action: " + action);
+			if (Config.D)
+				throw new RuntimeException("Unknown action: " + action);
 		}
 	}
 	
@@ -137,8 +144,7 @@ public class ComsService extends IntentService
 //			if (time == -1)
 //				throw new RuntimeException("Must give running time");
 			long time = Calendar.getInstance().getTimeInMillis();
-			Intent comsIntent = new Intent(getApplicationContext(),
-					ComsService.class);
+			Intent comsIntent = new Intent(this, ComsService.class);
 			comsIntent.setAction(intent.getAction());
 			comsIntent.putExtra(EXTRA_REPEATING, true);
 			if (intent.getAction().equals(ACTION_UPLOAD_DATA))
@@ -154,8 +160,7 @@ public class ComsService extends IntentService
 								Config.PULL_INTERVAL_DEFAULT) * 60 * 1000));
 			}
 			PendingIntent pendingComs = PendingIntent.getService(
-					getApplicationContext(), 0, comsIntent,
-					PendingIntent.FLAG_ONE_SHOT);
+					this, 0, comsIntent, PendingIntent.FLAG_ONE_SHOT);
 			AlarmManager alarm =
 				(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 			alarm.set(AlarmManager.RTC_WAKEUP,

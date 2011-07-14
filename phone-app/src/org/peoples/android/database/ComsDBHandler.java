@@ -111,6 +111,31 @@ public class ComsDBHandler extends PeoplesDBHandler
 	}
 	
 	/**
+	 * Get all of the status changes currently in the database.  Used to fetch
+	 * data for conversion to JSON so it can be sent to the server.
+	 * 
+	 * @return a {@link Cursor} with the status changes in it
+	 */
+	public Cursor getStatusChanges()
+	{
+		if (Config.D) Log.d(TAG, "Getting all status changes");
+		
+		//set up the query
+		String    table    = PeoplesDB.STATUS_TABLE_NAME;
+		String[]  cols     = {PeoplesDB.StatusTable.TYPE,
+							  PeoplesDB.StatusTable.STATUS,
+							  PeoplesDB.StatusTable.CREATED};
+		String    selc     = null;
+		String[]  selcArgs = null;
+		String    group    = null;
+		String    having   = null;
+		String    orderBy  = PeoplesDB.StatusTable.CREATED;
+		
+		//run it
+		return db.query(table, cols, selc, selcArgs, group, having, orderBy);
+	}
+	
+	/**
 	 * Marks the answer with id as having been uploaded.
 	 * 
 	 * @param id - id of the answer to mark
@@ -159,5 +184,21 @@ public class ComsDBHandler extends PeoplesDBHandler
 		String[] whereArgs = {"" + id};
 		
 		db.delete(PeoplesDB.CALLLOG_TABLE_NAME, whereClause, whereArgs);
+	}
+	
+	/**
+	 * Delete a record of an application status change from the database.
+	 * 
+	 * @param id - the id of the record to delete
+	 */
+	public void delStatusChange(int id)
+	{
+		if (Config.D) Log.d(TAG, "Deleting status change " + id);
+		
+		//set up the query
+		String whereClause = PeoplesDB.StatusTable._ID + " = ?";
+		String[] whereArgs = {"" + id};
+		
+		db.delete(PeoplesDB.STATUS_TABLE_NAME, whereClause, whereArgs);
 	}
 }
