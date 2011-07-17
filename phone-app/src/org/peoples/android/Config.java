@@ -180,6 +180,35 @@ public class Config
 	public static final String COMPLETION_SAMPLE = "completion_sample";
 	public static final int COMPLETION_SAMPLE_DEFAULT = 10;
 	
+	/**
+	 * How long (in minutes) to wait between re-notifiying the user that a
+	 * survey or surveys is awaiting.
+	 */
+	public static final String REFRESH_INTERVAL = "refresh_interval";
+	public static final int REFRESH_INTERVAL_DEFAULT = 10;
+	
+	/**
+	 * How many extra times should the user be notified about a pending survey.
+	 * This is in addition to the first time, so, for example, a value of 0
+	 * would result in survey notifications only being displayed once.
+	 */
+	public static final String REFRESH_COUNT = "refresh_count";
+	public static final int REFRESH_COUNT_DEFAULT = 2;
+	
+	/**
+	 * How long should the system wait for the user to take a survey before it
+	 * considers that survey ignored and removes it.  This is how long to wait
+	 * after the <strong>final</strong> notification refresh is sent.
+	 */
+	public static final String SURVEY_TIMEOUT = "survey_timeout";
+	public static final int SURVEY_TIMEOUT_DEFAULT = 30;
+	/**
+	 * This value, if used for {@link SURVEY_TIMEOUT_NEVER} will result in
+	 * surveys being kept until the phone is turned off (not recommended if
+	 * tracking what percentage of surveys a user answers is important.
+	 */
+	public static final int SURVEY_TIMEOUT_NEVER = -1;
+	
 	//settings by type
 	/** List of settings which are strings */
 	public static final String[] STRINGS =

@@ -6,9 +6,6 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.database;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -51,7 +48,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     private static final int DATABASE_VERSION = 4;
 
     //table names
-    public static final String TAKEN_TABLE_NAME = "survyesTaken";
+    public static final String TAKEN_TABLE_NAME = "surveysTaken";
     public static final String STATUS_TABLE_NAME = "statusChanges";
     public static final String LOCATION_TABLE_NAME = "locations";
     public static final String CALLLOG_TABLE_NAME = "calls";
@@ -68,29 +65,6 @@ public class PeoplesDB extends SQLiteOpenHelper
     	CALLLOG_TABLE_NAME, ANSWER_TABLE_NAME, BRANCH_TABLE_NAME,
     	CHOICE_TABLE_NAME, CONDITION_TABLE_NAME, QUESTION_TABLE_NAME,
     	SURVEY_TABLE_NAME, EXTRAS_TABLE_NAME, STATUS_TABLE_NAME};
-    
-    /**
-     * Returns a Collection of the classes of all the tables here.
-     * 
-     * @return Collection of table classes
-     */
-    public Collection<Class<? extends PEOPLESTable>> getTables()
-    {
-    	Collection<Class<? extends PEOPLESTable>> tables =
-    		new ArrayList<Class<? extends PEOPLESTable>>();
-    	tables.add(LocationTable.class);
-    	tables.add(CallLogTable.class);
-    	tables.add(AnswerTable.class);
-    	tables.add(BranchTable.class);
-    	tables.add(ChoiceTable.class);
-    	tables.add(ConditionTable.class);
-    	tables.add(QuestionTable.class);
-    	tables.add(SurveyTable.class);
-    	tables.add(ExtrasTable.class);
-    	tables.add(StatusTable.class);
-    	tables.add(TakenTable.class);
-    	return tables;
-    }
     
     /**
      * Class from which all the other tables in this class should inherit
@@ -143,7 +117,6 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final int RANDOM_DISMISSED = 10;
     	public static final int RANDOM_IGNORED = 11;
     	
-    	@SuppressWarnings("unused")
 		private static String createSql() {
     		return "CREATE TABLE " + TAKEN_TABLE_NAME + " ("
     		+ TakenTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -176,7 +149,6 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final int TEXT_LOGGING = 2;
     	public static final int SURVEYS = 3;
     	
-    	@SuppressWarnings("unused")
 		private static String createSql() {
     		return "CREATE TABLE " + STATUS_TABLE_NAME + " ("
     		+ StatusTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -203,7 +175,6 @@ public class PeoplesDB extends SQLiteOpenHelper
         public static final String ACCURACY = "accuracy";
         public static final String TIME = "time";
 
-        @SuppressWarnings("unused")
 		private static String createSql() {
         	return "CREATE TABLE " + LOCATION_TABLE_NAME + " ("
         	+ LocationTable._ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -280,7 +251,6 @@ public class PeoplesDB extends SQLiteOpenHelper
         	}
         }
         
-        @SuppressWarnings("unused")
         private static String createSql() {
         	return "CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
             + CallLogTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -343,8 +313,7 @@ public class PeoplesDB extends SQLiteOpenHelper
 	   public static final String CREATED = "created";
 	   public static final String UPLOADED = "uploaded";
 	   
-	   @SuppressWarnings("unused")
-	private static String createSql() {
+	   private static String createSql() {
 		   	return "CREATE TABLE " + EXTRAS_TABLE_NAME + " (" +
 		   		_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 		   		SURVEY_ID + " INT UNSIGNED NOT NULL, " +
@@ -368,7 +337,6 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final String QUESTION_ID = "question_id";
     	public static final String NEXT_Q = "next_q";
 
-    	@SuppressWarnings("unused")
 		private static String createSql() {
     		return "CREATE TABLE branches (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -397,7 +365,6 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final int TEXT_CHOICE = 0;
     	public static final int IMG_CHOICE = 1;
 
-    	@SuppressWarnings("unused")
 		private static String createSql() {
     		return "CREATE TABLE choices (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -426,7 +393,6 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final String CHOICE_ID = "choice_id";
     	public static final String TYPE = "type";
 
-    	@SuppressWarnings("unused")
 		private static String createSql() {
     		return "CREATE TABLE conditions (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -463,7 +429,6 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final int SCALE_IMG = 3;
     	public static final int FREE_RESPONSE = 4;
 
-    	@SuppressWarnings("unused")
 		private static String createSql() {
     		return "CREATE TABLE questions (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -505,7 +470,6 @@ public class PeoplesDB extends SQLiteOpenHelper
     	//for convenience
     	public static final String[] DAYS = {SU, MO, TU, WE, TH, FR, SA, SA};
 
-    	@SuppressWarnings("unused")
 		private static String createSql() {
     		return "CREATE TABLE surveys (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -529,15 +493,21 @@ public class PeoplesDB extends SQLiteOpenHelper
         db.beginTransaction();
 
         try {
-        	for (Class<? extends PEOPLESTable> table : getTables())
-        	{
-				db.execSQL((String) table.getDeclaredMethod("createSQL",
-						(Class<?>) null).invoke(null, (Object) null));
-        	}
+        	db.execSQL(LocationTable.createSql());
+        	db.execSQL(CallLogTable.createSql());
+        	db.execSQL(AnswerTable.createSql());
+        	db.execSQL(BranchTable.createSql());
+        	db.execSQL(ChoiceTable.createSql());
+        	db.execSQL(ConditionTable.createSql());
+        	db.execSQL(QuestionTable.createSql());
+        	db.execSQL(SurveyTable.createSql());
+        	db.execSQL(ExtrasTable.createSql());
+        	db.execSQL(StatusTable.createSql());
+        	db.execSQL(TakenTable.createSql());
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
-        	Log.e(TAG, e.getMessage());
+        	Log.e(TAG, e.toString());
         } finally {
             db.endTransaction();
         }

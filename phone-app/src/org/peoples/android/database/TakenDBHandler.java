@@ -110,6 +110,7 @@ public class TakenDBHandler extends PeoplesDBHandler
 				numCompleted++;
 			i++;
 		}
+		result.close();
 		return numCompleted * (100 / i);
 	}
 	

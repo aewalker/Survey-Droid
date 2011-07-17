@@ -55,8 +55,13 @@ public abstract class QuestionActivity extends Activity
 		{
 			SurveyBinder sBinder = (SurveyBinder) binder;
 			survey = sBinder.getSurvey();
+			if (Config.D)
+			{
+				Log.d(TAG, "service connected");
+				if (survey == null) throw new
+					RuntimeException("question given null survey");
+			}
 			getThis().onSurveyLoaded();
-			if (Config.D) Log.d(TAG, "service connected");
 			
 			//set the title if desired
 			if (Config.getSetting(getThis(), Config.SHOW_SURVEY_NAME,

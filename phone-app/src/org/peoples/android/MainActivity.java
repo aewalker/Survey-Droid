@@ -74,7 +74,7 @@ public class MainActivity extends Activity
         TextView progress = new TextView(this);
 //        VerticalProgressBar progress = new VerticalProgressBar(this);
 //        progress.setMax(100);
-        progress.setText(p);
+        progress.setText("" + p);
         LinearLayout PBLayout =
         	(LinearLayout) findViewById(R.id.main_progressBarLayout);
         PBLayout.addView(progress);
@@ -100,8 +100,6 @@ public class MainActivity extends Activity
                 Intent surveyIntent = new Intent(view.getContext(),
                 		SurveyService.class);
                 surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
-                surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID,
-                		SurveyService.DUMMY_SURVEY_ID);
                 startService(surveyIntent);
             }
         });
