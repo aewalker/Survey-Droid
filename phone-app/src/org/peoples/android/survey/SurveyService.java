@@ -7,7 +7,8 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -19,7 +20,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.peoples.android.Config;
 import org.peoples.android.R;
@@ -83,9 +83,21 @@ public class SurveyService extends Service
 	public static final String EXTRA_SURVEY_ID =
 		"org.peoples.android.survey.EXTRA_SURVEY_ID";
 	
+	/**
+	 * What kind of survey to start; sent with ACTION_SURVEY_READY.  Uses
+	 * SURVEY_TYPE_TIMED by default if this extra is not present.
+	 */
+	public static final String EXTRA_SURVEY_TYPE =
+		"org.peoples.android.survey.EXTRA_SURVEY_TYPE";
+	
 	//how many times the survey notification has been refreshed
 	private static final String EXTRA_REFRESH_COUNT =
 		"org.peoples.android.survey.EXTRA_REFRESH_COUNT";
+	
+	//survey types
+	public static final int SURVEY_TYPE_TIMED = 0;
+	public static final int SURVEY_TYPE_RANDOM = 1;
+	public static final int SURVEY_TYPE_USER_INIT = 2;
 	
 	/*-----------------------------------------------------------------------*/
 	
@@ -98,11 +110,11 @@ public class SurveyService extends Service
 	//the survey instance that each instance of this service uses
 	private Survey survey;
 	
-	//the current survey id
-	private int currentID;
-	
 	//is a survey currently running?
 	private boolean inSurvey = false;
+	
+	//the id of the survey that is currently running
+	private int currentID;
 	
 	//is the service currently active?
 	private boolean active = false;
@@ -118,7 +130,9 @@ public class SurveyService extends Service
 	
 	//collection of all the survey ids currently in the notification
 	//(can be multiple copies of the same one)
-	private final ArrayList<Integer> surveys = new ArrayList<Integer>();
+	//also keep the types
+	private final Queue<Integer> surveys = new LinkedList<Integer>();
+	private final Queue<Integer> surveyTypes = new LinkedList<Integer>();
 	
 	//the notification id (only need one)
 	private static final int N_ID = 0;
@@ -140,12 +154,15 @@ public class SurveyService extends Service
 			if (action.equals(ACTION_SURVEY_READY))
 			{
 				int id = intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID);
+				int type = intent.getIntExtra(EXTRA_SURVEY_TYPE,
+						SURVEY_TYPE_TIMED);
 				if (surveys.isEmpty())
 				{
 					if (Config.D) Log.v(TAG, "surveys is empty");
 					active = true;
 				}
 				surveys.add(id);
+				surveyTypes.add(type);
 				refresh(0, true);
 			}
 			else if (action.equals(ACTION_SHOW_SURVEY))
@@ -191,13 +208,10 @@ public class SurveyService extends Service
 	{
 		if (inSurvey)
 		{
-			//FIXME this Toast isn't showing up, but otherwise, the system is
-			//behaving properly
-			Toast.makeText(getApplicationContext(), "Please finish the current"
-					+ " survey before staring another.", Toast.LENGTH_LONG);
+			//TODO somehow tell the user that they can't start multiple surveys
 			return;
 		}
-		surveys.remove(currentID);
+		currentID = surveys.poll();
 		inSurvey = true;
 		if (!surveys.isEmpty()) refresh(0, false);
 		else removeNotification(false);
@@ -217,12 +231,11 @@ public class SurveyService extends Service
 		if (survey == null)
 		{
 			if (Config.D) Log.v(TAG, "creating new survey; current is null");
-			currentID  = surveys.get(0);
-			if (currentID == DUMMY_SURVEY_ID)
+			int id  = surveys.peek();
+			if (id == DUMMY_SURVEY_ID)
 				survey = new Survey(this);
 			else
-				survey = new Survey(currentID, this);
-			if (survey == null) throw new RuntimeException("survey is still null!");
+				survey = new Survey(id, this);
 		}
 		//things we're going to need for the notification
 		int icon = R.drawable.blue_survey_small;
@@ -322,11 +335,34 @@ public class SurveyService extends Service
 		{
 			TakenDBHandler tdbh = new TakenDBHandler(this);
 			tdbh.openWrite();
-			for (int id : surveys)
+			while (!surveys.isEmpty())
 			{
-				if (id != DUMMY_SURVEY_ID) tdbh.writeSurvey(id,
-					PeoplesDB.TakenTable.SCHEDULED_IGNORED,
-					System.currentTimeMillis());
+				int id = surveys.poll();
+				int type = surveyTypes.poll();
+				if (id != DUMMY_SURVEY_ID)
+				{
+					int status;
+					switch (type)
+					{
+					case SURVEY_TYPE_TIMED:
+						status = PeoplesDB.TakenTable.SCHEDULED_IGNORED;
+						break;
+					case SURVEY_TYPE_RANDOM:
+						status = PeoplesDB.TakenTable.RANDOM_IGNORED;
+						break;
+					case SURVEY_TYPE_USER_INIT:
+						//it seems really unlikely that this case will ever
+						//be used, so I don't think it makes sense to create
+						//a case for USER_INITIATED_IGNORED...
+						status =
+							PeoplesDB.TakenTable.USER_INITIATED_UNFINISHED;
+						break;
+					default:
+						throw new IllegalArgumentException(
+								"Invalid survey type: " + type);
+					}
+					tdbh.writeSurvey(id, status, System.currentTimeMillis());
+				}
 			}
 			tdbh.close();
 		}
@@ -344,36 +380,72 @@ public class SurveyService extends Service
 	//a user has finished a survey
 	private void endSurvey()
 	{
+		if (!inSurvey) throw new
+			RuntimeException("Cannot end a survey before starting one");
 		inSurvey = false;
 		if (currentID != DUMMY_SURVEY_ID)
 		{
 			TakenDBHandler tdbh = new TakenDBHandler(this);
 			tdbh.openWrite();
-			tdbh.writeSurvey(currentID,
-					PeoplesDB.TakenTable.SCHEDULED_FINISHED,
-					System.currentTimeMillis());
+			int type = surveyTypes.poll();
+			int status;
+			switch (type)
+			{
+			case SURVEY_TYPE_TIMED:
+				status = PeoplesDB.TakenTable.SCHEDULED_FINISHED;
+				break;
+			case SURVEY_TYPE_RANDOM:
+				status = PeoplesDB.TakenTable.RANDOM_FINISHED;
+				break;
+			case SURVEY_TYPE_USER_INIT:
+				status = PeoplesDB.TakenTable.USER_INITIATED_FINISHED;
+				break;
+			default:
+				throw new IllegalArgumentException(
+						"Invalid survey type: " + type);
+			}
+			tdbh.writeSurvey(currentID, status, System.currentTimeMillis());
 			tdbh.close();
 		}
 		if (surveys.isEmpty())
 			stopSelf();
 		else
 		{
-			currentID  = surveys.get(0);
-			if (currentID == DUMMY_SURVEY_ID)
+			int id  = surveys.peek();
+			if (id == DUMMY_SURVEY_ID)
 				survey = new Survey(this);
 			else
-				survey = new Survey(currentID, this);
+				survey = new Survey(id, this);
 		}
 	}
 	
 	//a user has exited a survey before it was finished
 	private void quitSurvey()
 	{
+		if (!inSurvey) throw new
+			RuntimeException("Cannot quit a survey before starting one");
+		inSurvey = false;
+		int type = surveyTypes.poll();
 		if (currentID == DUMMY_SURVEY_ID) return;
 		TakenDBHandler tdbh = new TakenDBHandler(this);
 		tdbh.openWrite();
-		tdbh.writeSurvey(currentID, PeoplesDB.TakenTable.SCHEDULED_UNFINISHED,
-				System.currentTimeMillis());
+		int status;
+		switch (type)
+		{
+		case SURVEY_TYPE_TIMED:
+			status = PeoplesDB.TakenTable.SCHEDULED_UNFINISHED;
+			break;
+		case SURVEY_TYPE_RANDOM:
+			status = PeoplesDB.TakenTable.RANDOM_UNFINISHED;
+			break;
+		case SURVEY_TYPE_USER_INIT:
+			status = PeoplesDB.TakenTable.USER_INITIATED_UNFINISHED;
+			break;
+		default:
+			throw new IllegalArgumentException(
+					"Invalid survey type: " + type);
+		}
+		tdbh.writeSurvey(currentID, status, System.currentTimeMillis());
 		tdbh.close();
 	}
 
