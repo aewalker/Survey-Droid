@@ -61,7 +61,19 @@
     "surveysTaken" : [
 	{
 	    "survey_id": 1,
-	    "status" : 4,
+	    "status" : 4, //one of:
+		//SURVEYS_DISABLED_LOCALLY = 0;
+	    	//SURVEYS_DISABLED_SERVER = 1;
+	    	//USER_INITIATED_FINISHED = 2;
+	    	//USER_INITIATED_UNFINISHED = 3;
+	    	//SCHEDULED_FINISHED = 4;
+	    	//SCHEDULED_UNFINISHED = 5;
+	    	//SCHEDULED_DISMISSED = 6;
+	    	//SCHEDULED_IGNORED = 7;
+	    	//RANDOM_FINISHED = 8;
+	    	//RANDOM_UNFINISHED = 9;
+	    	//RANDOM_DISMISSED = 10;
+	    	//RANDOM_IGNORED = 11;
 	    "created" : 0 //unix timestamp
 	}, {
 	    ...
