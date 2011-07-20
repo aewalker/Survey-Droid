@@ -68,7 +68,7 @@
 	
 	<!-- The four buttons on the main screen. -->
 	<string name="main_settingsButton">Settings</string>
-	<string name="main_sampleButton">Sample\nSurvey</string>
+	<string name="main_sampleButton">Surveys</string>
 	<string name="main_callButton">Call\n</string>
 	<string name="main_exitButton">Exit</string>
 	
@@ -76,4 +76,13 @@
 	<string name="settings_surveysSetting">Surveys</string>
 	<string name="settings_locationSetting">Location Tracking</string>
 	<string name="settings_loggingSetting">Call/Text Logging</string>
+	
+	<!-- Title text for the user-initiated surveys page -->
+	<string name="user_surveys_title">Available Surveys</string>
+	
+	<!-- Back button on the user-initiated surveys page -->
+	<string name="user_surveys_back">Back</string>
+	
+	<!-- Take button on the user-initiated surveys page -->
+	<string name="user_surveys_take">Take Now</string>
 </resources>

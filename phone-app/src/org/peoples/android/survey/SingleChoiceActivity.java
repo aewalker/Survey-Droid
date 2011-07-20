@@ -14,6 +14,7 @@ import org.peoples.android.ImageOrTextAdapter;
 import org.peoples.android.R;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -70,18 +71,20 @@ public class SingleChoiceActivity extends QuestionActivity
 		qText.setText(survey.getText());
 		
 		Choice[] choices = survey.getChoices();
-		Object[][] list = new Object[choices.length][2];
+		String[] strings = new String[choices.length];
+		Bitmap[] pics = new Bitmap[choices.length];
 		for (int i = 0; i < choices.length; i++)
 		{
-			list[i][ImageOrTextAdapter.IMG_POS] = choices[i].getImg();
-			list[i][ImageOrTextAdapter.STRING_POS] = choices[i].getText();
+			pics[i] = choices[i].getImg();
+			strings[i] = choices[i].getText();
 		}
 		listView = (ListView) findViewById(android.R.id.list);
-		ImageOrTextAdapter iotr = new ImageOrTextAdapter(this,
-				ListView.CHOICE_MODE_SINGLE, list, this);
-		listView.setAdapter(iotr);
-		if (survey.getAnswerChoices() != null)
-			iotr.setChecked(survey.getAnswerChoices());
+		ImageOrTextAdapter<String> iota = new ImageOrTextAdapter<String>(this,
+				android.R.layout.simple_list_item_single_choice,
+				strings, pics);
+		listView.setAdapter(iota);
+//		if (survey.getAnswerChoices() != null)
+//			iota.setInitialChecked(survey.getAnswerChoices());
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}
 	
@@ -90,8 +93,7 @@ public class SingleChoiceActivity extends QuestionActivity
 	{
 		Collection<Choice> answer = new ArrayList<Choice>();
 		Choice[] choices = survey.getChoices();
-		//answer.add(choices[listView.getCheckedItemPosition()]);
-		answer.add(choices[(Integer) getSelected().toArray()[0]]);
+		answer.add(choices[listView.getCheckedItemPosition()]);
 		survey.answer(answer);
 		if (Config.D) Log.d(TAG, "answered with: "
 				+ answer.toArray()[0].toString());
@@ -100,12 +102,7 @@ public class SingleChoiceActivity extends QuestionActivity
 	@Override
 	protected boolean isAnswered()
 	{
-		if (Config.D)
-			Log.d(TAG, "Answer index: " + listView.getCheckedItemPosition());
-		//if (listView.getCheckedItemPosition() == ListView.INVALID_POSITION)
-		if (getSelected().size() == 0)
-			return false;
-		if (getSelected().size() > 1)
+		if (listView.getCheckedItemPosition() == ListView.INVALID_POSITION)
 			return false;
 		return true;
 	}
@@ -113,8 +110,6 @@ public class SingleChoiceActivity extends QuestionActivity
 	@Override
 	protected String getInvalidAnswerMsg()
 	{
-		if (getSelected().size() == 0)
-			return "You must select a choice";
-		else return "You can only select one choice";
+		return "You must select a choice";
 	}
 }

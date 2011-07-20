@@ -216,6 +216,8 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	
 	/**
 	 * Get all surveys (id and time fields only); used for scheduling.
+	 * 
+	 * @return a cursor with the results
 	 */
 	public Cursor getSurveys()
 	{
@@ -237,6 +239,30 @@ public class SurveyDBHandler extends PeoplesDBHandler
 		String    group    = null;
 		String    having   = null;
 		String    orderBy  = null;
+		
+		//run it
+		return db.query(table, cols, selc, selcArgs, group, having, orderBy);
+	}
+	
+	/**
+	 * Get all surveys (id and name fields) that subjects can initiate
+	 * themselves.  Results are in alphabetical order by survey name.
+	 * 
+	 * @return a cursor with the results
+	 */
+	public Cursor getSubjectInitSurveys()
+	{
+		if (Config.D) Log.d(TAG, "getting subject-init surveys");
+		
+		//set up the query
+		String    table    = PeoplesDB.SURVEY_TABLE_NAME;
+		String[]  cols     = {PeoplesDB.SurveyTable._ID,
+						      PeoplesDB.SurveyTable.NAME};
+		String    selc     = PeoplesDB.SurveyTable.SUBJECT_INIT + " = ?";
+		String[]  selcArgs = {"1"};
+		String    group    = null;
+		String    having   = null;
+		String    orderBy  = PeoplesDB.SurveyTable.NAME;
 		
 		//run it
 		return db.query(table, cols, selc, selcArgs, group, having, orderBy);

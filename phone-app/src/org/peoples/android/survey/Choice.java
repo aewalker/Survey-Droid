@@ -86,11 +86,13 @@ public class Choice
 	/**
 	 * Get this Choice's text.
 	 * 
-	 * @return a String corresponding to the Choice text (null if this is an
-	 * image choice)
+	 * @return a String corresponding to the Choice text (empty string if this
+	 * is an image choice)
 	 */
 	public String getText()
 	{
+		if (choice_text == null)
+			return "";
 		return choice_text;
 	}
 	

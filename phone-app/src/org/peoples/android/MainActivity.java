@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.peoples.android.database.TakenDBHandler;
-import org.peoples.android.survey.SurveyService;
 
 /**
  * The Activity for the administration panel of the PEOPLES application.
@@ -74,7 +73,12 @@ public class MainActivity extends Activity
         TextView progress = new TextView(this);
 //        VerticalProgressBar progress = new VerticalProgressBar(this);
 //        progress.setMax(100);
-        progress.setText("" + p);
+        if (p == TakenDBHandler.NO_PERCENTAGE)
+        	progress.setText("");
+//        	progress.setIndeterminte(true);
+        else
+        	progress.setText("" + p);
+//        	progress.setProgress(p);
         LinearLayout PBLayout =
         	(LinearLayout) findViewById(R.id.main_progressBarLayout);
         PBLayout.addView(progress);
@@ -91,16 +95,15 @@ public class MainActivity extends Activity
             }
         });
         
-        //sample survey button
+        //user surveys button
         Button sample = (Button) findViewById(R.id.main_sampleButton);
         sample.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View view)
             {
                 Intent surveyIntent = new Intent(view.getContext(),
-                		SurveyService.class);
-                surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
-                startService(surveyIntent);
+                		UserSurveysActivity.class);
+                startActivity(surveyIntent);
             }
         });
         

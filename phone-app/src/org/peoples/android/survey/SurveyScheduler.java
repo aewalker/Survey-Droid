@@ -8,10 +8,7 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -179,7 +176,7 @@ public class SurveyScheduler extends IntentService
 						surveys.getColumnIndexOrThrow(
 								PeoplesDB.SurveyTable.DAYS[i])).split(","))
 				{
-					long scheduledTime = getUnixTime(days[i], time);
+					long scheduledTime = Config.getUnixTime(days[i], time);
 
 					if (Config.D)
 					{
@@ -214,42 +211,5 @@ public class SurveyScheduler extends IntentService
 		AlarmManager alarm =
 			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarm.set(AlarmManager.RTC_WAKEUP, nextRun, pendingScheduler);
-	}
-	
-	//returns the Unix timestamp of the next occurrence of the given day/time
-	private static long getUnixTime(String day, String time)
-	{
-		SimpleDateFormat timeSDF = new SimpleDateFormat(Config.TIME_FORMAT);
-		timeSDF.setTimeZone(TimeZone.getTimeZone("UTC"));
-		try
-		{
-			timeSDF.parse(time);
-		}
-		catch (ParseException e)
-		{
-			throw new RuntimeException("Invalid time: " + time);
-		}
-		
-		SimpleDateFormat daySDF = new SimpleDateFormat(Config.DAY_FORMAT);
-		daySDF.setTimeZone(TimeZone.getTimeZone("UTC"));
-		try
-		{
-			daySDF.parse(day);
-		}
-		catch (ParseException e)
-		{
-			throw new RuntimeException("Invalid day: " + day);
-		}
-		
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DAY_OF_WEEK,
-				daySDF.getCalendar().get(Calendar.DAY_OF_WEEK));
-		cal.set(Calendar.HOUR_OF_DAY,
-				timeSDF.getCalendar().get(Calendar.HOUR_OF_DAY));
-		cal.set(Calendar.MINUTE, timeSDF.getCalendar().get(Calendar.MINUTE));
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		
-		return cal.getTimeInMillis();
 	}
 }

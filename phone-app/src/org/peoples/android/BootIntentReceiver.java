@@ -10,7 +10,6 @@ import java.util.Calendar;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -79,12 +78,10 @@ public class BootIntentReceiver extends BroadcastReceiver
         
         //start location tracking
         if (Config.D) Log.d(TAG, "Starting location tracking");
-        LocationManager lm = (LocationManager) context.getSystemService(
-        		Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-        		Config.getSetting(context, Config.LOCATION_INTERVAL,
-        				Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0,
-        		new LocationTracker(context));
+        Intent trackingIntent =
+        	new Intent(context, LocationTrackerService.class);
+        trackingIntent.setAction(LocationTrackerService.ACTION_START_TRACKING);
+        context.startService(trackingIntent);
     	
     	//start the survey scheduler
     	if (Config.D) Log.d(TAG, "Starting survey scheduler");

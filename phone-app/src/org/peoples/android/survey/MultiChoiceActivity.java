@@ -14,6 +14,7 @@ import org.peoples.android.ImageOrTextAdapter;
 import org.peoples.android.R;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -28,7 +29,6 @@ import android.widget.TextView;
  * 
  * @author Austin Walker
  */
-@SuppressWarnings("unused")
 public class MultiChoiceActivity extends QuestionActivity
 {
 	private ListView listView;
@@ -63,18 +63,13 @@ public class MultiChoiceActivity extends QuestionActivity
 	@Override
 	protected void answer()
 	{
-		//SparseBooleanArray checked = listView.getCheckedItemPositions();
-		Collection<Integer> checked = getSelected();
+		SparseBooleanArray checked = listView.getCheckedItemPositions();
 		Collection<Choice> answers = new ArrayList<Choice>();
 		Choice[] choices = survey.getChoices();
-//		for (int i = 0; i < choices.length; i++)
-//		{
-//			if (checked.get(i, false))
-//				answers.add(choices[i]);
-//		}
-		for (int i : checked)
+		for (int i = 0; i < choices.length; i++)
 		{
-			answers.add(choices[i]);
+			if (checked.get(i, false))
+				answers.add(choices[i]);
 		}
 		survey.answer(answers);
 		
@@ -105,13 +100,9 @@ public class MultiChoiceActivity extends QuestionActivity
 	{
 		//getCheckItemIds is @deprecated as of API 8; we should move to
 		//getCheckedItemIds if we move up
-		
-		//ignore the dead code warning for now
-		//if (!Config.getSetting(this, Config.ALLOW_NO_CHOICES,
-		//		Config.ALLOW_NO_CHOICES_DEFAULT) &&
-		//		listView.getCheckItemIds().length == 0)
 		if (!Config.getSetting(this, Config.ALLOW_NO_CHOICES,
-				Config.ALLOW_NO_CHOICES_DEFAULT) && getSelected().size() == 0)
+				Config.ALLOW_NO_CHOICES_DEFAULT)
+				&& listView.getCheckItemIds().length == 0)
 			return false;
 		return true;
 	}
@@ -126,23 +117,24 @@ public class MultiChoiceActivity extends QuestionActivity
 	protected void onSurveyLoaded()
 	{
 		//set the question text
-		TextView qText =
-			(TextView) findViewById(R.id.multiple_choice_question);
+		TextView qText = (TextView) findViewById(R.id.multiple_choice_question);
 		qText.setText(survey.getText());
 		
 		Choice[] choices = survey.getChoices();
-		Object[][] list = new Object[choices.length][2];
+		String[] strings = new String[choices.length];
+		Bitmap[] pics = new Bitmap[choices.length];
 		for (int i = 0; i < choices.length; i++)
 		{
-			list[i][ImageOrTextAdapter.IMG_POS] = choices[i].getImg();
-			list[i][ImageOrTextAdapter.STRING_POS] = choices[i].getText();
+			pics[i] = choices[i].getImg();
+			strings[i] = choices[i].getText();
 		}
 		listView = (ListView) findViewById(android.R.id.list);
-		ImageOrTextAdapter iotr = new ImageOrTextAdapter(this,
-				ListView.CHOICE_MODE_MULTIPLE, list, this);
-		listView.setAdapter(iotr);
-		if (survey.getAnswerChoices() != null)
-			iotr.setChecked(survey.getAnswerChoices());
+		ImageOrTextAdapter<String> iota = new ImageOrTextAdapter<String>(this,
+				android.R.layout.simple_list_item_multiple_choice,
+				strings, pics);
+		listView.setAdapter(iota);
+		//if (survey.getAnswerChoices() != null)
+		//iota.setChecked(survey.getAnswerChoices());
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 	}
 }

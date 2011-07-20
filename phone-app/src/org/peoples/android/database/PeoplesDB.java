@@ -45,7 +45,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     //Change the version number here to force the database to
     //update itself.  This throws out all data.
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     //table names
     public static final String TAKEN_TABLE_NAME = "surveysTaken";
@@ -64,7 +64,8 @@ public class PeoplesDB extends SQLiteOpenHelper
     public static final String[] TABLE_NAMES = {LOCATION_TABLE_NAME,
     	CALLLOG_TABLE_NAME, ANSWER_TABLE_NAME, BRANCH_TABLE_NAME,
     	CHOICE_TABLE_NAME, CONDITION_TABLE_NAME, QUESTION_TABLE_NAME,
-    	SURVEY_TABLE_NAME, EXTRAS_TABLE_NAME, STATUS_TABLE_NAME};
+    	SURVEY_TABLE_NAME, EXTRAS_TABLE_NAME, STATUS_TABLE_NAME,
+    	TAKEN_TABLE_NAME};
     
     /**
      * Class from which all the other tables in this class should inherit
@@ -458,6 +459,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final String NAME = "name";
     	public static final String CREATED = "created";
     	public static final String QUESTION_ID = "question_id";
+    	public static final String SUBJECT_INIT = "subject_init";
 
     	public static final String MO = "mo";
     	public static final String TU = "tu";
@@ -475,6 +477,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     				"name VARCHAR(255),created DATETIME," +
     				"question_id INT UNSIGNED NOT NULL," +
+    				"subject_init INT UNSIGNED NOT NULL," +
     				"mo VARCHAR(255)," +
     				"tu VARCHAR(255)," +
     				"we VARCHAR(255)," +

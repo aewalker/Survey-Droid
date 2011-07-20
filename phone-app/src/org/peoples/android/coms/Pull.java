@@ -94,6 +94,8 @@ public class Pull extends WebClient
 	    				survey.getLong(SurveyTable.CREATED));
 	    		values.put(SurveyTable.QUESTION_ID,
 	    				survey.getInt(SurveyTable.QUESTION_ID));
+	    		values.put(SurveyTable.SUBJECT_INIT,
+	    				survey.getString(SurveyTable.SUBJECT_INIT));
 	    		values.put(SurveyTable.MO, survey.getString(SurveyTable.MO));
 	    		values.put(SurveyTable.TU, survey.getString(SurveyTable.TU));
 	    		values.put(SurveyTable.WE, survey.getString(SurveyTable.WE));
