@@ -3,12 +3,11 @@
  *                                                                           *
  * Shows a vertical progress bar.  Code adapted from                         *
  * http://560b.sakura.ne.jp/android/VerticalSlidebarExample.zip              *
- * and licensed under the Apache License.                                    *
+ * which is licensed under the Apache License.                               *
  *---------------------------------------------------------------------------*/
 package org.peoples.android;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -29,9 +28,6 @@ import android.view.ViewParent;
 import android.widget.RemoteViews.RemoteView;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-
-
 
 @RemoteView
 public class VerticalProgressBar extends View {
@@ -80,8 +76,7 @@ public class VerticalProgressBar extends View {
         mUiThreadId = Thread.currentThread().getId();
         initProgressBar();
         
-        TypedArray a =
-            context.obtainStyledAttributes(attrs, R.styleable.ProgressBar, defStyle, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ProgressBar, defStyle, 0);
 
         mNoInvalidate = true;
 

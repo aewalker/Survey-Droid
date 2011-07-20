@@ -2,7 +2,7 @@
 <!-- Code from
 	http://560b.sakura.ne.jp/android/VerticalSlidebarExample.zip
 	and licensed under the Apache License. -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
     <declare-styleable name="ProgressBar">
         <attr name="android:progressDrawable" />
         <attr name="android:minWidth" />

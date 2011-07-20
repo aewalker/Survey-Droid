@@ -145,8 +145,8 @@ public class LocationTrackerService extends Service
 					Config.getSetting(this, Config.TRACKED_END + i, null);
 				if (start == null || end == null) throw new RuntimeException(
 						"start or end time is null for time " + i);
-				long startTime = Config.getUnixTime(day, start);
-				long endTime = Config.getUnixTime(day, end);
+				long startTime = Util.getUnixTime(day, start);
+				long endTime = Util.getUnixTime(day, end);
 				times[i] = new TimePeriod(startTime, endTime);
 			}
 			Arrays.sort(times);
@@ -193,7 +193,7 @@ public class LocationTrackerService extends Service
 				getApplicationContext(), 0, rescheduleIntent, 0);
 		String nextDay = days[cal.get(Calendar.DAY_OF_WEEK)];
 		//this might not work very well
-		as.set(AlarmManager.RTC_WAKEUP, Config.getUnixTime(nextDay, "0000"),
+		as.set(AlarmManager.RTC_WAKEUP, Util.getUnixTime(nextDay, "0000"),
 				pendingReschedule);
 	}
 

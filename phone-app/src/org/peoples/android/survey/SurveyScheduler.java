@@ -19,6 +19,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import org.peoples.android.Config;
+import org.peoples.android.Util;
 import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.SurveyDBHandler;
 
@@ -176,7 +177,7 @@ public class SurveyScheduler extends IntentService
 						surveys.getColumnIndexOrThrow(
 								PeoplesDB.SurveyTable.DAYS[i])).split(","))
 				{
-					long scheduledTime = Config.getUnixTime(days[i], time);
+					long scheduledTime = Util.getUnixTime(days[i], time);
 
 					if (Config.D)
 					{
