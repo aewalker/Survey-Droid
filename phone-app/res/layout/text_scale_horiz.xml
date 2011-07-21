@@ -18,7 +18,7 @@
 	<!-- Dummy view -->
     <FrameLayout
 	    android:layout_weight="1"
-	    androd:layout_height="wrap_content"
+	    android:layout_height="wrap_content"
 	    android:layout_width="wrap_content"></FrameLayout>
 	<LinearLayout
 		android:layout_width="fill_parent"
@@ -32,7 +32,7 @@
 	    <!-- Dummy view -->
 	    <FrameLayout
 		    android:layout_weight="1"
-		    androd:layout_height="wrap_content"
+		    android:layout_height="wrap_content"
 		    android:layout_width="wrap_content"></FrameLayout>
 	    <TextView
 	    	android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
     <!-- Dummy view -->
     <FrameLayout
 	    android:layout_weight="1"
-	    androd:layout_height="wrap_content"
+	    android:layout_height="wrap_content"
 	    android:layout_width="wrap_content"></FrameLayout>
 	
     <LinearLayout
