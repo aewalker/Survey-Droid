@@ -36,7 +36,8 @@
 		                android:text="@string/main_settingsButton"
 		                android:drawableLeft="@drawable/blue_settings_medium"
 		                android:id="@+id/main_settingsButton"
-		                android:layout_weight="1" android:layout_width="fill_parent"></Button>
+		                android:layout_weight="1"
+		                android:layout_width="fill_parent"></Button>
 	                <Button
 		        		android:textAppearance="?android:attr/textAppearanceLarge"
 		                android:text="@string/main_sampleButton"
@@ -69,7 +70,8 @@
 		                android:layout_height="wrap_content"
 		                android:drawableLeft="@drawable/blue_back_medium"
 		                android:layout_gravity="center_vertical"
-		                android:layout_weight="1" android:layout_width="fill_parent"></Button>
+		                android:layout_weight="1"
+		                android:layout_width="fill_parent"></Button>
 		    	</LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -79,8 +81,14 @@
 	            android:layout_height="fill_parent"
 	            android:layout_gravity="top|right"
 	            android:layout_weight="1">
+	            <TextView
+	                android:layout_width="wrap_content"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:layout_height="wrap_content"
+	                android:text="@string/main_progressTitle"
+	                android:id="@+id/main_progessTitle"></TextView>
                 <org.peoples.android.VerticalProgressBar
-	           		android:layout_width="fill_parent"
+	           		android:layout_width="wrap_content"
 	           		android:layout_height="fill_parent"
    					android:progressDrawable="@drawable/progress_vertical"
 	           		android:id="@+id/main_progressBar"></org.peoples.android.VerticalProgressBar>

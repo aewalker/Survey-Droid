@@ -5,13 +5,14 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:orientation="vertical"
-	    android:layout_gravity="center_horizontal|center_vertical">
+	    android:layout_gravity="center">
     <TextView
 	    android:text="@string/question_loading_text"
 	    android:textAppearance="?android:attr/textAppearanceLarge"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/multiple_choice_question"
 	    android:layout_width="wrap_content"
+	    android:layout_marginBottom="10dip"
 	    android:layout_gravity="center"></TextView>
 	<ListView
 		android:layout_weight="1"
@@ -23,21 +24,18 @@
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
     	android:id="@+id/multiple_choice_buttonsLayout"
-    	android:layout_weight="1"
     	android:layout_gravity="center">
         <Button
         	android:id="@+id/multiple_choice_backButton"
         	android:text="@string/question_backButton"
         	android:layout_height="wrap_content"
         	android:layout_width="100dip"
-        	android:layout_weight="1"
-        	android:layout_gravity="center"></Button>
+        	android:layout_weight="1"></Button>
         <Button
         	android:id="@+id/multiple_choice_nextButton"
         	android:text="@string/question_nextButton"
         	android:layout_height="wrap_content"
         	android:layout_width="100dip"
-        	android:layout_weight="1"
-        	android:layout_gravity="center"></Button>
+        	android:layout_weight="1"></Button>
     </LinearLayout>
 </LinearLayout>

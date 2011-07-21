@@ -5,7 +5,6 @@
    	android:layout_width="fill_parent">
    	<TableRow
    		android:gravity="center_vertical|center_horizontal"
-   		android:layout_weight="1"
    		android:layout_width="fill_parent">
        	<TextView
        		android:textAppearance="?android:attr/textAppearanceLarge"
@@ -13,7 +12,8 @@
 		    android:layout_height="wrap_content"
 		    android:layout_width="wrap_content" 
 		    android:text="@string/settings_title"
-			android:gravity="center_vertical|center_horizontal"></TextView>
+		    android:layout_margin="10dip"
+		    android:gravity="center"></TextView>
     </TableRow>
    	<TableRow
    		android:gravity="center_vertical|center_horizontal"
@@ -86,8 +86,7 @@
 	</TableRow>
    	<TableRow
    		android:gravity="center_vertical|center_horizontal"
-   		android:layout_width="fill_parent"
-   		android:layout_weight="1">
+   		android:layout_width="fill_parent">
 		<LinearLayout 
 			android:orientation="horizontal" 
 			android:layout_height="wrap_content" 

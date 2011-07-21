@@ -12,7 +12,7 @@
 	<string name="settings_idButton">Show Phone ID</string>
 	
 	<!-- The default phone id. -->
-	<string name="id_defaultHoriz">0000 0000 0000 0000</string>
+	<string name="id_defaultHoriz">0000-0000-0000-0000</string>
 	<string name="id_defaultVert">0000\n0000\n0000\n0000</string>
 	
 	<!-- The back button on the id screen. --> 

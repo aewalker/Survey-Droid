@@ -10,8 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import android.os.Bundle;
-
 /**
  * Contains static, general use functions.
  * 

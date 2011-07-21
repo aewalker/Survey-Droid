@@ -4,22 +4,21 @@
 	android:id="@+id/survey_extras_topLayout"
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:gravity="center_vertical|center_horizontal">
+    android:orientation="vertical">
 	<TextView
 		android:textAppearance="?android:attr/textAppearanceLarge"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content" 
 	    android:text="@string/survey_extras_mainText"
 	    android:id="@+id/survey_extras_message"
-	    android:gravity="center_vertical|center_horizontal" android:layout_weight="1"></TextView>
+	    android:gravity="center"
+	    android:layout_weight="1"></TextView>
 	<LinearLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/survey_extras_topLayout"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:gravity="center_vertical|center_horizontal" android:layout_weight="1">
+	    android:orientation="horizontal">
 		<Button
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"

@@ -26,9 +26,7 @@
 		android:id="@+id/survey_confirmation_buttonsLayout"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:gravity="center_vertical|center_horizontal"
-	    android:layout_weight="1">
+	    android:orientation="horizontal">
 		<Button
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
