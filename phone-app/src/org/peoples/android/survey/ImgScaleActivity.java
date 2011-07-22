@@ -15,6 +15,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -30,6 +31,15 @@ public class ImgScaleActivity extends QuestionActivity
 {
 	//the display; keep it since it's used a lot
 	private Display display;
+	
+	//key to save the value in when saving/retrieving state
+	private static final String VALUE_KEY = "value_key";
+	
+	//the current value
+	private int value = 50;
+	
+	//is this activity being restored after being stopped?
+	private boolean isRestoring = false;
 	
 	@Override
 	protected void onCreate(Bundle savedState)
@@ -56,6 +66,12 @@ public class ImgScaleActivity extends QuestionActivity
 				R.id.img_scale_backButton).setOnClickListener(prevListener);
 		findViewById(
 				R.id.img_scale_nextButton).setOnClickListener(nextListener);
+		
+		if (savedState != null && savedState.containsKey(VALUE_KEY))
+		{
+			value = savedState.getInt(VALUE_KEY);
+			isRestoring = true;
+		}
 	}
 	
 	@Override
@@ -63,24 +79,32 @@ public class ImgScaleActivity extends QuestionActivity
 	{
 		int ans;
 		int max;
+		SeekBar sliderHoriz =
+			(SeekBar) findViewById(R.id.img_scale_sliderHoriz);
+		VerticalSeekBar sliderVert =
+			(VerticalSeekBar) findViewById(R.id.img_scale_sliderVert);
 		if (display.getOrientation() == Configuration.ORIENTATION_PORTRAIT)
 		{
-			SeekBar slider = (SeekBar) findViewById(R.id.img_scale_slider);
-			ans = slider.getProgress();
-			max = slider.getMax();
+			ans = sliderHoriz.getProgress();
+			max = sliderHoriz.getMax();
 		}
 		else
 		{
-			VerticalSeekBar slider =
-				(VerticalSeekBar) findViewById(R.id.img_scale_slider);
-			ans = slider.getProgress();
-			max = slider.getMax();
+			ans = sliderVert.getProgress();
+			max = sliderVert.getMax();
 		}
 		ans++; //because SeekBar starts at 0
 		ans *= (100.0 / (max + 1)); //have to scale the answer
 		
 		survey.answer(ans);
 		if (Config.D) Log.d(TAG, "answering with " + ans);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle state)
+	{
+		super.onSaveInstanceState(state);
+		state.putInt(VALUE_KEY, value);
 	}
 
 	@Override
@@ -107,22 +131,61 @@ public class ImgScaleActivity extends QuestionActivity
 		ImageView highImg = (ImageView) findViewById(R.id.img_scale_highImg);
 		lowImg.setImageBitmap(survey.getLowImg());
 		highImg.setImageBitmap(survey.getHighImg());
+		SeekBar sliderHoriz =
+			(SeekBar) findViewById(R.id.img_scale_sliderHoriz);
+		VerticalSeekBar sliderVert =
+			(VerticalSeekBar) findViewById(R.id.img_scale_sliderVert);
 		if (display.getOrientation() == Configuration.ORIENTATION_PORTRAIT)
 		{
-			SeekBar slider = (SeekBar) findViewById(R.id.img_scale_slider);
-			if (survey.getAnswerValue() == -1)
-				slider.setProgress(slider.getMax() / 2);
-			else slider.setProgress((int) ((survey.getAnswerValue() - 1)
-					* (100.0 / (slider.getMax() + 1))));
+			sliderVert.setVisibility(View.GONE);
+			sliderHoriz.setOnSeekBarChangeListener(
+					new SeekBar.OnSeekBarChangeListener()
+			{
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {}
+				
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {}
+				
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress,
+						boolean fromUser)
+				{
+					value = progress;
+				}
+			});
+			if (isRestoring)
+				sliderHoriz.setProgress(value);
+			else if (survey.getAnswerValue() == -1)
+				sliderHoriz.setProgress(sliderHoriz.getMax() / 2);
+			else sliderHoriz.setProgress((int) ((survey.getAnswerValue() - 1)
+					* (100.0 / (sliderHoriz.getMax() + 1))));
 		}
 		else
 		{
-			VerticalSeekBar slider =
-				(VerticalSeekBar) findViewById(R.id.img_scale_slider);
-			if (survey.getAnswerValue() == -1)
-				slider.setProgress(slider.getMax() / 2);
-			else slider.setProgress((int) ((survey.getAnswerValue() - 1)
-					* (100.0 / (slider.getMax() + 1))));
+			sliderHoriz.setVisibility(View.GONE);
+			sliderVert.setOnSeekBarChangeListener(
+					new VerticalSeekBar.OnSeekBarChangeListener()
+			{
+				@Override
+				public void onStopTrackingTouch(VerticalSeekBar seekBar) {}
+				
+				@Override
+				public void onStartTrackingTouch(VerticalSeekBar seekBar) {}
+				
+				@Override
+				public void onProgressChanged(VerticalSeekBar seekBar, int progress,
+						boolean fromUser)
+				{
+					value = progress;
+				}
+			});
+			if (isRestoring)
+				sliderVert.setProgress(value);
+			else if (survey.getAnswerValue() == -1)
+				sliderVert.setProgress(sliderVert.getMax() / 2);
+			else sliderVert.setProgress((int) ((survey.getAnswerValue() - 1)
+					* (100.0 / (sliderVert.getMax() + 1))));
 		}
 	}
 }

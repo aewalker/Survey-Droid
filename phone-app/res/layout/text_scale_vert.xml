@@ -24,8 +24,15 @@
 	   		android:layout_width="wrap_content"
 	   		android:layout_height="fill_parent"
 	   		android:layout_margin="25dip"
+    		android:thumb="@drawable/seek_thumb"
 			android:progressDrawable="@drawable/progress_vertical"
-	   		android:id="@+id/text_scale_slider"></org.peoples.android.VerticalSeekBar>
+	   		android:id="@+id/text_scale_sliderVert"></org.peoples.android.VerticalSeekBar>
+		<SeekBar
+			android:id="@+id/text_scale_sliderHoriz"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:visibility="gone"
+			android:progress="50"></SeekBar>
 	   	<LinearLayout
 	   		android:layout_width="wrap_content"
 			android:layout_height="fill_parent"

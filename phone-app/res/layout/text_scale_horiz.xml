@@ -40,10 +40,18 @@
 	    	android:layout_height="wrap_content"></TextView>
 	</LinearLayout>
 	<SeekBar
-		android:id="@+id/text_scale_slider"
+		android:id="@+id/text_scale_sliderHoriz"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
 		android:progress="50"></SeekBar>
+	<org.peoples.android.VerticalSeekBar
+	   		android:layout_width="wrap_content"
+	   		android:layout_height="fill_parent"
+	   		android:layout_margin="25dip"
+			android:visibility="gone"
+    		android:thumb="@drawable/seek_thumb"
+			android:progressDrawable="@drawable/progress_vertical"
+	   		android:id="@+id/text_scale_sliderVert"></org.peoples.android.VerticalSeekBar>
     <!-- Dummy view -->
     <FrameLayout
 	    android:layout_weight="1"

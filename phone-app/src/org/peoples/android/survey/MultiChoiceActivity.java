@@ -133,8 +133,14 @@ public class MultiChoiceActivity extends QuestionActivity
 				android.R.layout.simple_list_item_multiple_choice,
 				strings, pics);
 		listView.setAdapter(iota);
-		//if (survey.getAnswerChoices() != null)
-		//iota.setChecked(survey.getAnswerChoices());
+		int[] ansChoices = survey.getAnswerChoices();
+		if (ansChoices != null)
+		{
+			for (int item : ansChoices)
+			{
+				listView.setItemChecked(item, true);
+			}
+		}
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 	}
 }

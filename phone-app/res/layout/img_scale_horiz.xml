@@ -36,8 +36,16 @@
 	    	android:id="@+id/img_scale_highImg"
 	    	android:layout_height="wrap_content"></ImageView>
 	</LinearLayout>
+	<org.peoples.android.VerticalSeekBar
+   		android:layout_width="wrap_content"
+   		android:layout_height="fill_parent"
+   		android:layout_margin="25dip"
+		android:progressDrawable="@drawable/progress_vertical"
+   		android:thumb="@drawable/seek_thumb"
+   		android:visibility="gone"
+   		android:id="@+id/img_scale_sliderVert"></org.peoples.android.VerticalSeekBar>
 	<SeekBar
-		android:id="@+id/img_scale_slider"
+		android:id="@+id/img_scale_sliderHoriz"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
 		android:progress="50"></SeekBar>

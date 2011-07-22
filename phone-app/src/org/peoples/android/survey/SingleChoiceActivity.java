@@ -83,8 +83,12 @@ public class SingleChoiceActivity extends QuestionActivity
 				android.R.layout.simple_list_item_single_choice,
 				strings, pics);
 		listView.setAdapter(iota);
-//		if (survey.getAnswerChoices() != null)
-//			iota.setInitialChecked(survey.getAnswerChoices());
+		int[] ansChoices = survey.getAnswerChoices();
+		if (ansChoices != null)
+		{
+			if (Config.D) Log.d(TAG, "Previous answer: " + ansChoices[0]);
+			listView.setItemChecked(ansChoices[0], true);
+		}
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}
 	

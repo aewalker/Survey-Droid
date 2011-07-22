@@ -22,7 +22,7 @@
 	<Button
 		android:id="@+id/id_backButton" 
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
+		android:layout_width="100dip"
 		android:drawableLeft="@drawable/blue_back_small"
 		android:text="@string/id_backButton"></Button>
 </LinearLayout>
