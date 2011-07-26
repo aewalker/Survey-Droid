@@ -46,7 +46,7 @@ public class BootIntentReceiver extends BroadcastReceiver
     }
     
     //FIXME FOR TESTING ONLY - move back to onReceive when done
-    public void startup(Context context)
+    public static void startup(Context context)
     {
     	Log.i(TAG, "+++Starting PEOPLES+++");
         

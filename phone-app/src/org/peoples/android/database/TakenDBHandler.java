@@ -91,7 +91,11 @@ public class TakenDBHandler extends PeoplesDBHandler
 		//run it
 		Cursor result =
 			db.query(table, cols, selc, selcArgs, group, having, orderBy);
-		if (result.getCount() == 0) return NO_PERCENTAGE;
+		if (result.getCount() == 0) 
+		{
+			result.close();
+			return NO_PERCENTAGE;
+		}
 		result.moveToFirst();
 		
 		int size = Config.getSetting(contx, Config.COMPLETION_SAMPLE,

@@ -43,6 +43,7 @@ public class MainActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+    	BootIntentReceiver.startup(getApplicationContext());
         super.onCreate(savedInstanceState);
 
         if (Config.D) Log.d(TAG, "starting mainActivity");

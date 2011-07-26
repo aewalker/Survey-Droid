@@ -70,6 +70,7 @@
 				<action android:name="org.peoples.android.coms.ACTION_DOWNLOAD_DATA" />
 			</intent-filter>
 		</service>
+		<service android:name="LocationTrackerService" android:label="LocationTrackerService"></service>
 		<activity android:label="PEOPLES Survey Notification" android:name=".survey.NotificationActivity"></activity>
 		<activity android:label="PEOPLES Survey" android:name=".survey.SingleChoiceActivity"></activity>
 		<activity android:label="PEOPLES Survey" android:name=".survey.MultiChoiceActivity"></activity>

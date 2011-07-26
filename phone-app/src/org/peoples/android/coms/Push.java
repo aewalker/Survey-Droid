@@ -135,9 +135,10 @@ public class Push extends WebClient
         }
         catch (Exception e)
         {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.toString());
+            throw new RuntimeException("FATAL ERROR", e);
         }
-        return false;
+//        return false;
     }
     
     /**

@@ -3,12 +3,13 @@
  * needed.  Adapted from Android Wikitionary example provided with the       *
  * Android SDK.                                                              *
  *---------------------------------------------------------------------------*/
-//TODO add the ability to deal with https (includeing self-signed certs
 package org.peoples.android.coms;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.net.ssl.SSLException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -16,6 +17,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.peoples.android.Config;
@@ -34,6 +36,11 @@ public abstract class WebClient
 {
 	//logging tag
 	private static final String TAG = "WebClient";
+	
+	//config key used to indicate that we need to use the custom keystore
+	//used as an optimization to avoid catching a lot of exceptions
+	private static final String USE_PRIVATE_KEYSTORE =
+		"use_private_keystore";
 
 	//status codes
     private static final int HTTP_STATUS_OK = 200;
@@ -68,13 +75,36 @@ public abstract class WebClient
     protected static synchronized String getUrlContent(Context ctxt, String url)
     throws ApiException
     {
+    	return getUrlContent(ctxt, url, true);
+    }
+    
+    //same as above with recursion counter
+    private static synchronized String getUrlContent(Context ctxt, String url,
+    		boolean firstCall) throws ApiException
+    {
         // Create client and set our specific user-agent string
-        HttpClient client = new SocHttpClient(ctxt);
+        HttpClient client = getClient(ctxt);
         HttpGet request = new HttpGet(url);
 
         try
         {
-            HttpResponse response = client.execute(request);
+        	// Execute HTTP Post Request
+            HttpResponse response;
+			try
+			{
+				response = client.execute(request);
+			}
+			catch (Exception e)
+			{
+				Log.e(TAG, e.toString());
+				//make sure this isn't the recursive call
+				if (!firstCall)
+					throw new ApiException("Untrusted certificate");
+				//switch to using the other client
+				swapKeyStore(ctxt);
+				//the just do a recursive call
+				return getUrlContent(ctxt, url, false);
+			}
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
@@ -90,22 +120,52 @@ public abstract class WebClient
             throw new ApiException("Problem communicating with API", e);
         }
     }
-
+    
+    /**
+     * Posts given JSON content to a url
+     * 
+     * @param ctxt - the current context (usually a service)
+     * @param url - full url to send content to
+     * @param value - json content
+     * 
+     * @return true on success
+     */
     protected static synchronized boolean
-    	postJsonToUrl(Context ctxt, String url, String value)
+		postJsonToUrl(Context ctxt, String url, String value)
     {
-        try
-        {
-            HttpClient httpclient = new SocHttpClient(ctxt);
-            HttpPost httpPost = new HttpPost(url);
+    	return postJsonToUrl(ctxt, url, value, true);
+    }
 
+    //same as above with recursion counter
+    private static synchronized boolean
+    	postJsonToUrl(Context ctxt, String url, String value, boolean firstCall)
+    {
+        HttpClient httpclient = getClient(ctxt);
+        HttpPost httpPost = new HttpPost(url);
+        
+    	try
+    	{
             StringEntity se = new StringEntity(value);
             se.setContentEncoding(
             		new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             httpPost.setEntity(se);
 
             // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httpPost);
+            HttpResponse response;
+			try
+			{
+				response = httpclient.execute(httpPost);
+			}
+			catch (SSLException e)
+			{
+				//make sure this isn't the recursive call
+				if (!firstCall)
+					throw new ApiException("Untrusted certificate");
+				//switch to using the other client
+				swapKeyStore(ctxt);
+				//the just do a recursive call
+				return postJsonToUrl(ctxt, url, value, false);
+			}
 
             if (Config.D) Log.d(TAG,
             		getInputStreamAsString(response.getEntity().getContent()));
@@ -113,9 +173,30 @@ public abstract class WebClient
             StatusLine status = response.getStatusLine();
             if (status.getStatusCode() == HTTP_STATUS_OK)
                 return true;
-        }
-        catch (Exception e) { }
+    	}
+    	catch (Exception e)
+    	{
+    		Log.e(TAG, e.toString());
+    	}
         return false;
+    }
+    
+    private static void swapKeyStore(Context ctxt)
+    {
+    	Config.putSetting(ctxt, USE_PRIVATE_KEYSTORE,
+				!Config.getSetting(ctxt, USE_PRIVATE_KEYSTORE, false));
+    }
+    
+    private static HttpClient getClient(Context ctxt)
+    {
+    	if (Config.getSetting(ctxt, USE_PRIVATE_KEYSTORE, false))
+    	{
+    		return new SocHttpClient(ctxt);
+    	}
+    	else
+    	{
+    		return new DefaultHttpClient();
+    	}
     }
 
     private static String getInputStreamAsString(InputStream is)

@@ -45,7 +45,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     //Change the version number here to force the database to
     //update itself.  This throws out all data.
     private static final String DATABASE_NAME = "peoples.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     //table names
     public static final String TAKEN_TABLE_NAME = "surveysTaken";
@@ -290,12 +290,13 @@ public class PeoplesDB extends SQLiteOpenHelper
     	private static String createSql() {
     		return "CREATE TABLE answers (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-    				"question_id INT UNSIGNED NOT NULL," +
-    				"choice_ids TEXT," +
-    				"ans_text TEXT," +
-    				"ans_value INT," +
-    				"uploaded INT UNSIGNED DEFAULT 0," +
-    				"created DATETIME);";
+    				QUESTION_ID + " INT UNSIGNED NOT NULL," +
+    				ANS_TYPE + " INT," +
+    				CHOICE_IDS + " TEXT," +
+    				ANS_TEXT + " TEXT," +
+    				ANS_VALUE + " INT," +
+    				UPLOADED + " INT UNSIGNED DEFAULT 0," +
+    				CREATED + " DATETIME);";
     	}
     }
 

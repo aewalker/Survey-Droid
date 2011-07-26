@@ -39,7 +39,7 @@ public class Config
 	//names/default values for configurable settings
 	/** Is https enabled? */
 	public static final String HTTPS = "https";
-	public static final boolean HTTPS_DEFAULT = false;
+	public static final boolean HTTPS_DEFAULT = true;
 	
 	/** Frequency with which to run the survey scheduler (in minutes) */
 	public static final String SCHEDULER_INTERVAL = "scheduler_interval";

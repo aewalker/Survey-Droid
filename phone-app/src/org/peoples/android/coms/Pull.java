@@ -51,14 +51,36 @@ public class Pull extends WebClient
     		TelephonyManager tManager =
             	(TelephonyManager) ctxt.getSystemService(
             			Context.TELEPHONY_SERVICE);
-    		String url = "";
+    		StringBuilder url = new StringBuilder();
     		if (Config.getSetting(ctxt, Config.HTTPS, Config.HTTPS_DEFAULT))
-    			url = url + "https://";
+    			url.append("https://");
     		else
-    			url = url + "http://";
-            JSONObject json = new JSONObject(getUrlContent(ctxt, url +
-            	Config.getSetting(ctxt, Config.SERVER, Config.SERVER_DEFAULT)
-            	+ PULL_URL + tManager.getDeviceId()));
+    			url.append("http://");
+    		url.append(Config.getSetting(ctxt,
+    				Config.SERVER, Config.SERVER_DEFAULT));
+    		url.append(PULL_URL);
+    		url.append(tManager.getDeviceId());
+    		if (Config.D) Log.d(TAG, "Pull url: " + url.toString());
+    		JSONObject json;
+    		try
+    		{
+    			json = new JSONObject(getUrlContent(ctxt, url.toString()));
+    		}
+    		catch (Exception e)
+    		{
+    			Log.e(TAG, "Unable to communicate with remote server");
+    			try
+    			{
+    				ApiException apiE = (ApiException) e;
+    				Log.e(TAG, "Reason: " + apiE.toString());
+    				Log.e(TAG, "Make sure this device is registered");
+    			}
+    			catch (Exception unknownE)
+    			{
+    				Log.e(TAG, "Unkown Reason: " + e.toString());
+    			}
+    			return;
+    		}
             PeoplesDB pdb = new PeoplesDB(ctxt);
             SQLiteDatabase sdb = pdb.getWritableDatabase();
             syncSurveys(sdb, json.getJSONArray("surveys"));
@@ -72,7 +94,8 @@ public class Pull extends WebClient
         }
     	catch (Exception e)
     	{
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.toString());
+            throw new RuntimeException("FATAL ERROR", e);
         }
     }
 
