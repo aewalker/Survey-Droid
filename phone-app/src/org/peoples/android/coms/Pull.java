@@ -318,14 +318,14 @@ public class Pull extends WebClient
     		//times tracked
     		JSONArray times = config.getJSONArray("time_tracked");
     		Config.putSetting(ctxt, Config.NUM_TIMES_TRACKED,
-    				locations.length());
+    				times.length());
     		for (int i = 0; i < times.length(); i++)
     		{
-    			JSONObject time = locations.getJSONObject(i);
+    			JSONObject time = times.getJSONObject(i);
     			Config.putSetting(ctxt, Config.TRACKED_START + i,
-    					"" + time.optInt("long", 0));
+    					"" + time.optInt("start", 0));
     			Config.putSetting(ctxt, Config.TRACKED_END + i,
-    					"" + time.optInt("lat", 0));
+    					"" + time.optInt("end", 0));
     		}
     		config.remove("time_tracked");
     		
