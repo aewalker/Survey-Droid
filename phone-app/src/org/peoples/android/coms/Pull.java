@@ -59,44 +59,54 @@ public class Pull extends WebClient
     		url.append(Config.getSetting(ctxt,
     				Config.SERVER, Config.SERVER_DEFAULT));
     		url.append(PULL_URL);
-    		url.append(tManager.getDeviceId());
-    		if (Config.D) Log.d(TAG, "Pull url: " + url.toString());
-    		JSONObject json;
-    		try
+    		String uid = tManager.getDeviceId();
+    		if (uid != null)
     		{
-    			json = new JSONObject(getUrlContent(ctxt, url.toString()));
-    		}
-    		catch (Exception e)
-    		{
-    			Log.e(TAG, "Unable to communicate with remote server");
-    			try
-    			{
-    				ApiException apiE = (ApiException) e;
-    				Log.e(TAG, "Reason: " + apiE.toString());
-    				Log.e(TAG, "Make sure this device is registered");
-    			}
-    			catch (Exception unknownE)
-    			{
-    				Log.e(TAG, "Unkown Reason: " + e.toString());
-    			}
-    			return;
-    		}
-            PeoplesDB pdb = new PeoplesDB(ctxt);
-            SQLiteDatabase sdb = pdb.getWritableDatabase();
-            syncSurveys(sdb, json.getJSONArray("surveys"));
-            syncQuestions(sdb, json.getJSONArray("questions"));
-            syncChocies(sdb, json.getJSONArray("choices"));
-            syncBranches(sdb, json.getJSONArray("branches"));
-            syncConditions(sdb, json.getJSONArray("conditions"));
-            syncConfig(sdb, json.getJSONObject("config"), ctxt);
-            sdb.close();
-            pdb.close();
+	    		url.append(uid);
+	    		if (Config.D) Log.d(TAG, "Pull url: " + url.toString());
+	    		JSONObject json;
+	    		try
+	    		{
+	    			json = new JSONObject(getUrlContent(ctxt, url.toString()));
+	    		}
+	    		catch (Exception e)
+	    		{
+	    			Log.e(TAG, "Unable to communicate with remote server");
+	    			try
+	    			{
+	    				ApiException apiE = (ApiException) e;
+	    				Log.e(TAG, "Reason: " + apiE.getMessage());
+	    				Log.e(TAG, "Make sure this device is registered"
+	    						+ " and the server is working");
+	    			}
+	    			catch (Exception unknownE)
+	    			{
+	    				Log.e(TAG, "Unkown Reason: " + e.toString());
+	    			}
+	    			return;
+	    		}
+	            PeoplesDB pdb = new PeoplesDB(ctxt);
+	            SQLiteDatabase sdb = pdb.getWritableDatabase();
+	            syncSurveys(sdb, json.getJSONArray("surveys"));
+	            syncQuestions(sdb, json.getJSONArray("questions"));
+	            syncChocies(sdb, json.getJSONArray("choices"));
+	            syncBranches(sdb, json.getJSONArray("branches"));
+	            syncConditions(sdb, json.getJSONArray("conditions"));
+	            syncConfig(sdb, json.getJSONObject("config"), ctxt);
+	            sdb.close();
+	            pdb.close();
+        	}
+        	else
+        	{
+        		Log.w(TAG, "Device ID not available");
+        		Log.w(TAG, "Will reschedule and try again later");
+        	}
         }
     	catch (Exception e)
     	{
             Log.e(TAG, e.toString());
             throw new RuntimeException("FATAL ERROR", e);
-        }
+    	}
     }
 
     private static void syncSurveys(SQLiteDatabase db, JSONArray surveys)

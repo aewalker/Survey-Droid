@@ -22,7 +22,7 @@ public final class Util
 	 * 
 	 * @param day - the day of the week as in Config.DAY_FORMAT
 	 * @param time - the time of day as in Config.TIME_FORMAT
-	 * @return Unix timestamp in miliseconds
+	 * @return Unix timestamp in milliseconds
 	 */
 	public static long getUnixTime(String day, String time)
 	{

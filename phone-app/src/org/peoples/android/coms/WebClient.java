@@ -99,7 +99,7 @@ public abstract class WebClient
 				Log.e(TAG, e.toString());
 				//make sure this isn't the recursive call
 				if (!firstCall)
-					throw new ApiException("Untrusted certificate");
+					throw new ApiException("Untrusted certificate!");
 				//switch to using the other client
 				swapKeyStore(ctxt);
 				//the just do a recursive call

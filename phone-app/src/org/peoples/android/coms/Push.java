@@ -42,6 +42,19 @@ public class Push extends WebClient
     public static boolean pushAnswers(Context ctxt)
     {
         Log.i(TAG, "Pushing answers to server");
+        
+        TelephonyManager tManager =
+        	(TelephonyManager) ctxt.getSystemService(
+        			Context.TELEPHONY_SERVICE);
+    	String uid = tManager.getDeviceId();
+    	
+    	if (uid == null)
+    	{
+    		Log.w(TAG, "Device ID not available");
+    		Log.w(TAG, "Will reschedule and try again later");
+    		return false;
+    	}
+    	
         try
         {
         	ComsDBHandler cdbh = new ComsDBHandler(ctxt);
@@ -109,12 +122,6 @@ public class Push extends WebClient
             // now send to actual server
             JSONObject data = new JSONObject();
 
-            TelephonyManager tManager =
-            	(TelephonyManager) ctxt.getSystemService(
-            			Context.TELEPHONY_SERVICE);
-        	String uid = tManager.getDeviceId();
-
-            //data.put("deviceId", uid); //moved to url
             data.put("answers", answersJSON);
             if (Config.D) Log.d(TAG, data.toString());
             boolean success = postJsonToUrl(ctxt, getPushURL(ctxt)
@@ -153,6 +160,19 @@ public class Push extends WebClient
     public static boolean pushCompletionData(Context ctx)
     {
     	Log.i(TAG, "Pushing survey completion data to server");
+    	
+    	TelephonyManager tManager =
+        	(TelephonyManager) ctx.getSystemService(
+        			Context.TELEPHONY_SERVICE);
+    	String uid = tManager.getDeviceId();
+    	
+    	if (uid == null)
+    	{
+    		Log.w(TAG, "Device ID not available");
+    		Log.w(TAG, "Will reschedule and try again later");
+    		return false;
+    	}
+    	
         try
         {
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
@@ -194,11 +214,6 @@ public class Push extends WebClient
 
             // now send to actual server
             JSONObject data = new JSONObject();
-
-            TelephonyManager tManager =
-            	(TelephonyManager) ctx.getSystemService(
-            			Context.TELEPHONY_SERVICE);
-        	String uid = tManager.getDeviceId();
 
             data.put("surveysTaken", recordsJSON);
             if (Config.D) Log.d(TAG, data.toString());
@@ -245,6 +260,19 @@ public class Push extends WebClient
     public static boolean pushLocations(Context ctx)
     {
         Log.i(TAG, "Pushing locations to server");
+        
+        TelephonyManager tManager =
+        	(TelephonyManager) ctx.getSystemService(
+        			Context.TELEPHONY_SERVICE);
+    	String uid = tManager.getDeviceId();
+    	
+    	if (uid == null)
+    	{
+    		Log.w(TAG, "Device ID not available");
+    		Log.w(TAG, "Will reschedule and try again later");
+    		return false;
+    	}
+    	
         try
         {
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
@@ -288,11 +316,6 @@ public class Push extends WebClient
             // now send to actual server
             JSONObject data = new JSONObject();
 
-            TelephonyManager tManager =
-            	(TelephonyManager) ctx.getSystemService(
-            			Context.TELEPHONY_SERVICE);
-        	String uid = tManager.getDeviceId();
-
             data.put("locations", locationsJSON);
             if (Config.D) Log.d(TAG, data.toString());
             boolean success = postJsonToUrl(ctx, getPushURL(ctx)
@@ -330,6 +353,19 @@ public class Push extends WebClient
     public static boolean pushCallLog(Context ctx)
     {
         Log.i(TAG, "Pushing calllog to server");
+        
+        TelephonyManager tManager =
+        	(TelephonyManager) ctx.getSystemService(
+        			Context.TELEPHONY_SERVICE);
+    	String uid = tManager.getDeviceId();
+    	
+    	if (uid == null)
+    	{
+    		Log.w(TAG, "Device ID not available");
+    		Log.w(TAG, "Will reschedule and try again later");
+    		return false;
+    	}
+    	
         try
         {
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
@@ -372,11 +408,6 @@ public class Push extends WebClient
             // now send to actual server
             JSONObject data = new JSONObject();
 
-            TelephonyManager tManager =
-            	(TelephonyManager) ctx.getSystemService(
-            			Context.TELEPHONY_SERVICE);
-        	String uid = tManager.getDeviceId();
-
             data.put("calls", callsJSON);
             if (Config.D) Log.d(TAG, data.toString());
             boolean success = postJsonToUrl(ctx, getPushURL(ctx)
@@ -413,6 +444,19 @@ public class Push extends WebClient
     public static boolean pushStatusData(Context ctx)
     {
     	Log.i(TAG, "Pushing status data to server");
+    	
+    	TelephonyManager tManager =
+        	(TelephonyManager) ctx.getSystemService(
+        			Context.TELEPHONY_SERVICE);
+    	String uid = tManager.getDeviceId();
+    	
+    	if (uid == null)
+    	{
+    		Log.w(TAG, "Device ID not available");
+    		Log.w(TAG, "Will reschedule and try again later");
+    		return false;
+    	}
+    	
         try
         {
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
@@ -452,11 +496,6 @@ public class Push extends WebClient
 
             // now send to actual server
             JSONObject data = new JSONObject();
-
-            TelephonyManager tManager =
-            	(TelephonyManager) ctx.getSystemService(
-            			Context.TELEPHONY_SERVICE);
-        	String uid = tManager.getDeviceId();
 
             data.put("statusChanges", recordsJSON);
             if (Config.D) Log.v(TAG, data.toString());
