@@ -79,6 +79,7 @@ public class SingleChoiceActivity extends QuestionActivity
 			strings[i] = choices[i].getText();
 		}
 		listView = (ListView) findViewById(android.R.id.list);
+		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		ImageOrTextAdapter<String> iota = new ImageOrTextAdapter<String>(this,
 				android.R.layout.simple_list_item_single_choice,
 				strings, pics);
@@ -89,7 +90,6 @@ public class SingleChoiceActivity extends QuestionActivity
 			if (Config.D) Log.d(TAG, "Previous answer: " + ansChoices[0]);
 			listView.setItemChecked(ansChoices[0], true);
 		}
-		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}
 	
 	@Override

@@ -129,6 +129,7 @@ public class MultiChoiceActivity extends QuestionActivity
 			strings[i] = choices[i].getText();
 		}
 		listView = (ListView) findViewById(android.R.id.list);
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		ImageOrTextAdapter<String> iota = new ImageOrTextAdapter<String>(this,
 				android.R.layout.simple_list_item_multiple_choice,
 				strings, pics);
@@ -141,6 +142,5 @@ public class MultiChoiceActivity extends QuestionActivity
 				listView.setItemChecked(item, true);
 			}
 		}
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 	}
 }
