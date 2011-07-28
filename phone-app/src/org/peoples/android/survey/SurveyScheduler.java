@@ -173,9 +173,11 @@ public class SurveyScheduler extends IntentService
 			for (int i = 0; i < days.length; i++)
 			{
 				if (Config.D) Log.v(TAG, "Doing " + days[i]);
-				String[] times = surveys.getString(
+				String timeString = surveys.getString(
 						surveys.getColumnIndexOrThrow(
-								PeoplesDB.SurveyTable.DAYS[i])).split(",");
+								PeoplesDB.SurveyTable.DAYS[i]));
+				Log.v(TAG, "Time string: " + timeString);
+				String[] times = timeString.split(",");
 				for (String time : times)
 				{
 					if (time == "") continue;  //"".split(",") returns { "" }

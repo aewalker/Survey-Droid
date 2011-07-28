@@ -220,7 +220,10 @@ public class LocationTrackerService extends Service
 		/** Starts the location tracker. */
 		public void start()
 		{
-			if (started) throw new RuntimeException("already started!");
+			if (started) 
+			{
+				throw new RuntimeException("already started!");
+			}
 			started = true;
 			LocationManager lm = (LocationManager)
 				getThis().getSystemService(Context.LOCATION_SERVICE);

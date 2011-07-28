@@ -4,7 +4,6 @@
  * User control panel with buttons to adjust settings, show a sample survey, *
  * get the phone's id, and exit.                                             *
  *---------------------------------------------------------------------------*/
-//TODO add an indication of what percentage of surveys have been completed
 package org.peoples.android;
 
 import android.app.Activity;
@@ -43,7 +42,6 @@ public class MainActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-    	BootIntentReceiver.startup(getApplicationContext());
         super.onCreate(savedInstanceState);
 
         if (Config.D) Log.d(TAG, "starting mainActivity");

@@ -353,18 +353,19 @@ public class Pull extends WebClient
     		//note that this requires the keys in the incoming JSON
     		//to be the same as those defined in Config.java
     		JSONArray cNames = config.names();
+    		if (cNames == null) return;
     		for (int i = 0; i < cNames.length(); i++)
     		{
     			boolean done = false;
-    			String key = config.getString(cNames.getString(i));
-    			Object val = config.get(key);
+    			String key = cNames.getString(i);
+    			if (Config.D) Log.v(TAG, "Current key: " + key);
     			
     			//check for a string value
     			for (String k : Config.STRINGS)
     			{
     				if (key.equals(k))
     				{
-    					Config.putSetting(ctxt, key, (String) val);
+    					Config.putSetting(ctxt, key, config.getString(key));
     					done = true;
     					break;
     				}
@@ -376,7 +377,7 @@ public class Pull extends WebClient
     			{
     				if (key.equals(k))
     				{
-    					Config.putSetting(ctxt, key, (Integer) val);
+    					Config.putSetting(ctxt, key, config.getInt(key));
     					done = true;
     					break;
     				}
@@ -388,7 +389,10 @@ public class Pull extends WebClient
     			{
     				if (key.equals(k))
     				{
-    					Config.putSetting(ctxt, key, (Boolean) val);
+    					int val = config.getInt(key);
+    					boolean boolVal = true;
+    					if (val == 0) boolVal = false;
+    					Config.putSetting(ctxt, key, boolVal);
     					done = true;
     					break;
     				}
@@ -400,7 +404,8 @@ public class Pull extends WebClient
     			{
     				if (key.equals(k))
     				{
-    					Config.putSetting(ctxt, key, (Float) val);
+    					Config.putSetting(ctxt, key,
+    							(float) config.getDouble(key));
     					break;
     				}
     			}
