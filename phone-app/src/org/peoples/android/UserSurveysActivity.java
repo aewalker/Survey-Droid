@@ -63,7 +63,7 @@ public class UserSurveysActivity extends ListActivity
         	ids[i] = surveys.getInt(surveys.getColumnIndexOrThrow(
         			PeoplesDB.SurveyTable._ID));
         	names[i] = surveys.getString(surveys.getColumnIndexOrThrow(
-        			PeoplesDB.SurveyTable._ID));
+        			PeoplesDB.SurveyTable.NAME));
         	surveys.moveToNext();
         }
         surveys.close();

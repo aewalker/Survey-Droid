@@ -20,6 +20,7 @@ import org.peoples.android.Config;
 import org.peoples.android.database.PeoplesDB;
 import static org.peoples.android.database.PeoplesDB.*;
 import org.peoples.android.coms.WebClient;
+import org.peoples.android.coms.WebClient.ApiException;
 
 //TODO move all the database stuff into the ComsDBHelper.  Problem is, that
 //would basically render this class a wrapper.  Have to think about it...
@@ -30,7 +31,7 @@ import org.peoples.android.coms.WebClient;
  * @author Tony Xaio
  * @author Austin Walker
  */
-public class Pull extends WebClient
+public class Pull
 {
 	//logging tag
 	private static final String TAG = "Pull";
@@ -67,7 +68,7 @@ public class Pull extends WebClient
 	    		JSONObject json;
 	    		try
 	    		{
-	    			json = new JSONObject(getUrlContent(ctxt, url.toString()));
+	    			json = new JSONObject(WebClient.getUrlContent(ctxt, url.toString()));
 	    		}
 	    		catch (Exception e)
 	    		{

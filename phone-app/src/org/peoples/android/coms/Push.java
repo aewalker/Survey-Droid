@@ -23,7 +23,7 @@ import org.peoples.android.Config;
  * @author Tony Xaio
  * @author Austin Walker
  */
-public class Push extends WebClient
+public class Push
 {
 	//logging tag
 	private static final String TAG = "Push";
@@ -73,6 +73,8 @@ public class Push extends WebClient
                 cdbh.close();
             	return true;
             }
+            int[] uploadedIDs = new int[answers.getCount()];
+            int index = 0;
 
             while (!answers.isAfterLast())
             {
@@ -114,6 +116,10 @@ public class Push extends WebClient
                     				PeoplesDB.AnswerTable.ANS_TYPE)));
                 }
                 answersJSON.put(ans);
+                uploadedIDs[index] = answers.getInt(
+                		answers.getColumnIndexOrThrow(
+                				PeoplesDB.AnswerTable._ID));
+                index++;
                 answers.moveToNext();
             }
             answers.close();
@@ -124,17 +130,16 @@ public class Push extends WebClient
 
             data.put("answers", answersJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(ctxt, getPushURL(ctxt)
+            boolean success = WebClient.postJsonToUrl(ctxt, getPushURL(ctxt)
             		+ uid, data.toString());
 
             // mark answers as uploaded if appropriate
             if (success)
             {
             	cdbh.openWrite();
-                for (int i = 0; i < answersJSON.length(); i++)
+                for (int i = 0; i < uploadedIDs.length; i++)
                 {
-                    JSONObject ans = answersJSON.getJSONObject(i);
-                    cdbh.updateAnswer(ans.getInt(PeoplesDB.AnswerTable._ID));
+                    cdbh.updateAnswer(uploadedIDs[i]);
                 }
                 cdbh.close();
             }
@@ -143,9 +148,10 @@ public class Push extends WebClient
         catch (Exception e)
         {
             Log.e(TAG, e.toString());
-            throw new RuntimeException("FATAL ERROR", e);
+            if (Config.D)
+            	throw new RuntimeException("FATAL ERROR", e);
         }
-//        return false;
+        return false;
     }
     
     /**
@@ -193,6 +199,7 @@ public class Push extends WebClient
 
             compData.moveToFirst();
             int numRecords = 0;
+            int[] uploadedIDs = new int[compData.getCount()];
             while (!compData.isAfterLast())
             {
                 JSONObject item = new JSONObject();
@@ -207,6 +214,9 @@ public class Push extends WebClient
                 				PeoplesDB.TakenTable.CREATED)));
                 recordsJSON.put(item);
                 compData.moveToNext();
+                uploadedIDs[numRecords] = compData.getInt(
+                		compData.getColumnIndexOrThrow(
+                				PeoplesDB.TakenTable._ID));
                 numRecords++;
             }
             compData.close();
@@ -217,7 +227,7 @@ public class Push extends WebClient
 
             data.put("surveysTaken", recordsJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(ctx, getPushURL(ctx)
+            boolean success = WebClient.postJsonToUrl(ctx, getPushURL(ctx)
             		+ uid, data.toString());
 
             // delete records if appropriate
@@ -228,15 +238,12 @@ public class Push extends WebClient
             			Config.COMPLETION_SAMPLE_DEFAULT);
             	
             	cdbh.openWrite();
-                for (int i = recordsJSON.length() - 1; i >= 0; i--)
+                for (int i = uploadedIDs.length - 1; i >= 0; i--)
                 { //remember: these are in reverse order by creation date
-                    JSONObject item = recordsJSON.getJSONObject(i);
                     if (i >= size)
-                    	cdbh.updateCompletionRecord(
-                    			item.getInt(PeoplesDB.TakenTable._ID));
+                    	cdbh.updateCompletionRecord(uploadedIDs[i]);
                     else
-                    	cdbh.delCompletionRecord(
-                    			item.getInt(PeoplesDB.TakenTable._ID));
+                    	cdbh.delCompletionRecord(uploadedIDs[i]);
                 }
                 cdbh.close();
             }
@@ -290,6 +297,9 @@ public class Push extends WebClient
                 cdbh.close();
             	return true;
             }
+            
+            int[] uploadedIDs = new int[locations.getCount()];
+            int index = 0;
 
             locations.moveToFirst();
             while (!locations.isAfterLast())
@@ -308,6 +318,10 @@ public class Push extends WebClient
                 		locations.getColumnIndexOrThrow(
                 				PeoplesDB.LocationTable.TIME)));
                 locationsJSON.put(loc);
+                uploadedIDs[index] = locations.getInt(
+                		locations.getColumnIndexOrThrow(
+                				PeoplesDB.LocationTable._ID));
+                index++;
                 locations.moveToNext();
             }
             locations.close();
@@ -318,17 +332,16 @@ public class Push extends WebClient
 
             data.put("locations", locationsJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(ctx, getPushURL(ctx)
+            boolean success = WebClient.postJsonToUrl(ctx, getPushURL(ctx)
             		+ uid, data.toString());
 
             // delete locations if appropriate
             if (success)
             {
             	cdbh.openWrite();
-                for (int i = 0; i < locationsJSON.length(); i++)
+                for (int i = 0; i < uploadedIDs.length; i++)
                 {
-                    JSONObject loc = locationsJSON.getJSONObject(i);
-                    cdbh.delLocation(loc.getInt(PeoplesDB.LocationTable._ID));
+                    cdbh.delLocation(uploadedIDs[i]);
                 }
                 cdbh.close();
             }
@@ -382,6 +395,9 @@ public class Push extends WebClient
                 cdbh.close();
             	return true;
             }
+            
+            int[] uploadedIDs = new int[calls.getCount()];
+            int index = 0;
 
             calls.moveToFirst();
             while (!calls.isAfterLast())
@@ -400,6 +416,10 @@ public class Push extends WebClient
                 		calls.getColumnIndexOrThrow(
                 				PeoplesDB.CallLogTable.PHONE_NUMBER)), ctx));
                 callsJSON.put(log);
+                uploadedIDs[index] = calls.getInt(
+                		calls.getColumnIndexOrThrow(
+                				PeoplesDB.CallLogTable._ID));
+                index++;
                 calls.moveToNext();
             }
             calls.close();
@@ -410,17 +430,16 @@ public class Push extends WebClient
 
             data.put("calls", callsJSON);
             if (Config.D) Log.d(TAG, data.toString());
-            boolean success = postJsonToUrl(ctx, getPushURL(ctx)
+            boolean success = WebClient.postJsonToUrl(ctx, getPushURL(ctx)
             		+ uid, data.toString());
 
             // delete calls if appropriate
             if (success)
             {
             	cdbh.openWrite();
-                for (int i = 0; i < callsJSON.length(); i++)
+                for (int i = 0; i < uploadedIDs.length; i++)
                 {
-                    JSONObject log = callsJSON.getJSONObject(i);
-                    cdbh.delCall(log.getInt(PeoplesDB.CallLogTable._ID));
+                    cdbh.delCall(uploadedIDs[i]);
                 }
                 cdbh.close();
             }
@@ -474,6 +493,9 @@ public class Push extends WebClient
                 cdbh.close();
             	return true;
             }
+            
+            int[] uploadedIDs = new int[records.getCount()];
+            int index = 0;
 
             records.moveToFirst();
             while (!records.isAfterLast())
@@ -489,6 +511,10 @@ public class Push extends WebClient
                 		records.getColumnIndexOrThrow(
                 				PeoplesDB.StatusTable.CREATED)));
                 recordsJSON.put(record);
+                uploadedIDs[index] = records.getInt(
+                		records.getColumnIndexOrThrow(
+                				PeoplesDB.StatusTable._ID));
+                index++;
                 records.moveToNext();
             }
             records.close();
@@ -499,18 +525,16 @@ public class Push extends WebClient
 
             data.put("statusChanges", recordsJSON);
             if (Config.D) Log.v(TAG, data.toString());
-            boolean success = postJsonToUrl(ctx, getPushURL(ctx)
+            boolean success = WebClient.postJsonToUrl(ctx, getPushURL(ctx)
             		+ uid, data.toString());
 
             // delete records if appropriate
             if (success)
             {
             	cdbh.openWrite();
-                for (int i = 0; i < recordsJSON.length(); i++)
+                for (int i = 0; i < uploadedIDs.length; i++)
                 {
-                    JSONObject log = recordsJSON.getJSONObject(i);
-                    cdbh.delStatusChange(
-                    		log.getInt(PeoplesDB.StatusTable._ID));
+                    cdbh.delStatusChange(uploadedIDs[i]);
                 }
                 cdbh.close();
             }
