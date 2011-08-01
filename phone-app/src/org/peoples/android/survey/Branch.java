@@ -34,6 +34,7 @@ public class Branch
 	/**
 	 * Create a new Branch with no Conditions.
 	 * 
+	 * @param q_id - the id of the next question to go to
 	 * @param c - Conditions for this Branch
 	 * 
 	 * @see setQuestion

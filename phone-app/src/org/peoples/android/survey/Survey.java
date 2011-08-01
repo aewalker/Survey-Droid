@@ -45,7 +45,7 @@ public class Survey
 	private final int id;
 
 	//Android log stuff
-	private final String TAG = "SURVEY";
+	private final String TAG = "Survey";
 
 	//the survey name
 	private final String name;
@@ -129,7 +129,7 @@ public class Survey
 
 		//set up the first question, then iterate until done
 		firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
-		Log.d("Survey", "First question Setup");
+		Log.d(TAG, "First question Setup");
 		currentQ = firstQ;
 		while (!toDo.isEmpty())
 		{
@@ -145,12 +145,12 @@ public class Survey
 		{
 			branch.setQuestion(qMap);
 		}
-		Log.d("Survey", "branch Setup");
+		Log.d(TAG, "branch Setup");
 		for (Condition condition : cList)
 		{
 			condition.setQuestion(qMap);
 		}
-		Log.d("Survey", "condition Setup");
+		Log.d(TAG, "condition Setup");
 
 	}
 
@@ -167,7 +167,7 @@ public class Survey
 		//set up Branches
 		Cursor b = db.getBranches(id);
 		b.moveToFirst();
-		Log.d("Survey", "I have this many branches " +  b.getCount());
+		Log.d(TAG, "I have this many branches " +  b.getCount());
 		LinkedList<Branch> branches = new LinkedList<Branch>();
 		while (!b.isAfterLast())
 		{
@@ -193,7 +193,7 @@ public class Survey
 		//set up Choices
 		Cursor ch = db.getChoices(id);
 		ch.moveToFirst();
-		Log.d("Survey", "I have this many choices " +  ch.getCount());
+		Log.d(TAG, "I have this many choices " +  ch.getCount());
 		LinkedList<Choice> choices = new LinkedList<Choice>();
 		while (!ch.isAfterLast())
 		{
@@ -203,7 +203,7 @@ public class Survey
 			ch.moveToNext();
 		}
 		ch.close();
-		Log.d("Survey", "Building new question");
+		Log.d(TAG, "Building new question");
 		//finally, create the new Question
 		Cursor q = db.getQuestion(id);
 		q.moveToFirst();
@@ -215,16 +215,16 @@ public class Survey
 		switch (q_type)
 		{
 		case PeoplesDB.QuestionTable.FREE_RESPONSE:
-			newQ = new FreeResponseQuestion(text, id, bList, ctxt);
+			newQ = new FreeResponseQuestion(text, id, branches, ctxt);
 			break;
 		case PeoplesDB.QuestionTable.MULTI_CHOICE:
-			newQ = new ChoiceQuestion(text, id, bList, choices, true, ctxt);
+			newQ = new ChoiceQuestion(text, id, branches, choices, true, ctxt);
 			break;
 		case PeoplesDB.QuestionTable.SINGLE_CHOICE:
-			newQ = new ChoiceQuestion(text, id, bList, choices, false, ctxt);
+			newQ = new ChoiceQuestion(text, id, branches, choices, false, ctxt);
 			break;
 		case PeoplesDB.QuestionTable.SCALE_TEXT:
-			newQ = new SlidingScaleTextQuestion(text, id, bList,
+			newQ = new SlidingScaleTextQuestion(text, id, branches,
 					q.getString(q.getColumnIndexOrThrow(
 							PeoplesDB.QuestionTable.Q_SCALE_TEXT_LOW)),
 					q.getString(q.getColumnIndexOrThrow(
@@ -232,7 +232,7 @@ public class Survey
 					ctxt);
 			break;
 		case PeoplesDB.QuestionTable.SCALE_IMG:
-			newQ = new SlidingScaleImgQuestion(text, id, bList,
+			newQ = new SlidingScaleImgQuestion(text, id, branches,
 				q.getString(q.getColumnIndexOrThrow(
 					PeoplesDB.QuestionTable.Q_SCALE_IMG_LOW)).toCharArray(),
 				q.getString(q.getColumnIndexOrThrow(
