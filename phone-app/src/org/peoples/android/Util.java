@@ -27,6 +27,10 @@ public final class Util
 	//tag name for the whole app
 	private static final String TAG = "PEOPLES";
 	
+	/** Location of the application log */
+	public static final String LOGFILE =
+		"/data/data/org.peoples.android/peoples_log";
+	
 	/**
 	 * Get the Unix timestamp of the next occurrence of the given day/time
 	 * 
@@ -240,7 +244,6 @@ public final class Util
 	//tries to log the message to the internal log
 	private static void log(final String msg)
 	{
-		String LOGFILE = "/data/data/org.peoples.android/peoples_log";
 		String time = Calendar.getInstance().getTime().toString();
 		try
 		{
