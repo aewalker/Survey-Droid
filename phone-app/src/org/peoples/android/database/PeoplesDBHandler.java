@@ -10,9 +10,8 @@ package org.peoples.android.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import org.peoples.android.Config;
+import org.peoples.android.Util;
 
 /**
  * 
@@ -47,7 +46,7 @@ public class PeoplesDBHandler
 	 */
 	public void openWrite()
 	{
-		if(Config.D) Log.d(TAG, "opening write-only database connection");
+		Util.d(null, TAG, "opening write-only database connection");
 		pdb = new PeoplesDB(contx);
 		db  = pdb.getWritableDatabase();
 	}
@@ -57,7 +56,7 @@ public class PeoplesDBHandler
 	 */
 	public void openRead()
 	{
-		if(Config.D) Log.d(TAG, "opening read-only database connection");
+		Util.d(null, TAG, "opening read-only database connection");
 		pdb = new PeoplesDB(contx);
 		db  = pdb.getReadableDatabase();
 	}
@@ -68,7 +67,7 @@ public class PeoplesDBHandler
 	 */
 	public void close()
 	{
-		if(Config.D) Log.d(TAG, "closing database connection");
+		Util.d(null, TAG, "closing database connection");
 		db.close();
 		pdb.close();
 	}

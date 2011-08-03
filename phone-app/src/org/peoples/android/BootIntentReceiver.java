@@ -48,10 +48,10 @@ public class BootIntentReceiver extends BroadcastReceiver
     //FIXME FOR TESTING ONLY - move back to onReceive when done
     public static void startup(Context context)
     {
-    	Log.i(TAG, "+++Starting PEOPLES+++");
+    	Util.i(null, TAG, "+++Starting PEOPLES+++");
         
         //start the coms service pulling
-        if (Config.D) Log.d(TAG, "Starting pull service");
+        Util.d(null, TAG, "Starting pull service");
         Intent comsPullIntent = new Intent(context, ComsService.class);
         comsPullIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
         comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
@@ -60,31 +60,30 @@ public class BootIntentReceiver extends BroadcastReceiver
         context.startService(comsPullIntent);
         
         //start the coms service pushing
-        if (Config.D) Log.d(TAG, "Starting push service");
+        Util.d(null, TAG, "Starting push service");
         Intent comsPushIntent = new Intent(context, ComsService.class);
         comsPushIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
         comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
         		Calendar.getInstance().getTimeInMillis());
-        Log.d(TAG, "TIME: " + Calendar.getInstance().getTimeInMillis());
         comsPushIntent.putExtra(ComsService.EXTRA_REPEATING, true);
         context.startService(comsPushIntent);
         
         //start call monitoring
-        if (Config.D) Log.d(TAG, "Starting call monitoring");
+        Util.d(null, TAG, "Starting call monitoring");
         TelephonyManager tm = (TelephonyManager) context.getSystemService(
         		Context.TELEPHONY_SERVICE);
         tm.listen(new CallTracker(context),
         		PhoneStateListener.LISTEN_CALL_STATE);
         
         //start location tracking
-        if (Config.D) Log.d(TAG, "Starting location tracking");
+        Util.d(null, TAG, "Starting location tracking");
         Intent trackingIntent =
         	new Intent(context, LocationTrackerService.class);
         trackingIntent.setAction(LocationTrackerService.ACTION_START_TRACKING);
         context.startService(trackingIntent);
     	
     	//start the survey scheduler
-    	if (Config.D) Log.d(TAG, "Starting survey scheduler");
+    	Util.d(null, TAG, "Starting survey scheduler");
     	Intent schedulerIntent = new Intent(context, SurveyScheduler.class);
     	schedulerIntent.setAction(SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
     	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUNNING_TIME,

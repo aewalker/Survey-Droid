@@ -19,10 +19,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import org.peoples.android.Config;
 import org.peoples.android.R;
+import org.peoples.android.Util;
 import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.TakenDBHandler;
 
@@ -150,7 +150,7 @@ public class SurveyService extends Service
 	private synchronized void handleIntent(Intent intent)
 	{
 			String action = intent.getAction();
-			if (Config.D) Log.d(TAG, "Recieved action: " + action);
+			Util.d(null, TAG, "Recieved action: " + action);
 			if (action.equals(ACTION_SURVEY_READY))
 			{
 				int id = intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID);
@@ -158,7 +158,7 @@ public class SurveyService extends Service
 						SURVEY_TYPE_TIMED);
 				if (surveys.isEmpty())
 				{
-					if (Config.D) Log.v(TAG, "surveys is empty");
+					Util.v(null, TAG, "surveys is empty");
 					active = true;
 				}
 				surveys.add(id);
@@ -197,7 +197,7 @@ public class SurveyService extends Service
 			}
 			else
 			{
-				Log.w(TAG, "Unknown intent action: " + action);
+				Util.w(this, TAG, "Unknown intent action: " + action);
 				if (Config.D) throw new RuntimeException(
 						"Unknown intent action: " + action);
 			}
@@ -230,7 +230,7 @@ public class SurveyService extends Service
 		timeoutOn = false;
 		if (survey == null)
 		{
-			if (Config.D) Log.v(TAG, "creating new survey; current is null");
+			Util.v(null, TAG, "creating new survey; current is null");
 			int id  = surveys.peek();
 			if (id == DUMMY_SURVEY_ID)
 				survey = new Survey(this);
@@ -374,7 +374,7 @@ public class SurveyService extends Service
 	private void submit()
 	{
 		if (!survey.submit())
-			Log.e(TAG, "Survey reports error in submission!");
+			Util.e(this, TAG, "Survey reports error in submission!");
 	}
 	
 	//a user has finished a survey
@@ -470,7 +470,7 @@ public class SurveyService extends Service
 	@Override
 	public IBinder onBind(Intent intent)
 	{
-		if (Config.D) Log.d(TAG, "in onBind");
+		Util.d(null, TAG, "in onBind");
 		return surveyBinder;
 	}
 }

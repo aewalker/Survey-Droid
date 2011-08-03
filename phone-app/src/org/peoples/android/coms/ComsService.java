@@ -12,9 +12,9 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import org.peoples.android.Config;
+import org.peoples.android.Util;
 
 /**
  * Communication service that is responsible for communicating with the
@@ -96,7 +96,7 @@ public class ComsService extends IntentService
 		
 		if (action.equals(ACTION_UPLOAD_DATA))
 		{
-			if (Config.D) Log.d(TAG, "Uploading data");
+			Util.d(this, TAG, "Uploading data");
 			switch (intent.getIntExtra(EXTRA_DATA_TYPE, -1))
 			{
 			case SURVEY_DATA:
@@ -123,14 +123,14 @@ public class ComsService extends IntentService
 		}
 		else if (action.equals(ACTION_DOWNLOAD_DATA))
 		{
-			if (Config.D) Log.d(TAG, "Dowloading data");
+			Util.d(this, TAG, "Dowloading data");
 			Pull.syncWithWeb(this);
 			
 			reschedule(intent);
 		}
 		else
 		{
-			Log.w(TAG, "Unknown action: " + action);
+			Util.w(null, TAG, "Unknown action: " + action);
 			if (Config.D)
 				throw new RuntimeException("Unknown action: " + action);
 		}

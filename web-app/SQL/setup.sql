@@ -82,7 +82,7 @@ CREATE TABLE answers (
 	subject_id INT UNSIGNED NOT NULL,
 	ans_type TINYINT NOT NULL, /* CHOICE = 0, VALUE = 1, TEXT = 2 */
 	ans_text TEXT,
-	and_value INT,
+	ans_value INT,
 	created DATETIME);
 
 /* join table between asnwers and choices: the two have a HABTM relationship */

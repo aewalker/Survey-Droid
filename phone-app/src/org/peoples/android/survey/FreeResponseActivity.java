@@ -8,9 +8,9 @@ package org.peoples.android.survey;
 
 import org.peoples.android.Config;
 import org.peoples.android.R;
+import org.peoples.android.Util;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -44,7 +44,7 @@ public class FreeResponseActivity extends QuestionActivity
 	protected void answer()
 	{
 		survey.answer(input.getText().toString());
-		if (Config.D) Log.d(TAG, "answered with \""
+		Util.d(this, TAG, "answered with \""
 				+ input.getText().toString() + "\"");
 	}
 

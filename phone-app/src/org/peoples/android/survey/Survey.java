@@ -19,12 +19,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.SurveyDBHandler;
 import org.peoples.android.Config;
 import org.peoples.android.R;
+import org.peoples.android.Util;
 
 /**
  * The highest-level survey-related class.  A survey object contains everything
@@ -129,11 +129,11 @@ public class Survey
 
 		//set up the first question, then iterate until done
 		firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
-		Log.d(TAG, "First question Setup");
+		Util.d(null, TAG, "First question Setup");
 		currentQ = firstQ;
 		while (!toDo.isEmpty())
 		{
-			if (Config.D) Log.d(TAG, "next question");
+			Util.v(null, TAG, "next question");
 			setUpQuestion(toDo.remove(),
 					qMap, cMap, seen, bList, cList, toDo);
 		}
@@ -145,12 +145,12 @@ public class Survey
 		{
 			branch.setQuestion(qMap);
 		}
-		Log.d(TAG, "branch Setup");
+		Util.v(null, TAG, "branch Setup");
 		for (Condition condition : cList)
 		{
 			condition.setQuestion(qMap);
 		}
-		Log.d(TAG, "condition Setup");
+		Util.v(null, TAG, "condition Setup");
 
 	}
 
@@ -167,7 +167,7 @@ public class Survey
 		//set up Branches
 		Cursor b = db.getBranches(id);
 		b.moveToFirst();
-		Log.d(TAG, "I have this many branches " +  b.getCount());
+		Util.v(null, TAG, "I have this many branches " +  b.getCount());
 		LinkedList<Branch> branches = new LinkedList<Branch>();
 		while (!b.isAfterLast())
 		{
@@ -193,7 +193,7 @@ public class Survey
 		//set up Choices
 		Cursor ch = db.getChoices(id);
 		ch.moveToFirst();
-		Log.d(TAG, "I have this many choices " +  ch.getCount());
+		Util.v(null, TAG, "I have this many choices " +  ch.getCount());
 		LinkedList<Choice> choices = new LinkedList<Choice>();
 		while (!ch.isAfterLast())
 		{
@@ -203,7 +203,7 @@ public class Survey
 			ch.moveToNext();
 		}
 		ch.close();
-		Log.d(TAG, "Building new question");
+		Util.v(null, TAG, "Building new question");
 		//finally, create the new Question
 		Cursor q = db.getQuestion(id);
 		q.moveToFirst();
@@ -758,7 +758,7 @@ public class Survey
 	 */
 	public boolean addPhoto(InputStream photo)
 	{
-		if (Config.D) Log.v(TAG, "adding photo");
+		Util.v(null, TAG, "adding photo");
 		if (id == 0)
 		{
 			hasPhoto = true;

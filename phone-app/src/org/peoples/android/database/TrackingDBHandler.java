@@ -8,9 +8,9 @@ package org.peoples.android.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.provider.CallLog;
-import android.util.Log;
 
-import org.peoples.android.Config;
+import org.peoples.android.Util;
+
 import static org.peoples.android.database.PeoplesDB.CallLogTable;
 import static org.peoples.android.database.PeoplesDB.LocationTable;
 
@@ -41,7 +41,7 @@ public class TrackingDBHandler extends PeoplesDBHandler
 	 */
 	public void writeCall(String number, int type, int duration, long time)
 	{
-		if (Config.D) Log.d(TAG, "Writing call (type: "
+		Util.d(contx, TAG, "Writing call (type: "
 				+ CallLogTable.getCallTypeString(type) + ")");
 
 		ContentValues values = new ContentValues();
@@ -64,9 +64,10 @@ public class TrackingDBHandler extends PeoplesDBHandler
 	 * @param lon - longitude
 	 * @param time - time at which the subject was at the location
 	 */
-	public void writeLocation(double lat, double lon, double accuracy, long time)
+	public void writeLocation(
+			double lat, double lon, double accuracy, long time)
 	{
-		if (Config.D) Log.d(TAG, "Writing location: " + lat + ", " + lon);
+		Util.d(contx, TAG, "Writing location: " + lat + ", " + lon);
 
 		ContentValues values = new ContentValues();
 

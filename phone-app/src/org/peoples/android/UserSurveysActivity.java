@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,7 +32,7 @@ public class UserSurveysActivity extends ListActivity
 	{
 		super.onCreate(savedState);
 
-        if (Config.D) Log.d(TAG, "starting user surveys activity");
+        Util.d(null, TAG, "starting user surveys activity");
         
         //setting the layout of the activity
         Display display = ((WindowManager)
@@ -81,7 +80,7 @@ public class UserSurveysActivity extends ListActivity
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id)
 			{
-				if (Config.D) Log.d(TAG, "Starting survey " + ids[pos]);
+				Util.d(null, TAG, "Starting survey " + ids[pos]);
 				
 				Intent surveyIntent =
 					new Intent(getThis(), SurveyService.class);

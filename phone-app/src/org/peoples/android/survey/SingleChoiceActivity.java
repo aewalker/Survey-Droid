@@ -9,14 +9,13 @@ package org.peoples.android.survey;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.peoples.android.Config;
 import org.peoples.android.ImageOrTextAdapter;
 import org.peoples.android.R;
+import org.peoples.android.Util;
 
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ListView;
@@ -87,7 +86,7 @@ public class SingleChoiceActivity extends QuestionActivity
 		int[] ansChoices = survey.getAnswerChoices();
 		if (ansChoices != null)
 		{
-			if (Config.D) Log.d(TAG, "Previous answer: " + ansChoices[0]);
+			Util.d(null, TAG, "Previous answer: " + ansChoices[0]);
 			listView.setItemChecked(ansChoices[0], true);
 		}
 	}
@@ -99,8 +98,7 @@ public class SingleChoiceActivity extends QuestionActivity
 		Choice[] choices = survey.getChoices();
 		answer.add(choices[listView.getCheckedItemPosition()]);
 		survey.answer(answer);
-		if (Config.D) Log.d(TAG, "answered with: "
-				+ answer.toArray()[0].toString());
+		Util.d(this, TAG, "answered with: " + answer.toArray()[0].toString());
 	}
 
 	@Override

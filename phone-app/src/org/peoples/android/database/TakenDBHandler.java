@@ -10,9 +10,9 @@ package org.peoples.android.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import org.peoples.android.Config;
+import org.peoples.android.Util;
 
 /**
  * Provides the database read/write methods needed to track how surveys are
@@ -52,7 +52,7 @@ public class TakenDBHandler extends PeoplesDBHandler
 	 */
 	public boolean writeSurvey(int survey_id, int code, long created)
 	{
-		if (Config.D) Log.d(TAG, "Writing survey code: survey "
+		Util.d(contx, TAG, "Writing survey code: survey "
 				+ survey_id + " marked " + code);
 		ContentValues values = new ContentValues();
 		
@@ -77,7 +77,7 @@ public class TakenDBHandler extends PeoplesDBHandler
 	 */
 	public int getCompletionRate()
 	{
-		if (Config.D) Log.d(TAG, "Getting survey completion rate");
+		Util.d(null, TAG, "Getting survey completion rate");
 		
 		//set up the query
 		String    table    = PeoplesDB.TAKEN_TABLE_NAME;
@@ -138,7 +138,7 @@ public class TakenDBHandler extends PeoplesDBHandler
     	case PeoplesDB.TakenTable.RANDOM_FINISHED:
     		return true;
     	default:
-    		Log.w(TAG, "Unknown survey completion code: " + code);
+    		Util.w(null, TAG, "Unknown survey completion code: " + code);
     		if (Config.D) throw new
     			RuntimeException("Unknown survey completion code: " + code);
     		return false;

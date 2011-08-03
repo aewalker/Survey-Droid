@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import org.peoples.android.Config;
 import org.peoples.android.R;
+import org.peoples.android.Util;
 import org.peoples.android.survey.SurveyService.SurveyBinder;
 
 import android.app.Activity;
@@ -25,7 +26,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -79,7 +79,7 @@ public class SurveyExtrasActivity extends Activity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		if (Config.D) Log.d(TAG, "Creating SurveyExtrasActivity");
+		Util.d(null, TAG, "Creating SurveyExtrasActivity");
 		
 		//get the survey
 		Intent bindIntent = new Intent(this, SurveyService.class);
@@ -138,12 +138,12 @@ public class SurveyExtrasActivity extends Activity
 		try
 		{
 			if (!outputFile.createNewFile())
-				Log.e(TAG, "Cannont create file: "
+				Util.e(this, TAG, "Cannont create file: "
 						+ outputFile.getAbsolutePath());
 		}
 		catch (IOException e)
 		{
-			Log.e(TAG, e.toString());
+			Util.e(this, TAG, Util.fmt(e));
 		}
 		recorder.setOutputFile(outputFile.getAbsolutePath());
 		voice = (Button) findViewById(R.id.survey_extras_voiceButton);
@@ -163,8 +163,7 @@ public class SurveyExtrasActivity extends Activity
 					}
 					catch (Exception e)
 					{
-						if (e.getMessage() != null)
-						Log.e(TAG, e.toString());
+						Util.e(getThis(), TAG, Util.fmt(e));
 					}
 				}
 				else
@@ -179,7 +178,8 @@ public class SurveyExtrasActivity extends Activity
 						if (!survey.addVoice(
 								getContentResolver().openInputStream(
 										voiceUri)))
-							Log.e(TAG, "Failed to add voice recording!");
+							Util.e(getThis(), TAG,
+									"Failed to add voice recording!");
 						else
 						{
 							outputFile.deleteOnExit();
@@ -189,7 +189,7 @@ public class SurveyExtrasActivity extends Activity
 					}
 					catch (Exception e)
 					{
-						Log.e(TAG, e.getMessage());
+						Util.e(getThis(), TAG, Util.fmt(e));
 					}
 				}
 			}
@@ -220,7 +220,7 @@ public class SurveyExtrasActivity extends Activity
 	protected void onActivityResult(
 			int requestCode, int resultCode, Intent intent)
 	{
-		if (Config.D) Log.v(TAG, "in onActivityResult");
+		Util.v(null, TAG, "in onActivityResult");
 		boolean worked = false;
 		if (resultCode == Activity.RESULT_OK &&
 			requestCode == PHOTO_REQUEST_CODE)
@@ -228,11 +228,10 @@ public class SurveyExtrasActivity extends Activity
 			if (Config.getSetting(getThis(), Config.USE_FULL_RES_PHOTOS,
 					Config.USE_FULL_RES_PHOTOS_DEFAULT) && intent == null)
 			{
-				//ignore the dead code warning for now
 				photo.setClickable(false);
 				photo.setText("Full resolution photos not supported");
-				Log.w(TAG, "Full resolution photos not supported.");
-				Log.w(TAG, "Please disable in config to allow photo capture.");
+				Util.w(null, TAG, "Full resolution photos not supported.");
+				Util.w(null, TAG, "Please disable in config to allow photo capture.");
 				Toast.makeText(this, "Full resolution photos are not "
 						+ "supported; please contact the study administrator.",
 						Toast.LENGTH_LONG);
@@ -240,7 +239,7 @@ public class SurveyExtrasActivity extends Activity
 			}
 			try
 			{
-				if (Config.D) Log.v(TAG, "got a photo");
+				Util.v(this, TAG, "got a photo");
 				if (Config.getSetting(getThis(), Config.USE_FULL_RES_PHOTOS,
 						Config.USE_FULL_RES_PHOTOS_DEFAULT))
 				{
@@ -263,7 +262,7 @@ public class SurveyExtrasActivity extends Activity
 			}
 			catch (FileNotFoundException e)
 			{
-				Log.e(TAG, e.getMessage());
+				Util.e(this, TAG, Util.fmt(e));
 			}
 		}
 		

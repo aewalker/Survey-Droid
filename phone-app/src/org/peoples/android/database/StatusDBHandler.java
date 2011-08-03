@@ -5,11 +5,10 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.database;
 
-import org.peoples.android.Config;
+import org.peoples.android.Util;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 
 /**
  * Handles application status related calls to the PEOPLES database.
@@ -43,7 +42,7 @@ public class StatusDBHandler extends PeoplesDBHandler
 	 */
 	public boolean statusChanged(int feature, boolean enabled, long created)
 	{
-		if (Config.D) Log.d(TAG, "Writing status change: "
+		Util.d(contx, TAG, "Writing status change: "
 				+ feature + " is " + enabled);
 		ContentValues values = new ContentValues();
 		

@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 /**
  * Responsible for logging calls.  Catches the system broadcast when a call is
@@ -55,7 +54,7 @@ public class CallTracker extends PhoneStateListener
 		if (state == TelephonyManager.CALL_STATE_RINGING
 				|| state == TelephonyManager.CALL_STATE_OFFHOOK)
 		{ //call just started or is still going
-			if (!inCall && Config.D) Log.d(TAG, "Call starting");
+			if (!inCall) Util.d(ctxt, TAG, "Call starting");
 			inCall = true;
 		}
 		else if (state == TelephonyManager.CALL_STATE_IDLE && inCall == true)
@@ -64,7 +63,7 @@ public class CallTracker extends PhoneStateListener
 			if (!Config.getSetting(ctxt, Config.CALL_LOG_LOCAL, false) ||
 				!Config.getSetting(ctxt, Config.CALL_LOG_SERVER,
 						Config.CALL_LOG_SERVER_DEFAULT)) return;
-			if (Config.D) Log.d(TAG, "Call ended; call log lookup starting");
+			Util.d(ctxt, TAG, "Call ended; call log lookup starting");
 			
 			//go look up the most recent calls in the CallLog
 			String[] cols = {CallLog.Calls.TYPE,
@@ -78,7 +77,7 @@ public class CallTracker extends PhoneStateListener
 			Cursor newCalls = ctxt.getContentResolver().query(
 					CallLog.CONTENT_URI, cols, where, whereArgs, null);
 			
-			if (Config.D) Log.d(TAG, newCalls.getCount()
+			Util.d(ctxt, TAG, newCalls.getCount()
 					+ " new call(s) found");
 			if (newCalls.getCount() != 0)
 			{
@@ -103,7 +102,7 @@ public class CallTracker extends PhoneStateListener
 		{
 			if (Config.D)
 				throw new RuntimeException("Unkown phone state: " + state);
-			else Log.w(TAG, "Unknown phone state: " + state);
+			else Util.w(ctxt, TAG, "Unknown phone state: " + state);
 		}
 	}
 }

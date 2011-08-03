@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -44,7 +43,7 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        if (Config.D) Log.d(TAG, "starting mainActivity");
+        Util.d(null, TAG, "starting mainActivity");
         
         //setting the layout of the activity
         Display display = ((WindowManager)

@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -54,7 +53,7 @@ public class SettingsActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        if (Config.D) Log.d(TAG, "Starting settings activity");
+        Util.d(null, TAG, "Starting settings activity");
 
         //setting the layout of the activity
         Display display = ((WindowManager)

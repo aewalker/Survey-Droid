@@ -14,9 +14,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaRecorder;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import org.peoples.android.Config;
+import org.peoples.android.Util;
 import org.peoples.android.database.PeoplesDB;
 import static org.peoples.android.database.PeoplesDB.*;
 import org.peoples.android.coms.WebClient;
@@ -38,6 +38,8 @@ public class Pull
 
 	//pull address to be appended to the server
     private static final String PULL_URL = "/answers/pull/";
+    
+    private static Context c;
 
     /**
      * Syncs surveys, questions, choices, branches, and conditions with the
@@ -49,6 +51,7 @@ public class Pull
     {
     	try
     	{
+    		c = ctxt;
     		TelephonyManager tManager =
             	(TelephonyManager) ctxt.getSystemService(
             			Context.TELEPHONY_SERVICE);
@@ -64,7 +67,7 @@ public class Pull
     		if (uid != null)
     		{
 	    		url.append(uid);
-	    		if (Config.D) Log.d(TAG, "Pull url: " + url.toString());
+	    		Util.v(null, TAG, "Pull url: " + url.toString());
 	    		JSONObject json;
 	    		try
 	    		{
@@ -72,17 +75,18 @@ public class Pull
 	    		}
 	    		catch (Exception e)
 	    		{
-	    			Log.e(TAG, "Unable to communicate with remote server");
+	    			Util.e(ctxt, TAG,
+	    					"Unable to communicate with remote server");
 	    			try
 	    			{
 	    				ApiException apiE = (ApiException) e;
-	    				Log.e(TAG, "Reason: " + apiE.getMessage());
-	    				Log.e(TAG, "Make sure this device is registered"
+	    				Util.e(ctxt, TAG, "Reason: " + apiE.getMessage());
+	    				Util.e(null, TAG, "Make sure this device is registered"
 	    						+ " and the server is working");
 	    			}
 	    			catch (Exception unknownE)
 	    			{
-	    				Log.e(TAG, "Unkown Reason: " + e.toString());
+	    				Util.e(ctxt, TAG, "Unkown Reason: " + Util.fmt(e));
 	    			}
 	    			return;
 	    		}
@@ -99,24 +103,27 @@ public class Pull
         	}
         	else
         	{
-        		Log.w(TAG, "Device ID not available");
-        		Log.w(TAG, "Will reschedule and try again later");
+        		Util.w(ctxt, TAG, "Device ID not available");
+        		Util.w(null, TAG, "Will reschedule and try again later");
         	}
         }
     	catch (Exception e)
     	{
-            Log.e(TAG, e.toString());
+            Util.e(ctxt, TAG, Util.fmt(e));
             throw new RuntimeException("FATAL ERROR", e);
+    	}
+    	finally
+    	{
+        	c = null;
     	}
     }
 
     private static void syncSurveys(SQLiteDatabase db, JSONArray surveys)
     {
-    	Log.i(TAG, "Syncing surveys table");
+    	Util.i(null, TAG, "Syncing surveys table");
     	try
     	{
-    		if (Config.D) Log.d(TAG, "Fetched "
-    				+ surveys.length() + " surveys");
+    		Util.d(c, TAG, "Fetched " + surveys.length() + " surveys");
 	    	for (int i = 0 ; i < surveys.length(); i++)
 	    	{
 	    		JSONObject survey = surveys.getJSONObject(i);
@@ -153,12 +160,12 @@ public class Pull
     	}
     	catch (JSONException e)
     	{
-			Log.e(TAG, e.getMessage());
+			Util.e(c, TAG, Util.fmt(e));
 		}
     }
     private static void syncQuestions(SQLiteDatabase db, JSONArray questions)
     {
-    	Log.i(TAG, "Syncing questions table");
+    	Util.i(null, TAG, "Syncing questions table");
     	try
     	{
 	    	for (int i = 0; i < questions.length(); i++)
@@ -195,12 +202,12 @@ public class Pull
     	}
     	catch (JSONException e)
     	{
-			Log.e(TAG, e.getMessage());
+			Util.e(c, TAG, Util.fmt(e));
 		}
     }
     private static void syncConditions(SQLiteDatabase db, JSONArray conditions)
     {
-    	Log.i(TAG, "Syncing conditions table");
+    	Util.i(null, TAG, "Syncing conditions table");
     	try
     	{
 	    	for (int i = 0; i < conditions.length(); i++)
@@ -223,12 +230,12 @@ public class Pull
     	}
     	catch (JSONException e)
     	{
-			Log.e(TAG, e.getMessage());
+			Util.e(c, TAG, Util.fmt(e));
 		}
     }
     private static void syncBranches(SQLiteDatabase db, JSONArray branches)
     {
-    	Log.i(TAG, "Syncing branches table");
+    	Util.i(null, TAG, "Syncing branches table");
     	try
     	{
 	    	for (int i=0; i<branches.length(); i++)
@@ -247,12 +254,12 @@ public class Pull
     	}
     	catch (JSONException e)
     	{
-			Log.e(TAG, e.getMessage());
+			Util.e(c, TAG, Util.fmt(e));
 		}
     }
     private static void syncChocies(SQLiteDatabase db, JSONArray choices)
     {
-    	Log.i(TAG, "Syncing choices table");
+    	Util.i(null, TAG, "Syncing choices table");
     	try
     	{
 	    	for (int i = 0; i < choices.length(); i++)
@@ -283,13 +290,13 @@ public class Pull
     	}
     	catch (JSONException e)
     	{
-			Log.e(TAG, e.getMessage());
+			Util.e(c, TAG, Util.fmt(e));
 		}
     }
     
     private static void syncConfig(SQLiteDatabase db, JSONObject config, Context ctxt)
     {
-    	Log.i(TAG, "Updating configuration values");
+    	Util.i(ctxt, TAG, "Updating configuration values");
     	try
     	{
     		//do the special keys first
@@ -359,7 +366,7 @@ public class Pull
     		{
     			boolean done = false;
     			String key = cNames.getString(i);
-    			if (Config.D) Log.v(TAG, "Current key: " + key);
+    			Util.v(null, TAG, "Current key: " + key);
     			
     			//check for a string value
     			for (String k : Config.STRINGS)
@@ -414,7 +421,7 @@ public class Pull
     	}
     	catch (JSONException e)
     	{
-    		Log.e(TAG, e.toString());
+    		Util.e(ctxt, TAG, Util.fmt(e));
     	}
     }
 }

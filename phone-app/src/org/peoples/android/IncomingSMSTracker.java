@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 /**
  * Responsible for logging text messages. Catches the system broadcast when a
@@ -43,14 +42,14 @@ public class IncomingSMSTracker extends BroadcastReceiver {
         if (messages == null || messages.length == 0)
             return;
 
-        if (Config.D) Log.d(TAG, "SMS Received, start tracking");
+        Util.d(ctxt, TAG, "SMS Received, start tracking");
 
         // Get those messages
         SmsMessage smsMessage[] = new SmsMessage[messages.length];
         for (int n = 0; n < messages.length; n++)
             smsMessage[n] = SmsMessage.createFromPdu((byte[]) messages[n]);
 
-		if (Config.D) Log.d(TAG, messages.length + " new sms(s) detected");
+		Util.d(ctxt, TAG, messages.length + " new sms(s) detected");
 
 		// write the message record to database
 		TrackingDBHandler cdbh = new TrackingDBHandler(ctxt);

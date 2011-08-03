@@ -59,8 +59,6 @@ class DatasController extends AppController
     	$results = $this->Answer->find('all', array
 		(
 			'conditions' => array('Answer.question_id' => $questionid),
-			'fields' => array('Answer.choice_ids', 'Choice.choice_text', 
-					'Answer.ans_value', 'Answer.ans_text','Answer.created', 'Answer.subject_id'),
 			'order' => array('Answer.id')
 		));
 		
@@ -73,15 +71,22 @@ class DatasController extends AppController
 		}
 		else
 		{ //just look at the first answer since they are all for the same question
-			if (!$result[0]['Answer']['choie_ids'])
+			if ($results[0]['Answer']['ans_value'] == NULL)
 			{
-				if (!$result[0]['Answer']['ans_text'])
+				if ($results[0]['Answer']['ans_text'] != NULL)
 				{
-					$type = 'scale';
+					$type = 'freeResponse';
+				}
+			}
+			else
+			{
+				if ($results[0]['Answer']['ans_text'] != NULL)
+				{
+					$type = 'freeResponse';
 				}
 				else
 				{
-					$type = 'freeResponse';
+					$type = 'scale';
 				}
 			}
 		}

@@ -18,9 +18,9 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.peoples.android.R;
+import org.peoples.android.Util;
 
 import android.content.Context;
-import android.util.Log;
 
 /**
  * Custom version of the Apache http client.
@@ -72,7 +72,7 @@ public class SocHttpClient extends DefaultHttpClient
 			}
 			catch (CertificateException e)
 			{
-				Log.e(TAG, "Cert Exception!");
+				Util.e(ctxt, TAG, "Cert Exception: " + Util.fmt(e));
 				throw new AssertionError(e);
 			}
 			finally
@@ -86,7 +86,7 @@ public class SocHttpClient extends DefaultHttpClient
 		}
 		catch (Exception e)
 		{
-			Log.e(TAG, e.toString());
+			Util.e(ctxt, TAG, Util.fmt(e));
 			throw new AssertionError(e);
 		}
 	}

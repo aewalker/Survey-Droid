@@ -7,13 +7,12 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
-import org.peoples.android.Config;
 import org.peoples.android.R;
+import org.peoples.android.Util;
 import org.peoples.android.VerticalSeekBar;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -97,7 +96,7 @@ public class ImgScaleActivity extends QuestionActivity
 		ans *= (100.0 / (max + 1)); //have to scale the answer
 		
 		survey.answer(ans);
-		if (Config.D) Log.d(TAG, "answering with " + ans);
+		Util.d(this, TAG, "answering with " + ans);
 	}
 	
 	@Override

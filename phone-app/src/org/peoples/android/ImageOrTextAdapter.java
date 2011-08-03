@@ -8,7 +8,6 @@ package org.peoples.android;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -67,7 +66,7 @@ public class ImageOrTextAdapter<T> extends ArrayAdapter<T>
 				}
 				catch (Exception e)
 				{
-					Log.w(TAG, "Returned view does not "
+					Util.w(null, TAG, "Returned view does not "
 							+ "support unscaled background images");
 					unscaledBackground = true;
 					v.setBackgroundDrawable(pic);

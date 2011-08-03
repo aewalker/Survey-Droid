@@ -16,7 +16,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.util.Log;
 
 import org.peoples.android.Config;
 import org.peoples.android.Util;
@@ -125,12 +124,10 @@ public class SurveyScheduler extends IntentService
 	//schedule survey id for the given time
 	private void addSurvey(int id, long time)
 	{
-		if (Config.D)
-		{
-			Calendar c = Calendar.getInstance();
-			c.setTimeInMillis(time);
-			Log.d(TAG, "Scheduling survey " + id + " for " + c.getTime().toString());
-		}
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(time);
+		Util.d(this, TAG, "Scheduling survey "
+				+ id + " for " + c.getTime().toString());
 		
 		Intent surveyIntent = new Intent(getApplicationContext(),
 				SurveyService.class);
@@ -148,7 +145,7 @@ public class SurveyScheduler extends IntentService
 	//look for surveys that need to be scheduled and do so
 	private void scheduleSurveys(long runningTime)
 	{
-		Log.i(TAG, "Scheduling surveys");
+		Util.i(null, TAG, "Scheduling surveys");
 		
 		SurveyDBHandler sdbh = new SurveyDBHandler(this);
 		sdbh.openRead();
@@ -159,24 +156,21 @@ public class SurveyScheduler extends IntentService
 		long nextRun = runningTime + (Config.getSetting(this,
 				Config.SCHEDULER_INTERVAL, Config.SCHEDULER_INTERVAL_DEFAULT)
 				* 60 * 1000);
-		if (Config.D)
-		{
-			Log.v(TAG, "Current run time: "
-				+ runningTime + ", next run time: " + nextRun);
-			Log.d(TAG, "Number of surveys found: " + surveys.getCount());
-		}
+		Util.v(null, TAG, "Current run time: "
+			+ runningTime + ", next run time: " + nextRun);
+		Util.d(this, TAG, "Number of surveys found: " + surveys.getCount());
 		while (!surveys.isAfterLast())
 		{
 			int id = surveys.getInt(surveys.getColumnIndexOrThrow(
 					PeoplesDB.SurveyTable._ID));
-			if (Config.D) Log.d(TAG, "Doing survey " + id);
+			Util.d(null, TAG, "Doing survey " + id);
 			for (int i = 0; i < days.length; i++)
 			{
-				if (Config.D) Log.v(TAG, "Doing " + days[i]);
+				Util.v(null, TAG, "Doing " + days[i]);
 				String timeString = surveys.getString(
 						surveys.getColumnIndexOrThrow(
 								PeoplesDB.SurveyTable.DAYS[i]));
-				Log.v(TAG, "Time string: " + timeString);
+				Util.v(null, TAG, "Time string: " + timeString);
 				String[] times = timeString.split(",");
 				for (String time : times)
 				{
@@ -187,9 +181,9 @@ public class SurveyScheduler extends IntentService
 					{
 						Calendar c = Calendar.getInstance();
 						c.setTimeInMillis(scheduledTime);
-						Log.v(TAG, "Survey would be scheduled for "
+						Util.v(null, TAG, "Survey would be scheduled for "
 								+ c.getTime().toString());
-						Log.v(TAG, "should be scheduled for "
+						Util.v(null, TAG, "should be scheduled for "
 								+ days[i] + " at " + time);
 					}
 					//FIXME should check the time better

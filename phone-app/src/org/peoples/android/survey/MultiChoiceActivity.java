@@ -12,11 +12,11 @@ import java.util.Collection;
 import org.peoples.android.Config;
 import org.peoples.android.ImageOrTextAdapter;
 import org.peoples.android.R;
+import org.peoples.android.Util;
 
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.WindowManager;
@@ -91,7 +91,7 @@ public class MultiChoiceActivity extends QuestionActivity
 			{
 				answer = "no answers given";
 			}
-			Log.d(TAG, answer);
+			Util.d(this, TAG, answer);
 		}
 	}
 

@@ -12,11 +12,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import org.peoples.android.Config; 
+import org.peoples.android.Util;
 import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.survey.SurveyService.SurveyBinder;
 
@@ -51,7 +51,7 @@ public abstract class QuestionActivity extends Activity
 			survey = sBinder.getSurvey();
 			if (Config.D)
 			{
-				Log.d(TAG, "service connected");
+				Util.d(null, TAG, "service connected");
 				if (survey == null) throw new
 					RuntimeException("question given null survey");
 			}
@@ -139,7 +139,7 @@ public abstract class QuestionActivity extends Activity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		if (Config.D) Log.d(TAG, "Creating QuestionActivity");
+		Util.d(null, TAG, "Creating QuestionActivity");
 		
 		//get the survey
 		Intent bindIntent = new Intent(this, SurveyService.class);

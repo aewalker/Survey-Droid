@@ -11,11 +11,11 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.database.Cursor;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.ComsDBHandler;
 import org.peoples.android.Config;
+import org.peoples.android.Util;
 
 /**
  * Extension of {@link WebClient} that pushes data up to the server
@@ -41,7 +41,7 @@ public class Push
      */
     public static boolean pushAnswers(Context ctxt)
     {
-        Log.i(TAG, "Pushing answers to server");
+        Util.i(ctxt, TAG, "Pushing answers to server");
         
         TelephonyManager tManager =
         	(TelephonyManager) ctxt.getSystemService(
@@ -50,8 +50,8 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Log.w(TAG, "Device ID not available");
-    		Log.w(TAG, "Will reschedule and try again later");
+    		Util.w(ctxt, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
     	
@@ -63,7 +63,7 @@ public class Push
 
             JSONArray answersJSON = new JSONArray();
 
-            if (Config.D) Log.d(TAG, "# of answer to push : "
+            Util.d(ctxt, TAG, "# of answer to push : "
             		+ answers.getCount());
             answers.moveToFirst();
 
@@ -129,7 +129,7 @@ public class Push
             JSONObject data = new JSONObject();
 
             data.put("answers", answersJSON);
-            if (Config.D) Log.d(TAG, data.toString());
+            Util.d(null, TAG, data.toString());
             boolean success = WebClient.postJsonToUrl(ctxt, getPushURL(ctxt)
             		+ uid, data.toString());
 
@@ -147,7 +147,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Log.e(TAG, e.toString());
+            Util.e(ctxt, TAG, Util.fmt(e));
             if (Config.D)
             	throw new RuntimeException("FATAL ERROR", e);
         }
@@ -165,7 +165,7 @@ public class Push
      */
     public static boolean pushCompletionData(Context ctx)
     {
-    	Log.i(TAG, "Pushing survey completion data to server");
+    	Util.i(ctx, TAG, "Pushing survey completion data to server");
     	
     	TelephonyManager tManager =
         	(TelephonyManager) ctx.getSystemService(
@@ -174,8 +174,8 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Log.w(TAG, "Device ID not available");
-    		Log.w(TAG, "Will reschedule and try again later");
+    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
     	
@@ -187,7 +187,7 @@ public class Push
 
             JSONArray recordsJSON = new JSONArray();
 
-            if (Config.D) Log.d("Push", "# of results to push : "
+            Util.d(ctx, "Push", "# of results to push : "
             		+ compData.getCount());
 
             if (compData.getCount() == 0)
@@ -213,10 +213,10 @@ public class Push
                 		compData.getColumnIndexOrThrow(
                 				PeoplesDB.TakenTable.CREATED)));
                 recordsJSON.put(item);
-                compData.moveToNext();
                 uploadedIDs[numRecords] = compData.getInt(
                 		compData.getColumnIndexOrThrow(
                 				PeoplesDB.TakenTable._ID));
+                compData.moveToNext();
                 numRecords++;
             }
             compData.close();
@@ -226,7 +226,7 @@ public class Push
             JSONObject data = new JSONObject();
 
             data.put("surveysTaken", recordsJSON);
-            if (Config.D) Log.d(TAG, data.toString());
+            Util.d(null, TAG, data.toString());
             boolean success = WebClient.postJsonToUrl(ctx, getPushURL(ctx)
             		+ uid, data.toString());
 
@@ -251,7 +251,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Log.e(TAG, e.getMessage());
+            Util.e(ctx, TAG, Util.fmt(e));
         }
         return false;
     }
@@ -266,7 +266,7 @@ public class Push
      */
     public static boolean pushLocations(Context ctx)
     {
-        Log.i(TAG, "Pushing locations to server");
+        Util.i(ctx, TAG, "Pushing locations to server");
         
         TelephonyManager tManager =
         	(TelephonyManager) ctx.getSystemService(
@@ -275,8 +275,8 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Log.w(TAG, "Device ID not available");
-    		Log.w(TAG, "Will reschedule and try again later");
+    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
     	
@@ -288,7 +288,7 @@ public class Push
 
             JSONArray locationsJSON = new JSONArray();
 
-            if (Config.D) Log.d("Push", "# of locations to push : "
+            Util.d(ctx, "Push", "# of locations to push : "
             		+ locations.getCount());
 
             if (locations.getCount() == 0)
@@ -331,7 +331,7 @@ public class Push
             JSONObject data = new JSONObject();
 
             data.put("locations", locationsJSON);
-            if (Config.D) Log.d(TAG, data.toString());
+            Util.d(null, TAG, data.toString());
             boolean success = WebClient.postJsonToUrl(ctx, getPushURL(ctx)
             		+ uid, data.toString());
 
@@ -349,7 +349,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Log.e(TAG, e.getMessage());
+           Util.e(ctx, TAG, Util.fmt(e));
         }
         return false;
     }
@@ -365,7 +365,7 @@ public class Push
      */
     public static boolean pushCallLog(Context ctx)
     {
-        Log.i(TAG, "Pushing calllog to server");
+        Util.i(ctx, TAG, "Pushing calllog to server");
         
         TelephonyManager tManager =
         	(TelephonyManager) ctx.getSystemService(
@@ -374,8 +374,8 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Log.w(TAG, "Device ID not available");
-    		Log.w(TAG, "Will reschedule and try again later");
+    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
     	
@@ -386,8 +386,7 @@ public class Push
             Cursor calls = cdbh.getCalls();
             JSONArray callsJSON = new JSONArray();
 
-            if (Config.D)
-            	Log.d(TAG, "# of call logs to push : " + calls.getCount());
+           Util.d(ctx, TAG, "# of call logs to push : " + calls.getCount());
 
             if (calls.getCount() == 0)
             {
@@ -429,7 +428,7 @@ public class Push
             JSONObject data = new JSONObject();
 
             data.put("calls", callsJSON);
-            if (Config.D) Log.d(TAG, data.toString());
+            Util.d(null, TAG, data.toString());
             boolean success = WebClient.postJsonToUrl(ctx, getPushURL(ctx)
             		+ uid, data.toString());
 
@@ -447,7 +446,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Log.e(TAG, e.getMessage());
+            Util.e(ctx, TAG, Util.fmt(e));
         }
         return false;
     }
@@ -462,7 +461,7 @@ public class Push
      */
     public static boolean pushStatusData(Context ctx)
     {
-    	Log.i(TAG, "Pushing status data to server");
+    	Util.i(ctx, TAG, "Pushing status data to server");
     	
     	TelephonyManager tManager =
         	(TelephonyManager) ctx.getSystemService(
@@ -471,8 +470,8 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Log.w(TAG, "Device ID not available");
-    		Log.w(TAG, "Will reschedule and try again later");
+    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
     	
@@ -483,8 +482,7 @@ public class Push
             Cursor records = cdbh.getStatusChanges();
             JSONArray recordsJSON = new JSONArray();
 
-            if (Config.D)
-            	Log.d(TAG, "# of status records to push : "
+            Util.d(ctx, TAG, "# of status records to push : "
             			+ records.getCount());
 
             if (records.getCount() == 0)
@@ -524,7 +522,7 @@ public class Push
             JSONObject data = new JSONObject();
 
             data.put("statusChanges", recordsJSON);
-            if (Config.D) Log.v(TAG, data.toString());
+            Util.v(null, TAG, data.toString());
             boolean success = WebClient.postJsonToUrl(ctx, getPushURL(ctx)
             		+ uid, data.toString());
 
@@ -542,7 +540,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Log.e(TAG, e.getMessage());
+            Util.e(ctx, TAG, Util.fmt(e));
         }
         return false;
     }

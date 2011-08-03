@@ -21,9 +21,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.peoples.android.Config;
+import org.peoples.android.Util;
 
 import android.content.Context;
-import android.util.Log;
 
 /**
  * Helper methods to simplify talking with and parsing responses from a
@@ -96,7 +96,7 @@ public abstract class WebClient
 			}
 			catch (Exception e)
 			{
-				Log.e(TAG, e.toString());
+				Util.e(ctxt, TAG, Util.fmt(e));
 				//make sure this isn't the recursive call
 				if (!firstCall)
 					throw new ApiException("Untrusted certificate!");
@@ -113,7 +113,8 @@ public abstract class WebClient
                 throw new ApiException("Invalid response from server: " +
                         status.toString());
             }
-            return getInputStreamAsString(response.getEntity().getContent());
+            return getInputStreamAsString(ctxt,
+            		response.getEntity().getContent());
         }
         catch (IOException e)
         {
@@ -167,8 +168,8 @@ public abstract class WebClient
 				return postJsonToUrl(ctxt, url, value, false);
 			}
 
-            if (Config.D) Log.d(TAG,
-            		getInputStreamAsString(response.getEntity().getContent()));
+            Util.d(ctxt, TAG, "Content: " + getInputStreamAsString(ctxt,
+            		response.getEntity().getContent()));
 
             StatusLine status = response.getStatusLine();
             if (status.getStatusCode() == HTTP_STATUS_OK)
@@ -176,7 +177,7 @@ public abstract class WebClient
     	}
     	catch (Exception e)
     	{
-    		Log.e(TAG, e.toString());
+    		Util.e(ctxt, TAG, Util.fmt(e));
     	}
         return false;
     }
@@ -199,7 +200,7 @@ public abstract class WebClient
     	}
     }
 
-    private static String getInputStreamAsString(InputStream is)
+    private static String getInputStreamAsString(Context ctxt, InputStream is)
     {
         byte[] sBuffer = new byte[512];
         ByteArrayOutputStream content = new ByteArrayOutputStream();
@@ -215,7 +216,7 @@ public abstract class WebClient
         }
         catch (IOException e)
         {
-            Log.e(TAG, e.getMessage());
+            Util.e(ctxt, TAG, Util.fmt(e));
         }
         return new String(content.toByteArray());
     }

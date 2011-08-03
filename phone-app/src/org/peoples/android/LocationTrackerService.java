@@ -22,7 +22,6 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 
 //TODO
 /*
@@ -79,7 +78,7 @@ public class LocationTrackerService extends Service
 		}
 		else
 		{
-			Log.w(TAG, "Unknown intent action: " + action);
+			Util.w(this, TAG, "Unknown intent action: " + action);
 			if (Config.D) throw new
 				RuntimeException("Unknown intent action: " + action);
 		}
@@ -316,7 +315,8 @@ public class LocationTrackerService extends Service
 			 */
 			if (provider.equals(LocationManager.GPS_PROVIDER))
 			{
-				Log.i(TAG, "GPS disabled, falling back to network");
+				Util.i(getThis(), TAG, "GPS disabled, "
+						+ "falling back to network");
 				networkMode = true;
 				
 				LocationManager lm = (LocationManager)
@@ -333,7 +333,7 @@ public class LocationTrackerService extends Service
 			//switch back to GPS if it comes back online
 			if (provider.equals(LocationManager.GPS_PROVIDER))
 			{
-				Log.i(TAG, "GPS re-enabled, "
+				Util.i(getThis(), TAG, "GPS re-enabled, "
 						+ "switching back from network updates");
 				networkMode = false;
 				

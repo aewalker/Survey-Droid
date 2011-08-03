@@ -8,9 +8,8 @@ package org.peoples.android.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
-import org.peoples.android.Config;
+import org.peoples.android.Util;
 
 /**
  * Provides the database read/write methods needed by the communication
@@ -46,7 +45,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getNewAnswers()
 	{
-		if (Config.D) Log.d(TAG, "Fetching new answers");
+		Util.d(null, TAG, "Fetching new answers");
 		
 		//set up the query
 
@@ -69,7 +68,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getNewCompletionData()
 	{
-		if (Config.D) Log.d(TAG, "Fetching new survey completion data");
+		Util.d(null, TAG, "Fetching new survey completion data");
 		
 		//set up the query
 		String    table    = PeoplesDB.TAKEN_TABLE_NAME;
@@ -92,7 +91,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getLocations()
 	{
-		if (Config.D) Log.d(TAG, "Fetching locations");
+		Util.d(null, TAG, "Fetching locations");
 		
 		//set up the query
 
@@ -116,7 +115,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getCalls()
 	{
-		if (Config.D) Log.d(TAG, "Fetching calls");
+		Util.d(null, TAG, "Fetching calls");
 		
 		//set up the query
 
@@ -140,7 +139,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getStatusChanges()
 	{
-		if (Config.D) Log.d(TAG, "Getting all status changes");
+		Util.d(null, TAG, "Getting all status changes");
 		
 		//set up the query
 		String    table    = PeoplesDB.STATUS_TABLE_NAME;
@@ -164,7 +163,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public void updateAnswer(int id)
 	{
-		if (Config.D) Log.d(TAG, "Marking answer " + id + " as uploaded");
+		Util.d(null, TAG, "Marking answer " + id + " as uploaded");
 		
 		ContentValues values = new ContentValues();
 		
@@ -183,7 +182,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public void updateCompletionRecord(int id)
 	{
-		if (Config.D) Log.d(TAG, "Marking record " + id + " as uploaded");
+		Util.d(null, TAG, "Marking record " + id + " as uploaded");
 		
 		ContentValues values = new ContentValues();
 		
@@ -202,7 +201,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public void delCompletionRecord(int id)
 	{
-		if (Config.D) Log.d(TAG, "Deleting record " + id);
+		Util.d(null, TAG, "Deleting record " + id);
 		
 		//set up the query
 		String whereClause = PeoplesDB.TakenTable._ID + " = ?";
@@ -218,7 +217,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public void delLocation(int id)
 	{
-		if (Config.D) Log.d(TAG, "Deleting location " + id);
+		Util.d(null, TAG, "Deleting location " + id);
 		
 		//set up the query
 		String whereClause = PeoplesDB.LocationTable._ID + " = ?";
@@ -234,7 +233,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public void delCall(int id)
 	{
-		if (Config.D) Log.d(TAG, "Deleting call " + id);
+		Util.d(null, TAG, "Deleting call " + id);
 		
 		//set up the query
 		String whereClause = PeoplesDB.CallLogTable._ID + " = ?";
@@ -250,7 +249,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 */
 	public void delStatusChange(int id)
 	{
-		if (Config.D) Log.d(TAG, "Deleting status change " + id);
+		Util.d(null, TAG, "Deleting status change " + id);
 		
 		//set up the query
 		String whereClause = PeoplesDB.StatusTable._ID + " = ?";

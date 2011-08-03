@@ -16,6 +16,7 @@ $_SESSION['pagename'] = $pagename;
 
 echo "<h2>$pagename</h2>";
 //show the results
+//TODO sort out all of these in a much better way
 if ($type == 'multipleChoice')
 { //adapt the results table based on the kind of quetion:
   //don't show text or value for multiple choice...
@@ -30,21 +31,21 @@ if ($type == 'multipleChoice')
 else if ($type == 'freeResponse')
 { //...don't show choices or value for free response...
 	echo $tablefordata->startTable('Answer', array(
-						'Answer Text', 'Time', 'Subject Id'
+						'Answer Value', 'Answer Text', 'Time', 'Subject Id'
 						));
 	echo $tablefordata->tableBody($results, array(),
 	            array(
-	            	'ans_text', 'created', 'subject_id'
+	            	'ans_value', 'ans_text', 'created', 'subject_id'
             ));
 }
 else if ($type == 'scale')
 { //...don't show choices or text for scale...
 	echo $tablefordata->startTable('Answer', array(
-						'Answer Text', 'Time', 'Subject Id'
+						'Answer Value', 'Answer Text', 'Time', 'Subject Id'
 						));
 	echo $tablefordata->tableBody($results, array(),
 	            array(
-	            	'ans_text', 'created', 'subject_id'
+	            	'ans_value', 'ans_text', 'created', 'subject_id'
             ));
 }
 

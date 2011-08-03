@@ -13,14 +13,13 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import org.peoples.android.Config;
 import org.peoples.android.R;
+import org.peoples.android.Util;
 import org.peoples.android.survey.SurveyService.SurveyBinder;
 
 /**
@@ -56,7 +55,7 @@ public class ConfirmSubmitActivity extends Activity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		if (Config.D) Log.d(TAG, "Creating ConfirmSubmitActivity");
+		Util.d(null, TAG, "Creating ConfirmSubmitActivity");
 		
 		//get the survey
 		Intent bindIntent = new Intent(this, SurveyService.class);

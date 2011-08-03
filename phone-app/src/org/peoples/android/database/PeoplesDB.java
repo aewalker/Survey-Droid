@@ -10,9 +10,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.util.Log;
 
-import org.peoples.android.Config;
+import org.peoples.android.Util;
 
 /**
  * Represents the SQLite database to hold information for the app.  Contains
@@ -492,7 +491,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db) {
     	AnswerTable.createSql();
-    	Log.d(TAG, "onCreate");
+    	Util.d(null, TAG, "onCreate");
 
         db.beginTransaction();
 
@@ -511,7 +510,7 @@ public class PeoplesDB extends SQLiteOpenHelper
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
-        	Log.e(TAG, e.toString());
+        	Util.e(null, TAG, Util.fmt(e));
         } finally {
             db.endTransaction();
         }
@@ -520,8 +519,8 @@ public class PeoplesDB extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        Log.i(TAG, "Upgrading database from version " + oldVersion + " to "
-                + newVersion + ", which will destroy all old data");
+        Util.i(null, TAG, "Upgrading database from version " + oldVersion +
+        		" to " + newVersion + ", which will destroy all old data");
         for (String table : TABLE_NAMES)
         {
         	db.execSQL("DROP TABLE IF EXISTS " + table);
@@ -536,19 +535,19 @@ public class PeoplesDB extends SQLiteOpenHelper
      */
     public PeoplesDB(Context context) {
     	super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        Log.d(TAG, "in constructor");
+        Util.d(null, TAG, "in constructor");
     }
 
     //for debugging; want to be able to print out when database is accessed
     @Override
     public synchronized SQLiteDatabase getReadableDatabase() {
-    	if(Config.D) Log.d(TAG, "getReadable");
+    	Util.d(null, TAG, "getReadable");
     	return super.getReadableDatabase();
     }
 
     @Override
     public synchronized SQLiteDatabase getWritableDatabase() {
-    	if(Config.D) Log.d(TAG, "getWriteable");
+    	Util.d(null, TAG, "getWriteable");
     	return super.getWritableDatabase();
     }
 

@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.peoples.android.Config;
+import org.peoples.android.Util;
 import org.peoples.android.survey.Base64Coder;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 /**
  * Handles Survey related calls to the PEOPLES database.
@@ -67,7 +67,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getSurvey(int id)
 	{
-		if (Config.D) Log.d(TAG, "getting survey " + id);
+		Util.d(null, TAG, "getting survey " + id);
 		
 		//set up the query
 
@@ -91,7 +91,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getQuestion(int id)
 	{
-		if (Config.D) Log.d(TAG, "getting question " + id);
+		Util.d(null, TAG, "getting question " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.QUESTION_TABLE_NAME;
@@ -120,7 +120,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getChoices(int id)
 	{
-		if (Config.D) Log.d(TAG, "getting choices for question " + id);
+		Util.d(null, TAG, "getting choices for question " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.CHOICE_TABLE_NAME;
@@ -143,7 +143,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getChoice(int id)
 	{
-		if (Config.D) Log.d(TAG, "getting choice " + id);
+		Util.d(null, TAG, "getting choice " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.CHOICE_TABLE_NAME;
@@ -167,7 +167,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getBranches(int id)
 	{
-		if (Config.D) Log.d(TAG, "getting branches for question " + id);
+		Util.d(null, TAG, "getting branches for question " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.BRANCH_TABLE_NAME;
@@ -190,7 +190,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getConditions(int id)
 	{
-		if (Config.D) Log.d(TAG, "getting conditions for branch " + id);
+		Util.d(null, TAG, "getting conditions for branch " + id);
 		
 
 		//set up the query
@@ -221,7 +221,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getSurveys()
 	{
-		if (Config.D) Log.d(TAG, "getting all surveys");
+		Util.d(null, TAG, "getting all surveys");
 		
 		//set up the query
 
@@ -252,7 +252,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getSubjectInitSurveys()
 	{
-		if (Config.D) Log.d(TAG, "getting subject-init surveys");
+		Util.d(null, TAG, "getting subject-init surveys");
 		
 		//set up the query
 		String    table    = PeoplesDB.SURVEY_TABLE_NAME;
@@ -275,7 +275,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public Cursor getQuestionHistory(int id)
 	{
-		if (Config.D) Log.d(TAG, "getting answers for question " + id);
+		Util.d(null, TAG, "getting answers for question " + id);
 		
 		//set up the query
 		String    table    = PeoplesDB.ANSWER_TABLE_NAME;
@@ -326,7 +326,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 			}
 		}
 		
-		if (Config.D) Log.d(TAG, "writing answer for question " + q_id
+		Util.d(contx, TAG, "writing answer for question " + q_id
 				+ ": " + ids.toString());
 		ContentValues values = new ContentValues();
 		
@@ -352,7 +352,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public boolean writeAnswer(int q_id, String text, long created)
 	{
-		if (Config.D) Log.d(TAG, "writing answer for question " + q_id + ": \""
+		Util.d(contx, TAG, "writing answer for question " + q_id + ": \""
 				+ text + "\"");
 		ContentValues values = new ContentValues();
 		
@@ -368,8 +368,8 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	}
 	
 	/**
-	 * Write a subject's answer to a sliding scale (value based) question to the
-	 * database.
+	 * Write a subject's answer to a sliding scale (value based) question to
+	 * the database.
 	 * 
 	 * @param q_id - the question_id
 	 * @param value - the value given in the question
@@ -379,7 +379,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 */
 	public boolean writeAnswer(int q_id, int value, long created)
 	{
-		if (Config.D) Log.d(TAG, "writing answer for question " + q_id + ": "
+		Util.d(contx, TAG, "writing answer for question " + q_id + ": "
 				+ value);
 		ContentValues values = new ContentValues();
 		
@@ -410,7 +410,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	public int writeExtra(int survey_id, int type,
 			InputStream stream, long created, int row_id)
 	{
-		if (Config.D) Log.d(TAG, "writing extra for survey "
+		Util.d(null, TAG, "writing extra for survey "
 				+ survey_id + " to database");
 		if (Config.D && row_id != 0)
 		{
@@ -447,7 +447,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 			}
 			catch (Exception e)
 			{
-				Log.e(TAG, e.getMessage());
+				Util.e(contx, TAG, Util.fmt(e));
 				return WRITE_ERROR;
 			}
 			
@@ -475,7 +475,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 			}
 			catch (Exception e)
 			{
-				Log.e(TAG, e.getMessage());
+				Util.e(contx, TAG, Util.fmt(e));
 				return WRITE_ERROR;
 			}
 			
