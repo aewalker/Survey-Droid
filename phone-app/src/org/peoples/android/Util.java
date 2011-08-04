@@ -244,7 +244,8 @@ public final class Util
 	//tries to log the message to the internal log
 	private static void log(final String msg)
 	{
-		String time = Calendar.getInstance().getTime().toString();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM.dd HH:mm:ss z");
+		String time = sdf.format(Calendar.getInstance().getTime()); 
 		try
 		{
 			FileOutputStream fos = new FileOutputStream(LOGFILE, true);
@@ -257,10 +258,12 @@ public final class Util
 		catch (FileNotFoundException e)
 		{
 			Log.w(TAG, "Can't write to log; file not found");
+			return;
 		}
 		catch (IOException e)
 		{
 			Log.w(TAG, "IO exception when trying to write to log");
+			return;
 		}
 	}
 	

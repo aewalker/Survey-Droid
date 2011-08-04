@@ -5,6 +5,7 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.coms;
 
+import java.io.File;
 import java.util.Calendar;
 
 import android.app.AlarmManager;
@@ -12,9 +13,11 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import org.peoples.android.Config;
 import org.peoples.android.Util;
+import org.peoples.android.ViewLogActivity;
 
 /**
  * Communication service that is responsible for communicating with the
@@ -88,10 +91,41 @@ public class ComsService extends IntentService
 	{
 		super(null);
 	}
+	
+	//atempts to send Austin the logs
+	private void sendLog()
+	{
+		File log = new File(Util.LOGFILE);
+		if (log.length() > 10000) //don't let the file get over 10K
+		{
+			Intent emailIntent =
+				new Intent(android.content.Intent.ACTION_SEND);
+			emailIntent.setType("plain/text");
+			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+					new String[] {"awalkerenator@gmail.com"});
+			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+					"PEOPLES Log");
+			try
+			{
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+						ViewLogActivity.readLogFile());
+			}
+			catch (Exception e)
+			{
+				Log.w(TAG, "Can't read log file");
+				return;
+			}
+			this.startActivity(Intent.createChooser(emailIntent,
+					"Send PEOPLES Log"));
+			log.delete();
+		}
+	}
 
 	@Override
 	protected void onHandleIntent(Intent intent)
 	{
+		if (Config.D) sendLog();
+		
 		String action = intent.getAction();
 		
 		if (action.equals(ACTION_UPLOAD_DATA))
