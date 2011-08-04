@@ -209,6 +209,12 @@ public class Config
 	 */
 	public static final int SURVEY_TIMEOUT_NEVER = -1;
 	
+	/**
+	 * Use this to get custom data set by the study admin.  To get a specific
+	 * key, append "#key_name" to this value.
+	 */
+	public static final String USER_DATA = "user_data";
+	
 	//settings by type
 	/** List of settings which are strings */
 	public static final String[] STRINGS =

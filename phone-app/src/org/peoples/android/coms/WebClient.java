@@ -8,6 +8,7 @@ package org.peoples.android.coms;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
 
 import javax.net.ssl.SSLException;
 
@@ -94,9 +95,9 @@ public abstract class WebClient
 			{
 				response = client.execute(request);
 			}
-			catch (Exception e)
+			catch (SSLException e)
 			{
-				Util.e(ctxt, TAG, Util.fmt(e));
+				Util.w(ctxt, TAG, Util.fmt(e));
 				//make sure this isn't the recursive call
 				if (!firstCall)
 					throw new ApiException("Untrusted certificate!");
@@ -104,6 +105,10 @@ public abstract class WebClient
 				swapKeyStore(ctxt);
 				//the just do a recursive call
 				return getUrlContent(ctxt, url, false);
+			}
+			catch (SocketException e)
+			{
+				throw new ApiException("Network problem", e);
 			}
 
             // Check if server response is valid

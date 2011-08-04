@@ -301,51 +301,94 @@ public class Pull
     	{
     		//do the special keys first
     		
-    		//application features
-    		JSONObject features = config.getJSONObject("features_enabled");
-    		if (features.optInt("survey", 0) == 1)
-    			Config.putSetting(ctxt, Config.SURVEYS_SERVER, true);
-    		else
-    			Config.putSetting(ctxt, Config.SURVEYS_SERVER, false);
-    		if (features.optInt("callog", 0) == 1)
-    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, true);
-    		else
-    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, false);
-    		if (features.optInt("location", 0) == 1)
-    			Config.putSetting(ctxt, Config.TRACKING_SERVER, true);
-    		else
-    			Config.putSetting(ctxt, Config.TRACKING_SERVER, false);
-    		config.remove("features_enabled");
-    		
-    		//location tracked
-    		JSONArray locations = config.getJSONArray("location_tracked");
-    		Config.putSetting(ctxt, Config.NUM_LOCATIONS_TRACKED,
-    				locations.length());
-    		for (int i = 0; i < locations.length(); i++)
+    		//user data
+    		try
     		{
-    			JSONObject location = locations.getJSONObject(i);
-    			Config.putSetting(ctxt, Config.TRACKED_LONG + i,
-    					(float) location.optDouble("long", 0.0));
-    			Config.putSetting(ctxt, Config.TRACKED_LAT + i,
-    					(float) location.optDouble("lat", 0.0));
-    			Config.putSetting(ctxt, Config.TRACKED_RADIUS + i,
-    					(float) location.optDouble("radius", 0.0));
+	    		JSONObject user_data = config.getJSONObject("user_data");
+	    		JSONArray udNames = user_data.names();
+	    		if (udNames != null)
+	    		{
+		    		for (int i = 0; i < udNames.length(); i++)
+		    		{
+		    			String key = udNames.getString(i);
+						Config.putSetting(ctxt, Config.USER_DATA + "#" + key,
+								user_data.getString(key));
+		    		}
+	    		}
     		}
-    		config.remove("location_tracked");
-    		
-    		//times tracked
-    		JSONArray times = config.getJSONArray("time_tracked");
-    		Config.putSetting(ctxt, Config.NUM_TIMES_TRACKED,
-    				times.length());
-    		for (int i = 0; i < times.length(); i++)
+    		catch (JSONException e)
     		{
-    			JSONObject time = times.getJSONObject(i);
-    			Config.putSetting(ctxt, Config.TRACKED_START + i,
-    					"" + time.optInt("start", 0));
-    			Config.putSetting(ctxt, Config.TRACKED_END + i,
-    					"" + time.optInt("end", 0));
+    			Util.w(ctxt, TAG, "No user_data");
     		}
-    		config.remove("time_tracked");
+    		
+    		try
+    		{
+	    		//application features
+	    		JSONObject features = config.getJSONObject("features_enabled");
+	    		if (features.optInt("survey", 0) == 1)
+	    			Config.putSetting(ctxt, Config.SURVEYS_SERVER, true);
+	    		else
+	    			Config.putSetting(ctxt, Config.SURVEYS_SERVER, false);
+	    		if (features.optInt("callog", 0) == 1)
+	    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, true);
+	    		else
+	    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, false);
+	    		if (features.optInt("location", 0) == 1)
+	    			Config.putSetting(ctxt, Config.TRACKING_SERVER, true);
+	    		else
+	    			Config.putSetting(ctxt, Config.TRACKING_SERVER, false);
+	    		config.remove("features_enabled");
+			}
+			catch (JSONException e)
+			{
+				Util.w(ctxt, TAG, "No features_enabled");
+			}
+    		
+			try
+			{
+	    		//location tracked
+	    		JSONArray locations = config.getJSONArray("location_tracked");
+	    		Config.putSetting(ctxt, Config.NUM_LOCATIONS_TRACKED,
+	    				locations.length());
+	    		for (int i = 0; i < locations.length(); i++)
+	    		{
+	    			JSONObject location = locations.getJSONObject(i);
+	    			Config.putSetting(ctxt, Config.TRACKED_LONG + i,
+	    					(float) location.optDouble("long", 0.0));
+	    			Config.putSetting(ctxt, Config.TRACKED_LAT + i,
+	    					(float) location.optDouble("lat", 0.0));
+	    			Config.putSetting(ctxt, Config.TRACKED_RADIUS + i,
+	    					(float) location.optDouble("radius", 0.0));
+	    		}
+	    		config.remove("location_tracked");
+			}
+			catch (JSONException e)
+			{
+				Util.w(ctxt, TAG, "No location_tracked");
+				Config.putSetting(ctxt, Config.NUM_LOCATIONS_TRACKED, 0);
+			}
+    		
+			try
+			{
+	    		//times tracked
+	    		JSONArray times = config.getJSONArray("time_tracked");
+	    		Config.putSetting(ctxt, Config.NUM_TIMES_TRACKED,
+	    				times.length());
+	    		for (int i = 0; i < times.length(); i++)
+	    		{
+	    			JSONObject time = times.getJSONObject(i);
+	    			Config.putSetting(ctxt, Config.TRACKED_START + i,
+	    					"" + time.optInt("start", 0));
+	    			Config.putSetting(ctxt, Config.TRACKED_END + i,
+	    					"" + time.optInt("end", 0));
+	    		}
+	    		config.remove("time_tracked");
+			}
+			catch (JSONException e)
+			{
+				Util.w(ctxt, TAG, "No times_tracked");
+				Config.putSetting(ctxt, Config.NUM_TIMES_TRACKED, 0);
+			}
     		
     		//voice_format (because it needs to be converted
     		String format = config.optString("voice_format");

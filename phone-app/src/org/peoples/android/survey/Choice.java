@@ -58,7 +58,7 @@ public class Choice
 	 */
 	public Choice(String text, int id, Context c)
 	{
-		choice_text = text;
+		choice_text = Survey.processText(c, text);
 		type = PeoplesDB.ChoiceTable.TEXT_CHOICE;
 		choice_img = null;
 		this.id = id;

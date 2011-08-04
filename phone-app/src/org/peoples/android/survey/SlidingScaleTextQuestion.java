@@ -38,8 +38,8 @@ public class SlidingScaleTextQuestion extends Question
 	{
 		super(text, id, b, PeoplesDB.QuestionTable.SCALE_TEXT, ctxt);
 		
-		this.textLow = textLow;
-		this.textHigh = textHigh;
+		this.textLow = Survey.processText(ctxt, textLow);
+		this.textHigh = Survey.processText(ctxt, textHigh);
 	}
 	
 	/**

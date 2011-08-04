@@ -113,8 +113,8 @@ public class Survey
 		Cursor s = db.getSurvey(id);
 		if (!s.moveToFirst())
 			throw new IllegalArgumentException("no such survey");
-		name = s.getString(
-				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.NAME));
+		name = processText(ctxt, s.getString(
+				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.NAME)));
 		int firstQID = s.getInt(
 				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.QUESTION_ID));
 		s.close();
@@ -835,5 +835,79 @@ public class Survey
 		}
 
 		return worked;
+	}
+	
+	/**
+	 * Looks through a string and replaces any occurrences of control sequences
+	 * with the correct text.  If the data needed cannot be found, then the
+	 * name of that data is used instead.
+	 * 
+	 * The full set of rules for this function is as follows (by example):
+	 * <ol>
+	 * <li>"Hello, #place" becomes "Hello, World" ("#place" => "World")</li>
+	 * <li>"Hello, #place!" becomes "Hello, World" ("#place!" => "World")</li>
+	 * <li>"Hello, #place\!" becomes "Hello, World!" ("#place" => "World")</li>
+	 * <li>"Hello, \#place" becomes "Hello, #place" ("\" removed)</li>
+	 * <li>"#greeting World" becomes "Hello, World" ("#greeting" => "Hello,")
+	 * </li>
+	 * <li>"#greeting#place" becomes "Hello, World" ("#greeting" => "Hello, "
+	 * and "#place" => "World")</li>
+	 * <li>"Hello, #somenonexistantkey" becomes "Hello, somenonexistantkey"
+	 * ("#" removed)</li>
+	 * </ol>
+	 * 
+	 * The search and replace is case sensitive.  Because of this (and because
+	 * of the last rule above), it is recommended that administrators use
+	 * descriptive keys so that, in the event that the data meant to replace
+	 * that key is not found, the resulting text looks acceptable.
+	 * 
+	 * @param ctxt - the context (used for Config lookup calls)
+	 * @param text - the string to look through
+	 * @return a new string with the replaced values
+	 */
+	public static String processText(Context ctxt, String text)
+	{
+		char ctl = '#';
+		char esc = '\\';
+		StringBuilder newString = new StringBuilder();
+		char[] chars = text.toCharArray();
+		boolean escape = false;
+		for (int i = 0; i < text.length(); i++)
+		{
+			char c = chars[i];
+			if (c == ctl && !escape)
+			{
+				StringBuilder key = new StringBuilder();
+				i++;
+				if (i < text.length()) c = chars[i];
+				while (c != ' ' && c != esc && i < text.length())
+				{
+					if (c == ctl)
+					{
+						//DO NOT replace "#" with ctl!
+						newString.append(Config.getSetting(ctxt,
+								key.toString(), Config.USER_DATA + "#" + key));
+						newString.append(processText(ctxt, text.substring(i)));
+						return newString.toString();
+					}
+					key.append(c);
+					i++;
+					if (i < text.length()) c = chars[i];
+				}
+				//DO NOT replace "#" with ctl!
+				newString.append(Config.getSetting(ctxt, key.toString(),
+						Config.USER_DATA + "#" + key));
+				i--;
+				continue;
+			}
+			if (c == esc)
+			{
+				escape = true;
+				continue;
+			}
+			newString.append(c);
+			escape = false;
+		}
+		return text;
 	}
 }
