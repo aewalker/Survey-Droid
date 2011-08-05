@@ -51,6 +51,7 @@ public class CallTracker extends PhoneStateListener
 	public void onCallStateChanged(int state, String incomingNumber)
 	{
 		super.onCallStateChanged(state, incomingNumber);
+		Util.d(ctxt, TAG, "Call state changed: " + state);
 		if (state == TelephonyManager.CALL_STATE_RINGING
 				|| state == TelephonyManager.CALL_STATE_OFFHOOK)
 		{ //call just started or is still going

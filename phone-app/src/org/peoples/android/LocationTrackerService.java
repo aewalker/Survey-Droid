@@ -74,7 +74,9 @@ public class LocationTrackerService extends Service
 		}
 		else if (action.equals(ACTION_START_TRACKING))
 		{
-			schedule();
+			//FIXME fix this later; for now, just test GPS
+			lt.start();
+			//schedule();
 		}
 		else
 		{
@@ -117,7 +119,7 @@ public class LocationTrackerService extends Service
 		//some setup stuff
 		AlarmManager as = (AlarmManager)
 			this.getSystemService(ALARM_SERVICE);
-		//Yes, there supposed to be 8 days.  See the rescheduling code
+		//Yes, there're supposed to be 8 days.  See the rescheduling code
 		//later on.
 		String[] days =
 			{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
@@ -253,44 +255,46 @@ public class LocationTrackerService extends Service
 				double lon = loc.getLongitude();
 				int numLocs = Config.getSetting(getThis(),
 						Config.NUM_LOCATIONS_TRACKED, 0);
-				boolean log = false;
-				if (numLocs >= 1)
-				{
-					for (int i = 0; i < numLocs; i++)
-					{
-						//for each location tracked, get the information
-						//for that location and validate it
-						double thisLon = (double) Config.getSetting(getThis(),
-								Config.TRACKED_LONG + i, (float) -1.0);
-						double thisLat = (double) Config.getSetting(getThis(),
-								Config.TRACKED_LAT + i, (float) -1.0);
-						double thisRad = (double) Config.getSetting(getThis(),
-								Config.TRACKED_RADIUS + i, (float) -1.0);
-						if (thisLon == -1.0 ||
-							thisLat == -1.0 ||
-							thisRad == -1.0)
-						{
-							throw new RuntimeException("cannot find location "
-									+ "tracking value for location index" + i);
-						}
-						
-						//now see if the incoming location
-						//is within a valid location
-						float[] results = new float[1];
-						Location.distanceBetween(lat, lon,
-								thisLat, thisLon, results);
-						if (results[0] < (thisRad * 1000))
-						{
-							log = true;
-							break;
-						}
-					}
-				}
-				else
-				{ //assume that if there are no locations, then everything
-				  //should be tracked (to track nowhere just turn off tracking)
-					log = true;
-				}
+				//FIXME just log everything for now, to make sure it works
+//				boolean log = false;
+				boolean log = true;
+//				if (numLocs >= 1)
+//				{
+//					for (int i = 0; i < numLocs; i++)
+//					{
+//						//for each location tracked, get the information
+//						//for that location and validate it
+//						double thisLon = (double) Config.getSetting(getThis(),
+//								Config.TRACKED_LONG + i, (float) -1.0);
+//						double thisLat = (double) Config.getSetting(getThis(),
+//								Config.TRACKED_LAT + i, (float) -1.0);
+//						double thisRad = (double) Config.getSetting(getThis(),
+//								Config.TRACKED_RADIUS + i, (float) -1.0);
+//						if (thisLon == -1.0 ||
+//							thisLat == -1.0 ||
+//							thisRad == -1.0)
+//						{
+//							throw new RuntimeException("cannot find location "
+//									+ "tracking value for location index" + i);
+//						}
+//						
+//						//now see if the incoming location
+//						//is within a valid location
+//						float[] results = new float[1];
+//						Location.distanceBetween(lat, lon,
+//								thisLat, thisLon, results);
+//						if (results[0] < (thisRad * 1000))
+//						{
+//							log = true;
+//							break;
+//						}
+//					}
+//				}
+//				else
+//				{ //assume that if there are no locations, then everything
+//				  //should be tracked (to track nowhere just turn off tracking)
+//					log = true;
+//				}
 				if (log)
 				{
 					TrackingDBHandler tdbh = new TrackingDBHandler(getThis());

@@ -100,6 +100,7 @@ public class ComsService extends IntentService
 		{
 			Intent emailIntent =
 				new Intent(android.content.Intent.ACTION_SEND);
+			emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			emailIntent.setType("plain/text");
 			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
 					new String[] {"awalkerenator@gmail.com"});
