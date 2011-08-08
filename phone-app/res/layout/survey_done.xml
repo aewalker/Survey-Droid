@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/survey_done_topLayout"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal|center_vertical">
+    <TextView
+		android:textAppearance="?android:attr/textAppearanceLarge"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/survey_done_text"
+    	android:text="@string/survey_done_text"
+    	android:layout_weight="1"
+    	android:gravity="center_horizontal|center_vertical"></TextView>
+	<Button
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/survey_done_exitButton"
+		android:text="@string/survey_done_exit"
+		android:drawableLeft="@drawable/blue_back_medium"
+		android:layout_margin="5dip"></Button>
+</LinearLayout>

@@ -85,4 +85,10 @@
 	
 	<!-- Take button on the user-initiated surveys page -->
 	<string name="user_surveys_take">Take Now</string>
+	
+	<!-- Exit button on the survey-completion (survey_done) page. -->
+	<string name="survey_done_exit">Exit</string>
+	
+	<!-- Main text on the survey-completion (survey_done) page. -->
+	<string name="survey_done_text">The survey has been successfully submitted!</string>
 </resources>

@@ -201,10 +201,17 @@ public class SurveyExtrasActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
+				//finish up the backend stuff
 				Intent finishIntent =
 					new Intent(getThis(), SurveyService.class);
 				finishIntent.setAction(SurveyService.ACTION_END_SURVEY);
 				startService(finishIntent);
+				
+				//tell the user they're done
+				Intent doneIntent =
+					new Intent(getThis(), SurveyDoneActivity.class);
+				startActivity(doneIntent);
+				
 				finish();
 			}
 		});

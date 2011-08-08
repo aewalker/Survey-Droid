@@ -39,7 +39,8 @@
 				android:screenOrientation="portrait"
 				android:configChanges="keyboardHidden|orientation"
 				android:debuggable="true">
-				
+		
+		<!-- Receivers -->
         <receiver android:label="IncomingSMSTracker" android:name="IncomingSMSTracker" android:enabled="true">
 			<intent-filter>
     			<action android:name="android.provider.Telephony.SMS_RECEIVED" />
@@ -62,6 +63,8 @@
 				<action android:name="org.peoples.android.coms.ACTION_DOWNLOAD_DATA" />
 			</intent-filter>
 		</receiver>
+		
+		<!-- Services -->
 		<service android:label="SurveyScheduler" android:name=".survey.SurveyScheduler">
 			<intent-filter>
 				<action android:name="org.peoples.android.survey.ACTION_ADD_SURVEY" />
@@ -84,7 +87,9 @@
 			</intent-filter>
 		</service>
 		<service android:name="LocationTrackerService" android:label="LocationTrackerService"></service>
-		<activity android:label="PEOPLES Survey Notification" android:name=".survey.NotificationActivity"></activity>
+		
+		<!-- Activities -->
+		<activity android:label="PEOPLES Survey" android:name=".survey.SurveyDoneActivity"></activity>
 		<activity android:label="PEOPLES Survey" android:name=".survey.SingleChoiceActivity"></activity>
 		<activity android:label="PEOPLES Survey" android:name=".survey.MultiChoiceActivity"></activity>
 		<activity android:label="PEOPLES Survey" android:name=".survey.TextScaleActivity"></activity>
