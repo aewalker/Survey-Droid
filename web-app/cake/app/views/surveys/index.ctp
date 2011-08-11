@@ -13,7 +13,7 @@ echo $table->tableBody($results, array(
 		'command' => 'editsurvey', 'arg' => 'id', 'type' => 'link'),
 	'Delete' => array(
 		'command' => 'deletesurvey', 'arg' => 'id', 'type' => 'link'),
-	'Select' => array(
+	'Edit Survey Questions' => array(
 		'command' => 'viewsurvey', 'arg' => 'id', 'type' => 'link' ) 
 	), array('id', 'name'));
 echo $table->endTable(array('Add Survey' =>

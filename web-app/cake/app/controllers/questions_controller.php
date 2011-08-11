@@ -54,18 +54,24 @@ class QuestionsController extends AppController
     	if ($this->data['Question']['confirm'] == true)
 		{
 			//first do the base64 transform
-			if (!empty($this->data['Question']['q_img_low']))
+			if (!empty($this->data['Question']['q_img_low']['tmp_name']))
 			{
+                // var_dump($this->data);
+                // echo empty($this->data['Question']['q_img_low']);
 				$file = $this->data['Question']['q_img_low']['tmp_name'];
 				$this->data['Question']['q_img_low'] =
 					base64_encode(fread(fopen($file, 'r'), filesize($file)));
+			} else {
+			    $this->data['Question']['q_img_low'] = "";
 			}
-			if (!empty($this->data['Question']['q_img_high']))
+			if (!empty($this->data['Question']['q_img_high']['tmp_name']))
 			{
 				$file = $this->data['Question']['q_img_high']['tmp_name'];
 				$this->data['Question']['q_img_high'] =
 					base64_encode(fread(fopen($file, 'r'), filesize($file)));
-			}
+			} else {
+			    $this->data['Question']['q_img_high'] = "";
+        	}
 			
 			//then save
 	    	$this->Question->create();
