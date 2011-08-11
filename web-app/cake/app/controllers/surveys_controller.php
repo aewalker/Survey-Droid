@@ -100,6 +100,15 @@ class SurveysController extends AppController
 			{
 				$this->set('name', $result['Survey']['name']);
 				$this->set('surveyid', $surveyid);
+
+                $this->set('questions', $this->Survey->Question->find('list', array
+        		(
+        			'conditions' => array('survey_id' => $surveyid),
+        			'fields' => array('q_text'),
+        			'order' => array('id'),
+        			'recursive' => 0
+        		)));
+        		
 				$this->set('questionid', $result['Survey']['question_id']);
 				$days_result = array();
 				foreach ($this->days as $day)

@@ -5,6 +5,8 @@
 	<key>documents</key>
 	<array>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>cake</string>
 			<key>regexFolderFilter</key>
@@ -13,6 +15,8 @@
 			<string>cake</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>SQL</string>
 			<key>regexFolderFilter</key>
@@ -20,14 +24,30 @@
 			<key>sourceDirectory</key>
 			<string>SQL</string>
 		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../../.Trash/SOC-App/pull.json</string>
+			<key>lastUsed</key>
+			<date>2011-08-11T18:17:42Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../../.Trash/SOC-App/push.json</string>
+			<key>lastUsed</key>
+			<date>2011-08-11T18:17:42Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../../.Trash/SOC-App/README</string>
+		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>200</integer>
+	<integer>232</integer>
 	<key>metaData</key>
 	<dict/>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{203, 4}, {1227, 874}}</string>
+	<string>{{1682, -180}, {1678, 1080}}</string>
 </dict>
 </plist>
