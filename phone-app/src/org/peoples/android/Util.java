@@ -5,17 +5,16 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+//import java.io.FileNotFoundException;
+//import java.io.FileOutputStream;
+//import java.io.IOException;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
+//import android.widget.Toast;
 
 /**
  * Contains static, general use functions.
@@ -25,53 +24,96 @@ import android.widget.Toast;
 public final class Util
 {
 	//tag name for the whole app
-	private static final String TAG = "PEOPLES";
+	private static final String APP_TAG = "PEOPLES";
+	
+	//tag name for this class
+	private static final String TAG = "Util";
 	
 	/** Location of the application log */
 	public static final String LOGFILE =
 		"/data/data/org.peoples.android/peoples_log";
 	
+	private static final boolean USE_APP_TAG = true;
+	
+	/**
+	 * Generate a request code for use with {@link AlarmManager#set}.
+	 * 
+	 * @return a pseudo-random integer influenced by the current system time
+	 */
+	public static int randRequestCode()
+	{
+		int time = (int) System.currentTimeMillis();
+		int rand = (int) (Math.random() * 10000.0);
+		return time + rand;
+	}
+	
+	/**
+	 * Get the day of the week from {@link Calendar} that corresponds to the
+	 * day given as a string.
+	 * 
+	 * @param day - the day as a string from the set {Sun, Mon, Tue,
+	 * Wed, Thu, Fri, Sat}
+	 * @return the number for that day, as in {@link Calendar#get(int)}
+	 */
+	public static int getDay(String day)
+	{
+		if (day.equals("Sun")) return Calendar.SUNDAY;
+		else if (day.equals("Mon")) return Calendar.MONDAY;
+		else if (day.equals("Tue")) return Calendar.TUESDAY;
+		else if (day.equals("Wed")) return Calendar.WEDNESDAY;
+		else if (day.equals("Thu")) return Calendar.THURSDAY;
+		else if (day.equals("Fri")) return Calendar.FRIDAY;
+		else if (day.equals("Sat")) return Calendar.SATURDAY;
+		else throw new IllegalArgumentException("Bad day: " + day);
+	}
+	
 	/**
 	 * Get the Unix timestamp of the next occurrence of the given day/time
 	 * 
-	 * @param day - the day of the week as in Config.DAY_FORMAT
-	 * @param time - the time of day as in Config.TIME_FORMAT
+	 * @param day - the day of the week as in {@link Config#DAY_FORMAT}
+	 * @param time - the time of day as in {@link Config#TIME_FORMAT}
 	 * @return Unix timestamp in milliseconds
 	 */
 	public static long getUnixTime(String day, String time)
 	{
-		SimpleDateFormat timeSDF = new SimpleDateFormat(Config.TIME_FORMAT);
-		timeSDF.setTimeZone(TimeZone.getTimeZone("UTC"));
+		//first, get the day right
+		Calendar now = Calendar.getInstance(TimeZone.getDefault(), Locale.US);
+		now.setTimeInMillis(System.currentTimeMillis());
+		int targetDay = getDay(day);
+		while (now.get(Calendar.DAY_OF_WEEK) != targetDay)
+		{
+			now.add(Calendar.DAY_OF_YEAR, 1);
+		}
+		
+		//do some parsing now to get the time
+		int hours;
+		int mins;
+		if (time.length() == 3) time = "0" + time;
 		try
 		{
-			timeSDF.parse(time);
+			hours = Integer.parseInt(time.substring(0, 2));
+			mins = Integer.parseInt(time.substring(2, 4));
 		}
-		catch (ParseException e)
+		catch (Exception e)
 		{
-			throw new RuntimeException("Invalid time: " + time);
+			throw new RuntimeException("Invalid time string: " + time);
 		}
+		now.set(Calendar.HOUR_OF_DAY, hours);
+		now.set(Calendar.MINUTE, mins);
+		now.set(Calendar.SECOND, 0);
+		now.set(Calendar.MILLISECOND, 0);
+		long returnTime = now.getTimeInMillis();
 		
-		SimpleDateFormat daySDF = new SimpleDateFormat(Config.DAY_FORMAT);
-		daySDF.setTimeZone(TimeZone.getTimeZone("UTC"));
-		try
+		//account for the situation where the day desired is the same as the
+		//current day, but the time is in the past
+		if (returnTime < System.currentTimeMillis())
 		{
-			daySDF.parse(day);
+			now.add(Calendar.DAY_OF_YEAR, 7);
+			returnTime = now.getTimeInMillis();
 		}
-		catch (ParseException e)
-		{
-			throw new RuntimeException("Invalid day: " + day);
-		}
-		
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DAY_OF_WEEK,
-				daySDF.getCalendar().get(Calendar.DAY_OF_WEEK));
-		cal.set(Calendar.HOUR_OF_DAY,
-				timeSDF.getCalendar().get(Calendar.HOUR_OF_DAY));
-		cal.set(Calendar.MINUTE, timeSDF.getCalendar().get(Calendar.MINUTE));
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		
-		return cal.getTimeInMillis();
+		Util.d(null, TAG, "Time difference: " + 
+				(returnTime - System.currentTimeMillis()));
+		return returnTime;
 	}
 	
 	/*-----------------------------------------------------------------------*/
@@ -95,12 +137,15 @@ public final class Util
 		if (Config.D)
 		{
 			if (c != null) toast(c, tag + " :: " + msg);
-			Log.e(tag, msg);
+			if (USE_APP_TAG)
+				Log.e(APP_TAG, tag + " :: " + msg);
+			else
+				Log.e(tag, msg);
 			log(msg);
 		}
 		else
 		{
-			Log.e(TAG, msg);
+			Log.e(APP_TAG, msg);
 		}
 	}
 	
@@ -116,12 +161,15 @@ public final class Util
 		if (Config.D)
 		{
 			if (c != null) toast(c, tag + " :: " + msg);
-			Log.w(tag, msg);
+			if (USE_APP_TAG)
+				Log.w(APP_TAG, tag + " :: " + msg);
+			else
+				Log.w(tag, msg);
 			log(msg);
 		}
 		else
 		{
-			Log.w(TAG, msg);
+			Log.w(APP_TAG, msg);
 		}
 	}
 	
@@ -137,12 +185,15 @@ public final class Util
 		if (Config.D)
 		{
 			if (c != null) toast(c, tag + " :: " + msg);
-			Log.i(tag, msg);
+			if (USE_APP_TAG)
+				Log.i(APP_TAG, tag + " :: " + msg);
+			else
+				Log.i(tag, msg);
 			log(msg);
 		}
 		else
 		{
-			Log.i(TAG, msg);
+			Log.i(APP_TAG, msg);
 		}
 	}
 	
@@ -158,7 +209,10 @@ public final class Util
 		if (Config.D)
 		{
 			if (c != null) toast(c, tag + " :: " + msg);
-			Log.d(tag, msg);
+			if (USE_APP_TAG)
+				Log.d(APP_TAG, tag + " :: " + msg);
+			else
+				Log.d(tag, msg);
 			log(msg);
 		}
 	}
@@ -175,7 +229,10 @@ public final class Util
 		if (Config.D)
 		{
 			if (c != null) toast(c, tag + " :: " + msg);
-			Log.v(tag, msg);
+			if (USE_APP_TAG)
+				Log.v(APP_TAG, tag + " :: " + msg);
+			else
+				Log.v(tag, msg);
 			log(msg);
 		}
 	}
@@ -244,33 +301,33 @@ public final class Util
 	//tries to log the message to the internal log
 	private static void log(final String msg)
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat("MM.dd HH:mm:ss z");
-		String time = sdf.format(Calendar.getInstance().getTime()); 
-		try
-		{
-			FileOutputStream fos = new FileOutputStream(LOGFILE, true);
-			fos.write(time.getBytes());
-			fos.write(" | ".getBytes());
-			fos.write(msg.getBytes());
-			fos.write("\n".getBytes());
-			fos.close();
-		}
-		catch (FileNotFoundException e)
-		{
-			Log.w(TAG, "Can't write to log; file not found");
-			return;
-		}
-		catch (IOException e)
-		{
-			Log.w(TAG, "IO exception when trying to write to log");
-			return;
-		}
+//		SimpleDateFormat sdf = new SimpleDateFormat("MM.dd HH:mm:ss z");
+//		String time = sdf.format(Calendar.getInstance().getTime()); 
+//		try
+//		{
+//			FileOutputStream fos = new FileOutputStream(LOGFILE, true);
+//			fos.write(time.getBytes());
+//			fos.write(" | ".getBytes());
+//			fos.write(msg.getBytes());
+//			fos.write("\n".getBytes());
+//			fos.close();
+//		}
+//		catch (FileNotFoundException e)
+//		{
+//			Log.w(TAG, "Can't write to log; file not found");
+//			return;
+//		}
+//		catch (IOException e)
+//		{
+//			Log.w(TAG, "IO exception when trying to write to log");
+//			return;
+//		}
 	}
 	
 	//tries to show a toast message
 	private static void toast(Context c, final String msg)
 	{
 		//this doesn't always work, and there's no way to fix it -Austin
-		Toast.makeText(c, msg, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(c, msg, Toast.LENGTH_SHORT).show();
 	}
 }

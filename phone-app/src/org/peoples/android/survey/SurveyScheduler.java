@@ -9,6 +9,7 @@
 package org.peoples.android.survey;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -59,14 +60,6 @@ public class SurveyScheduler extends IntentService
 	public static final String EXTRA_SURVEY_ID =
 		"org.peoples.android.survey.EXTRA_SURVEY_ID";
 	
-	//TODO add code to make use of this
-	/**
-	 * The number of times a survey has been skipped.  Used (optionally)
-	 * with {@link ACTION_ADD_SURVEY}.
-	 */
-	public static final String EXTRA_SKIPPED_COUNT =
-		"org.peoples.android.survey.EXTRA_SKIPPED_COUNT";
-	
 	/**
 	 * The time the survey is to be scheduled for.  Used with
 	 * {@link ACTION_ADD_SURVEY}.
@@ -115,9 +108,10 @@ public class SurveyScheduler extends IntentService
 		}
 		else
 		{
-			//throw an error; unknown action requested
-			//TODO could just ignore it instead...
-			throw new RuntimeException("Unknown action requested");
+			Util.w(null, TAG, "Unknown action requested: " + action);
+			if (Config.D)
+				throw new RuntimeException("Unknown action requested: "
+						+ action);
 		}
 	}
 	
@@ -127,16 +121,18 @@ public class SurveyScheduler extends IntentService
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(time);
 		Util.d(this, TAG, "Scheduling survey "
-				+ id + " for " + c.getTime().toString());
+				+ id + " for " + c.getTime().toGMTString() + " GMT");
 		
 		Intent surveyIntent = new Intent(getApplicationContext(),
 				SurveyService.class);
 		surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
 		surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID, id);
 		surveyIntent.putExtra(EXTRA_RUNNING_TIME, time);
+		//trick to ensure that each intent has a unique request code
 		PendingIntent pendingSurvey = PendingIntent.getService(
-				getApplicationContext(), 0, surveyIntent,
-				PendingIntent.FLAG_ONE_SHOT);
+				getApplicationContext(), Util.randRequestCode(),
+				surveyIntent, 0);
+		if (pendingSurvey == null) throw new RuntimeException("NULL PE");
 		AlarmManager alarm =
 			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarm.set(AlarmManager.RTC_WAKEUP, time, pendingSurvey);
@@ -175,23 +171,27 @@ public class SurveyScheduler extends IntentService
 				for (String time : times)
 				{
 					if (time == "") continue;  //"".split(",") returns { "" }
-					long scheduledTime = Util.getUnixTime(days[i], time);
+					long scheduledTime;
+					try
+					{
+						scheduledTime = Util.getUnixTime(days[i], time);
+					}
+					catch (IllegalArgumentException e)
+					{
+						Util.e(null, TAG, "Invalid survey time: \""
+								+ time + "\"; skipping");
+						continue;
+					}
 
 					if (Config.D)
 					{
-						Calendar c = Calendar.getInstance();
-						c.setTimeInMillis(scheduledTime);
+						Date d = new Date(scheduledTime);
 						Util.v(null, TAG, "Survey would be scheduled for "
-								+ c.getTime().toString());
+								+ d.toGMTString() + " GMT");
 						Util.v(null, TAG, "should be scheduled for "
 								+ days[i] + " at " + time);
 					}
-					//FIXME should check the time better
-					if (/*(scheduledTime < (nextRun + (60 * 1000)))
-							&& (*/scheduledTime >= runningTime/*)*/)
-					{
-						addSurvey(id, scheduledTime);
-					}
+					addSurvey(id, scheduledTime);
 				}
 			}
 			surveys.moveToNext();
@@ -200,13 +200,11 @@ public class SurveyScheduler extends IntentService
 		sdbh.close();
 		
 		//make sure to run this again later
-		Intent schedulerIntent = new Intent(getApplicationContext(),
-				SurveyScheduler.class);
+		Intent schedulerIntent = new Intent(this, SurveyScheduler.class);
 		schedulerIntent.setAction(ACTION_SCHEDULE_SURVEYS);
 		schedulerIntent.putExtra(EXTRA_RUNNING_TIME, nextRun);
 		PendingIntent pendingScheduler = PendingIntent.getService(
-				getApplicationContext(), 0, schedulerIntent,
-				PendingIntent.FLAG_ONE_SHOT);
+				this, 0, schedulerIntent, PendingIntent.FLAG_ONE_SHOT);
 		AlarmManager alarm =
 			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarm.set(AlarmManager.RTC_WAKEUP, nextRun, pendingScheduler);

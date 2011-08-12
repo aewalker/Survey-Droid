@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.IBinder;
 
@@ -58,7 +57,17 @@ public class LocationTrackerService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
-		handleIntent(intent);
+		if (intent == null)
+		{
+			Intent restartIntent =
+				new Intent(this, LocationTrackerService.class);
+			restartIntent.setAction(ACTION_START_TRACKING);
+			handleIntent(restartIntent);
+		}
+		else
+		{
+			handleIntent(intent);
+		}
 		return START_STICKY;
 	}
 
@@ -74,9 +83,7 @@ public class LocationTrackerService extends Service
 		}
 		else if (action.equals(ACTION_START_TRACKING))
 		{
-			//FIXME fix this later; for now, just test GPS
-			lt.start();
-			//schedule();
+			schedule();
 		}
 		else
 		{
@@ -107,9 +114,35 @@ public class LocationTrackerService extends Service
 		@Override
 		public int compareTo(TimePeriod that)
 		{
-			if (this.start < that.start) return 1;
-			if (this.start > that.start) return -1;
-			return 0;
+			//rationale for this being ok:
+			//1. this is an internal class so all uses are known
+			//2. no two numbers are going to differ by more than the number of
+			//seconds in a day, which is less than 2^32 - 1
+			return (int) (this.start - that.start);
+		}
+	}
+	
+	//returns day as string by converting using the Calendar constants
+	private static String getDay(int day)
+	{
+		switch (day)
+		{
+		case Calendar.SUNDAY:
+			return "Sun";
+		case Calendar.MONDAY:
+			return "Mon";
+		case Calendar.TUESDAY:
+			return "Tue";
+		case Calendar.WEDNESDAY:
+			return "Wed";
+		case Calendar.THURSDAY:
+			return "Thu";
+		case Calendar.FRIDAY:
+			return "Fri";
+		case Calendar.SATURDAY:
+			return "Sat";
+		default:
+			throw new IllegalArgumentException("Invalid day: " + day);
 		}
 	}
 	
@@ -119,23 +152,21 @@ public class LocationTrackerService extends Service
 		//some setup stuff
 		AlarmManager as = (AlarmManager)
 			this.getSystemService(ALARM_SERVICE);
-		//Yes, there're supposed to be 8 days.  See the rescheduling code
-		//later on.
-		String[] days =
-			{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 		Calendar cal = Calendar.getInstance();
 		
 		//get the number of times we're looking at
 		int numTimes = Config.getSetting(this,
 				Config.NUM_TIMES_TRACKED, 0);
+		Util.v(this, TAG, "Tracking for " + numTimes + " different times.");
 		if (numTimes == 0)
 		{
+			if (!isTracking)
 			lt.start();
 			isTracking = true;
 		}
 		else
 		{
-			String day = days[cal.get(Calendar.DAY_OF_WEEK) - 1];
+			String day = getDay(cal.get(Calendar.DAY_OF_WEEK));
 			
 			TimePeriod[] times = new TimePeriod[numTimes];
 			for (int i = 0; i < numTimes; i++)
@@ -175,7 +206,7 @@ public class LocationTrackerService extends Service
 				new Intent(this, LocationTrackerService.class);
 			toggleIntent.setAction(ACTION_TOGGLE_TRACKING);
 			PendingIntent pendingToggle = PendingIntent.getService(
-					getApplicationContext(), 0, toggleIntent, 0);
+					this, Util.randRequestCode(), toggleIntent, 0);
 			for (TimePeriod time : finalTimes)
 			{
 				//TODO One thing to improve here is to filter out times that
@@ -191,10 +222,9 @@ public class LocationTrackerService extends Service
 			new Intent(this, LocationTrackerService.class);
 		rescheduleIntent.setAction(ACTION_START_TRACKING);
 		PendingIntent pendingReschedule = PendingIntent.getService(
-				getApplicationContext(), 0, rescheduleIntent, 0);
-		String nextDay = days[cal.get(Calendar.DAY_OF_WEEK)];
+				this, 0, rescheduleIntent, 0);
 		//this might not work very well
-		as.set(AlarmManager.RTC_WAKEUP, Util.getUnixTime(nextDay, "0000"),
+		as.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (24 * 60 * 60 * 1000),
 				pendingReschedule);
 	}
 
@@ -209,9 +239,6 @@ public class LocationTrackerService extends Service
 
 	private class LocationTracker implements LocationListener
 	{
-		//is the app using network location updates?
-		private boolean networkMode = false;
-		
 		//has the location tracker been started?
 		private boolean started = false;
 	
@@ -228,9 +255,13 @@ public class LocationTrackerService extends Service
 			started = true;
 			LocationManager lm = (LocationManager)
 				getThis().getSystemService(Context.LOCATION_SERVICE);
-			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				Config.getSetting(getThis(), Config.LOCATION_INTERVAL,
-				Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0, this);
+			//Get updates from EVERYTHING! At this point, why not?
+			for (String provider : lm.getProviders(false))
+			{
+				lm.requestLocationUpdates(provider,
+					Config.getSetting(getThis(), Config.LOCATION_INTERVAL,
+					Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0, this);
+			}
 		}
 		
 		/** Stops the location tracker. */
@@ -255,46 +286,44 @@ public class LocationTrackerService extends Service
 				double lon = loc.getLongitude();
 				int numLocs = Config.getSetting(getThis(),
 						Config.NUM_LOCATIONS_TRACKED, 0);
-				//FIXME just log everything for now, to make sure it works
-//				boolean log = false;
-				boolean log = true;
-//				if (numLocs >= 1)
-//				{
-//					for (int i = 0; i < numLocs; i++)
-//					{
-//						//for each location tracked, get the information
-//						//for that location and validate it
-//						double thisLon = (double) Config.getSetting(getThis(),
-//								Config.TRACKED_LONG + i, (float) -1.0);
-//						double thisLat = (double) Config.getSetting(getThis(),
-//								Config.TRACKED_LAT + i, (float) -1.0);
-//						double thisRad = (double) Config.getSetting(getThis(),
-//								Config.TRACKED_RADIUS + i, (float) -1.0);
-//						if (thisLon == -1.0 ||
-//							thisLat == -1.0 ||
-//							thisRad == -1.0)
-//						{
-//							throw new RuntimeException("cannot find location "
-//									+ "tracking value for location index" + i);
-//						}
-//						
-//						//now see if the incoming location
-//						//is within a valid location
-//						float[] results = new float[1];
-//						Location.distanceBetween(lat, lon,
-//								thisLat, thisLon, results);
-//						if (results[0] < (thisRad * 1000))
-//						{
-//							log = true;
-//							break;
-//						}
-//					}
-//				}
-//				else
-//				{ //assume that if there are no locations, then everything
-//				  //should be tracked (to track nowhere just turn off tracking)
-//					log = true;
-//				}
+				boolean log = false;
+				if (numLocs >= 1)
+				{
+					for (int i = 0; i < numLocs; i++)
+					{
+						//for each location tracked, get the information
+						//for that location and validate it
+						double thisLon = (double) Config.getSetting(getThis(),
+								Config.TRACKED_LONG + i, (float) -1.0);
+						double thisLat = (double) Config.getSetting(getThis(),
+								Config.TRACKED_LAT + i, (float) -1.0);
+						double thisRad = (double) Config.getSetting(getThis(),
+								Config.TRACKED_RADIUS + i, (float) -1.0);
+						if (thisLon == -1.0 ||
+							thisLat == -1.0 ||
+							thisRad == -1.0)
+						{
+							throw new RuntimeException("cannot find location "
+									+ "tracking value for location index" + i);
+						}
+						
+						//now see if the incoming location
+						//is within a valid location
+						float[] results = new float[1];
+						Location.distanceBetween(lat, lon,
+								thisLat, thisLon, results);
+						if (results[0] < (thisRad * 1000))
+						{
+							log = true;
+							break;
+						}
+					}
+				}
+				else
+				{ //assume that if there are no locations, then everything
+				  //should be tracked (to track nowhere just turn off tracking)
+					log = true;
+				}
 				if (log)
 				{
 					TrackingDBHandler tdbh = new TrackingDBHandler(getThis());
@@ -317,54 +346,21 @@ public class LocationTrackerService extends Service
 			 * to write stuff that relies on bugs that are likely to get fixed,
 			 * all we can do here is to fall back to a different provider.
 			 */
-			if (provider.equals(LocationManager.GPS_PROVIDER))
-			{
-				Util.i(getThis(), TAG, "GPS disabled, "
-						+ "falling back to network");
-				networkMode = true;
-				
-				LocationManager lm = (LocationManager)
-					getThis().getSystemService(Context.LOCATION_SERVICE);
-				lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-					Config.getSetting(getThis(), Config.LOCATION_INTERVAL,
-        			Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0, this);
-			}
+			Util.i(getThis(), TAG, "Location provider " + provider +
+					" disabled!");
 		}
 	
 		@Override
 		public void onProviderEnabled(String provider)
 		{
-			//switch back to GPS if it comes back online
-			if (provider.equals(LocationManager.GPS_PROVIDER))
-			{
-				Util.i(getThis(), TAG, "GPS re-enabled, "
-						+ "switching back from network updates");
-				networkMode = false;
-				
-				stop();
-				start();
-			}
+			Util.i(getThis(), TAG, "Location provider " + provider +
+			" enabled!");
 		}
 	
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras)
 		{
-			//basically, if the gps goes out of service (or comes back in),
-			//treat it like it has been disabled (or re-enabled)
-			if (provider.equals(LocationManager.GPS_PROVIDER))
-			{
-				if (status == LocationProvider.OUT_OF_SERVICE
-						&& networkMode == false)
-				{
-					onProviderDisabled(provider);
-				}
-				
-				if (status == LocationProvider.AVAILABLE
-						&& networkMode == true)
-				{
-					onProviderEnabled(provider);
-				}
-			}
+			//nothing to do
 		}
 	}
 }

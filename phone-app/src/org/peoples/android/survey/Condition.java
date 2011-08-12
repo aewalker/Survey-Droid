@@ -84,7 +84,7 @@ public class Condition
 		if (question != null) throw new RuntimeException(
 				"attempt to set condition question multiple times");
 		if (!qMap.containsKey(q_id)) throw new RuntimeException(
-				"bad question map");
+				"bad question map: atempting to set question " + q_id);
 		question = qMap.get(q_id);
 	}
 	

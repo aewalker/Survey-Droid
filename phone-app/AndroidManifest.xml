@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-	android:versionCode="6" android:versionName="alpha-0.3.3" package="org.peoples.android">
+	android:versionCode="7" android:versionName="alpha-0.3.4" package="org.peoples.android">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.INTERNET" />
@@ -104,12 +104,14 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<!--
 		<activity android:label="PEOPLES Log" android:name="ViewLogActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		-->
 		<activity android:label="PEOPLES Settings" android:name="SettingsActivity"></activity>
 		<activity android:label="PEOPLES" android:name="IDActivity"></activity>
 

@@ -333,6 +333,8 @@ public class SurveyDBHandler extends PeoplesDBHandler
 		//set up the query
 		values.put(PeoplesDB.AnswerTable.QUESTION_ID, q_id);
 		values.put(PeoplesDB.AnswerTable.CHOICE_IDS, ids.toString());
+		values.put(PeoplesDB.AnswerTable.ANS_TYPE,
+				PeoplesDB.AnswerTable.CHOICE);
 		values.put(PeoplesDB.AnswerTable.CREATED, created);
 		
 		//run it
@@ -359,6 +361,8 @@ public class SurveyDBHandler extends PeoplesDBHandler
 		//set up the query
 		values.put(PeoplesDB.AnswerTable.QUESTION_ID, q_id);
 		values.put(PeoplesDB.AnswerTable.ANS_TEXT, text);
+		values.put(PeoplesDB.AnswerTable.ANS_TYPE,
+				PeoplesDB.AnswerTable.TEXT);
 		values.put(PeoplesDB.AnswerTable.CREATED, created);
 		
 		//run it
@@ -386,6 +390,8 @@ public class SurveyDBHandler extends PeoplesDBHandler
 		//set up the query
 		values.put(PeoplesDB.AnswerTable.QUESTION_ID, q_id);
 		values.put(PeoplesDB.AnswerTable.ANS_VALUE, value);
+		values.put(PeoplesDB.AnswerTable.ANS_TYPE,
+				PeoplesDB.AnswerTable.VALUE);
 		values.put(PeoplesDB.AnswerTable.CREATED, created);
 		
 		//run it

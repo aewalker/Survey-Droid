@@ -112,7 +112,7 @@ public class Survey
 		//start out by getting the survey level stuff done
 		Cursor s = db.getSurvey(id);
 		if (!s.moveToFirst())
-			throw new IllegalArgumentException("no such survey");
+			throw new IllegalArgumentException("no such survey: " + id);
 		name = processText(ctxt, s.getString(
 				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.NAME)));
 		int firstQID = s.getInt(

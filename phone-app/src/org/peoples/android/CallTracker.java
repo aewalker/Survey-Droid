@@ -61,11 +61,12 @@ public class CallTracker extends PhoneStateListener
 		else if (state == TelephonyManager.CALL_STATE_IDLE && inCall == true)
 		{ //call just ended
 			inCall = false;
+			Util.d(ctxt, TAG, "Call ended; call log lookup starting");
 			if (!Config.getSetting(ctxt, Config.CALL_LOG_LOCAL, false) ||
 				!Config.getSetting(ctxt, Config.CALL_LOG_SERVER,
 						Config.CALL_LOG_SERVER_DEFAULT)) return;
-			Util.d(ctxt, TAG, "Call ended; call log lookup starting");
 			
+			Util.d(ctxt, TAG, "Searching log");
 			//go look up the most recent calls in the CallLog
 			String[] cols = {CallLog.Calls.TYPE,
 							 CallLog.Calls.DATE,

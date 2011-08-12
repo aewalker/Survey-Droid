@@ -7,6 +7,7 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android.survey;
 
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -23,6 +24,7 @@ import android.os.IBinder;
 import org.peoples.android.Config;
 import org.peoples.android.R;
 import org.peoples.android.Util;
+import org.peoples.android.coms.ComsService;
 import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.TakenDBHandler;
 
@@ -122,6 +124,9 @@ public class SurveyService extends Service
 	//is the current notification going to time out?
 	private boolean timeoutOn = false;
 	
+	//for testing, holds the time that the most recent survey was scheduled for
+	private long currentTime;
+	
 	//the binder to send to clients
 	private final SurveyBinder surveyBinder = new SurveyBinder();
 	
@@ -141,7 +146,9 @@ public class SurveyService extends Service
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
 		handleIntent(intent);
-		return START_STICKY;
+		//TODO because this service is so complex, just let it die if it
+		//gets killed.  In the future, it would be better to do with it.
+		return START_NOT_STICKY;
 	}
 	
 	//handle the incoming intents one by one
@@ -156,6 +163,8 @@ public class SurveyService extends Service
 				int id = intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID);
 				int type = intent.getIntExtra(EXTRA_SURVEY_TYPE,
 						SURVEY_TYPE_TIMED);
+				currentTime = intent.getLongExtra(
+						SurveyScheduler.EXTRA_RUNNING_TIME, 0);
 				if (surveys.isEmpty())
 				{
 					Util.v(null, TAG, "surveys is empty");
@@ -240,6 +249,8 @@ public class SurveyService extends Service
 		//things we're going to need for the notification
 		int icon = R.drawable.blue_survey_small;
 		String tickerText;
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(currentTime);
 		if (surveys.size() == 1)
 			tickerText = "New Survey Awaiting";
 		else
@@ -248,12 +259,18 @@ public class SurveyService extends Service
 		Context context = getApplicationContext();
 		String contentTitle = "PEOPLES";
 		String contentText;
-		if (surveys.size() == 1)
-			contentText = "You have a new survey awaiting;"
-				+ " click here to take it now";
+		if (Config.D)
+			contentText = "(" + surveys.size() + ")" +
+				c.getTime().toGMTString();
 		else
-			contentText = "You have " + surveys.size() + " new surveys"
-				+ " awaiting; click here to take one now";
+		{
+			if (surveys.size() == 1)
+				contentText = "You have a new survey awaiting;"
+					+ " click here to take it now";
+			else
+				contentText = "You have " + surveys.size() + " new surveys"
+					+ " awaiting; click here to take one now";
+		}
 		
 		//now create the notification
 		Intent notificationIntent = new Intent(this, SurveyService.class);
@@ -406,6 +423,13 @@ public class SurveyService extends Service
 			}
 			tdbh.writeSurvey(currentID, status, System.currentTimeMillis());
 			tdbh.close();
+			
+			//try to upload answers ASAP
+			Intent comsIntent = new Intent(this, ComsService.class);
+			comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+			comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
+					ComsService.SURVEY_DATA);
+			startService(comsIntent);
 		}
 		if (surveys.isEmpty())
 			stopSelf();
