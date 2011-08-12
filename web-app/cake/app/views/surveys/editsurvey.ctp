@@ -6,8 +6,8 @@
  *---------------------------------------------------------------------------*/
 echo $form->create('Survey', array('url' => "editsurvey/$surveyid"));
 echo $form->input('name', array('value' => $name));
-echo $form->input('question_id', array('value' => $questionid,
-	'label' => 'First Question', 'type' => 'text'));
+echo $form->input('question_id', array('label' => 'First Question', 'type' => 'select',
+    'options' => $questions, 'value' => $questionid));
 echo '<p>You may wish to allow phone users to start this survey whenever they want to. '.
 	'To enable this feature for this survey, check the box below.';
 echo $form->input('subject_init', array

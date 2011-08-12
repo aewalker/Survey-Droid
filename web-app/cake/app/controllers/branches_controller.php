@@ -72,8 +72,16 @@ class BranchesController extends AppController
     	$result = $this->Branch->find('first', array
     	(
     		'conditions' => array('Branch.id' => $branchid),
-    		'fields' => array('question_id')
+    		'fields' => array('question_id', 'next_q')
     	));
+        // $surveyid = $this-
+        $next_question = $this->Branch->Question->findById($result['Branch']['next_q']);
+        $this->set('questions', $this->Branch->Question->find('list', array(
+            'conditions' => array('survey_id' => $next_question['Question']['survey_id']),
+            'fields' => array('q_text'),
+            'order' => array('id')
+        )));
+        
     	$this->set('questionid', $result['Branch']['question_id']);
     	if (isset($this->data['Branch']['cancel']) && $this->data['Branch']['cancel'] == true)
     	{

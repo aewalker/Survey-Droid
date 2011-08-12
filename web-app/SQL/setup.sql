@@ -122,6 +122,27 @@ CREATE TABLE status_changes (
 	/* gps 0, call log, 1, text log 2, surveys 3 */
 	feature TINYINT NOT NULL);
 
+DROP TABLE IF EXISTS surveys_taken;
+CREATE TABLE surveys_taken (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	survey_id INT UNSIGNED NOT NULL,
+	created DATETIME NOT NULL,
+	/* status can be one of
+		SURVEYS_DISABLED_LOCALLY = 0;
+	    SURVEYS_DISABLED_SERVER = 1;
+	    USER_INITIATED_FINISHED = 2;
+	    USER_INITIATED_UNFINISHED = 3;
+	    SCHEDULED_FINISHED = 4;
+	    SCHEDULED_UNFINISHED = 5;
+	    SCHEDULED_DISMISSED = 6;
+	    SCHEDULED_IGNORED = 7;
+	    RANDOM_FINISHED = 8;
+	    RANDOM_UNFINISHED = 9;
+	    RANDOM_DISMISSED = 10;
+	    RANDOM_IGNORED = 11;
+	*/
+	status TINYINT NOT NULL);
+
 /* This is actually a pretty common way to set up config (used by, eg., freeradius). */
 DROP TABLE IF EXISTS configurations;
 CREATE TABLE configurations (
