@@ -68,6 +68,9 @@ public class MainActivity extends Activity
         VerticalProgressBar progress = (VerticalProgressBar)
         	findViewById(R.id.main_progressBar);
         progress.setMax(100);
+        int goal = Config.getSetting(this, Config.COMPLETION_GOAL,
+        		Config.COMPLETION_GOAL_DEFAULT);
+        progress.setSecondaryProgress(goal);
         if (p == TakenDBHandler.NO_PERCENTAGE)
         	progress.setProgress(0);
         else

@@ -96,6 +96,10 @@ public class Config
 	public static final int VOICE_FORMAT_DEFAULT =
 		MediaRecorder.OutputFormat.MPEG_4;
 	
+	/** What is the target percentage of surveys to have completed? */
+	public static final String COMPLETION_GOAL = "completion_goal";
+	public static final int COMPLETION_GOAL_DEFAULT = 75;
+	
 	/**
 	 * Should full resolution photos (that are possibly/likely quite large) be
 	 * sent to the server when the user takes a photo with their survey? 
@@ -181,7 +185,7 @@ public class Config
 	public static final int COMPLETION_SAMPLE_DEFAULT = 10;
 	
 	/**
-	 * How long (in minutes) to wait between re-notifiying the user that a
+	 * How long (in minutes) to wait between re-notifying the user that a
 	 * survey or surveys is awaiting.
 	 */
 	public static final String REFRESH_INTERVAL = "refresh_interval";
@@ -231,7 +235,7 @@ public class Config
 	public static final String[] INTS =
 		{SCHEDULER_INTERVAL, PUSH_INTERVAL, PULL_INTERVAL, LOCATION_INTERVAL,
 		SURVEY_DELAY, VOICE_FORMAT, NUM_LOCATIONS_TRACKED, NUM_TIMES_TRACKED,
-		COMPLETION_SAMPLE};
+		COMPLETION_SAMPLE, COMPLETION_GOAL};
 	
 	/** List of settings which are floats */
 	public static final String[] FLOATS =

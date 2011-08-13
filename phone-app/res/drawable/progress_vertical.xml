@@ -20,11 +20,12 @@
         <clip android:clipOrientation="vertical" android:gravity="bottom" >
             <shape>
                 <corners android:radius="5dip" />
+                <!-- Colors modified here by Austin -->
                 <gradient
-                        android:startColor="#80ffd300"
-                        android:centerColor="#80ffb600"
+                        android:startColor="#30ffd300"
+                        android:centerColor="#30ffb600"
                         android:centerX="0.75"
-                        android:endColor="#a0ffcb00"
+                        android:endColor="#50ffcb00"
                         android:angle="0"
                 />
             </shape>

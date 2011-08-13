@@ -130,7 +130,8 @@
     		"allow_no_choices" : 0,
     		"show_survey_name" : 1,
     		"voice_format" : "mpeg4", //or 3gp
-		"completion_sample": 10,
+		"completion_sample" : 10,
+		"completion_goal" : 75, //the survey completion rate goal (between 0 and 100)
 		//this is where we put information for questions/choices
 		//this information should be different for each phone, so on the
 		//website, work will have to be done to customize each pull request
