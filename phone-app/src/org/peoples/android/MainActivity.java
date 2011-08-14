@@ -30,12 +30,6 @@ public class MainActivity extends Activity
 {
 	//logging tag
     private static final String TAG = "MainActivity";
-
-    //little hack here to show toast (see the call button listener)
-    private Activity getThis()
-    {
-    	return this;
-    }
     
     /** Called when the activity is first created. */
     @Override
@@ -110,7 +104,8 @@ public class MainActivity extends Activity
             {
             	Intent callIntent = new Intent(Intent.ACTION_CALL);
             	callIntent.setData(Uri.parse("tel:"
-            			+ Config.getSetting(getThis(), Config.ADMIN_PHONE_NUMBER,
+            			+ Config.getSetting(MainActivity.this,
+            					Config.ADMIN_PHONE_NUMBER,
             					Config.ADMIN_PHONE_NUMBER_DEFAULT)));
             	try
             	{
@@ -118,7 +113,7 @@ public class MainActivity extends Activity
             	}
             	catch (ActivityNotFoundException e)
             	{
-            		Toast.makeText(getThis(),
+            		Toast.makeText(MainActivity.this,
             				"Call failed!", Toast.LENGTH_SHORT);
             	}
             }

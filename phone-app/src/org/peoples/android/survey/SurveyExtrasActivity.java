@@ -108,7 +108,8 @@ public class SurveyExtrasActivity extends Activity
 			{
 				Intent photoIntent =
 					new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				if (Config.getSetting(getThis(), Config.USE_FULL_RES_PHOTOS,
+				if (Config.getSetting(SurveyExtrasActivity.this,
+						Config.USE_FULL_RES_PHOTOS,
 						Config.USE_FULL_RES_PHOTOS_DEFAULT))
 				{
 					photoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
@@ -163,7 +164,7 @@ public class SurveyExtrasActivity extends Activity
 					}
 					catch (Exception e)
 					{
-						Util.e(getThis(), TAG, Util.fmt(e));
+						Util.e(SurveyExtrasActivity.this, TAG, Util.fmt(e));
 					}
 				}
 				else
@@ -178,7 +179,7 @@ public class SurveyExtrasActivity extends Activity
 						if (!survey.addVoice(
 								getContentResolver().openInputStream(
 										voiceUri)))
-							Util.e(getThis(), TAG,
+							Util.e(SurveyExtrasActivity.this, TAG,
 									"Failed to add voice recording!");
 						else
 						{
@@ -189,7 +190,7 @@ public class SurveyExtrasActivity extends Activity
 					}
 					catch (Exception e)
 					{
-						Util.e(getThis(), TAG, Util.fmt(e));
+						Util.e(SurveyExtrasActivity.this, TAG, Util.fmt(e));
 					}
 				}
 			}
@@ -203,24 +204,19 @@ public class SurveyExtrasActivity extends Activity
 			{
 				//finish up the backend stuff
 				Intent finishIntent =
-					new Intent(getThis(), SurveyService.class);
+					new Intent(SurveyExtrasActivity.this, SurveyService.class);
 				finishIntent.setAction(SurveyService.ACTION_END_SURVEY);
 				startService(finishIntent);
 				
 				//tell the user they're done
 				Intent doneIntent =
-					new Intent(getThis(), SurveyDoneActivity.class);
+					new Intent(SurveyExtrasActivity.this,
+							SurveyDoneActivity.class);
 				startActivity(doneIntent);
 				
 				finish();
 			}
 		});
-	}
-	
-	//hack to get main object
-	private SurveyExtrasActivity getThis()
-	{
-		return this;
 	}
 	
 	@Override
@@ -232,13 +228,15 @@ public class SurveyExtrasActivity extends Activity
 		if (resultCode == Activity.RESULT_OK &&
 			requestCode == PHOTO_REQUEST_CODE)
 		{ //we have a photo
-			if (Config.getSetting(getThis(), Config.USE_FULL_RES_PHOTOS,
+			if (Config.getSetting(SurveyExtrasActivity.this,
+					Config.USE_FULL_RES_PHOTOS,
 					Config.USE_FULL_RES_PHOTOS_DEFAULT) && intent == null)
 			{
 				photo.setClickable(false);
 				photo.setText("Full resolution photos not supported");
 				Util.w(null, TAG, "Full resolution photos not supported.");
-				Util.w(null, TAG, "Please disable in config to allow photo capture.");
+				Util.w(null, TAG, "Please disable in "
+						+ "config to allow photo capture.");
 				Toast.makeText(this, "Full resolution photos are not "
 						+ "supported; please contact the study administrator.",
 						Toast.LENGTH_LONG);
@@ -247,7 +245,8 @@ public class SurveyExtrasActivity extends Activity
 			try
 			{
 				Util.v(this, TAG, "got a photo");
-				if (Config.getSetting(getThis(), Config.USE_FULL_RES_PHOTOS,
+				if (Config.getSetting(SurveyExtrasActivity.this,
+						Config.USE_FULL_RES_PHOTOS,
 						Config.USE_FULL_RES_PHOTOS_DEFAULT))
 				{
 					worked = survey.addPhoto(

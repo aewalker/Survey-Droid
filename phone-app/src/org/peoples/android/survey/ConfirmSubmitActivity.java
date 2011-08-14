@@ -84,7 +84,7 @@ public class ConfirmSubmitActivity extends Activity
 			public void onClick(View view)
 			{
 				survey.prevQuestion();
-				Intent backIntent = new Intent(getThis(),
+				Intent backIntent = new Intent(ConfirmSubmitActivity.this,
 						QuestionActivity.getNextQusetionClass(
 								survey.getQuestionType()));
     			startActivity(backIntent);
@@ -101,24 +101,19 @@ public class ConfirmSubmitActivity extends Activity
 			{
 				//show the extras page
 				Intent extrasIntent = new Intent(
-						getThis(), SurveyExtrasActivity.class);
+						ConfirmSubmitActivity.this,
+						SurveyExtrasActivity.class);
 				startActivity(extrasIntent);
 				
 				//submit the answers
 				Intent finishIntent = new Intent(
-						getThis(), SurveyService.class);
+						ConfirmSubmitActivity.this, SurveyService.class);
 				finishIntent.setAction(SurveyService.ACTION_SUBMIT_ANSWERS);
 				startService(finishIntent);
 				
 				finish();
 			}
 		});
-	}
-	
-	//little hack to get the outer object
-	private ConfirmSubmitActivity getThis()
-	{
-		return this;
 	}
 	
 	@Override

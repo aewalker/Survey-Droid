@@ -51,8 +51,9 @@ public abstract class QuestionActivity extends Activity
 		@Override
 		public void run()
 		{
-			Util.i(getThis(), TAG, "Survey timed out");
-			Intent timeoutIntent = new Intent(getThis(), SurveyService.class);
+			Util.i(QuestionActivity.this, TAG, "Survey timed out");
+			Intent timeoutIntent = new Intent(QuestionActivity.this,
+					SurveyService.class);
 			timeoutIntent.setAction(SurveyService.ACTION_QUIT_SURVEY);
 			startService(timeoutIntent);
 			finish();
@@ -73,10 +74,11 @@ public abstract class QuestionActivity extends Activity
 				if (survey == null) throw new
 					RuntimeException("question given null survey");
 			}
-			getThis().onSurveyLoaded();
+			QuestionActivity.this.onSurveyLoaded();
 			
 			//set the title if desired
-			if (Config.getSetting(getThis(), Config.SHOW_SURVEY_NAME,
+			if (Config.getSetting(QuestionActivity.this,
+					Config.SHOW_SURVEY_NAME,
 					Config.SHOW_SURVEY_NAME_DEFAULT))
 				setTitle(survey.getName());
 		}
@@ -84,12 +86,6 @@ public abstract class QuestionActivity extends Activity
 		@Override
 		public void onServiceDisconnected(ComponentName name) {}
 	};
-	
-	//little hack to get the outer object
-	private QuestionActivity getThis()
-	{
-		return this;
-	}
 	
 	/**
 	 * Handler for the "previous" button.  Extending classes should install
@@ -109,7 +105,7 @@ public abstract class QuestionActivity extends Activity
         	else
         	{ //start the next activity
         		survey.prevQuestion();
-        		Intent prevIntent = new Intent(getThis(),
+        		Intent prevIntent = new Intent(QuestionActivity.this,
         				getNextQusetionClass(survey.getQuestionType()));
         		startActivity(prevIntent);
         		isDone = true;
@@ -132,13 +128,13 @@ public abstract class QuestionActivity extends Activity
         		survey.nextQuestion();
         		if (!survey.done())
         		{ //still have more questions
-        			Intent nextIntent = new Intent(getThis(),
+        			Intent nextIntent = new Intent(QuestionActivity.this,
         					getNextQusetionClass(survey.getQuestionType()));
         			startActivity(nextIntent);
         		}
         		else
         		{ //survey is over
-        			Intent submitIntent = new Intent(getThis(),
+        			Intent submitIntent = new Intent(QuestionActivity.this,
         					ConfirmSubmitActivity.class);
         			startActivity(submitIntent);
         		}
@@ -147,7 +143,7 @@ public abstract class QuestionActivity extends Activity
         	else
         	{ //no answer has been given
         		Toast.makeText(getApplicationContext(),
-        				getThis().getInvalidAnswerMsg(),
+        				QuestionActivity.this.getInvalidAnswerMsg(),
         				Toast.LENGTH_SHORT).show();
         	}
         }

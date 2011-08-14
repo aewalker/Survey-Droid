@@ -83,7 +83,7 @@ public class UserSurveysActivity extends ListActivity
 				Util.d(null, TAG, "Starting survey " + ids[pos]);
 				
 				Intent surveyIntent =
-					new Intent(getThis(), SurveyService.class);
+					new Intent(UserSurveysActivity.this, SurveyService.class);
 				surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
 				surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_TYPE,
 						SurveyService.SURVEY_TYPE_USER_INIT);
@@ -106,7 +106,4 @@ public class UserSurveysActivity extends ListActivity
             }
         });
 	}
-	
-	//hack to get parent object
-	private UserSurveysActivity getThis() { return this; }
 }

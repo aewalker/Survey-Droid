@@ -233,9 +233,6 @@ public class LocationTrackerService extends Service
 	{
 		return null;
 	}
-	
-	//hack to get parent object
-	private LocationTrackerService getThis() { return this; }
 
 	private class LocationTracker implements LocationListener
 	{
@@ -254,12 +251,14 @@ public class LocationTrackerService extends Service
 			}
 			started = true;
 			LocationManager lm = (LocationManager)
-				getThis().getSystemService(Context.LOCATION_SERVICE);
+				LocationTrackerService.this.getSystemService(
+						Context.LOCATION_SERVICE);
 			//Get updates from EVERYTHING! At this point, why not?
 			for (String provider : lm.getProviders(false))
 			{
 				lm.requestLocationUpdates(provider,
-					Config.getSetting(getThis(), Config.LOCATION_INTERVAL,
+					Config.getSetting(LocationTrackerService.this,
+							Config.LOCATION_INTERVAL,
 					Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0, this);
 			}
 		}
@@ -271,20 +270,23 @@ public class LocationTrackerService extends Service
 				throw new RuntimeException("can't stop; not started!");
 			started = false;
 			LocationManager lm = (LocationManager)
-				getThis().getSystemService(Context.LOCATION_SERVICE);
+				LocationTrackerService.this.getSystemService(
+						Context.LOCATION_SERVICE);
 			lm.removeUpdates(this);
 		}
 	
 		@Override
 		public void onLocationChanged(Location loc)
 		{
-			if (Config.getSetting(getThis(), Config.TRACKING_LOCAL, true) &&
-				Config.getSetting(getThis(), Config.TRACKING_SERVER,
+			if (Config.getSetting(LocationTrackerService.this,
+						Config.TRACKING_LOCAL, true) &&
+				Config.getSetting(LocationTrackerService.this,
+						Config.TRACKING_SERVER,
 							Config.TRACKING_SERVER_DEFAULT))
 			{
 				double lat = loc.getLatitude();
 				double lon = loc.getLongitude();
-				int numLocs = Config.getSetting(getThis(),
+				int numLocs = Config.getSetting(LocationTrackerService.this,
 						Config.NUM_LOCATIONS_TRACKED, 0);
 				boolean log = false;
 				if (numLocs >= 1)
@@ -293,11 +295,14 @@ public class LocationTrackerService extends Service
 					{
 						//for each location tracked, get the information
 						//for that location and validate it
-						double thisLon = (double) Config.getSetting(getThis(),
+						double thisLon = (double) Config.getSetting(
+								LocationTrackerService.this,
 								Config.TRACKED_LONG + i, (float) -1.0);
-						double thisLat = (double) Config.getSetting(getThis(),
+						double thisLat = (double) Config.getSetting(
+								LocationTrackerService.this,
 								Config.TRACKED_LAT + i, (float) -1.0);
-						double thisRad = (double) Config.getSetting(getThis(),
+						double thisRad = (double) Config.getSetting(
+								LocationTrackerService.this,
 								Config.TRACKED_RADIUS + i, (float) -1.0);
 						if (thisLon == -1.0 ||
 							thisLat == -1.0 ||
@@ -326,7 +331,8 @@ public class LocationTrackerService extends Service
 				}
 				if (log)
 				{
-					TrackingDBHandler tdbh = new TrackingDBHandler(getThis());
+					TrackingDBHandler tdbh =
+						new TrackingDBHandler(LocationTrackerService.this);
 					tdbh.openWrite();
 					tdbh.writeLocation(lat, lon, loc.getAccuracy(),
 							loc.getTime());
@@ -346,14 +352,14 @@ public class LocationTrackerService extends Service
 			 * to write stuff that relies on bugs that are likely to get fixed,
 			 * all we can do here is to fall back to a different provider.
 			 */
-			Util.i(getThis(), TAG, "Location provider " + provider +
+			Util.i(null, TAG, "Location provider " + provider +
 					" disabled!");
 		}
 	
 		@Override
 		public void onProviderEnabled(String provider)
 		{
-			Util.i(getThis(), TAG, "Location provider " + provider +
+			Util.i(null, TAG, "Location provider " + provider +
 			" enabled!");
 		}
 	

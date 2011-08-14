@@ -35,17 +35,11 @@ public class SettingsActivity extends Activity
 	//logging tag
     private static final String TAG = "SettingsActivity";
     
-    //track wether or not each of the settings has been changed
-    //then, when the activity is stopped, notifiy the database
+    //track whether or not each of the settings has been changed
+    //then, when the activity is stopped, notify the database
     private boolean surveyChanged = false;
     private boolean locationChanged = false;
     private boolean calllogChanged = false;
-    
-    //little hack here to get this object (see the id button listener)
-    private Activity getThis()
-    {
-    	return this;
-    }
 
     /** Called when the activity is first created. */
     @Override
@@ -81,7 +75,8 @@ public class SettingsActivity extends Activity
 			@Override
 			public void onCheckedChanged(CompoundButton button, boolean check)
 			{
-				Config.putSetting(getThis(), Config.TRACKING_LOCAL, check);
+				Config.putSetting(SettingsActivity.this,
+						Config.TRACKING_LOCAL, check);
 				locationChanged = !locationChanged;
 			}
         });
@@ -96,7 +91,8 @@ public class SettingsActivity extends Activity
 			@Override
 			public void onCheckedChanged(CompoundButton button, boolean check)
 			{
-				Config.putSetting(getThis(), Config.CALL_LOG_LOCAL, check);
+				Config.putSetting(SettingsActivity.this,
+						Config.CALL_LOG_LOCAL, check);
 				calllogChanged = !calllogChanged;
 			}
         });
@@ -110,7 +106,8 @@ public class SettingsActivity extends Activity
 			@Override
 			public void onCheckedChanged(CompoundButton button, boolean check)
 			{
-				Config.putSetting(getThis(), Config.SURVEYS_LOCAL, check);
+				Config.putSetting(SettingsActivity.this,
+						Config.SURVEYS_LOCAL, check);
 				surveyChanged = !surveyChanged;
 			}
         });
@@ -123,7 +120,8 @@ public class SettingsActivity extends Activity
 			public void onClick(View view)
 			{
 				//show the id activity
-				Intent idIntent = new Intent(getThis(), IDActivity.class);
+				Intent idIntent = new Intent(SettingsActivity.this,
+						IDActivity.class);
 				startActivity(idIntent);
 			}
 		});
@@ -138,17 +136,17 @@ public class SettingsActivity extends Activity
             	StringBuilder info = new StringBuilder();
             	
             	info.append("Location tracking is " +
-            			(Config.getSetting(getThis(),
+            			(Config.getSetting(SettingsActivity.this,
             					Config.TRACKING_LOCAL, true) ?
             					"enabled\n" : "disabled\n"));
             	
             	info.append("Call logging is " +
-            			(Config.getSetting(getThis(),
+            			(Config.getSetting(SettingsActivity.this,
             					Config.CALL_LOG_LOCAL, true) ?
             					"enabled\n" : "disabled\n"));
             	
             	info.append("Surveys are " +
-            			(Config.getSetting(getThis(),
+            			(Config.getSetting(SettingsActivity.this,
             					Config.SURVEYS_LOCAL, true) ?
             					"enabled" : "disabled"));
 
