@@ -61,6 +61,12 @@ public class BootIntentReceiver extends BroadcastReceiver
     	h.postDelayed(r, 10 * 1000); //delay 10 seconds
     }
     
+    //TODO should this be private?
+    /**
+     * Starts up the basic PEOPLES services.
+     * 
+     * @param context - the context given to the receiver
+     */
     public static void startup(final Context context)
     {
     	Util.i(null, TAG, "+++Starting PEOPLES+++");

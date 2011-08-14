@@ -35,7 +35,7 @@ public class Push
      * Once successfully, each pushed answer will be marked as uploaded in the
      * database.
      *
-     * @param ctxt - the current Context
+     * @param ctxt - the current {@link Context}
      *
      * @return true if all the answers has been successfully pushed
      */
@@ -157,10 +157,10 @@ public class Push
     /**
      * Push all data about survey completion in the phone's database to the
      * server.  Once this is done, some of the data may be deleted.  The amount
-     * deleted is determined by {@link Config.COMPLETION_SAMPLE}; enough will
+     * deleted is determined by {@link Config#COMPLETION_SAMPLE}; enough will
      * be kept to fulfill that sample size.
      * 
-     * @param ctx - the current context
+     * @param ctx - the current {@link Context}
      * @return true on success
      */
     public static boolean pushCompletionData(Context ctx)
@@ -257,10 +257,10 @@ public class Push
     }
 
     /**
-     * Push all GPS Locations in the phone database to the server. Once
+     * Push all locations in the phone database to the server. Once
      * successfully, each pushed location will be removed from the database.
      *
-     * @param ctxt - the current Context
+     * @param ctxt - the current {@link Context}
      *
      * @return true if all the locations has been successfully pushed
      */
@@ -359,7 +359,7 @@ public class Push
      * Phone number is hashed before sending to the server to preserve privacy
      * Once successful, each call log will be deleted from the database.
      *
-     * @param ctxt - the current Context
+     * @param ctxt - the current {@link Context}
      *
      * @return true if push was successful
      */
@@ -455,7 +455,7 @@ public class Push
      * Push all un-uploaded application status change record to the server.
      * Once successful, the pushed records are deleted from the database.
      *
-     * @param ctxt - the current Context
+     * @param ctxt - the current {@link Context}
      *
      * @return true if push was successful
      */

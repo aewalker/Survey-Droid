@@ -13,16 +13,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import org.peoples.android.Base64Coder;
 import org.peoples.android.database.SurveyDBHandler;
 import org.peoples.android.database.PeoplesDB;
 
 /**
- * Model for a survey choice.  Based on the SQL:
- * 
- * CREATE TABLE choices (
- *  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
- *  text VARCHAR(255),
- *  question_id INT UNSIGNED);
+ * Model for a survey choice.
  * 
  * @author Diego Vargas
  * @author Austin Walker
@@ -54,7 +50,7 @@ public class Choice
 	 * 
 	 * @param text - the text the Choice should contain
 	 * @param id - choice_id as in the database
-	 * @param c - the current context
+	 * @param c - the current {@link Context}
 	 */
 	public Choice(String text, int id, Context c)
 	{
@@ -70,7 +66,7 @@ public class Choice
 	 * 
 	 * @param img - the base 64 character array representing the image to use
 	 * @param id - the choice_id as in the database
-	 * @param c - the current context
+	 * @param c - the current {@link Context}
 	 */
 	public Choice(char[] img, Context c, int id) //XD it lets me do this!!!!
 	{
@@ -99,7 +95,8 @@ public class Choice
 	/**
 	 * Get this Choice's image.
 	 * 
-	 * @return this Choice's Bitmap image (or null if this is a text Choice)
+	 * @return this Choice's {@link Bitmap} image (or null if this is a text
+	 * Choice)
 	 */
 	public Bitmap getImg()
 	{
@@ -121,10 +118,10 @@ public class Choice
 	/**
 	 * "Answer" a Question with this Choice.
 	 * 
-	 * @param q - the Question being answered
+	 * @param q - the {@link Question} being answered
 	 * @param q_id - the Question being answered's id
 	 * 
-	 * @return an Answer object corresponding this choice/question pair
+	 * @return an {@link Answer} corresponding this choice/question pair
 	 */
 	public static Answer answer(Question q, int q_id, Collection<Choice> c, Context ctxt)
 	{
@@ -141,9 +138,9 @@ public class Choice
 	/*-----------------------------------------------------------------------*/
 	
 	/**
-	 * Checks whether this Choice has ever been used to answer a Question
+	 * Checks whether this Choice has ever been used to answer a question
 	 * 
-	 * @param id - the Question id to look for
+	 * @param id - the question id to look for
 	 * 
 	 * @return true or false
 	 * 
@@ -178,7 +175,7 @@ public class Choice
 	/**
 	 * Get a string representation of this choice.
 	 * 
-	 * @return the choice text
+	 * @return the Choice's text
 	 */
 	public String toString()
 	{

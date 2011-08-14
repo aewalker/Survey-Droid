@@ -34,9 +34,9 @@ public class TrackingDBHandler extends PeoplesDBHandler
 	 *
 	 * @param number - the phone number
 	 * @param type - the type of call; one of
-	 * {@link CallLog.Calls.INCOMING_TYPE},
-	 * {@link CallLog.Calls.MISSED_TYPE}, or
-	 * {@link CallLog.Calls.OUTGOING_TYPE}
+	 * {@link CallLog#Calls.INCOMING_TYPE},
+	 * {@link CallLog#Calls.MISSED_TYPE}, or
+	 * {@link CallLog#Calls.OUTGOING_TYPE}
 	 * @param duration - how long the call was (ignored for missed calls)
 	 */
 	public void writeCall(String number, int type, int duration, long time)

@@ -23,8 +23,8 @@ public class FreeResponseQuestion extends Question
 	 * 
 	 * @param text - the question text
 	 * @param id - the question id
-	 * @param b - the Branches from this question
-	 * @param ctxt - the context (used for database calls)
+	 * @param b - the {@link Branch}es from this question
+	 * @param ctxt - the {@link Context} (used for database calls)
 	 */
 	public FreeResponseQuestion(String text, int id, Collection<Branch> b,
 			Context ctxt)

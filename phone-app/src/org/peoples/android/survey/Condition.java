@@ -9,14 +9,7 @@ package org.peoples.android.survey;
 import java.util.Map;
 
 /**
- * Model for a branch condition.  Based on SQL:
- * 
- * CREATE TABLE conditions (
- *  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
- *  branch_id INT UNSIGNED NOT NULL,
- *  question_id INT UNSIGNED NOT NULL,
- *  choice_id INT UNSIGNED NOT NULL,
- *  type TINYINT UNSIGNED NOT NULL);
+ * Model for a branch condition.
  *  		
  * @author Diego Vargas
  * @author Austin Walker
@@ -24,8 +17,21 @@ import java.util.Map;
 public class Condition
 {
 	//enumeration of the comparison types
+	/**
+	 * Condition type that checks if the question has been answered with the
+	 * given choice during the current instance of the survey.
+	 */
 	public static final int JUST_WAS = 0;
+	/**
+	 * Condition type that checks if the question has ever been answered with
+	 * the given choice in <strong>any</strong> instance of the survey.
+	 */
 	public static final int EVER_WAS = 1;
+	/**
+	 * Condition type that checks to ensure that the question has <strong>never
+	 * </strong> been answered with the given choice in <strong>any</strong>
+	 * instance of the survey.
+	 */
 	public static final int HAS_NEVER_BEEN = 2;
 	
 	//Question to look at when evaluating this condition
@@ -48,12 +54,15 @@ public class Condition
 	/**
 	 * Create a new Condition.
 	 * 
-	 * @param c - Choice to look at
+	 * @param c - {@link Choice} to look at
 	 * @param t - type of relation required
+	 * @param ans - {@link Answer}s from the survey (required to  check current
+	 * answers)
 	 * 
-	 * @throws RuntimeException if t is not a valid type
+	 * @throws RuntimeException if t is not a valid type from the set
+	 * {{@link #JUST_WAS}, {@link #EVER_WAS}, {@link #HAS_NEVER_BEEN}}.
 	 * 
-	 * @see setQuestion
+	 * @see Condition#setQuestion(Map)
 	 */
 	public Condition(int q_id, Choice c, int t, Iterable<Answer> ans)
 	{
@@ -71,10 +80,11 @@ public class Condition
 	}
 	
 	/**
-	 * Set the Condition's Question.  Needed to avoid infinite recursion in the
-	 * Survey constructor.  Should only be called once.
+	 * Set the Condition's {@link Question}.  Needed to avoid infinite
+	 * recursion in {@link Survey#Survey(int, android.content.Context)}.
+	 * Should only be called once.
 	 * 
-	 * @param q_map - a Map of build Question objects
+	 * @param q_map - a {@link Map} of built Questions
 	 * 
 	 * @throws RuntimeException if called multiple times
 	 * @throws RuntimeException if the given map doesn't have the need Question
@@ -93,7 +103,7 @@ public class Condition
 	 * 
 	 * @return true or false
 	 * 
-	 * @throws RuntimeException if called before setQuestion
+	 * @throws RuntimeException if called before {@link #setQuestion(Map)}
 	 */
 	public boolean eval()
 	{

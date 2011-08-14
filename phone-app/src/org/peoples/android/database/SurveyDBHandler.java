@@ -10,9 +10,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.peoples.android.Base64Coder;
 import org.peoples.android.Config;
 import org.peoples.android.Util;
-import org.peoples.android.survey.Base64Coder;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,13 +35,13 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	public static final int WRITE_ERROR = -1;
 	
 	/**
-	 * Used with {@link writeExtra} to write a photo taken as part of a
+	 * Used with {@link #writeExtra} to write a photo taken as part of a
 	 * survey to the database.
 	 */
 	public static final int PHOTO = 0;
 	
 	/**
-	 * Used with {@link writeExtra} to write a voice recording made as part of
+	 * Used with {@link #writeExtra} to write a voice recording made as part of
 	 * a survey to the database.
 	 */
 	public static final int VOICE = 1;
@@ -64,6 +64,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 * Get the Survey level data.
 	 * 
 	 * @param id - the survey_id
+	 * @return a {@link Cursor} with the results
 	 */
 	public Cursor getSurvey(int id)
 	{
@@ -88,6 +89,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 * Get a Question.
 	 * 
 	 * @param id - the question_id
+	 * @return a {@link Cursor} with the results
 	 */
 	public Cursor getQuestion(int id)
 	{
@@ -117,6 +119,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 * Get the Choice level data for a particular Question.
 	 * 
 	 * @param id - the question_id
+	 * @return a {@link Cursor} with the results
 	 */
 	public Cursor getChoices(int id)
 	{
@@ -140,6 +143,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 * Get a particular Choice
 	 * 
 	 * @param id - the choice_id
+	 * @return a {@link Cursor} with the results
 	 */
 	public Cursor getChoice(int id)
 	{
@@ -164,6 +168,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 * Get the Branch level data for a particular Question.
 	 * 
 	 * @param id - the question_id
+	 * @return a {@link Cursor} with the results
 	 */
 	public Cursor getBranches(int id)
 	{
@@ -187,6 +192,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 * Get the Condition level data for a particular Branch.
 	 * 
 	 * @param id - the branch_id
+	 * @return a {@link Cursor} with the results
 	 */
 	public Cursor getConditions(int id)
 	{
@@ -217,7 +223,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	/**
 	 * Get all surveys (id and time fields only); used for scheduling.
 	 * 
-	 * @return a cursor with the results
+	 * @return a {@link Cursor} with the results
 	 */
 	public Cursor getSurveys()
 	{
@@ -248,7 +254,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 * Get all surveys (id and name fields) that subjects can initiate
 	 * themselves.  Results are in alphabetical order by survey name.
 	 * 
-	 * @return a cursor with the results
+	 * @return a {@link Cursor} with the results
 	 */
 	public Cursor getSubjectInitSurveys()
 	{
@@ -272,6 +278,7 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 * Get the Answer history for a particular Question
 	 * 
 	 * @param id - the question_id
+	 * @return a {@link Cursor} with the results
 	 */
 	public Cursor getQuestionHistory(int id)
 	{
@@ -404,14 +411,14 @@ public class SurveyDBHandler extends PeoplesDBHandler
 	 * Write a photo or voice recording to the database.
 	 * 
 	 * @param survey_id - the survey id that this photo was taken for
-	 * @param type - either {@link PHOTO} or {@link VOICE}
+	 * @param type - either {@link #PHOTO} or {@link #VOICE}
 	 * @param stream - the stream containing the photo or recording's data
 	 * @param created - timestamp of when the photo or recording was made
 	 * @param row_id - the row to put the photo or recording into, or 0 if a
 	 * new row is to be made
 	 * 
-	 * @return the row in the extras table where the photo or recording was put,
-	 * or {@link WRITE_ERROR} on error
+	 * @return the row in the extras table where the photo or recording was
+	 * put, or {@link #WRITE_ERROR} on error
 	 */
 	public int writeExtra(int survey_id, int type,
 			InputStream stream, long created, int row_id)

@@ -34,7 +34,7 @@ public class ComsService extends IntentService
 	//intent actions
 	/**
 	 * Tells the service to upload any data.  Optionally, the specific type of
-	 * data can be specified with {@link EXTRA_DATA_TYPE}; by default, all data
+	 * data can be specified with {@link #EXTRA_DATA_TYPE}; by default, all data
 	 * is uploaded.
 	 */
 	public static final String ACTION_UPLOAD_DATA =
@@ -46,19 +46,19 @@ public class ComsService extends IntentService
 	
 	//intent extras
 	/**
-	 * Can be used with {@link ACTION_UPLOAD_DATA} to upload only a certain
+	 * Can be used with {@link #ACTION_UPLOAD_DATA} to upload only a certain
 	 * type of data.  A good example of when this might be useful is when a
 	 * survey has just finished: at that point, there is certainly new survey
-	 * data.  Can be {@link SURVEY_DATA}, {@link LOCATION_DATA},
-	 * or {@link CALL_DATA}.
+	 * data.  Can be {@link #SURVEY_DATA}, {@link #LOCATION_DATA},
+	 * or {@link #CALL_DATA}.
 	 */
 	public static final String EXTRA_DATA_TYPE =
 		"org.peoples.android.coms.EXTRA_DATA_TYPE";
 	
 	/**
 	 * If set to true, the will cause the requested action to be repeated
-	 * after the appropriate delay (either {@link Config.PUSH_INTERVAL} or
-	 * {@link Config.PUSH_INTERVAL}.  If set, {@link EXTRA_RUNNING_TIME}
+	 * after the appropriate delay (either {@link Config#PUSH_INTERVAL} or
+	 * {@link Config#PUSH_INTERVAL}.  If set, {@link #EXTRA_RUNNING_TIME}
 	 * must also be given.
 	 */
 	public static final String EXTRA_REPEATING =
@@ -66,22 +66,22 @@ public class ComsService extends IntentService
 	
 	/**
 	 * Used to tell this service when it was set to run; used with
-	 * {@link EXTRA_REPEATING}.
+	 * {@link #EXTRA_REPEATING}.
 	 */
 	public static final String EXTRA_RUNNING_TIME =
 		"org.peoples.android.coms.EXTRA_RUNNING_TIME";
 	
 	//data types for the extra
-	/** Survey data; used for {@link EXTRA_DATA_TYPE}. */
+	/** Survey data; used for {@link #EXTRA_DATA_TYPE}. */
 	public static final int SURVEY_DATA = 0;
 	
-	/** Location data; used for {@link EXTRA_DATA_TYPE}. */
+	/** Location data; used for {@link #EXTRA_DATA_TYPE}. */
 	public static final int LOCATION_DATA = 1;
 	
-	/** Call data; used for {@link EXTRA_DATA_TYPE}. */
+	/** Call data; used for {@link #EXTRA_DATA_TYPE}. */
 	public static final int CALL_DATA = 2;
 	
-	/** Application status data; used for {@link EXTRA_DATA_TYPE} */
+	/** Application status data; used for {@link #EXTRA_DATA_TYPE} */
 	public static final int STATUS_DATA = 3;
 	
 	/**

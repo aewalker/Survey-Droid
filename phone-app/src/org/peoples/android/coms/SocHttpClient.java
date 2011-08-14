@@ -23,9 +23,11 @@ import org.peoples.android.Util;
 import android.content.Context;
 
 /**
- * Custom version of the Apache http client.
+ * Custom version of the <a href="http://hc.apache.org/httpclient-3.x/">
+ * Apache http client</a>.
  * 
- * @author Tony Xiao, Austin Walker
+ * @author Tony Xiao
+ * @author Austin Walker
  */
 public class SocHttpClient extends DefaultHttpClient
 {

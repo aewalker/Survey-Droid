@@ -14,15 +14,8 @@ import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.SurveyDBHandler;
 
 /**
- * Model for a Survey answer.  Based on the SQL:
- * 
- * CREATE TABLE answers (
- *  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
- *  question_id INT UNSIGNED NOT NULL,
- *  subject_id INT UNSIGNED NOT NULL,
- *  choice_id INT UNSIGNED,
- *  ans_text TEXT,
- *  created DATETIME);
+ * Holds the answer to a survey question and contains methods to write that
+ * answer to the database and extract data from it.
  * 
  * @author Diego Vargas
  * @author Austin Walker
@@ -58,10 +51,10 @@ public class Answer
     /**
      * Create a new Answer to a free response question.
      * 
-     * @param q - the Question object being answered
-     * @param q_id - that Question's id
-     * @param t - the answer text for a free response Question
-     * @param ctxt - the current context
+     * @param q - the {@link Question} being answered
+     * @param q_id - that question's id
+     * @param t - the answer text
+     * @param ctxt - the current {@link Context}
      */
 	public Answer(Question q, int q_id, String t, Context ctxt)
 	{
@@ -81,10 +74,10 @@ public class Answer
 	/**
 	 * Create a new Answer to a slider (value based) question.
 	 * 
-	 * @param q - the Question object being answered
-	 * @param q_id - that Question's id
+	 * @param q - the {@link Question} being answered
+	 * @param q_id - that question's id
 	 * @param v - the value the question was answered with
-	 * @param ctxt - the current context
+	 * @param ctxt - the current {@link Context}
 	 */
 	public Answer(Question q, int q_id, int v, Context ctxt)
 	{
@@ -104,11 +97,11 @@ public class Answer
 	/**
 	 * Create a new Answer to a multiple choice question.
 	 * 
-	 * @param q - the Question object being answered
-	 * @param q_id - that Question's id
-	 * @param choices - the choices that were picked
+	 * @param q - the {@link Question} being answered
+	 * @param q_id - that question's id
+	 * @param choices - the {@link Choice}s that were picked
 	 * @param choice_ids - the ids of the choices that were picked
-	 * @param ctxt - the current context
+	 * @param ctxt - the current {@link Context}
 	 */
 	public Answer(Question q, int q_id, Collection<Choice> choices,
 			int[] choice_ids, Context ctxt)
@@ -129,7 +122,7 @@ public class Answer
 	/**
 	 * Get this Answer's Question
 	 * 
-	 * @return the Question object being answered
+	 * @return the {@link Question} being answered
 	 */
 	public Question getQuestion()
 	{
@@ -139,9 +132,9 @@ public class Answer
 	/**
 	 * Get the choices given in this answer
 	 * 
-	 * @return the Choice array the Question was answered with if the
-	 * Question was multiple choice, or null if the Question was free response
-	 * or value based.
+	 * @return the {@link Choice} array the {@link Question} was answered with
+	 * if the Question was multiple choice, or null if the Question was free
+	 * response or value based.
 	 */
 	public Collection<Choice> getChoices()
 	{
@@ -152,7 +145,7 @@ public class Answer
 	 * Get this Answer's text
 	 * 
 	 * @return the text as a String that was given as a response if the
-	 * Question was free response, or null otherwise
+	 * {@link Question} was free response, or null otherwise
 	 */
     public String getText()
     {
@@ -163,7 +156,7 @@ public class Answer
      * Get this Answer's value
      * 
      * @return the value (an int), or -1 if this answer was not for a scale
-     * question
+     * {@link Question}
      */
     public int getValue()
     {

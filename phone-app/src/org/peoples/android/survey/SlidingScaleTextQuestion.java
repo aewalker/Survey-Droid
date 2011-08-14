@@ -28,10 +28,10 @@ public class SlidingScaleTextQuestion extends Question
 	 * 
 	 * @param text - the question text
 	 * @param id - the question id
-	 * @param b - the Branches from this question
+	 * @param b - the {@link Branch}es from this question
 	 * @param textLow - text for the low end of the scale
 	 * @param textHigh - text for the high end of the scale
-	 * @param ctxt - the context (used for database calls)
+	 * @param ctxt - the {@link Context} (used for database calls)
 	 */
 	public SlidingScaleTextQuestion(String text, int id, Collection<Branch> b,
 			String textLow, String textHigh, Context ctxt)

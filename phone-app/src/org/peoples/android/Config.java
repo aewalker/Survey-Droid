@@ -101,12 +101,12 @@ public class Config
 	public static final int COMPLETION_GOAL_DEFAULT = 75;
 	
 	/**
-	 * Should full resolution photos (that are possibly/likely quite large) be
-	 * sent to the server when the user takes a photo with their survey? 
+	 * <p>Should full resolution photos (that are possibly/likely quite large)
+	 * be sent to the server when the user takes a photo with their survey?</p> 
 	 * 
-	 * Note that due to an old bug on a small number of Android devices, it is
-	 * possible that that photos will not be able to be sent if this is turned
-	 * on.  Make sure to test on the device in use.
+	 * <p><strong>Note:</strong> due to an old bug on a small number of Android
+	 * devices, it is possible that that photos will not be able to be sent if
+	 * this is turned on.  Make sure to test on the device in use.</p>
 	 */
 	public static final String USE_FULL_RES_PHOTOS = "use_full_res_photos";
 	public static final boolean USE_FULL_RES_PHOTOS_DEFAULT = false;
@@ -147,21 +147,21 @@ public class Config
 	/**
 	 * Longitude for location tracked.  Since multiple locations can be set,
 	 * make sure to append a number to the end of this. You can get the number
-	 * of locations being tracked using {@link NUM_LOCATIONS_TRACKED}.
+	 * of locations being tracked using {@link #NUM_LOCATIONS_TRACKED}.
 	 */
 	public static final String TRACKED_LONG = "lt_long";
 	
 	/**
 	 * Latitude for location tracked.  Since multiple locations can be set,
 	 * make sure to append a number to the end of this. You can get the number
-	 * of locations being tracked using {@link NUM_LOCATIONS_TRACKED}.
+	 * of locations being tracked using {@link #NUM_LOCATIONS_TRACKED}.
 	 */
 	public static final String TRACKED_LAT = "lt_lat";
 	
 	/**
 	 * Radius for location tracked.  Since multiple locations can be set,
 	 * make sure to append a number to the end of this. You can get the number
-	 * of locations being tracked using {@link NUM_LOCATIONS_TRACKED}.
+	 * of locations being tracked using {@link #NUM_LOCATIONS_TRACKED}.
 	 */
 	public static final String TRACKED_RADIUS = "lt_rad";
 	
@@ -173,14 +173,14 @@ public class Config
 	/**
 	 * Start of time tracked.  Since multiple times can be set,
 	 * make sure to append a number to the end of this. You can get the number
-	 * of times being tracked using {@link NUM_TIMES_TRACKED}.
+	 * of times being tracked using {@link #NUM_TIMES_TRACKED}.
 	 */
 	public static final String TRACKED_START = "tt_start";
 	
 	/**
 	 * End of time tracked.  Since multiple times can be set,
 	 * make sure to append a number to the end of this. You can get the number
-	 * of times being tracked using {@link NUM_TIMES_TRACKED}.
+	 * of times being tracked using {@link #NUM_TIMES_TRACKED}.
 	 */
 	public static final String TRACKED_END = "tt_end";
 	
@@ -214,9 +214,10 @@ public class Config
 	public static final String SURVEY_TIMEOUT = "survey_timeout";
 	public static final int SURVEY_TIMEOUT_DEFAULT = 30;
 	/**
-	 * This value, if used for {@link SURVEY_TIMEOUT_NEVER} will result in
-	 * surveys being kept until the phone is turned off (not recommended if
-	 * tracking what percentage of surveys a user answers is important.
+	 * This value, if used for {@link #SURVEY_TIMEOUT} will result in
+	 * surveys being kept until the phone is turned off.  <strong>Use of this
+	 * is not recommended if tracking what percentage of surveys a user answers
+	 * is important.</strong>
 	 */
 	public static final int SURVEY_TIMEOUT_NEVER = -1;
 	

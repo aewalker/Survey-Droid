@@ -30,12 +30,12 @@ import org.peoples.android.survey.SurveyService.SurveyBinder;
  */
 public abstract class QuestionActivity extends Activity
 {	
-	//logging tag
+	/** Logging tag */
 	protected static final String TAG = "QuestionActivity";
 	
 	/**
 	 * The survey being ran.  Note that this should not be used until
-	 * onSurveyLoaded().
+	 * {@link #onSurveyLoaded()}.
 	 */
 	protected Survey survey;
 	
@@ -89,7 +89,7 @@ public abstract class QuestionActivity extends Activity
 	
 	/**
 	 * Handler for the "previous" button.  Extending classes should install
-	 * this as the onClickListener for the back button.
+	 * this as the {@link View.OnClickListener} for the back button.
 	 */
     protected final View.OnClickListener prevListener =
     	new View.OnClickListener()
@@ -115,7 +115,7 @@ public abstract class QuestionActivity extends Activity
     
     /**
      * Handler for the "next" button.  Extending classes should install
-     * this as the onClickListener for the next button.
+     * this as the {@link View.OnClickListener} for the next button.
 	 */
     protected final View.OnClickListener nextListener =
     	new View.OnClickListener()
@@ -210,30 +210,32 @@ public abstract class QuestionActivity extends Activity
 	protected abstract boolean isAnswered();
 	
 	/**
-	 * Answer the current question with the appropriate answer() call to
-	 * survey.  Note that you should NOT call survey.nextQuestion().
+	 * Answer the current question with the appropriate answer call to the
+	 * survey.  Note that you should <strong>NOT</strong> call
+	 * {@link Survey#nextQuestion()}.
 	 */
 	protected abstract void answer();
 	
 	/**
 	 * Should return a string that is to be displayed to the user as an
 	 * explanation of why they cannot move to the next question.  Called if
-	 * the next button is pressed and isAnswered() returns false.
+	 * the next button is pressed and {@link #isAnswered()} returns false.
 	 * 
 	 * @return the message to show to the user
 	 */
 	protected abstract String getInvalidAnswerMsg();
 	
 	/**
-	 * Called once the survey has been loaded (usually after onCreate).
+	 * Called once the survey has been loaded (usually after
+	 * {@link QuestionActivity#onCreate(Bundle)}).
 	 */
 	protected abstract void onSurveyLoaded();
 	
 	/**
 	 * Gets the proper class for a question of a given type.  Useful when
-	 * creating intents to start question activities.
+	 * creating {@link Intent}s to start question activities.
 	 * 
-	 * @param type - the type as seen in {@link PeoplesDB.QuestionTable}
+	 * @param type - the type as seen in {@link PeoplesDB#QuestionTable}
 	 * 
 	 * @return the class type corresponding to that type
 	 */

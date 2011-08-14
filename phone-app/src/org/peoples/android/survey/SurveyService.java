@@ -39,7 +39,7 @@ public class SurveyService extends Service
 	//intent actions
 	/**
 	 * A survey is ready but has not been accepted by the user.  Intent must
-	 * include a survey id in {@link EXTRA_SURVEY_ID}.
+	 * include a survey id in {@link #EXTRA_SURVEY_ID}.
 	 */
 	public static final String ACTION_SURVEY_READY =
 		"org.peoples.android.survey.ACTION_SURVEY_READY";
@@ -52,7 +52,7 @@ public class SurveyService extends Service
 	
 	/**
 	 * Submit all live answers for this survey. Should only be
-	 * sent after {@link ACTION_SURVEY_READY}, otherwise the survey will not
+	 * sent after {@link #ACTION_SURVEY_READY}, otherwise the survey will not
 	 * be built and an exception will be thrown.
 	 */
 	public static final String ACTION_SUBMIT_ANSWERS = 
@@ -86,8 +86,8 @@ public class SurveyService extends Service
 		"org.peoples.android.survey.EXTRA_SURVEY_ID";
 	
 	/**
-	 * What kind of survey to start; sent with ACTION_SURVEY_READY.  Uses
-	 * SURVEY_TYPE_TIMED by default if this extra is not present.
+	 * What kind of survey to start; sent with {@link #ACTION_SURVEY_READY}.
+	 * Uses {@link #SURVEY_TYPE_TIMED} by default if this extra is not present.
 	 */
 	public static final String EXTRA_SURVEY_TYPE =
 		"org.peoples.android.survey.EXTRA_SURVEY_TYPE";
@@ -97,8 +97,13 @@ public class SurveyService extends Service
 		"org.peoples.android.survey.EXTRA_REFRESH_COUNT";
 	
 	//survey types
+	/** Used with {@link #EXTRA_SURVEY_TYPE} for time-based surveys */
 	public static final int SURVEY_TYPE_TIMED = 0;
+	/**
+	 * Used with {@link #EXTRA_SURVEY_TYPE} for randomized time-based surveys
+	 */
 	public static final int SURVEY_TYPE_RANDOM = 1;
+	/** Used with {@link #EXTRA_SURVEY_TYPE} for user-initiated surveys */
 	public static final int SURVEY_TYPE_USER_INIT = 2;
 	
 	/*-----------------------------------------------------------------------*/
@@ -474,16 +479,16 @@ public class SurveyService extends Service
 	}
 
 	/**
-	 * Simple Binder extension that provides a survey object.
+	 * Simple {@link Binder} extension that provides a survey object.
 	 * 
 	 * @author Austin Walker
 	 */
 	public class SurveyBinder extends Binder
 	{
 		/**
-		 * Called to get the survey object currently running.
+		 * Called to get the survey currently running.
 		 * 
-		 * @return the Survey object
+		 * @return the {@link Survey}
 		 */
 		public Survey getSurvey()
 		{

@@ -16,15 +16,15 @@ import android.telephony.SmsMessage;
 
 /**
  * Responsible for logging text messages. Catches the system broadcast when a
- * text is
- * coming in and logs it.
+ * text is coming in and logs it.
  *
  * @author Tony Xiao
  */
 public class IncomingSMSTracker extends BroadcastReceiver {
     // logging tag
     private static final String TAG = "IncomingSMS";
-	private static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+	private static final String ACTION_SMS_RECEIVED =
+		"android.provider.Telephony.SMS_RECEIVED";
 
     @Override
     public void onReceive(Context ctxt, Intent intent) {

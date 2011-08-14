@@ -16,7 +16,7 @@
 //Changed by Austin
 //We accept this code under the GPLv3
 //TODO remove the class if we upgrade to API 8
-package org.peoples.android.survey;
+package org.peoples.android;
 
 /**
 * A Base64 encoder/decoder.

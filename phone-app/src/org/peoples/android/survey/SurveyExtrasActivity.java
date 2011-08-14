@@ -32,6 +32,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+/**
+ * Lets users capture a photo and/or voice recording and upload them along with
+ * the answers to a survey.  Shown at the end of a survey.
+ * 
+ * @author Austin Walker
+ */
 public class SurveyExtrasActivity extends Activity
 {
 	//logging tag

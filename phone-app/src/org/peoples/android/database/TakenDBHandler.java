@@ -26,7 +26,7 @@ public class TakenDBHandler extends PeoplesDBHandler
 	private static final String TAG = "SurveysTakenDBHandler";
 	
 	/**
-	 * Returned from {@link getCompletionRate} if there have not been any
+	 * Returned from {@link #getCompletionRate} if there have not been any
 	 * surveys taken
 	 */
 	public static final int NO_PERCENTAGE = -1;
@@ -45,7 +45,7 @@ public class TakenDBHandler extends PeoplesDBHandler
 	 * Write an entry for a survey's completion (or not) to the database.
 	 * 
 	 * @param survey_id - the survey's id
-	 * @param code - the code from {@link PeoplesDB.TakenTable} describing
+	 * @param code - the code from {@link PeoplesDB#TakenTable} describing
 	 * the type of survey and its completion status
 	 * @param created - when the surveys was completed/dismissed/etc.
 	 * @return true on success
@@ -70,10 +70,10 @@ public class TakenDBHandler extends PeoplesDBHandler
 	/**
 	 * Get the current completion rate for surveys.  Looks at the last few
 	 * entries (the exact number is controlled by
-	 * {@link Config.COMPLETION_SAMPLE}) to determine this.
+	 * {@link Config#COMPLETION_SAMPLE}) to determine this.
 	 * 
 	 * @return the percentage completed between 0 and 100, or
-	 * {@link NO_PERCENTAGE} if there are no suveys to go by 
+	 * {@link #NO_PERCENTAGE} if there are no surveys to go by 
 	 */
 	public int getCompletionRate()
 	{

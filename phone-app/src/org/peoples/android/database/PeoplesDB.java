@@ -59,7 +59,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     public static final String SURVEY_TABLE_NAME = "surveys";
     public static final String EXTRAS_TABLE_NAME = "extras";
     
-    /** Contains the names of all the tables declared in PeoplesDB. */
+    /** Contains the names of all the tables declared in {@link PeoplesDB}. */
     public static final String[] TABLE_NAMES = {LOCATION_TABLE_NAME,
     	CALLLOG_TABLE_NAME, ANSWER_TABLE_NAME, BRANCH_TABLE_NAME,
     	CHOICE_TABLE_NAME, CONDITION_TABLE_NAME, QUESTION_TABLE_NAME,
@@ -78,13 +78,15 @@ public class PeoplesDB extends SQLiteOpenHelper
     	private PEOPLESTable() {}
     	
     	/**
-    	 * Get SQL that should be used to create this table.  Note that this
-    	 * method (and it's counterparts in all of the other classes) have
-    	 * SuppressWarnings("unused") because this method is never called
-    	 * directly (only through Method.invoke()).
+    	 * Get SQL that should be used to create this table.
     	 * 
     	 * @return SQL as a string that should be executed
     	 */
+    	/*
+    	 * Note that this method (and it's counterparts in all of the other
+    	 * classes) have SuppressWarnings("unused") because this method is
+    	 * never called directly (only through Method.invoke()).
+   	   	 */
     	@SuppressWarnings("unused")
 		private static String createSql() {
 			return null;
@@ -267,7 +269,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     * uploaded (to mark whether each answer has been sent to the server), and
     * either a choice id or and answer text depending on the type of question.
     * 
-    * @see com.peoples.android.survey.Answer
+    * @see org.peoples.android.survey.Answer
     * 
     * @author Diego Vargas
     * @author Vladimir Costescu
@@ -281,9 +283,11 @@ public class PeoplesDB extends SQLiteOpenHelper
     	public static final String CREATED = "created";
     	public static final String UPLOADED = "uploaded";
 
-    	/** Answer types */
+    	/** {@link #ANS_VALUE} for choice-based questions */
     	public static final int CHOICE = 0;
+    	/** {@link #ANS_VALUE} for value-based questions */
     	public static final int VALUE = 1;
+    	/** {@link #ANS_VALUE} for text-based questions */
     	public static final int TEXT = 2;
 
     	private static String createSql() {
@@ -531,7 +535,7 @@ public class PeoplesDB extends SQLiteOpenHelper
     /**
      * Create the database object.
      *
-     * @param context - Android Context; needed to create the call log
+     * @param context - {@link Context} needed for super
      */
     public PeoplesDB(Context context) {
     	super(context, DATABASE_NAME, null, DATABASE_VERSION);

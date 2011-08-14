@@ -22,6 +22,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+/**
+ * Shows the user a list of surveys that can be started on demand and lets the
+ * user do so.
+ * 
+ * @author Austin Walker
+ */
 public class UserSurveysActivity extends ListActivity
 {
 	//logging tag

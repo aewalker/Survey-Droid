@@ -22,6 +22,7 @@ import android.graphics.BitmapFactory;
 
 import org.peoples.android.database.PeoplesDB;
 import org.peoples.android.database.SurveyDBHandler;
+import org.peoples.android.Base64Coder;
 import org.peoples.android.Config;
 import org.peoples.android.R;
 import org.peoples.android.Util;
@@ -308,7 +309,7 @@ public class Survey
 	/**
 	 * A simple constructor to put together a sample survey.
 	 * 
-	 * @param ctxt - the current Context
+	 * @param ctxt - the current {@link Context}
 	 */
 	public Survey(Context ctxt)
 	{
@@ -424,9 +425,9 @@ public class Survey
 	/**
 	 * Get the current question's choices.
 	 * 
-	 * @return the current question's choices as an array.  If the current
-	 * question does not exist or is not of the correct type, then an empty
-	 * array will be returned
+	 * @return the current question's {@link Choice}s as an array.  If the
+	 * current question does not exist or is not of the correct type, then an
+	 * empty array will be returned
 	 */
 	public Choice[] getChoices()
 	{
@@ -488,9 +489,9 @@ public class Survey
 	/**
 	 * Get the current question's low-end image.
 	 * 
-	 * @return the current question's low-end image as a Bitmap. If the current
-	 * question does not exist or is not an image-based scale question, then
-	 * null will be returned.
+	 * @return the current question's low-end image as a {@link Bitmap}. If the
+	 * current question does not exist or is not an image-based scale question,
+	 * then null will be returned.
 	 */
 	public Bitmap getLowImg()
 	{
@@ -500,9 +501,9 @@ public class Survey
 	/**
 	 * Get the current question's high-end image.
 	 * 
-	 * @return the current question's high-end image as a Bitmap. If the current
-	 * question does not exist or is not an image-based scale question, then
-	 * null will be returned.
+	 * @return the current question's high-end image as a {@link Bitmap}. If
+	 * the current question does not exist or is not an image-based scale
+	 * question, then null will be returned.
 	 */
 	public Bitmap getHighImg()
 	{
@@ -658,7 +659,7 @@ public class Survey
 	/**
 	 * Get the type of the current question.
 	 * 
-	 * @return the type, as in {@link PeoplesDB.QuestionTable}
+	 * @return the type, as in {@link PeoplesDB#QuestionTable}
 	 */
 	public int getQuestionType()
 	{
@@ -692,7 +693,7 @@ public class Survey
 	/**
 	 * Answer a multiple choice question.
 	 * 
-	 * @param c - the Collection of {@link Choice}s to answer with
+	 * @param c - the {@link Collection} of {@link Choice}s to answer with
 	 * 
 	 * @throws RuntimeException if the question being answered is not a
 	 * choice question
@@ -861,7 +862,7 @@ public class Survey
 	 * descriptive keys so that, in the event that the data meant to replace
 	 * that key is not found, the resulting text looks acceptable.
 	 * 
-	 * @param ctxt - the context (used for Config lookup calls)
+	 * @param ctxt - the {@link Context} (used for {@link Config} lookup calls)
 	 * @param text - the string to look through
 	 * @return a new string with the replaced values
 	 */

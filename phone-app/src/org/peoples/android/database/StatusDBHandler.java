@@ -33,8 +33,8 @@ public class StatusDBHandler extends PeoplesDBHandler
 	/**
 	 * Write to the database that a feature has been enabled or disabled.
 	 * 
-	 * @param feature - the feature affected (see {@link PeoplesDB.StatusTable}
-	 * for the feature codes
+	 * @param feature - the feature affected (see {@link PeoplesDB#StatusTable}
+	 * for the feature codes)
 	 * @param enabled - true if the feature was enabled, false if it was
 	 * disabled
 	 * @param created - when the setting was changed

@@ -41,7 +41,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 * by creation time so that the oldest data will be sent first (in case of
 	 * a weak connection).
 	 * 
-	 * @return a cursor with the data
+	 * @return a {@link Cursor} with the data
 	 */
 	public Cursor getNewAnswers()
 	{
@@ -64,7 +64,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	/**
 	 * Get all survey completion data that haven't yet been uploaded.
 	 * 
-	 * @return a cursor with the data
+	 * @return a {@link Cursor} with the data
 	 */
 	public Cursor getNewCompletionData()
 	{
@@ -87,7 +87,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 * Get all the locations.  The results are ordered by time so that older
 	 * older data is sent first.
 	 * 
-	 * @return
+	 * @return a {@link Cursor} with the data
 	 */
 	public Cursor getLocations()
 	{
@@ -111,7 +111,7 @@ public class ComsDBHandler extends PeoplesDBHandler
 	 * Get all the calls.  The results are ordered by time so that older
 	 * older data is sent first.
 	 * 
-	 * @return
+	 * @return a {@link Cursor} with the data
 	 */
 	public Cursor getCalls()
 	{

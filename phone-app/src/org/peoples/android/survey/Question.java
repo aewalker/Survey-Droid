@@ -13,11 +13,7 @@ import java.util.Stack;
 import android.content.Context;
 
 /**
- * Model for a survey Question.  Based on the SQL:
- * 
- * CREATE TABLE questions (
- *  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
- *  text TEXT);
+ * Model for a survey question.
  * 
  * @author Diego Vargas
  * @author Austin Walker
@@ -43,13 +39,17 @@ public abstract class Question
 	//has the current Question been answered?
 	private boolean answered = false;
 	
-	//the question's type
+	/**
+	 * The type of this Question
+	 * 
+	 * @see org.peoples.android.database.PeoplesDB.QuestionTable
+	 */
 	protected int type;
 
 	//set of branches
 	private final Collection<Branch> branches;
 	
-	//have to have this around to make Answers
+	/** {@link Context} used to make database calls */
 	protected final Context ctxt;
 	
 	/*-----------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ public abstract class Question
 	 * 
 	 * @param text - the question text as a String
 	 * @param id - the Question's id from the database
-	 * @param b - a Collection of Branches for this Question
+	 * @param b - a {@link Collection} of {@link Branch}es for this Question
 	 */
 
 	protected Question(String text, int id, Collection<Branch> b,
@@ -88,7 +88,7 @@ public abstract class Question
 	 * Get the type of this question.
 	 * 
 	 * @return an int corresponding to one of the types defined in
-	 * {@link PeoplesDB.QuestionTable}
+	 * {@link org.peoples.android.database.PeoplesDB#QuestionTable}
 	 */
 	public int getType()
 	{
@@ -99,7 +99,7 @@ public abstract class Question
 	 * Answer this Question.  Does background work and should be called by
 	 * any extending class.
 	 * 
-	 * @param ans - the Answer to be recorded
+	 * @param ans - the {@link Answer} to be recorded
 	 * 
 	 * @throws RuntimeException if the current Question has already been
 	 * answered.
@@ -114,7 +114,7 @@ public abstract class Question
 	}
 
 	/**
-	 * Evaluate Branches to find the next Question.
+	 * Evaluate branches to find the next Question.
 	 * 
 	 * @return the next Question
 	 * 
@@ -137,7 +137,7 @@ public abstract class Question
 	 * Checks whether the question has ever been answered with a particular
 	 * Choice.
 	 * 
-	 * @param c - the Choice to have been
+	 * @param c - the {@link Choice} to have been
 	 * 
 	 * @return true or false
 	 */
@@ -149,7 +149,7 @@ public abstract class Question
 	/**
 	 * Remove the most recent Answer from the stack.
 	 * 
-	 * @return the most recent Answer
+	 * @return the most recent {@link Answer}
 	 */
 	public Answer popAns()
 	{
@@ -162,9 +162,9 @@ public abstract class Question
 	}
 
 	/**
-	 * Set this Question to be unanswered.  WARNING: only use this in
-	 * situations in which you want to reset everything (for example, when
-	 * restarting a survey).
+	 * Set this Question to be unanswered. <strong>WARNING:</strong> only use
+	 * this in situations in which you want to reset everything (for example,
+	 * when restarting a survey).
 	 */
 	public void prime()
 	{

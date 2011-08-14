@@ -10,12 +10,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Model for a survey branch.  Based on the SQL:
- * 
- * CREATE TABLE branches (
- *  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
- *  prev_q INT UNSIGNED NOT NULL, //foreign keys//
- *  next_q INT UNSIGNED NOT NULL)
+ * Model for a survey branch.
  *
  * @author Diego Vargas
  * @author Austin Walker
@@ -32,10 +27,10 @@ public class Branch
 	/*-----------------------------------------------------------------------*/
 
 	/**
-	 * Create a new Branch with no Conditions.
+	 * Create a new Branch.
 	 * 
 	 * @param q_id - the id of the next question to go to
-	 * @param c - Conditions for this Branch
+	 * @param c - {@link Condition}s for this Branch
 	 * 
 	 * @see setQuestion
 	 */
@@ -47,8 +42,9 @@ public class Branch
 	}
 	
 	/**
-	 * Set the Branch's Question.  Needed to avoid infinite recursion in the
-	 * Survey constructor.  Should only be called once.
+	 * Set the Branch's {@link Question}.  Needed to avoid infinite recursion
+	 * in {@link Survey#Survey(int, android.content.Context)}. Should only be
+	 * called once.
 	 * 
 	 * @param qMap - a mapping of Question objects to their ids
 	 * 
@@ -69,7 +65,7 @@ public class Branch
 	 * 
 	 * @return true or false
 	 * 
-	 * @throws RuntimeException if called before setQuestion
+	 * @throws RuntimeException if called before {@link #setQuestion}
 	 */
 	public boolean eval()
 	{
@@ -88,7 +84,7 @@ public class Branch
 	/**
 	 * Get the Question this Branch points to
 	 * 
-	 * @return Question this Branch points to
+	 * @return {@link Question} this Branch points to
 	 */
 	public Question nextQuestion()
 	{

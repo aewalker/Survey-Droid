@@ -15,7 +15,7 @@ import org.peoples.android.Util;
 
 /**
  * 
- * Interact with our database using this class, PeoplesDB will
+ * Interact with our database using this class, {@link PeoplesDB} will
  * keep track of the version of the DB, creating the DB, updating
  * the DB, and other versioning manipulations.
  * 
@@ -25,16 +25,23 @@ import org.peoples.android.Util;
 public class PeoplesDBHandler
 {
 	//logging tag
-	protected static final String TAG = "LocationTableHandler";
+	private static final String TAG = "PeoplesDBHandler";
 	
-	protected PeoplesDB pdb;
+	private PeoplesDB pdb;
+	
+	/**
+	 * The {@link Context} this handler was created with; used for database
+	 * calls.
+	 */
 	protected Context contx;
+	
+	/** The {@link SQLiteDatabase} used to make database calls. */
 	protected SQLiteDatabase db;
 	
 	/**
 	 * Simple constructor.
 	 * 
-	 * @param context - the current Context
+	 * @param context - the current {@link Context}
 	 */
 	public PeoplesDBHandler(Context context)
 	{

@@ -47,7 +47,7 @@ public class ChoiceQuestion extends Question
 	/**
 	 * Returns an array of this question's choices.
 	 * 
-	 * @return an array of the choices
+	 * @return an array of the {@link Choice}s
 	 */
 	public Choice[] getChoices()
 	{
@@ -74,9 +74,9 @@ public class ChoiceQuestion extends Question
 	/**
 	 * Answer this question with the given set of choices.
 	 * 
-	 * @param c - the choices to answer with
+	 * @param c - the {@link Choice}s to answer with
 	 * 
-	 * @return the newly made answer
+	 * @return the newly made {@link Answer}
 	 */
 	public Answer answer(Collection<Choice> c)
 	{

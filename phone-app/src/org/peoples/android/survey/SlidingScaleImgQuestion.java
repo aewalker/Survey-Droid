@@ -8,6 +8,7 @@ package org.peoples.android.survey;
 
 import java.util.Collection;
 
+import org.peoples.android.Base64Coder;
 import org.peoples.android.database.PeoplesDB;
 
 import android.content.Context;
@@ -30,10 +31,10 @@ public class SlidingScaleImgQuestion extends Question
 	 * 
 	 * @param text - the question text
 	 * @param id - the question id
-	 * @param b - the Branches from this question
+	 * @param b - the {@link Branch}es from this question
 	 * @param imgLow - base 64 encoded image for the low end of the scale
 	 * @param imgHigh - base 64 encoded image for the high end of the scale
-	 * @param ctxt - the context (used for database calls)
+	 * @param ctxt - the {@link Context} (used for database calls)
 	 */
 	public SlidingScaleImgQuestion(String text, int id, Collection<Branch> b,
 			char[] imgLow, char[] imgHigh, Context ctxt)
@@ -54,7 +55,7 @@ public class SlidingScaleImgQuestion extends Question
 	 * Returns the Bitmap created from the base 64 string given to the
 	 * constructor as the low image.
 	 * 
-	 * @return the low Bitmap
+	 * @return the low {@link Bitmap}
 	 */
 	public Bitmap getLowImg()
 	{
@@ -65,7 +66,7 @@ public class SlidingScaleImgQuestion extends Question
 	 * Returns the Bitmap created from the base 64 string given to the
 	 * constructor as the high image.
 	 * 
-	 * @return the high Bitmap
+	 * @return the high {@link Bitmap}
 	 */
 	public Bitmap getHighImg()
 	{
@@ -75,9 +76,9 @@ public class SlidingScaleImgQuestion extends Question
 	/**
 	 * Answer this question.
 	 * 
-	 * @param val - the value on the scale between 1 and 100
+	 * @param val - the value on the scale between 0 and 100
 	 * 
-	 * @return the new answer created
+	 * @return the new {@link Answer} created
 	 */
 	public Answer answer(int val)
 	{
