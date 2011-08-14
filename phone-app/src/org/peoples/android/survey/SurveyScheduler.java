@@ -128,11 +128,22 @@ public class SurveyScheduler extends IntentService
 		surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
 		surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID, id);
 		surveyIntent.putExtra(EXTRA_RUNNING_TIME, time);
-		//trick to ensure that each intent has a unique request code
+		/*
+		 * We have a tricky situation here.  Each survey "instance" (that is,
+		 * a survey at a particular date/time) must be uniquely identified by
+		 * request code.  However, that code must be the same each time it is
+		 * generated in order to prevent one survey instance from being
+		 * scheduled multiple times, which would occur if this service is run
+		 * again before that instance is set to be delivered.  Thus, we
+		 * essentially need a hash function that takes a time and an id and
+		 * produces a unique int in a deterministic way.
+		 * 
+		 * For now, I think XOR works fine.  However, I don't think that it is
+		 * guaranteed to work 100% of the time for all possible situations.
+		 */
 		PendingIntent pendingSurvey = PendingIntent.getService(
-				getApplicationContext(), Util.randRequestCode(),
+				getApplicationContext(), ((int) time) ^ id,
 				surveyIntent, 0);
-		if (pendingSurvey == null) throw new RuntimeException("NULL PE");
 		AlarmManager alarm =
 			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarm.set(AlarmManager.RTC_WAKEUP, time, pendingSurvey);

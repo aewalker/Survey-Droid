@@ -132,6 +132,7 @@
     		"voice_format" : "mpeg4", //or 3gp
 		"completion_sample" : 10,
 		"completion_goal" : 75, //the survey completion rate goal (between 0 and 100)
+		"question_timeout" : 5, //timeout (in mins) for the user to answer a question
 		//this is where we put information for questions/choices
 		//this information should be different for each phone, so on the
 		//website, work will have to be done to customize each pull request

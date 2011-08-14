@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.Toast;
@@ -40,6 +41,23 @@ public abstract class QuestionActivity extends Activity
 	
 	//has the next question activity been started?
 	private boolean isDone = false;
+	
+	//handle to deal with timeouts
+	private final Handler timeoutHandler = new Handler();
+	
+	//runnable that times out the survey
+	private final Runnable timeout = new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			Util.i(getThis(), TAG, "Survey timed out");
+			Intent timeoutIntent = new Intent(getThis(), SurveyService.class);
+			timeoutIntent.setAction(SurveyService.ACTION_QUIT_SURVEY);
+			startService(timeoutIntent);
+			finish();
+		}
+	};
 	
 	//connection to the SurveyService
 	private ServiceConnection connection = new ServiceConnection()
@@ -147,6 +165,16 @@ public abstract class QuestionActivity extends Activity
 	}
 	
 	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		Util.d(null, TAG, "in onStart()");
+		
+		//remove the timeout if it exists
+		timeoutHandler.removeCallbacks(timeout);
+	}
+	
+	@Override
 	protected void onStop()
 	{
 		/*
@@ -154,15 +182,27 @@ public abstract class QuestionActivity extends Activity
 		 * visible), kill it, but only if the next question has been
 		 * started.  This makes the app run more smoothly; the user doesn't
 		 * see black screens in between questions.
+		 * 
+		 * On the other hand, if the next question hasn't been started, start
+		 * the timeout that will kill the survey if the user doesn't come back
+		 * to this after a certain amount of time.
 		 */
 		super.onStop();
 		if (isDone) finish();
+		else
+		{
+			int delay = Config.getSetting(this, Config.QUESTION_TIMEOUT,
+					Config.QUESTION_TIMEOUT_DEFAULT);
+			delay *= 60 * 1000;
+			timeoutHandler.postDelayed(timeout, delay);
+		}
 	}
 	
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
+		timeoutHandler.removeCallbacks(timeout);
 		unbindService(connection);
 	}
 	

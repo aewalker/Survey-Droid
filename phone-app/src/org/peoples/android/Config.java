@@ -133,6 +133,13 @@ public class Config
 	public static final boolean CALL_LOG_SERVER_DEFAULT = false;
 	
 	/**
+	 * How long should the system wait for a user to answer a question
+	 * (in minutes)?
+	 */
+	public static final String QUESTION_TIMEOUT = "question_timeout";
+	public static final int QUESTION_TIMEOUT_DEFAULT = 15; 
+	
+	/**
 	 * The number of different locations in which locations should be logged.
 	 */
 	public static final String NUM_LOCATIONS_TRACKED = "num_locations";
@@ -235,7 +242,7 @@ public class Config
 	public static final String[] INTS =
 		{SCHEDULER_INTERVAL, PUSH_INTERVAL, PULL_INTERVAL, LOCATION_INTERVAL,
 		SURVEY_DELAY, VOICE_FORMAT, NUM_LOCATIONS_TRACKED, NUM_TIMES_TRACKED,
-		COMPLETION_SAMPLE, COMPLETION_GOAL};
+		COMPLETION_SAMPLE, COMPLETION_GOAL, QUESTION_TIMEOUT};
 	
 	/** List of settings which are floats */
 	public static final String[] FLOATS =
