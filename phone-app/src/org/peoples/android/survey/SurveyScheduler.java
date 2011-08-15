@@ -165,6 +165,8 @@ public class SurveyScheduler extends IntentService
 				* 60 * 1000);
 		Util.v(null, TAG, "Current run time: "
 			+ runningTime + ", next run time: " + nextRun);
+		Util.v(null, TAG, "Time difference: "
+				+ ((nextRun - runningTime) / 1000) + "s");
 		Util.d(this, TAG, "Number of surveys found: " + surveys.getCount());
 		while (!surveys.isAfterLast())
 		{
@@ -211,6 +213,7 @@ public class SurveyScheduler extends IntentService
 		sdbh.close();
 		
 		//make sure to run this again later
+		Util.d(null, TAG, "rescheduling survey scheduler run");
 		Intent schedulerIntent = new Intent(this, SurveyScheduler.class);
 		schedulerIntent.setAction(ACTION_SCHEDULE_SURVEYS);
 		schedulerIntent.putExtra(EXTRA_RUNNING_TIME, nextRun);

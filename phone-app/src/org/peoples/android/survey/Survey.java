@@ -8,6 +8,7 @@ package org.peoples.android.survey;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -169,7 +170,7 @@ public class Survey
 		Cursor b = db.getBranches(id);
 		b.moveToFirst();
 		Util.v(null, TAG, "I have this many branches " +  b.getCount());
-		LinkedList<Branch> branches = new LinkedList<Branch>();
+		ArrayList<Branch> branches = new ArrayList<Branch>();
 		while (!b.isAfterLast())
 		{
 			int b_id = b.getInt(
@@ -181,13 +182,11 @@ public class Survey
                 seen.put(q_id, true);
                 toDo.add(q_id);
             }
-			branches.add(new Branch(q_id,
-					getConditions(b_id, cMap, seen, toDo, cList)));
+			Branch newBranch = new Branch(q_id,
+					getConditions(b_id, cMap, seen, toDo, cList)); 
+			branches.add(newBranch);
+			bList.add(newBranch);
 			b.moveToNext();
-		}
-		for (Branch branch : branches)
-		{
-			bList.add(branch);
 		}
 		b.close();
 

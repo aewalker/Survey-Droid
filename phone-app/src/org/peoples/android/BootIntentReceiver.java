@@ -5,8 +5,6 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android;
 
-import java.util.Calendar;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -65,7 +63,7 @@ public class BootIntentReceiver extends BroadcastReceiver
     /**
      * Starts up the basic PEOPLES services.
      * 
-     * @param context - the context given to the receiver
+     * @param context - the {@link Context} given to the receiver
      */
     public static void startup(final Context context)
     {
@@ -76,9 +74,23 @@ public class BootIntentReceiver extends BroadcastReceiver
         final Intent comsPullIntent = new Intent(context, ComsService.class);
         comsPullIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
         comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
-        		Calendar.getInstance().getTimeInMillis());
+        		System.currentTimeMillis());
         comsPullIntent.putExtra(ComsService.EXTRA_REPEATING, true);
         context.startService(comsPullIntent);
+        
+        //start call monitoring
+        Util.d(null, TAG, "Starting call monitoring");
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(
+        		Context.TELEPHONY_SERVICE);
+        tm.listen(new CallTracker(context),
+        		PhoneStateListener.LISTEN_CALL_STATE);
+        
+        //start location tracking
+        Util.d(null, TAG, "Starting location tracking");
+        Intent trackingIntent =
+        	new Intent(context, LocationTrackerService.class);
+        trackingIntent.setAction(LocationTrackerService.ACTION_START_TRACKING);
+        context.startService(trackingIntent);
     	
         //delay other things for a bit so that pull can complete first
         Runnable r = new Runnable()
@@ -91,23 +103,10 @@ public class BootIntentReceiver extends BroadcastReceiver
 		        Intent comsPushIntent = new Intent(context, ComsService.class);
 		        comsPushIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
 		        comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
-		        		Calendar.getInstance().getTimeInMillis());
+		        		System.currentTimeMillis());
 		        comsPushIntent.putExtra(ComsService.EXTRA_REPEATING, true);
 		        context.startService(comsPushIntent);
 		        
-		        //start call monitoring
-		        Util.d(null, TAG, "Starting call monitoring");
-		        TelephonyManager tm = (TelephonyManager) context.getSystemService(
-		        		Context.TELEPHONY_SERVICE);
-		        tm.listen(new CallTracker(context),
-		        		PhoneStateListener.LISTEN_CALL_STATE);
-		        
-		        //start location tracking
-		        Util.d(null, TAG, "Starting location tracking");
-		        Intent trackingIntent =
-		        	new Intent(context, LocationTrackerService.class);
-		        trackingIntent.setAction(LocationTrackerService.ACTION_START_TRACKING);
-		        context.startService(trackingIntent);
 		    	//start the survey scheduler
 		    	Util.d(null, TAG, "Starting survey scheduler");
 		    	Intent schedulerIntent = new Intent(context,
@@ -115,7 +114,7 @@ public class BootIntentReceiver extends BroadcastReceiver
 		    	schedulerIntent.setAction(
 		    			SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
 		    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUNNING_TIME,
-		    			Calendar.getInstance().getTimeInMillis());
+		    			System.currentTimeMillis());
 		        context.startService(schedulerIntent);
 	        }
     	};

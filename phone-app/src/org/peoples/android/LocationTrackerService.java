@@ -8,7 +8,10 @@ package org.peoples.android;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
+import org.peoples.android.coms.ComsService;
 import org.peoples.android.database.TrackingDBHandler;
 
 import android.app.AlarmManager;
@@ -30,6 +33,8 @@ import android.os.IBinder;
  * This is something that can be tested extensively later on.
  */
 
+//TODO this class CANNOT deal with time periods that stretch through midnight
+
 /**
  * Tracks the subject's location and writes location data points to the
  * database.
@@ -46,11 +51,17 @@ public class LocationTrackerService extends Service
 	private static final String ACTION_TOGGLE_TRACKING =
 		"org.peoples.android.ACTION_TOGGLE_TRACKING";
 	
+	/** Config key: have the location tracking times been coalesced? */
+	public static final String TIMES_COALESCED = "times_coalesced";
+	
 	//logging tag
 	private static final String TAG = "LocationTrackerService";
 	
 	//is tracking currently running?
 	private boolean isTracking = false;
+	
+	//has this service already gone through its first run?
+	private boolean alreadyStarted = false;
 	
 	private LocationTracker lt = new LocationTracker();
 	
@@ -80,6 +91,7 @@ public class LocationTrackerService extends Service
 			if (isTracking) lt.stop();
 			else lt.start();
 			isTracking = !isTracking;
+			schedule();
 		}
 		else if (action.equals(ACTION_START_TRACKING))
 		{
@@ -95,17 +107,17 @@ public class LocationTrackerService extends Service
 	
 	private class TimePeriod implements Comparable<TimePeriod>
 	{
-		long start;
-		long end;
+		int start;
+		int end;
 		
-		public TimePeriod(long s, long e)
+		public TimePeriod(int s, int e)
 		{
 			start = s;
 			end = e;
 		}
 		
 		//does this time period contain a given time?
-		public boolean contains(long time)
+		public boolean contains(int time)
 		{
 			if (time >= start && time <= end) return true;
 			return false;
@@ -118,32 +130,98 @@ public class LocationTrackerService extends Service
 			//1. this is an internal class so all uses are known
 			//2. no two numbers are going to differ by more than the number of
 			//seconds in a day, which is less than 2^32 - 1
-			return (int) (this.start - that.start);
+			return (this.start - that.start);
 		}
 	}
 	
-	//returns day as string by converting using the Calendar constants
-	private static String getDay(int day)
+//	//returns day as string by converting using the Calendar constants
+//	private static String getDay(int day)
+//	{
+//		switch (day)
+//		{
+//		case Calendar.SUNDAY:
+//			return "Sun";
+//		case Calendar.MONDAY:
+//			return "Mon";
+//		case Calendar.TUESDAY:
+//			return "Tue";
+//		case Calendar.WEDNESDAY:
+//			return "Wed";
+//		case Calendar.THURSDAY:
+//			return "Thu";
+//		case Calendar.FRIDAY:
+//			return "Fri";
+//		case Calendar.SATURDAY:
+//			return "Sat";
+//		default:
+//			throw new IllegalArgumentException("Invalid day: " + day);
+//		}
+//	}
+	
+	//fix the times so that they don't overlap
+	private void coalesceTimes()
 	{
-		switch (day)
+		//get the number of times we're looking at
+		int numTimes = Config.getSetting(this,
+				Config.NUM_TIMES_TRACKED, 0);
+		if (numTimes == 0)
 		{
-		case Calendar.SUNDAY:
-			return "Sun";
-		case Calendar.MONDAY:
-			return "Mon";
-		case Calendar.TUESDAY:
-			return "Tue";
-		case Calendar.WEDNESDAY:
-			return "Wed";
-		case Calendar.THURSDAY:
-			return "Thu";
-		case Calendar.FRIDAY:
-			return "Fri";
-		case Calendar.SATURDAY:
-			return "Sat";
-		default:
-			throw new IllegalArgumentException("Invalid day: " + day);
+			Config.putSetting(this, TIMES_COALESCED, true);
+			return;
 		}
+		
+		TimePeriod[] times = new TimePeriod[numTimes];
+		for (int i = 0; i < numTimes; i++)
+		{
+			String start =
+				Config.getSetting(this, Config.TRACKED_START + i, null);
+			String end =
+				Config.getSetting(this, Config.TRACKED_END + i, null);
+			if (start == null || end == null) throw new RuntimeException(
+					"start or end time is null for time " + i);
+			times[i] = new TimePeriod(Integer.parseInt(start),
+					Integer.parseInt(end));
+		}
+		Arrays.sort(times);
+		
+		Util.v(null, TAG, "Uncoalessed times:");
+		for (TimePeriod time : times)
+		{
+			Util.v(null, TAG, "Time period: " + time.start
+					+ " to " + time.end);
+		}
+		
+		//at this point, we have an array of times sorted by the start time
+		ArrayList<TimePeriod> finalTimes = new ArrayList<TimePeriod>();
+		int lastTime = 0;
+		for (int i = 1; i < times.length; i++)
+		{
+			if (times[lastTime].contains(times[i].start))
+			{
+				if (!times[lastTime].contains(times[i].end))
+					times[lastTime].end = times[i].end;
+			}
+			else
+			{
+				finalTimes.add(times[lastTime]);
+				lastTime = i;
+			}
+		}
+		finalTimes.add(times[lastTime]);
+		
+		Config.putSetting(this, Config.NUM_TIMES_TRACKED, finalTimes.size());
+		
+		Util.v(null, TAG, "Coalessed times:");
+		int i = 0;
+		for (TimePeriod time : finalTimes)
+		{
+			Config.putSetting(this, Config.TRACKED_START + i, "" + time.start);
+			Config.putSetting(this, Config.TRACKED_END + i, "" + time.end);
+			Util.v(null, TAG, "Time period: " + time.start
+					+ " to " + time.end);
+			i++;
+		}
+		Config.putSetting(this, TIMES_COALESCED, true);
 	}
 	
 	//schedules alarms to turn tracking on and off
@@ -152,80 +230,125 @@ public class LocationTrackerService extends Service
 		//some setup stuff
 		AlarmManager as = (AlarmManager)
 			this.getSystemService(ALARM_SERVICE);
-		Calendar cal = Calendar.getInstance();
 		
-		//get the number of times we're looking at
-		int numTimes = Config.getSetting(this,
-				Config.NUM_TIMES_TRACKED, 0);
-		Util.v(this, TAG, "Tracking for " + numTimes + " different times.");
-		if (numTimes == 0)
+		if (!Config.getSetting(this, TIMES_COALESCED, false))
 		{
-			if (!isTracking)
-			lt.start();
-			isTracking = true;
+			Util.d(null, TAG, "Reseting service and coalescing times");
+			
+			//reset the whole service
+			if (isTracking)
+			{
+				lt.stop();
+				isTracking = false;
+			}
+			alreadyStarted = false;
+			coalesceTimes();
 		}
 		else
 		{
-			String day = getDay(cal.get(Calendar.DAY_OF_WEEK));
-			
-			TimePeriod[] times = new TimePeriod[numTimes];
-			for (int i = 0; i < numTimes; i++)
+			Util.d(null, TAG, "Times already coalesced");
+		}
+		
+		int numTimes = Config.getSetting(this, Config.NUM_TIMES_TRACKED, 0);
+		if (numTimes == 0)
+		{
+			Util.d(null, TAG, "No times tracked; tracking all the time");
+			if (!isTracking)
+				lt.start();
+			isTracking = true;
+			alreadyStarted = true;
+		}
+		else
+		{
+			Util.d(null, TAG, numTimes + " times tracked");
+			//fetch all the times
+			int[] times = new int[numTimes * 2];
+			for (int i = 0; i < numTimes; i ++)
 			{
-				String start =
-					Config.getSetting(this, Config.TRACKED_START + i, null);
-				String end =
-					Config.getSetting(this, Config.TRACKED_END + i, null);
-				if (start == null || end == null) throw new RuntimeException(
-						"start or end time is null for time " + i);
-				long startTime = Util.getUnixTime(day, start);
-				long endTime = Util.getUnixTime(day, end);
-				times[i] = new TimePeriod(startTime, endTime);
-			}
-			Arrays.sort(times);
-			
-			//at this point, we have an array of times sorted by the start time
-			ArrayList<TimePeriod> finalTimes = new ArrayList<TimePeriod>();
-			int lastTime = 0;
-			for (int i = 1; i < times.length; i++)
-			{
-				if (times[lastTime].contains(times[i].start))
+				int start;
+				int end;
+				try
 				{
-					if (!times[lastTime].contains(times[i].end))
-						times[lastTime].end = times[i].end;
+					start = Integer.parseInt(Config.getSetting(
+							this, Config.TRACKED_START + i, null));
+					end = Integer.parseInt(Config.getSetting(
+							this, Config.TRACKED_END + i, null));
 				}
-				else
+				catch (NumberFormatException e)
 				{
-					finalTimes.add(times[lastTime]);
-					lastTime = i;
+					throw new RuntimeException(
+							"No time tracked for time " + i);
 				}
+				times[i * 2] = start;
+				times[(i * 2) + 1] = end;
 			}
-			finalTimes.add(times[lastTime]);
 			
 			//now we have the final collection of times that don't overlap
+			//figure out what the current time is and act accordingly
+			Calendar now = Calendar.getInstance(
+					TimeZone.getDefault(), Locale.US);
+			now.setTimeInMillis(System.currentTimeMillis());
+			int hour = now.get(Calendar.HOUR_OF_DAY);
+			int mins = now.get(Calendar.MINUTE);
+			
+			int currentTime = (hour * 100) + mins;
+			
+			boolean onNow = false; //should tracking be on now?
+			int nextTime = 0; //the next time after now
+			while (nextTime < times.length &&
+					times[nextTime] < currentTime)
+			{
+				onNow = !onNow;
+				nextTime++;
+			}
+			
+			if (onNow && !alreadyStarted)
+			{
+				Util.d(null, TAG, "should be tracking now; turning on");
+				if (isTracking)
+				{
+					throw new RuntimeException("Already tracking!");
+				}
+				lt.start();
+				isTracking = true;
+				alreadyStarted = true;
+			}
+			
+			//now schedule the alarm for the next time to toggle
+			long nextRun = System.currentTimeMillis();
+			int time;
+			if (nextTime >= times.length)
+			{
+				//roll over to the next day
+				time = times[0];
+				nextRun += (24 - (hour + 1)) * 60 * 60 * 1000;
+				nextRun += (60 - mins) * 60 * 1000;
+				hour = 0;
+				mins = 0;
+			}
+			else
+			{
+				time = times[nextTime];
+			}
+			int thenHour = (int) (((double) (time)) / 100.0);
+			int thenMins = time - (thenHour * 100);
+			nextRun += (thenHour - (hour + 1)) * 60 * 60 * 1000;
+			nextRun += (60 - mins) * 60 * 1000;
+			nextRun += thenMins * 60 * 1000;
+			
+			Calendar c = Calendar.getInstance(
+					TimeZone.getDefault(), Locale.US);
+			c.setTimeInMillis(nextRun);
+			Util.d(null, TAG, "Next toggle at: " +
+					c.getTime().toLocaleString());
+			
 			Intent toggleIntent =
 				new Intent(this, LocationTrackerService.class);
 			toggleIntent.setAction(ACTION_TOGGLE_TRACKING);
 			PendingIntent pendingToggle = PendingIntent.getService(
-					this, Util.randRequestCode(), toggleIntent, 0);
-			for (TimePeriod time : finalTimes)
-			{
-				//TODO One thing to improve here is to filter out times that
-				//are in the past.  Since there will likely be very few time
-				//periods, it's not a big deal right now.
-				as.set(AlarmManager.RTC_WAKEUP, time.start, pendingToggle);
-				as.set(AlarmManager.RTC_WAKEUP, time.end, pendingToggle);
-			}
+					this, 0, toggleIntent, 0);
+			as.set(AlarmManager.RTC_WAKEUP, nextRun, pendingToggle);
 		}
-		
-		//finally, reschedule this for the next day
-		Intent rescheduleIntent =
-			new Intent(this, LocationTrackerService.class);
-		rescheduleIntent.setAction(ACTION_START_TRACKING);
-		PendingIntent pendingReschedule = PendingIntent.getService(
-				this, 0, rescheduleIntent, 0);
-		//this might not work very well
-		as.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (24 * 60 * 60 * 1000),
-				pendingReschedule);
 	}
 
 	@Override
@@ -284,8 +407,10 @@ public class LocationTrackerService extends Service
 						Config.TRACKING_SERVER,
 							Config.TRACKING_SERVER_DEFAULT))
 			{
+				Util.i(LocationTrackerService.this, TAG, "Got a new location");
 				double lat = loc.getLatitude();
 				double lon = loc.getLongitude();
+				Util.v(null, TAG, "Lat: " + lat + ", long: " + lon);
 				int numLocs = Config.getSetting(LocationTrackerService.this,
 						Config.NUM_LOCATIONS_TRACKED, 0);
 				boolean log = false;
@@ -317,6 +442,8 @@ public class LocationTrackerService extends Service
 						float[] results = new float[1];
 						Location.distanceBetween(lat, lon,
 								thisLat, thisLon, results);
+						Util.v(null, TAG, "Distance: "
+								+ (results[0] / 1000) + "km");
 						if (results[0] < (thisRad * 1000))
 						{
 							log = true;
@@ -331,12 +458,25 @@ public class LocationTrackerService extends Service
 				}
 				if (log)
 				{
+					Util.d(null, TAG, "Storing location");
 					TrackingDBHandler tdbh =
 						new TrackingDBHandler(LocationTrackerService.this);
 					tdbh.openWrite();
 					tdbh.writeLocation(lat, lon, loc.getAccuracy(),
 							loc.getTime());
 					tdbh.close();
+					
+					//tell the coms service to upload this data
+					Intent uploadIntent = new Intent(LocationTrackerService.this,
+							ComsService.class);
+					uploadIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+					uploadIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
+							ComsService.LOCATION_DATA);
+					startService(uploadIntent);
+				}
+				else
+				{
+					Util.d(null, TAG, "Not storing: loction out of range");
 				}
 				
 			}

@@ -11,11 +11,13 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaRecorder;
 import android.telephony.TelephonyManager;
 
 import org.peoples.android.Config;
+import org.peoples.android.LocationTrackerService;
 import org.peoples.android.Util;
 import org.peoples.android.database.PeoplesDB;
 import static org.peoples.android.database.PeoplesDB.*;
@@ -372,6 +374,8 @@ public class Pull
 			{
 	    		//times tracked
 	    		JSONArray times = config.getJSONArray("time_tracked");
+	    		Config.putSetting(ctxt, LocationTrackerService.TIMES_COALESCED,
+	    				false);
 	    		Config.putSetting(ctxt, Config.NUM_TIMES_TRACKED,
 	    				times.length());
 	    		for (int i = 0; i < times.length(); i++)
@@ -383,6 +387,12 @@ public class Pull
 	    					"" + time.optInt("end", 0));
 	    		}
 	    		config.remove("time_tracked");
+	    		//tell the location tracking service to recalculate
+	    		Intent trackingIntent = new Intent(ctxt,
+	    				LocationTrackerService.class);
+	    		trackingIntent.setAction(
+	    				LocationTrackerService.ACTION_START_TRACKING);
+	    		ctxt.startService(trackingIntent);
 			}
 			catch (JSONException e)
 			{
