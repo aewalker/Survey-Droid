@@ -33,7 +33,7 @@ public class CallTracker extends PhoneStateListener
 	private final Context ctxt;
 	
 	//the most recent CallLog lookup
-	private long lastLookup = Calendar.getInstance().getTimeInMillis();
+	private long lastLookup = System.currentTimeMillis();
 	
 	/**
 	 * Constructor.  Typically only one instance of this class should be

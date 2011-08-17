@@ -379,6 +379,7 @@ public class LocationTrackerService extends Service
 			//Get updates from EVERYTHING! At this point, why not?
 			for (String provider : lm.getProviders(false))
 			{
+				Util.v(null, TAG, "Found provider: " + provider);
 				lm.requestLocationUpdates(provider,
 					Config.getSetting(LocationTrackerService.this,
 							Config.LOCATION_INTERVAL,
@@ -462,6 +463,8 @@ public class LocationTrackerService extends Service
 					TrackingDBHandler tdbh =
 						new TrackingDBHandler(LocationTrackerService.this);
 					tdbh.openWrite();
+					//loc.getTime() is acting a bit oddly
+					//probably just due to the lack of GPS signal
 					tdbh.writeLocation(lat, lon, loc.getAccuracy(),
 							loc.getTime());
 					tdbh.close();

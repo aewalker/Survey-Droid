@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import org.peoples.android.Config;
 import org.peoples.android.R;
@@ -79,6 +80,11 @@ public class SurveyService extends Service
 	//that were held in it as being ignored
 	private static final String ACTION_REMOVE_SURVEYS =
 		"org.peoples.android.survey.ACTION_REMOVE_SURVEYS";
+	
+	//action to use in the intent sent when the user clicks the
+	//clear all button
+	private static final String ACTION_CANCEL_SURVEYS =
+		"org.peoples.android.survey.ACTION_CANCEL_SURVEYS";
 	
 	//key values for extras
 	/** The id of the survey this service is starting for. */
@@ -209,6 +215,10 @@ public class SurveyService extends Service
 			{
 				submit();
 			}
+			else if (action.equals(ACTION_CANCEL_SURVEYS))
+			{
+				cancel();
+			}
 			else
 			{
 				Util.w(this, TAG, "Unknown intent action: " + action);
@@ -222,7 +232,8 @@ public class SurveyService extends Service
 	{
 		if (inSurvey)
 		{
-			//TODO somehow tell the user that they can't start multiple surveys
+			Toast.makeText(this, "Please finish the current survey "
+					+ "before starting another.", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		currentID = surveys.poll();
@@ -241,6 +252,7 @@ public class SurveyService extends Service
 	//if alarm is true, then some kind of alarm should go off (vibration/sound)
 	private void refresh(int count, boolean alarm)
 	{
+		Util.d(null, TAG, "refresh: count = " + count + ", alarm = " + alarm);
 		timeoutOn = false;
 		if (survey == null)
 		{
@@ -286,6 +298,13 @@ public class SurveyService extends Service
 			new Notification(icon, tickerText, when);
 		notification.setLatestEventInfo(
 				context, contentTitle, contentText, contentIntent);
+		
+		//create the deleteIntent
+		Intent deleteIntent = new Intent(this, SurveyService.class);
+		deleteIntent.setAction(ACTION_CANCEL_SURVEYS);
+		PendingIntent pendingDelIntent =
+			PendingIntent.getService(this, 1, deleteIntent, 0);
+		notification.deleteIntent = pendingDelIntent;
 		
 		//add some extra things
 		//the system policy will determine if either of these will actually
@@ -344,15 +363,66 @@ public class SurveyService extends Service
 		
 	}
 	
+	//marks all current surveys as dismissed 
+	private void cancel()
+	{
+		Util.i(null, TAG, "Canceling all surveys");
+		TakenDBHandler tdbh = new TakenDBHandler(this);
+		tdbh.openWrite();
+		int currentType = 0;
+		if (inSurvey) currentType = surveyTypes.poll();
+		while (!surveys.isEmpty())
+		{
+			int id = surveys.poll();
+			int type = surveyTypes.poll();
+			if (id != DUMMY_SURVEY_ID)
+			{
+				int status;
+				switch (type)
+				{
+				case SURVEY_TYPE_TIMED:
+					status = PeoplesDB.TakenTable.SCHEDULED_DISMISSED;
+					break;
+				case SURVEY_TYPE_RANDOM:
+					status = PeoplesDB.TakenTable.RANDOM_DISMISSED;
+					break;
+				case SURVEY_TYPE_USER_INIT:
+					//it seems really unlikely that this case will ever
+					//be used, so I don't think it makes sense to create
+					//a case for USER_INITIATED_DISMISSED...
+					status =
+						PeoplesDB.TakenTable.USER_INITIATED_UNFINISHED;
+					break;
+				default:
+					throw new IllegalArgumentException(
+							"Invalid survey type: " + type);
+				}
+				tdbh.writeSurvey(id, status, System.currentTimeMillis());
+			}
+		}
+		tdbh.close();
+		
+		//just let the removeNotification function do the cleanup
+		if (inSurvey)
+		{
+			surveyTypes.add(currentType);
+			removeNotification(false);
+		}
+		else removeNotification(true);
+	}
+	
 	//removes the notification and marks all current surveys as being ignored
 	//if finish is true, then stop the service
 	private void removeNotification(boolean finish)
 	{
+		Util.d(null, TAG, "Removing notification (finish = " + finish + ")");
 		active = false;
 		
 		NotificationManager nm = (NotificationManager)
 			getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancel(N_ID);
+		int currentType = 0;
+		if (!finish) currentType = surveyTypes.poll();
 		if (!surveys.isEmpty())
 		{
 			TakenDBHandler tdbh = new TakenDBHandler(this);
@@ -390,6 +460,7 @@ public class SurveyService extends Service
 		}
 		
 		if (finish) stopSelf();
+		else surveyTypes.add(currentType);
 	}
 	
 	//submit answers for the current survey and finish up
