@@ -101,6 +101,7 @@ public class TakenDBHandler extends PeoplesDBHandler
 		int size = Config.getSetting(contx, Config.COMPLETION_SAMPLE,
 				Config.COMPLETION_SAMPLE_DEFAULT);
 		int numCompleted = 0;
+		int sampleSize = 0;
 		int i = 0;
 		while (i < size)
 		{
@@ -109,39 +110,69 @@ public class TakenDBHandler extends PeoplesDBHandler
 					result.getColumnIndexOrThrow(PeoplesDB.TakenTable.STATUS));
 			result.moveToNext();
 			if (code == PeoplesDB.TakenTable.SURVEYS_DISABLED_SERVER) continue;
-				
-			if (countsAsCompleted(code))
-				numCompleted++;
+			
+			int counts = countsAsCompleted(code);
+			sampleSize++;
 			i++;
+			switch (counts)
+			{
+			case -1:
+				break;
+			case 0:
+				sampleSize--;
+				break;
+			case 1:
+				numCompleted++;
+				break;
+			default:
+				Util.w(null, TAG, "Bad count code");
+			}
 		}
 		result.close();
-		return numCompleted * (100 / i);
+		Util.v(null, TAG, "numCompleted: " + numCompleted);
+		Util.v(null, TAG, "sampleSize: " + sampleSize);
+		return (int) (numCompleted * (100.0 / (double) sampleSize));
 	}
 	
-	//does the given survey completion status code count as being completed?
-	private static boolean countsAsCompleted(int code)
+	/**
+	 * Determine how to count a certain type of survey.
+	 * 
+	 * @param code - the survey completion code, as in
+	 * {@link PeoplesDB#TakenTable}
+	 * @return -1 if the survey should count as uncompleted, 0 if it should
+	 * not be counted at all, and 1 if it should be counted as completed
+	 */
+	private static int countsAsCompleted(int code)
 	{
 		switch (code)
 		{
 		case PeoplesDB.TakenTable.SURVEYS_DISABLED_LOCALLY:
-    	case PeoplesDB.TakenTable.SURVEYS_DISABLED_SERVER:
     	case PeoplesDB.TakenTable.SCHEDULED_UNFINISHED:
     	case PeoplesDB.TakenTable.SCHEDULED_DISMISSED:
     	case PeoplesDB.TakenTable.SCHEDULED_IGNORED:
     	case PeoplesDB.TakenTable.RANDOM_UNFINISHED:
     	case PeoplesDB.TakenTable.RANDOM_DISMISSED:
     	case PeoplesDB.TakenTable.RANDOM_IGNORED:
-    		return false;
-    	case PeoplesDB.TakenTable.USER_INITIATED_FINISHED:
+			return -1;
+
+    	case PeoplesDB.TakenTable.SURVEYS_DISABLED_SERVER:
     	case PeoplesDB.TakenTable.USER_INITIATED_UNFINISHED:
+			return 0;
+		
+		//for testing, let these surveys count
+    	case PeoplesDB.TakenTable.USER_INITIATED_FINISHED:
+    		if (Config.D) return 1;
+    		else return 0;
+
     	case PeoplesDB.TakenTable.SCHEDULED_FINISHED:
     	case PeoplesDB.TakenTable.RANDOM_FINISHED:
-    		return true;
+			return 1;
+			
     	default:
     		Util.w(null, TAG, "Unknown survey completion code: " + code);
     		if (Config.D) throw new
     			RuntimeException("Unknown survey completion code: " + code);
-    		return false;
+    		return 0;
 		}
 	}
 }

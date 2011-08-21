@@ -238,10 +238,14 @@ public class Push
             			Config.COMPLETION_SAMPLE_DEFAULT);
             	
             	cdbh.openWrite();
+            	int numKept = 0;
                 for (int i = uploadedIDs.length - 1; i >= 0; i--)
                 { //remember: these are in reverse order by creation date
-                    if (i >= size)
+                    if (numKept < size)
+                    {
                     	cdbh.updateCompletionRecord(uploadedIDs[i]);
+                    	numKept++;
+                    }
                     else
                     	cdbh.delCompletionRecord(uploadedIDs[i]);
                 }

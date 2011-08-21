@@ -390,6 +390,7 @@ public class SurveyService extends Service
 					//it seems really unlikely that this case will ever
 					//be used, so I don't think it makes sense to create
 					//a case for USER_INITIATED_DISMISSED...
+					//TODO maybe just don't even log this?
 					status =
 						PeoplesDB.TakenTable.USER_INITIATED_UNFINISHED;
 					break;
@@ -397,7 +398,11 @@ public class SurveyService extends Service
 					throw new IllegalArgumentException(
 							"Invalid survey type: " + type);
 				}
-				tdbh.writeSurvey(id, status, System.currentTimeMillis());
+				if (tdbh.writeSurvey(id, status,
+						System.currentTimeMillis()) == false)
+				{
+					Util.e(this, TAG, "Failed to write completion record!");
+				}
 			}
 		}
 		tdbh.close();
@@ -446,6 +451,7 @@ public class SurveyService extends Service
 						//it seems really unlikely that this case will ever
 						//be used, so I don't think it makes sense to create
 						//a case for USER_INITIATED_IGNORED...
+						//TODO again, we could just not do anything here
 						status =
 							PeoplesDB.TakenTable.USER_INITIATED_UNFINISHED;
 						break;
@@ -453,7 +459,11 @@ public class SurveyService extends Service
 						throw new IllegalArgumentException(
 								"Invalid survey type: " + type);
 					}
-					tdbh.writeSurvey(id, status, System.currentTimeMillis());
+					if (tdbh.writeSurvey(id, status,
+							System.currentTimeMillis()) == false)
+					{
+						Util.e(this, TAG, "Failed to write completion record!");
+					}
 				}
 			}
 			tdbh.close();
@@ -497,7 +507,11 @@ public class SurveyService extends Service
 				throw new IllegalArgumentException(
 						"Invalid survey type: " + type);
 			}
-			tdbh.writeSurvey(currentID, status, System.currentTimeMillis());
+			if (tdbh.writeSurvey(currentID, status,
+					System.currentTimeMillis()) == false)
+			{
+				Util.e(this, TAG, "Failed to write completion record!");
+			}
 			tdbh.close();
 			
 			//try to upload answers ASAP
@@ -545,7 +559,11 @@ public class SurveyService extends Service
 			throw new IllegalArgumentException(
 					"Invalid survey type: " + type);
 		}
-		tdbh.writeSurvey(currentID, status, System.currentTimeMillis());
+		if (tdbh.writeSurvey(currentID, status,
+				System.currentTimeMillis()) == false)
+		{
+			Util.e(this, TAG, "Failed to write completion record!");
+		}
 		tdbh.close();
 	}
 

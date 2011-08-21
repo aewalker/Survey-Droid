@@ -66,6 +66,7 @@ public class MainActivity extends Activity
         		Config.COMPLETION_GOAL_DEFAULT);
         progress.setSecondaryProgress(goal);
         if (p == TakenDBHandler.NO_PERCENTAGE)
+        	//TODO find a way to make the bar indicate this better
         	progress.setProgress(0);
         else
         	progress.setProgress(p);
