@@ -77,27 +77,32 @@ public class BootIntentReceiver extends BroadcastReceiver
         		System.currentTimeMillis());
         comsPullIntent.putExtra(ComsService.EXTRA_REPEATING, true);
         context.startService(comsPullIntent);
-        
-        //start call monitoring
-        Util.d(null, TAG, "Starting call monitoring");
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(
-        		Context.TELEPHONY_SERVICE);
-        tm.listen(new CallTracker(context),
-        		PhoneStateListener.LISTEN_CALL_STATE);
-        
-        //start location tracking
-        Util.d(null, TAG, "Starting location tracking");
-        Intent trackingIntent =
-        	new Intent(context, LocationTrackerService.class);
-        trackingIntent.setAction(LocationTrackerService.ACTION_START_TRACKING);
-        context.startService(trackingIntent);
     	
-        //delay other things for a bit so that pull can complete first
+        /*
+         * Delay other things for a bit so that pull can complete first.  This
+         * way, if some feature is disabled on the server, it won't even be
+         * started.
+         */
         Runnable r = new Runnable()
     	{
 			@Override
 	        public void run()
 	        {
+		        //start call monitoring
+		        Util.d(null, TAG, "Starting call monitoring");
+		        TelephonyManager tm = (TelephonyManager)
+		        	context.getSystemService(Context.TELEPHONY_SERVICE);
+		        tm.listen(new CallTracker(context),
+		        		PhoneStateListener.LISTEN_CALL_STATE);
+		        
+		        //start location tracking
+		        Util.d(null, TAG, "Starting location tracking");
+		        Intent trackingIntent =
+		        	new Intent(context, LocationTrackerService.class);
+		        trackingIntent.setAction(
+		        		LocationTrackerService.ACTION_START_TRACKING);
+		        context.startService(trackingIntent);
+		        
 		        //start the coms service pushing
 		        Util.d(null, TAG, "Starting push service");
 		        Intent comsPushIntent = new Intent(context, ComsService.class);

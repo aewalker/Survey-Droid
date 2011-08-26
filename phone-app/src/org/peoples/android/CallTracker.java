@@ -5,8 +5,6 @@
  *---------------------------------------------------------------------------*/
 package org.peoples.android;
 
-import java.util.Calendar;
-
 import org.peoples.android.database.TrackingDBHandler;
 
 import android.content.Context;
@@ -48,7 +46,8 @@ public class CallTracker extends PhoneStateListener
 	}
 	
 	@Override
-	public void onCallStateChanged(int state, String incomingNumber)
+	public synchronized void onCallStateChanged(
+			int state, String incomingNumber)
 	{
 		super.onCallStateChanged(state, incomingNumber);
 		Util.d(ctxt, TAG, "Call state changed: " + state);
@@ -74,10 +73,11 @@ public class CallTracker extends PhoneStateListener
 							 CallLog.Calls.DURATION};
 			String where = CallLog.Calls.DATE + " > ?";
 			String[] whereArgs = {Long.toString(lastLookup)};
-			lastLookup = Calendar.getInstance().getTimeInMillis();
+			String order = CallLog.Calls.DATE;
+			lastLookup = System.currentTimeMillis();
 			
 			Cursor newCalls = ctxt.getContentResolver().query(
-					CallLog.CONTENT_URI, cols, where, whereArgs, null);
+					CallLog.Calls.CONTENT_URI, cols, where, whereArgs, order);
 			
 			Util.d(ctxt, TAG, newCalls.getCount()
 					+ " new call(s) found");
@@ -99,6 +99,7 @@ public class CallTracker extends PhoneStateListener
 				}
 				cdbh.close();
 			}
+			newCalls.close();
 		}
 		else if (state != TelephonyManager.CALL_STATE_IDLE)
 		{

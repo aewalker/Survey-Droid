@@ -109,7 +109,9 @@ public class ComsDBHandler extends PeoplesDBHandler
 	
 	/**
 	 * Get all the calls.  The results are ordered by time so that older
-	 * older data is sent first.
+	 * older data is sent first.  Phone numbers returned by this function
+	 * are <strong>not</strong> yet hashed, so remember to do so in order
+	 * to protect privacy.
 	 * 
 	 * @return a {@link Cursor} with the data
 	 */
