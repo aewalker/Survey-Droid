@@ -95,10 +95,11 @@ class SubjectsController extends AppController
 	 */
 	function edit($id = NULL)
 	{
+
 		if ($id == NULL) $this->redirect('/subjects/');
 		if ($this->data['Subject']['confirm'] == true)
 		{
-			$this->Subject->save();
+			$this->Subject->save($this->data);
 			$this->Session->setFlash('Subject edited!');
 			$this->redirect('/subjects');
 		}

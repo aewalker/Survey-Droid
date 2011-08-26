@@ -11,6 +11,6 @@ model/bin/*
 
 *~
 *.*~
-web-app/cake/app/tmp/sessions
+web-app/cake/app/tmp
 .project
 .metadata
