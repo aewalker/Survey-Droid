@@ -22,7 +22,14 @@
             "th": "",
             "fr": "",
             "sa": "",
-            "su": ""
+            "su": "",
+            "subject_variables" : {
+                "name1": "John",
+                "name2": "Jane", 
+                "name3": "Jack",
+                "name4": "Joan",
+                "name5": "Jeff"
+            }
         }, {
             ...
         }, {

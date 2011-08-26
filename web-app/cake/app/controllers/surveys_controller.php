@@ -110,6 +110,7 @@ class SurveysController extends AppController
         		)));
         		
 				$this->set('questionid', $result['Survey']['question_id']);
+				$this->set('subject_variables', $result['Survey']['subject_variables']);
 				$days_result = array();
 				foreach ($this->days as $day)
 				{
