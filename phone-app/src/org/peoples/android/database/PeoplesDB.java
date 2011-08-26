@@ -206,27 +206,38 @@ public class PeoplesDB extends SQLiteOpenHelper
         public static final String DURATION = "duration";
         public static final String TIME = "time";
 
+        //TODO this could be dangerous if one of the Android types
+        //is changed in a later version to be 4 or 5
+        /** Holds call type codes */
         public static final class CallType {
-            public static final int INCOMING = android.provider.CallLog.Calls.INCOMING_TYPE;
-            public static final int OUTGOING = android.provider.CallLog.Calls.OUTGOING_TYPE;
-            public static final int MISSED = android.provider.CallLog.Calls.MISSED_TYPE;
+            public static final int INCOMING =
+            	android.provider.CallLog.Calls.INCOMING_TYPE;
+            public static final int OUTGOING =
+            	android.provider.CallLog.Calls.OUTGOING_TYPE;
+            public static final int MISSED =
+            	android.provider.CallLog.Calls.MISSED_TYPE;
             public static final int INCOMING_TEXT = 4;
             public static final int OUTGOING_TEXT = 5;
         }
 
-        // Given an integer call type, return a string representation
+        /**
+         * Given an integer call type, return a string representation
+         * 
+         * @param callType
+         * @return a String representation of the given call type
+         */
         public static String getCallTypeString(int callType) {
             String stringCallType;
 
             switch (callType) {
                 case CallType.INCOMING:
-                    stringCallType = "Incoming";
+                    stringCallType = "Incoming Call";
                     break;
                 case CallType.MISSED:
-                    stringCallType = "Missed";
+                    stringCallType = "Missed Call";
                     break;
                 case CallType.OUTGOING:
-                    stringCallType = "Outgoing";
+                    stringCallType = "Outgoing Call";
                     break;
                 case CallType.INCOMING_TEXT:
                     stringCallType = "Incoming Text";
@@ -241,11 +252,17 @@ public class PeoplesDB extends SQLiteOpenHelper
 
             return stringCallType;
         }
-
+        
+        /**
+         * Determines whether or not a call/text of the given type should have
+         * duration information listed with it.
+         * 
+         * @param callType
+         * @return true if that type has a duration
+         */
         public static boolean hasDuration(int callType) {
         	switch (callType) {
         		case CallType.INCOMING:
-        			return true;
         		case CallType.OUTGOING:
         			return true;
         		default:

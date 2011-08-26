@@ -7,9 +7,9 @@ package org.peoples.android.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.provider.CallLog;
 
 import org.peoples.android.Util;
+import org.peoples.android.database.PeoplesDB.CallLogTable.CallType;
 
 import static org.peoples.android.database.PeoplesDB.CallLogTable;
 import static org.peoples.android.database.PeoplesDB.LocationTable;
@@ -30,13 +30,11 @@ public class TrackingDBHandler extends PeoplesDBHandler
 	}
 
 	/**
-	 * Writes a call to the database.
+	 * Writes a call to the database.  Phone numbers should
+	 * <strong>not</strong> be hashed before being given to this function.
 	 *
 	 * @param number - the phone number
-	 * @param type - the type of call; one of
-	 * {@link CallLog#Calls.INCOMING_TYPE},
-	 * {@link CallLog#Calls.MISSED_TYPE}, or
-	 * {@link CallLog#Calls.OUTGOING_TYPE}
+	 * @param type - the type of call; from {@link CallType}
 	 * @param duration - how long the call was (ignored for missed calls)
 	 */
 	public void writeCall(String number, int type, int duration, long time)
