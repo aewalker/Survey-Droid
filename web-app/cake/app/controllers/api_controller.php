@@ -75,6 +75,7 @@ class APIController extends AppController
 	 */
 	function pull($deviceid = NULL)
 	{
+	    error_reporting(E_ERROR | E_WARNING | E_PARSE);
 		$subjectid = $this->getSubjectID($deviceid, $message, $worked);
 		if ($worked == false)
 		{
@@ -105,9 +106,15 @@ class APIController extends AppController
 						$value = strtotime($value . ' GMT');
 					if ($field == 'subject_variables') {
 					    $subjectVariables = json_decode($value, true);
-                        $value = $subjectVariables[$deviceid];
-                        // var_dump($subjectVariables);
-                        // $field = 'variables';
+                        if (isset($subjectVariables)) {
+                            if (array_key_exists($deviceid, $subjectVariables)) {
+                                $value = $subjectVariables[$deviceid];
+                            } else {
+                                $value = null;
+                            }
+                        } else {
+                            $value = NULL;
+                        }
 					}
 				}
 				$results[$table] = array_merge($results[$table], array($item[$table]));
