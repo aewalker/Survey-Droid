@@ -1,6 +1,6 @@
 <?php 
 /*---------------------------------------------------------------------------*
- * controllers/answers_controller.php                                        *
+ * controllers/api_controller.php                                        *
  *                                                                           *
  * Contains functions that are used by the phone: push and pull to send a    *
  * subjects survey answers and pull new survey data, respectively.           *
@@ -22,7 +22,7 @@
 class APIController extends AppController
 {
 	//for php4
-	var $name = 'Answers';
+	var $name = 'api';
 	
 	//this controller is associated with all the models that the phones use
 	var $uses = array('Survey', 'Answer', 'Location', 'StatusChange', 'Call',

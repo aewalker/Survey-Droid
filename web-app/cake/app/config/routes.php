@@ -31,3 +31,7 @@
  * ...and connect the rest of 'Pages' controller's urls.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
+
+// Aliasing Api to answers for backwork compatibility
+
+    Router::connect('/answers/:action/*', array('controller' => 'api', 'action' => 'index'));
