@@ -114,40 +114,41 @@ public final class R {
         public static final int settings_surveysRowLayout=0x7f06002a;
         public static final int settings_surveysSettingTitle=0x7f06002b;
         public static final int settings_surveysSettingToggle=0x7f06002c;
+        public static final int settings_syncButton=0x7f060036;
         public static final int settings_title=0x7f060029;
-        public static final int survey_confirmation_backButton=0x7f06003b;
-        public static final int survey_confirmation_buttonsLayout=0x7f060039;
-        public static final int survey_confirmation_confirmButton=0x7f06003a;
-        public static final int survey_confirmation_message=0x7f060037;
-        public static final int survey_confirmation_subtitle=0x7f060038;
-        public static final int survey_confirmation_topLayout=0x7f060036;
-        public static final int survey_done_exitButton=0x7f06003e;
-        public static final int survey_done_text=0x7f06003d;
-        public static final int survey_done_topLayout=0x7f06003c;
-        public static final int survey_extras_doneButton=0x7f060043;
-        public static final int survey_extras_message=0x7f060040;
-        public static final int survey_extras_photoButton=0x7f060041;
-        public static final int survey_extras_topLayout=0x7f06003f;
-        public static final int survey_extras_voiceButton=0x7f060042;
-        public static final int text_scale_backButton=0x7f06004c;
-        public static final int text_scale_buttonsLayout=0x7f06004b;
-        public static final int text_scale_highText=0x7f060048;
-        public static final int text_scale_lowText=0x7f060047;
-        public static final int text_scale_nextButton=0x7f06004d;
-        public static final int text_scale_question=0x7f060045;
-        public static final int text_scale_scaleLayout=0x7f06004e;
-        public static final int text_scale_sliderHoriz=0x7f060049;
-        public static final int text_scale_sliderVert=0x7f06004a;
-        public static final int text_scale_textLayout=0x7f060046;
-        public static final int text_scale_topLayout=0x7f060044;
-        public static final int user_surveys_backButton=0x7f060052;
-        public static final int user_surveys_horizLayout=0x7f060050;
-        public static final int user_surveys_question=0x7f060051;
-        public static final int user_surveys_title=0x7f060053;
-        public static final int user_surveys_topLayout=0x7f06004f;
-        public static final int view_log_scrollView=0x7f060055;
-        public static final int view_log_text=0x7f060056;
-        public static final int view_log_topLayout=0x7f060054;
+        public static final int survey_confirmation_backButton=0x7f06003c;
+        public static final int survey_confirmation_buttonsLayout=0x7f06003a;
+        public static final int survey_confirmation_confirmButton=0x7f06003b;
+        public static final int survey_confirmation_message=0x7f060038;
+        public static final int survey_confirmation_subtitle=0x7f060039;
+        public static final int survey_confirmation_topLayout=0x7f060037;
+        public static final int survey_done_exitButton=0x7f06003f;
+        public static final int survey_done_text=0x7f06003e;
+        public static final int survey_done_topLayout=0x7f06003d;
+        public static final int survey_extras_doneButton=0x7f060044;
+        public static final int survey_extras_message=0x7f060041;
+        public static final int survey_extras_photoButton=0x7f060042;
+        public static final int survey_extras_topLayout=0x7f060040;
+        public static final int survey_extras_voiceButton=0x7f060043;
+        public static final int text_scale_backButton=0x7f06004d;
+        public static final int text_scale_buttonsLayout=0x7f06004c;
+        public static final int text_scale_highText=0x7f060049;
+        public static final int text_scale_lowText=0x7f060048;
+        public static final int text_scale_nextButton=0x7f06004e;
+        public static final int text_scale_question=0x7f060046;
+        public static final int text_scale_scaleLayout=0x7f06004f;
+        public static final int text_scale_sliderHoriz=0x7f06004a;
+        public static final int text_scale_sliderVert=0x7f06004b;
+        public static final int text_scale_textLayout=0x7f060047;
+        public static final int text_scale_topLayout=0x7f060045;
+        public static final int user_surveys_backButton=0x7f060053;
+        public static final int user_surveys_horizLayout=0x7f060051;
+        public static final int user_surveys_question=0x7f060052;
+        public static final int user_surveys_title=0x7f060054;
+        public static final int user_surveys_topLayout=0x7f060050;
+        public static final int view_log_scrollView=0x7f060056;
+        public static final int view_log_text=0x7f060057;
+        public static final int view_log_topLayout=0x7f060055;
     }
     public static final class layout {
         public static final int free_response=0x7f030000;
@@ -181,93 +182,94 @@ public final class R {
         public static final int app_name=0x7f050000;
         /**  The back button on the id screen. 
          */
-        public static final int id_backButton=0x7f050007;
+        public static final int id_backButton=0x7f050008;
         /**  The default phone id. 
          */
-        public static final int id_defaultHoriz=0x7f050005;
-        public static final int id_defaultVert=0x7f050006;
+        public static final int id_defaultHoriz=0x7f050006;
+        public static final int id_defaultVert=0x7f050007;
         public static final int id_title=0x7f050002;
-        public static final int main_callButton=0x7f05001a;
-        public static final int main_exitButton=0x7f05001b;
+        public static final int main_callButton=0x7f05001b;
+        public static final int main_exitButton=0x7f05001c;
         /**  The title for the survey progress bar. 
          */
-        public static final int main_progressTitle=0x7f05000c;
-        public static final int main_sampleButton=0x7f050019;
+        public static final int main_progressTitle=0x7f05000d;
+        public static final int main_sampleButton=0x7f05001a;
         /**  The four buttons on the main screen. 
          */
-        public static final int main_settingsButton=0x7f050018;
+        public static final int main_settingsButton=0x7f050019;
         /**  The titles for each activity (shown at the top usually. 
          */
         public static final int main_title=0x7f050001;
         /**  The text for the postpone button 
          */
-        public static final int notification_activity_postpone=0x7f05000e;
+        public static final int notification_activity_postpone=0x7f05000f;
         /**  The text for the take now button 
          */
-        public static final int notification_activity_takeNow=0x7f05000d;
+        public static final int notification_activity_takeNow=0x7f05000e;
         /**  The title text for the notification activity 
          */
-        public static final int notification_activity_title=0x7f05000f;
+        public static final int notification_activity_title=0x7f050010;
         /**  The back button on the survey questions. 
          */
-        public static final int question_backButton=0x7f050009;
+        public static final int question_backButton=0x7f05000a;
         /**  The text to display while a question is loading 
          */
-        public static final int question_loading_text=0x7f05000b;
+        public static final int question_loading_text=0x7f05000c;
         /**  The next button on the survey questions. 
          */
-        public static final int question_nextButton=0x7f05000a;
+        public static final int question_nextButton=0x7f05000b;
         /**  The back button on the settings screen. 
          */
-        public static final int settings_backButton=0x7f050008;
+        public static final int settings_backButton=0x7f050009;
         /**  The button to show the phone id. 
          */
         public static final int settings_idButton=0x7f050004;
-        public static final int settings_locationSetting=0x7f05001d;
-        public static final int settings_loggingSetting=0x7f05001e;
+        public static final int settings_locationSetting=0x7f05001e;
+        public static final int settings_loggingSetting=0x7f05001f;
         /**  The three phone settings. 
          */
-        public static final int settings_surveysSetting=0x7f05001c;
+        public static final int settings_surveysSetting=0x7f05001d;
+        public static final int settings_syncButton=0x7f050005;
         public static final int settings_title=0x7f050003;
         /**  The go back button on the survey confirmation page 
          */
-        public static final int survey_confirmation_back=0x7f050013;
+        public static final int survey_confirmation_back=0x7f050014;
         /**  The confirm button on the survey confirmation page 
          */
-        public static final int survey_confirmation_confirm=0x7f050012;
+        public static final int survey_confirmation_confirm=0x7f050013;
         /**  The subtitle for the survey confirmation page 
          */
-        public static final int survey_confirmation_subtitle=0x7f050011;
+        public static final int survey_confirmation_subtitle=0x7f050012;
         /**  The main title for the survey confirmation page 
          */
-        public static final int survey_confirmation_title=0x7f050010;
+        public static final int survey_confirmation_title=0x7f050011;
         /**  Exit button on the survey-completion (survey_done) page. 
          */
-        public static final int survey_done_exit=0x7f050022;
+        public static final int survey_done_exit=0x7f050023;
         /**  Main text on the survey-completion (survey_done) page. 
          */
-        public static final int survey_done_text=0x7f050023;
+        public static final int survey_done_text=0x7f050024;
         /**  Text for the done button on the survey extras page 
          */
-        public static final int survey_extras_doneButton=0x7f050017;
+        public static final int survey_extras_doneButton=0x7f050018;
         /**  The main text on the survey extras page 
          */
-        public static final int survey_extras_mainText=0x7f050014;
+        public static final int survey_extras_mainText=0x7f050015;
         /**  Text for the take photo button on the survey extras page 
          */
-        public static final int survey_extras_photoButton=0x7f050015;
+        public static final int survey_extras_photoButton=0x7f050016;
         /**  Text for the record voice button on the survey extras page 
          */
-        public static final int survey_extras_voiceButton=0x7f050016;
+        public static final int survey_extras_voiceButton=0x7f050017;
         /**  Back button on the user-initiated surveys page 
          */
-        public static final int user_surveys_back=0x7f050020;
+        public static final int user_surveys_back=0x7f050021;
         /**  Take button on the user-initiated surveys page 
          */
-        public static final int user_surveys_take=0x7f050021;
+        public static final int user_surveys_take=0x7f050022;
         /**  Title text for the user-initiated surveys page 
          */
-        public static final int user_surveys_title=0x7f05001f;
+        public static final int user_surveys_title=0x7f050020;
     }
     public static final class styleable {
         /** Attributes that can be used with a ProgressBar.

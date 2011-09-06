@@ -7,6 +7,7 @@
 package org.peoples.android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -123,6 +124,20 @@ public class SettingsActivity extends Activity
 				Intent idIntent = new Intent(SettingsActivity.this,
 						IDActivity.class);
 				startActivity(idIntent);
+			}
+		});
+        
+        // Immediately sync data with server
+        Button syncNow = (Button) findViewById(R.id.settings_syncButton);
+        final Context context = this;
+        syncNow.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Util.d(context, SettingsActivity.TAG, "Start downloading data intent");
+				final Intent comsPullIntent = new Intent(context, ComsService.class);
+				comsPullIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
+				context.startService(comsPullIntent);
 			}
 		});
         

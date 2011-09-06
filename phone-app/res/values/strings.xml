@@ -10,6 +10,8 @@
 	
 	<!-- The button to show the phone id. -->
 	<string name="settings_idButton">Show Phone ID</string>
+	<string name="settings_syncButton">Sync with server now</string>
+	
 	
 	<!-- The default phone id. -->
 	<string name="id_defaultHoriz">0000-0000-0000-0000</string>
