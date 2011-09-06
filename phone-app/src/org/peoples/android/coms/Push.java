@@ -28,7 +28,7 @@ public class Push
 	//logging tag
 	private static final String TAG = "Push";
 
-	private static final String PUSH_URL = "/answers/push/";
+	private static final String PUSH_URL = "/api/push/";
 
     /**
      * Push all un-uploaded survey answers in the phone database to the server.
