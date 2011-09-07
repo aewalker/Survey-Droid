@@ -11,8 +11,10 @@
  * 
  * @author Austin Walker
  * @author Sema Berkiten
+ * @author Tony Xiao
  */
-class ConditionsController extends AppController
+App::import('Controller', 'Rest');
+class ConditionsController extends RestController
 {
 	//for php4
 	var $name = 'Conditions';

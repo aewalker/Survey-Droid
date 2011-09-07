@@ -10,12 +10,14 @@
  * site, it must be registered (it's device id added) to a subject.
  * 
  * @author Austin Walker
+ * @author Tony Xiao
  */
-class SubjectsController extends AppController
+App::import('Controller', 'Rest');
+class SubjectsController extends RestController
 {
 	//might as well support php4
 	var $name = 'Subjects';
-	
+
 	//load the Auth (ie authorization) component and the Table helper
     var $components = array('Auth');
     var $helpers = array('Table');
@@ -148,75 +150,5 @@ class SubjectsController extends AppController
 		else
 			echo 'An error has occured!';
 	}
-
-    /** ------- Restful API begins here !  -------- **/
-    /**
-     * TODO: Refactor this so I don't have to keep on repeating
-     * $this->autoRender = false and $this->data = json_decode(file_get_contents('php//input'), true)
-     */
-    function rest_index() {
-        $this->autoRender = false;
-        $subjects= $this->Subject->find('all', array(
-            'recursive' => 0
-        ));
-        e(json_encode($subjects));
-    }
-
-    /** Create */
-    function rest_create() {
-        $this->autoRender = false;
-        $this->data = json_decode(file_get_contents('php://input'), true);
-        if (!empty($this->data)) {
-            unset($this->data['Subject']['id']); // disallow client-assigned id
-            if ($this->Subject->save($this->data)) {;
-                $this->header('HTTP/1.1 201 Created');
-                e(json_encode($this->Subject->read())); // TODO: read() returns associated models, which is unintended
-                return;
-            }
-        }
-        $this->header('HTTP/1.1 400 Bad Request');
-    }
-
-    /** Read */
-    function rest_read($id) {
-        $this->autoRender = false;
-        $subject= $this->Subject->find('first', array(
-            'conditions' => array('Subject.id' => $id),
-            'recursive' => 0
-        ));
-        if ($subject) {
-            e(json_encode($subject));
-            return;
-        }
-        $this->header('HTTP/1.1 404 Not Found');
-    }
-
-    /** Update */
-    function rest_update($id) {
-        $this->autoRender = false;
-        if ($this->Subject->read(null, $id)) {
-            $this->data = json_decode(file_get_contents('php://input'), true);
-            if (!empty($this->data)) {
-                unset($this->data['Subject']['id']); // disallow client-assigned id
-                if ($this->Subject->save($this->data)) {;
-                    e(json_encode($this->Subject->read()));
-                    return;
-                }
-            }
-            $this->header('HTTP/1.1 400 Bad Request');
-            return;
-        }
-        $this->header('HTTP/1.1 404 Not Found');
-    }
-
-    /** Delete */
-    function rest_delete($id) {
-        $this->autoRender = false;
-        if($this->Subject->delete($id)) {
-            $this->header('HTTP/1.1 204 No Content');
-            return;
-        }
-        $this->header('HTTP/1.1 404 Not Found');
-    }
 }
 ?>
