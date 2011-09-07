@@ -20,6 +20,6 @@
  * possible by default.
  */
 define('SSL', false);
-Configure::write('Routing.prefixes', array('rest'));
+//Configure::write('Routing.prefixes', array('rest'));
 
 ?>
