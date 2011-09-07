@@ -13,12 +13,13 @@ Ext.Date.patterns = {
     UniversalSortableDateTime: "Y-m-d H:i:sO",
     YearMonth: "F, Y"
 };
+
 Ext.application({
     name: "Soc",
 
     controllers: ["Surveys"],
 
-    autoCreateViewport : false,
+    autoCreateViewport : true,
 
     launch: function() {
         console.log("App launching");

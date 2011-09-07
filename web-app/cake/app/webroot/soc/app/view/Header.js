@@ -1,10 +1,10 @@
-Ext.define('Books.view.Header', {
+Ext.define('Soc.view.Header', {
     extend: 'Ext.Component',
     dock: 'top',
     baseCls: 'app-header',
     initComponent: function() {
         Ext.applyIf(this, {
-            html: 'Loading nested data example'
+            html: 'Soc App'
         });
         this.callParent(arguments);
     }

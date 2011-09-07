@@ -3,7 +3,7 @@ Ext.define('Soc.controller.Surveys', {
 
     models: ['Survey'],
 
-    stores: ['Surveys'],
+    stores: ['Surveys', 'Subjects', 'Users'],
 
     init: function() {
         var me = this;
