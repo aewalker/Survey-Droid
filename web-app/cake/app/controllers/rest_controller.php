@@ -43,7 +43,7 @@ class RestController extends AppController
         $this->autoRender = false;
         $modelClass = $this->modelClass;
         $model = $this->$modelClass->find('first', array(
-            'conditions' => array('Subject.id' => $id),
+            'conditions' => array($modelClass.'.id' => $id),
             'recursive' => -1
         ));
         if ($model) {
