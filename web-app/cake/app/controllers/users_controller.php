@@ -12,7 +12,8 @@
  * @author Sema Berkiten
  * @author Austin Walker
  */
-class UsersController extends AppController
+App::import('Controller', 'Rest');
+class UsersController extends RestController
 {
 	var $name = 'Users';
 	

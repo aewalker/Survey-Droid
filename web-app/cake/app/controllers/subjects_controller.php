@@ -10,12 +10,14 @@
  * site, it must be registered (it's device id added) to a subject.
  * 
  * @author Austin Walker
+ * @author Tony Xiao
  */
-class SubjectsController extends AppController
+App::import('Controller', 'Rest');
+class SubjectsController extends RestController
 {
 	//might as well support php4
 	var $name = 'Subjects';
-	
+
 	//load the Auth (ie authorization) component and the Table helper
     var $components = array('Auth');
     var $helpers = array('Table');
@@ -148,6 +150,5 @@ class SubjectsController extends AppController
 		else
 			echo 'An error has occured!';
 	}
-	
 }
 ?>

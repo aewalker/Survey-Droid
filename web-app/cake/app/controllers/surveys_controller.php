@@ -17,8 +17,10 @@
  * 
  * @author Austin Walker
  * @author Sema Berkiten
+ * @author Tony Xiao
  */
-class SurveysController extends AppController
+App::import('Controller', 'Rest');
+class SurveysController extends RestController
 {
 	//for php4
 	var $name = 'Surveys';

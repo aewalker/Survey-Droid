@@ -11,8 +11,10 @@
  * 
  * @author Austin Walker
  * @author Sema Berkiten
+ * @author Tony Xiao
  */
-class ChoicesController extends AppController
+App::import('Controller', 'Rest');
+class ChoicesController extends RestController
 {
 	//for php4
 	var $name = 'Choices';
