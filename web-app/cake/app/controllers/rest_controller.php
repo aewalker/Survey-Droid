@@ -16,8 +16,8 @@ class RestController extends AppController
     /** Get a list of whatever model we are working with, with arbitrary filtering */
     function rest_index() {
         $this->autoRender = false;
+        $this->header('Content-Type: application/json');
         $modelClass = $this->modelClass;
-
         // add any applicable filters
         $conditions = array();
         if ($this->params['url'])
@@ -35,6 +35,7 @@ class RestController extends AppController
     /** Create */
     function rest_create() {
         $this->autoRender = false;
+        $this->header('Content-Type: application/json');
         $modelClass = $this->modelClass;
         $this->data = json_decode(file_get_contents('php://input'), true);
         if (!empty($this->data)) {
@@ -51,6 +52,7 @@ class RestController extends AppController
     /** Read */
     function rest_read($id) {
         $this->autoRender = false;
+        $this->header('Content-Type: application/json');
         $modelClass = $this->modelClass;
         $model = $this->$modelClass->find('first', array(
             'conditions' => array($modelClass.'.id' => $id),
@@ -66,6 +68,7 @@ class RestController extends AppController
     /** Update */
     function rest_update($id) {
         $this->autoRender = false;
+        $this->header('Content-Type: application/json');
         $modelClass = $this->modelClass;
         if ($this->$modelClass->read(null, $id)) {
             $this->data = json_decode(file_get_contents('php://input'), true);
@@ -85,6 +88,7 @@ class RestController extends AppController
     /** Delete */
     function rest_delete($id) {
         $this->autoRender = false;
+        $this->header('Content-Type: application/json');
         $modelClass = $this->modelClass;
         if($this->$modelClass->delete($id)) {
             $this->header('HTTP/1.1 204 No Content');
