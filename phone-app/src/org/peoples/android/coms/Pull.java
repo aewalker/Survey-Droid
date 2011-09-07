@@ -39,7 +39,7 @@ public class Pull
 	private static final String TAG = "Pull";
 
 	//pull address to be appended to the server
-    private static final String PULL_URL = "/answers/pull/";
+    private static final String PULL_URL = "/api/pull/";
     
     private static Context c;
 
