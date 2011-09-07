@@ -7,17 +7,27 @@
  *                                                                           *
  * @author Tony Xiao                                                         *
  *---------------------------------------------------------------------------*/
+/**
+ * TODO: Refactor so I don't have to keep on repeating $this->autoRender = false
+ * TODO: and $this->data = json_decode(file_get_contents('php//input'), true)
+ */
 class RestController extends AppController
 {
-	 /**
-     * TODO: Refactor this so I don't have to keep on repeating
-     * $this->autoRender = false and $this->data = json_decode(file_get_contents('php//input'), true)
-     */
+    /** Get a list of whatever model we are working with, with arbitrary filtering */
     function rest_index() {
         $this->autoRender = false;
         $modelClass = $this->modelClass;
+
+        // add any applicable filters
+        $conditions = array();
+        if ($this->params['url'])
+            foreach ($this->params['url'] as $field => $value)
+                if ($field != 'url' && array_key_exists($field, $this->$modelClass->_schema))
+                    $conditions[$modelClass.'.'.$field] = $value;
+
         $models= $this->$modelClass->find('all', array(
-            'recursive' => -1
+            'recursive' => -1,
+            'conditions' => $conditions
         ));
         e(json_encode($models));
     }
