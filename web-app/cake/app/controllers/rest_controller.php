@@ -17,7 +17,7 @@ class RestController extends AppController
         $this->autoRender = false;
         $modelClass = $this->modelClass;
         $models= $this->$modelClass->find('all', array(
-            'recursive' => 0
+            'recursive' => -1
         ));
         e(json_encode($models));
     }
@@ -44,7 +44,7 @@ class RestController extends AppController
         $modelClass = $this->modelClass;
         $model = $this->$modelClass->find('first', array(
             'conditions' => array('Subject.id' => $id),
-            'recursive' => 0
+            'recursive' => -1
         ));
         if ($model) {
             e(json_encode($model));
