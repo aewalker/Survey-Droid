@@ -74,8 +74,9 @@ class RestController extends AppController
             $this->data = json_decode(file_get_contents('php://input'), true);
             if (!empty($this->data)) {
                 unset($this->data[$modelClass ]['id']); // disallow client-assigned id
-                if ($this->$modelClass->save($this->data)) {;
-                    e(json_encode($this->$modelClass->read()));
+                if ($this->$modelClass->save($this->data)) {
+                    // TODO: Ext Js 4 json reader bug force me to enclose a single item in array
+                    e(json_encode(array($this->$modelClass->read())));
                     return;
                 }
             }

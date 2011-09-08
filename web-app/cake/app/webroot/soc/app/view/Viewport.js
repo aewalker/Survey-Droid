@@ -8,6 +8,7 @@ Ext.define('Soc.view.Viewport', {
             dockedItems: [
                 Ext.create('Soc.view.Header')
             ],
+            border: false,
             items: [
                 { xtype: 'mainTabs' }
             ]

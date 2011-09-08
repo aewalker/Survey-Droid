@@ -13,6 +13,10 @@ Ext.define('Soc.model.Subject', {
         reader: {
             type: 'json',
             record: 'Subject'
+        },
+        writer: {
+            type: 'json',
+            root: 'Subject'
         }
     }
 });
