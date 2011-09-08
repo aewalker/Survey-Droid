@@ -7,24 +7,14 @@ Ext.define("Soc.view.subject.Grid", {
     dockedItems: [{
         xtype: 'toolbar',
         items: [{
-            text: 'Add',
-            iconCls: 'icon-add',
-            handler: function(){
-//                // empty record
-//                store.insert(0, new Person());
-//                rowEditing.startEdit(0, 0);
-            }
+            action: 'add',
+            text: 'Add Subject',
+            iconCls: 'icon-add'
         }, '-', {
-            itemId: 'delete',
-            text: 'Delete',
+            action: 'delete',
+            text: 'Delete Subject',
             iconCls: 'icon-delete',
-            disabled: true,
-            handler: function(){
-//                var selection = grid.getView().getSelectionModel().getSelection()[0];
-//                if (selection) {
-//                    store.remove(selection);
-//                }
-            }
+            disabled: true
         }]
     }],
     columns: [
@@ -34,11 +24,11 @@ Ext.define("Soc.view.subject.Grid", {
         }, {
             text: 'First Name',
             dataIndex: 'first_name',
-            editor: { allowBlank: false }
+            editor: {}
         }, {
             text: 'Last Name',
             dataIndex: 'last_name',
-            editor: { allowBlank: false }
+            editor: {}
         }, {
             text: 'Phone Number',
             dataIndex: 'phone_num',
@@ -46,7 +36,7 @@ Ext.define("Soc.view.subject.Grid", {
         }, {
             text: 'Device Id',
             dataIndex: 'device_id',
-            editor: { allowBlank: false }
+            editor: {}
         }
     ],
     plugins: [

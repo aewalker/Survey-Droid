@@ -22,3 +22,16 @@ $sidebar-background-color: #eaeaea;
 
     border-bottom: 1px solid darken($header-background-color, 15) !important;
 }
+
+/* Just some button icons */
+.icon-user {
+    background-image: url(../images/user.png) !important;
+}
+
+.icon-add {
+    background-image: url(../images/add.png) !important;
+}
+
+.icon-delete {
+    background-image: url(../images/delete.png) !important;
+}
