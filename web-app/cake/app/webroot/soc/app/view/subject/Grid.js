@@ -19,7 +19,7 @@ Ext.define("Soc.view.subject.Grid", {
     }],
     columns: [
         {
-            text: 'Id',
+            text: 'Subject Id',
             dataIndex: 'id'
         }, {
             text: 'First Name',
@@ -40,9 +40,6 @@ Ext.define("Soc.view.subject.Grid", {
         }
     ],
     plugins: [
-        Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: false
-        })
+        'rowediting'
     ]
 });
