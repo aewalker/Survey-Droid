@@ -42,7 +42,9 @@ class RestController extends AppController
             unset($this->data[$modelClass]['id']); // disallow client-assigned id
             if ($this->$modelClass->save($this->data)) {;
                 $this->header('HTTP/1.1 201 Created');
-                e(json_encode($this->$modelClass->read())); // TODO: read() returns associated models, which is unintended
+                // TODO: Ext Js 4 json reader bug force me to enclose a single item in array
+                // TODO: read() returns associated models, which is unintended
+                e(json_encode(array($this->$modelClass->read())));
                 return;
             }
         }
