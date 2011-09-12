@@ -39,7 +39,7 @@ public class Pull
 	private static final String TAG = "Pull";
 
 	//pull address to be appended to the server
-    private static final String PULL_URL = "/answers/pull/";
+    private static final String PULL_URL = "/api/pull/";
     
     private static Context c;
 
@@ -306,7 +306,7 @@ public class Pull
     		//user data
     		try
     		{
-	    		JSONObject user_data = config.getJSONObject("user_data");
+	    		JSONObject user_data = config.getJSONObject("subject_variables");
 	    		JSONArray udNames = user_data.names();
 	    		if (udNames != null)
 	    		{

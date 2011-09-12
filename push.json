@@ -26,8 +26,9 @@
     ],
     "locations": [
         {
-            "long": 0,
-            "lat": 0,
+            "longitude": 0,
+            "latitude": 0,
+            "accuracy": 0,
             "created": 0
         }, {
             ...

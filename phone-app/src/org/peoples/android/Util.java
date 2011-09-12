@@ -35,18 +35,6 @@ public final class Util
 	
 	private static final boolean USE_APP_TAG = true;
 	
-//	/**
-//	 * Generate a request code for use with {@link AlarmManager#set}.
-//	 * 
-//	 * @return a pseudo-random integer influenced by the current system time
-//	 */
-//	public static int randRequestCode()
-//	{
-//		int time = (int) System.currentTimeMillis();
-//		int rand = (int) (Math.random() * 10000.0);
-//		return time + rand;
-//	}
-	
 	/**
 	 * Get the day of the week from {@link Calendar} that corresponds to the
 	 * day given as a string.
