@@ -84,6 +84,22 @@
    				android:layout_weight="1"></ToggleButton>
    		</LinearLayout>
 	</TableRow>
+	<TableRow
+   		android:gravity="center_vertical|center_horizontal"
+   		android:layout_width="fill_parent"
+   		android:layout_weight="1">
+   		<LinearLayout 
+   			android:orientation="horizontal" 
+   			android:layout_height="wrap_content" 
+   			android:layout_width="fill_parent" 
+   			android:id="@+id/settings_loggingRowLayout">
+   			<Button android:layout_height="wrap_content"
+   					android:layout_weight="1"
+   					android:id="@+id/settings_syncButton"
+   					android:text="@string/settings_syncButton"
+   					android:layout_width="wrap_content"></Button>
+   		</LinearLayout>
+	</TableRow>
    	<TableRow
    		android:gravity="center_vertical|center_horizontal"
    		android:layout_width="fill_parent">
@@ -106,5 +122,6 @@
 				android:text="@string/settings_idButton"
 				android:layout_weight="1"></Button>
 		</LinearLayout>
+		
 	</TableRow>
 </TableLayout>

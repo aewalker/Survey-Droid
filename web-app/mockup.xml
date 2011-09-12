@@ -1,0 +1,39 @@
+<mockup version="1.0" skin="sketch" measuredW="1138" measuredH="633" mockupW="942" mockupH="567">
+  <controls>
+    <control controlID="36" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="196" y="66" w="942" h="567" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>A%20Web%20Page%0Ahttp%3A//</text>
+      </controlProperties>
+    </control>
+    <control controlID="37" controlTypeID="com.balsamiq.mockups::FieldSet" x="215" y="171" w="200" h="408" measuredW="200" measuredH="170" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Questions</text>
+      </controlProperties>
+    </control>
+    <control controlID="38" controlTypeID="com.balsamiq.mockups::FieldSet" x="430" y="369" w="200" h="208" measuredW="200" measuredH="170" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Choices</text>
+      </controlProperties>
+    </control>
+    <control controlID="39" controlTypeID="com.balsamiq.mockups::FieldSet" x="431" y="172" w="200" h="197" measuredW="200" measuredH="170" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Current%20Question</text>
+      </controlProperties>
+    </control>
+    <control controlID="40" controlTypeID="com.balsamiq.mockups::FieldSet" x="643" y="177" w="466" h="402" measuredW="200" measuredH="170" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Branches%20%26%20Conditions</text>
+      </controlProperties>
+    </control>
+    <control controlID="41" controlTypeID="com.balsamiq.mockups::TabBar" x="202" y="148" w="921" h="447" measuredW="358" measuredH="100" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Users%2C%20Subjects%2C%20Surveys%2C%20Data%2C%20Settings</text>
+      </controlProperties>
+    </control>
+    <control controlID="42" controlTypeID="com.balsamiq.mockups::Tree" x="658" y="199" w="436" h="365" measuredW="300" measuredH="225" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%3E%20Go%20to%20Question%205%20%5Bquestion%20text%5D%20if%20%0A%20v%20Answer%20to%20Question%202%20is%20Yes%0A%20v%20Answer%20to%20Question%201%20is%20No</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

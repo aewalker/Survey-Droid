@@ -17,8 +17,10 @@
  * 
  * @author Austin Walker
  * @author Sema Berkiten
+ * @author Tony Xiao
  */
-class SurveysController extends AppController
+App::import('Controller', 'Rest');
+class SurveysController extends RestController
 {
 	//for php4
 	var $name = 'Surveys';
@@ -110,6 +112,7 @@ class SurveysController extends AppController
         		)));
         		
 				$this->set('questionid', $result['Survey']['question_id']);
+				$this->set('subject_variables', $result['Survey']['subject_variables']);
 				$days_result = array();
 				foreach ($this->days as $day)
 				{

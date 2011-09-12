@@ -11,8 +11,10 @@
  * 
  * @author Austin Walker
  * @author Sema Berkiten
+ * @author Tony Xiao
  */
-class BranchesController extends AppController
+App::import('Controller', 'Rest');
+class BranchesController extends RestController
 {
 	//for php4
 	var $name = 'Branches';

@@ -25,6 +25,7 @@ CREATE TABLE surveys (
 	created DATETIME,
 	question_id INT UNSIGNED NOT NULL, /* the first question in the survey */
 	subject_init TINYINT DEFAULT 0, /* can subjects initiate this survey? (1 for yes, 0 for no) */ 
+	subject_variables TEXT, /* on the server variables are different by subject */
 	/* field for each day; holds times in 24 hour format separtated by commas */
 	mo VARCHAR(255),
 	tu VARCHAR(255),

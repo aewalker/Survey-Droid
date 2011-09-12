@@ -8,8 +8,10 @@
  * Shows and allows users to change survey configurations settings.
  * 
  * @author Austin Walker
+ * @author Tony Xiao
  */
-class ConfigurationsController extends AppController
+App::import('Controller', 'Rest');
+class ConfigurationsController extends RestController
 {
 	var $name = 'Configurations';
 	

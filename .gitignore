@@ -7,10 +7,13 @@ model/.classpath
 model/.project
 model/.settings
 model/bin/*
-
+web-app/SOC-web-app.tmproj
 
 *~
 *.*~
-web-app/cake/app/tmp/sessions
+web-app/cake/app/tmp
+web-app/cake/app/webroot/soc/resources/sass/.sass-cache
+web-app/cake/.idea/workspace.xml
+.DS_Store
 .project
 .metadata

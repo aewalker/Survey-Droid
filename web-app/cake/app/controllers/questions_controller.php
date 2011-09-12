@@ -11,8 +11,10 @@
  * 
  * @author Austin Walker
  * @author Sema Berkiten
+ * @author Tony Xiao
  */
-class QuestionsController extends AppController
+App::import('Controller', 'Rest');
+class QuestionsController extends RestController
 {
 	//for php4
 	var $name = 'Questions';

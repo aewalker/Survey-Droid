@@ -28,6 +28,7 @@ echo $form->input('fr', array('value' => $days['fr'], 'label' => 'Friday'));
 echo $form->input('sa', array('value' => $days['sa'], 'label' => 'Saturday'));
 echo $form->input('su', array('value' => $days['su'], 'label' => 'Sunday'));
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
+echo $form->input('subject_variables', array('value' => $subject_variables));
 echo $form->end('Edit');
 
 echo $form->create('Survey', array('action' => 'index'));
