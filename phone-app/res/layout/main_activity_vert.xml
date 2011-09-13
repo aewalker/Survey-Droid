@@ -25,19 +25,11 @@
 	            android:layout_weight="2">
                 <Button
 	        		android:textAppearance="?android:attr/textAppearanceLarge"
-	                android:layout_height="wrap_content"
-	                android:layout_gravity="left|center_vertical"
-	                android:text="@string/main_settingsButton"
-	                android:drawableLeft="@drawable/blue_settings_medium"
-	                android:id="@+id/main_settingsButton"
-	                android:layout_weight="1" android:layout_width="fill_parent"></Button>
-                <Button
-	        		android:textAppearance="?android:attr/textAppearanceLarge"
 	                android:text="@string/main_sampleButton"
 	                android:layout_width="fill_parent"
 	                android:id="@+id/main_sampleButton"
 	                android:layout_height="wrap_content"
-	                android:drawableLeft="@drawable/blue_survey_medium"
+	                android:drawableLeft="@drawable/survey"
 	                android:layout_gravity="center_vertical"
 	                android:layout_weight="1"></Button>
                 <Button
@@ -46,15 +38,23 @@
 	                android:layout_width="fill_parent"
 	                android:id="@+id/main_callButton"
 	                android:layout_height="wrap_content"
-	                android:drawableLeft="@drawable/blue_call_medium"
+	                android:drawableLeft="@drawable/call"
 	                android:layout_gravity="center_vertical"
 	                android:layout_weight="1"></Button>
+                <Button
+	        		android:textAppearance="?android:attr/textAppearanceLarge"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="left|center_vertical"
+	                android:text="@string/main_settingsButton"
+	                android:drawableLeft="@drawable/settings"
+	                android:id="@+id/main_settingsButton"
+	                android:layout_weight="1" android:layout_width="fill_parent"></Button>
                 <Button
                 	android:textAppearance="?android:attr/textAppearanceLarge"
 	                android:text="@string/main_exitButton"
 	                android:id="@+id/main_exitButton"
 	                android:layout_height="wrap_content"
-	                android:drawableLeft="@drawable/blue_back_medium"
+	                android:drawableLeft="@drawable/exit"
 	                android:layout_gravity="center_vertical"
 	                android:layout_weight="1" android:layout_width="fill_parent"></Button>
             </LinearLayout>

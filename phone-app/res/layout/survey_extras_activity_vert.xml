@@ -19,20 +19,20 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/survey_extras_photoButton"
 		android:text="@string/survey_extras_photoButton"
-		android:drawableLeft="@drawable/blue_settings_medium"
+		android:drawableLeft="@drawable/photo"
 		android:layout_margin="5dip"></Button>
 	<Button 
 		android:text="@string/survey_extras_voiceButton"
 		android:layout_width="fill_parent"
 		android:id="@+id/survey_extras_voiceButton"
-		android:drawableLeft="@drawable/blue_settings_medium"
+		android:drawableLeft="@drawable/call"
 		android:layout_height="wrap_content"
 	    android:layout_margin="5dip"></Button>
 	<Button 
 		android:text="@string/survey_extras_doneButton"
 		android:layout_width="fill_parent"
 		android:id="@+id/survey_extras_doneButton"
-		android:drawableLeft="@drawable/blue_settings_medium"
+		android:drawableLeft="@drawable/forward"
 		android:layout_height="wrap_content"
 	    android:layout_margin="5dip"></Button>
 </LinearLayout>

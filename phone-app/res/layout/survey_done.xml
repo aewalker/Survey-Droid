@@ -19,6 +19,6 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/survey_done_exitButton"
 		android:text="@string/survey_done_exit"
-		android:drawableLeft="@drawable/blue_back_medium"
+		android:drawableLeft="@drawable/exit"
 		android:layout_margin="5dip"></Button>
 </LinearLayout>

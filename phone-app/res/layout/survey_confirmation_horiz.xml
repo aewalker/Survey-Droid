@@ -27,21 +27,21 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
+		<Button 
+			android:text="@string/survey_confirmation_back"
+			android:layout_width="fill_parent"
+			android:id="@+id/survey_confirmation_backButton"
+			android:drawableLeft="@drawable/back"
+			android:layout_height="wrap_content"
+		    android:layout_margin="5dip"
+		    android:layout_weight="1"></Button>
 		<Button
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/survey_confirmation_confirmButton"
 			android:text="@string/survey_confirmation_confirm"
-			android:drawableLeft="@drawable/blue_settings_medium"
+			android:drawableLeft="@drawable/forward"
 			android:layout_margin="5dip"
 			android:layout_weight="1"></Button>
-		<Button 
-			android:text="@string/survey_confirmation_back"
-			android:layout_width="fill_parent"
-			android:id="@+id/survey_confirmation_backButton"
-			android:drawableLeft="@drawable/blue_settings_medium"
-			android:layout_height="wrap_content"
-		    android:layout_margin="5dip"
-		    android:layout_weight="1"></Button>
 	</LinearLayout>
 </LinearLayout>

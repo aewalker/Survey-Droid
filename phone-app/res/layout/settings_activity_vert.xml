@@ -113,7 +113,7 @@
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
 				android:text="@string/settings_backButton"
-				android:drawableLeft="@drawable/blue_back_small"
+				android:drawableLeft="@drawable/exit_small"
 				android:layout_weight="1"></Button>			    
    			<Button
 				android:id="@+id/settings_idButton" 

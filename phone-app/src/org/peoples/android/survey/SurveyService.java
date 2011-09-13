@@ -264,7 +264,7 @@ public class SurveyService extends Service
 				survey = new Survey(id, this);
 		}
 		//things we're going to need for the notification
-		int icon = R.drawable.blue_survey_small;
+		int icon = R.drawable.survey_small;
 		String tickerText;
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(currentTime);

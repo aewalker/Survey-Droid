@@ -342,29 +342,53 @@ public class Survey
 				//this looks rather dumb; it's just a test to make sure the
 				//encoding works properly
 				LinkedList<Choice> choicesList1 = new LinkedList<Choice>();
+				//purple
+				Bitmap purpleImg = BitmapFactory.decodeResource(
+						ctxt.getResources(), R.drawable.purple);
+				ByteArrayOutputStream baosPurple = new ByteArrayOutputStream();
+				purpleImg.compress(Bitmap.CompressFormat.PNG, 100, baosPurple);
+				choicesList1.add(new Choice(Base64Coder.encode(
+						baosPurple.toByteArray()), ctxt, 0));
+				
 				//blue
 				Bitmap blueImg = BitmapFactory.decodeResource(
-						ctxt.getResources(), R.drawable.blue_back_medium);
+						ctxt.getResources(), R.drawable.blue);
 				ByteArrayOutputStream baosBlue = new ByteArrayOutputStream();
 				blueImg.compress(Bitmap.CompressFormat.PNG, 100, baosBlue);
 				choicesList1.add(new Choice(Base64Coder.encode(
 						baosBlue.toByteArray()), ctxt, 0));
 				
-				//red
-				Bitmap redImg = BitmapFactory.decodeResource(
-						ctxt.getResources(), R.drawable.red_back_medium);
-				ByteArrayOutputStream baosRed = new ByteArrayOutputStream();
-				redImg.compress(Bitmap.CompressFormat.PNG, 100, baosRed);
-				choicesList1.add(new Choice(Base64Coder.encode(
-						baosRed.toByteArray()), ctxt, 0));
-				
 				//green
 				Bitmap greenImg = BitmapFactory.decodeResource(
-						ctxt.getResources(), R.drawable.green_back_medium);
+						ctxt.getResources(), R.drawable.green);
 				ByteArrayOutputStream baosGreen = new ByteArrayOutputStream();
 				greenImg.compress(Bitmap.CompressFormat.PNG, 100, baosGreen);
 				choicesList1.add(new Choice(Base64Coder.encode(
 						baosGreen.toByteArray()), ctxt, 0));
+				
+				//yellow
+				Bitmap yellowImg = BitmapFactory.decodeResource(
+						ctxt.getResources(), R.drawable.yellow);
+				ByteArrayOutputStream baosYellow = new ByteArrayOutputStream();
+				yellowImg.compress(Bitmap.CompressFormat.PNG, 100, baosYellow);
+				choicesList1.add(new Choice(Base64Coder.encode(
+						baosYellow.toByteArray()), ctxt, 0));
+				
+				//orange
+				Bitmap orangeImg = BitmapFactory.decodeResource(
+						ctxt.getResources(), R.drawable.orange);
+				ByteArrayOutputStream baosOrange = new ByteArrayOutputStream();
+				orangeImg.compress(Bitmap.CompressFormat.PNG, 100, baosOrange);
+				choicesList1.add(new Choice(Base64Coder.encode(
+						baosOrange.toByteArray()), ctxt, 0));
+				
+				//red
+				Bitmap redImg = BitmapFactory.decodeResource(
+						ctxt.getResources(), R.drawable.red);
+				ByteArrayOutputStream baosRed = new ByteArrayOutputStream();
+				redImg.compress(Bitmap.CompressFormat.PNG, 100, baosRed);
+				choicesList1.add(new Choice(Base64Coder.encode(
+						baosRed.toByteArray()), ctxt, 0));
 				
 				prevQ = new ChoiceQuestion("What are your favorite colors", i,
 						branches, choicesList1, true, ctxt);

@@ -70,7 +70,7 @@
 	
 	<!-- The four buttons on the main screen. -->
 	<string name="main_settingsButton">Settings</string>
-	<string name="main_sampleButton">Surveys</string>
+	<string name="main_sampleButton">Start a\nsurvey</string>
 	<string name="main_callButton">Call\n</string>
 	<string name="main_exitButton">Exit</string>
 	
@@ -80,7 +80,7 @@
 	<string name="settings_loggingSetting">Call/Text Logging</string>
 	
 	<!-- Title text for the user-initiated surveys page -->
-	<string name="user_surveys_title">Available Surveys</string>
+	<string name="user_surveys_title">Start a survey</string>
 	
 	<!-- Back button on the user-initiated surveys page -->
 	<string name="user_surveys_back">Back</string>
@@ -92,5 +92,5 @@
 	<string name="survey_done_exit">Exit</string>
 	
 	<!-- Main text on the survey-completion (survey_done) page. -->
-	<string name="survey_done_text">The survey has been successfully submitted!</string>
+	<string name="survey_done_text">Thank you! Your survey has been submitted.</string>
 </resources>

@@ -24,6 +24,6 @@
     	android:text="@string/user_surveys_back"
     	android:layout_height="wrap_content"
     	android:layout_width="100dip"
-	   	android:drawableLeft="@drawable/blue_back_small"
+	   	android:drawableLeft="@drawable/exit_small"
     	android:layout_gravity="center"></Button>
 </LinearLayout>

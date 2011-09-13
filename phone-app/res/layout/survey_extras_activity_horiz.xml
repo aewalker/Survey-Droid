@@ -24,14 +24,14 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/survey_extras_photoButton"
 			android:text="@string/survey_extras_photoButton"
-			android:drawableTop="@drawable/blue_settings_medium"
+			android:drawableTop="@drawable/photo"
 			android:layout_margin="5dip"
 			android:layout_weight="1"></Button>
 		<Button 
 			android:text="@string/survey_extras_voiceButton"
 			android:layout_width="fill_parent"
 			android:id="@+id/survey_extras_voiceButton"
-			android:drawableTop="@drawable/blue_settings_medium"
+			android:drawableTop="@drawable/call"
 			android:layout_height="wrap_content"
 		    android:layout_margin="5dip"
 		    android:layout_weight="1"></Button>
@@ -39,7 +39,7 @@
 			android:text="@string/survey_extras_doneButton"
 			android:layout_width="fill_parent"
 			android:id="@+id/survey_extras_doneButton"
-			android:drawableTop="@drawable/blue_settings_medium"
+			android:drawableTop="@drawable/forward"
 			android:layout_height="wrap_content"
 		    android:layout_margin="5dip"
 		    android:layout_weight="1"></Button>
