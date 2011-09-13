@@ -128,18 +128,24 @@ public class SettingsActivity extends Activity
 		});
         
         // Immediately sync data with server
-        Button syncNow = (Button) findViewById(R.id.settings_syncButton);
-        final Context context = this;
-        syncNow.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Util.d(context, SettingsActivity.TAG, "Start downloading data intent");
-				final Intent comsPullIntent = new Intent(context, ComsService.class);
-				comsPullIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
-				context.startService(comsPullIntent);
-			}
-		});
+        if (Config.D)
+        {
+	        Button syncNow = (Button) findViewById(R.id.settings_syncButton);
+	        final Context context = this;
+	        syncNow.setOnClickListener(new View.OnClickListener()
+	        {
+				@Override
+				public void onClick(View v)
+				{
+					Util.d(null, SettingsActivity.TAG,
+							"Start downloading data intent");
+					final Intent comsPullIntent =
+						new Intent(context, ComsService.class);
+					comsPullIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
+					context.startService(comsPullIntent);
+				}
+			});
+        }
         
         //exit button
         Button back = (Button) findViewById(R.id.settings_backButton);

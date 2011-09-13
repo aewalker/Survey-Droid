@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     	xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/text_scale_topLayout"
+	    android:id="@+id/scale_topLayout"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:orientation="vertical"
@@ -10,7 +10,7 @@
 	    android:text="@string/question_loading_text"
 	    android:textAppearance="?android:attr/textAppearanceLarge"
 	    android:layout_height="wrap_content"
-	    android:id="@+id/text_scale_question"
+	    android:id="@+id/scale_question"
 	    android:layout_width="wrap_content"
 	    android:layout_gravity="center"
 	    android:layout_marginBottom="10dip"></TextView>
@@ -24,11 +24,15 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
-		android:id="@+id/text_scale_textLayout">
+		android:id="@+id/scale_textLayout">
 	    <TextView
 	    	android:layout_width="wrap_content"
-	    	android:id="@+id/text_scale_lowText"
+	    	android:id="@+id/scale_lowText"
 	    	android:layout_height="wrap_content"></TextView>
+	    <ImageView
+	    	android:layout_width="wrap_content"
+	    	android:id="@+id/scale_lowImg"
+	    	android:layout_height="wrap_content"></ImageView>
 	    <!-- Dummy view -->
 	    <FrameLayout
 		    android:layout_weight="1"
@@ -36,11 +40,15 @@
 		    android:layout_width="wrap_content"></FrameLayout>
 	    <TextView
 	    	android:layout_width="wrap_content"
-	    	android:id="@+id/text_scale_highText"
+	    	android:id="@+id/scale_highText"
 	    	android:layout_height="wrap_content"></TextView>
+	    <ImageView
+	    	android:layout_width="wrap_content"
+	    	android:id="@+id/scale_highImg"
+	    	android:layout_height="wrap_content"></ImageView>
 	</LinearLayout>
 	<SeekBar
-		android:id="@+id/text_scale_sliderHoriz"
+		android:id="@+id/scale_sliderHoriz"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
 		android:progress="50"></SeekBar>
@@ -51,7 +59,7 @@
 			android:visibility="gone"
     		android:thumb="@drawable/seek_thumb"
 			android:progressDrawable="@drawable/progress_vertical"
-	   		android:id="@+id/text_scale_sliderVert"></org.peoples.android.VerticalSeekBar>
+	   		android:id="@+id/scale_sliderVert"></org.peoples.android.VerticalSeekBar>
     <!-- Dummy view -->
     <FrameLayout
 	    android:layout_weight="1"
@@ -61,15 +69,15 @@
     <LinearLayout
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
-    	android:id="@+id/text_scale_buttonsLayout">
+    	android:id="@+id/scale_buttonsLayout">
         <Button
-        	android:id="@+id/text_scale_backButton"
+        	android:id="@+id/scale_backButton"
         	android:text="@string/question_backButton"
         	android:layout_height="wrap_content"
         	android:layout_width="100dip"
         	android:layout_weight="1"></Button>
         <Button
-        	android:id="@+id/text_scale_nextButton"
+        	android:id="@+id/scale_nextButton"
         	android:text="@string/question_nextButton"
         	android:layout_height="wrap_content"
         	android:layout_width="100dip"
