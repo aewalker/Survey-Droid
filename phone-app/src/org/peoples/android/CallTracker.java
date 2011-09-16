@@ -9,6 +9,7 @@ import org.peoples.android.database.TrackingDBHandler;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
 import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -71,50 +72,67 @@ public class CallTracker extends PhoneStateListener
 				return;				
 			}
 			
-			
-			Util.d(ctxt, TAG, "Searching log");
-			//go look up the most recent calls in the CallLog
-			String[] cols = {CallLog.Calls.TYPE,
-							 CallLog.Calls.DATE,
-							 CallLog.Calls.NUMBER,
-							 CallLog.Calls.DURATION};
-			String where = CallLog.Calls.DATE + " > ?";
-			String[] whereArgs = {Long.toString(lastLookup)};
-			String order = CallLog.Calls.DATE;
-			
-			Cursor newCalls = ctxt.getContentResolver().query(
-					CallLog.Calls.CONTENT_URI, cols, where, whereArgs, order);
-			
-			Util.d(ctxt, TAG, newCalls.getCount()
-					+ " new call(s) found");
-			if (newCalls.getCount() != 0)
-			{
-				TrackingDBHandler cdbh = new TrackingDBHandler(ctxt);
-				cdbh.openWrite();
-				newCalls.moveToFirst();
-				while (!newCalls.isAfterLast())
-				{
-					cdbh.writeCall(
-						newCalls.getString(newCalls.getColumnIndexOrThrow(
-								CallLog.Calls.NUMBER)),
-						newCalls.getInt(newCalls.getColumnIndexOrThrow(
-								CallLog.Calls.TYPE)),
-						(int) newCalls.getLong(newCalls.getColumnIndexOrThrow(
-								CallLog.Calls.DURATION)),
-						newCalls.getLong(newCalls.getColumnIndexOrThrow(
-								CallLog.Calls.DATE)));
-					if (newCalls.isLast())
+	    	Runnable r = new Runnable()
+	    	{
+				@Override
+		        public void run()
+		        {
+					Util.d(ctxt, TAG, "Searching log");
+					//go look up the most recent calls in the CallLog
+					String[] cols = {CallLog.Calls.TYPE,
+									 CallLog.Calls.DATE,
+									 CallLog.Calls.NUMBER,
+									 CallLog.Calls.DURATION};
+					String where = CallLog.Calls.DATE + " > ?";
+					String[] whereArgs = {Long.toString(lastLookup)};
+					String order = CallLog.Calls.DATE;
+					
+					Cursor newCalls = ctxt.getContentResolver().query(
+							CallLog.Calls.CONTENT_URI,
+							cols, where, whereArgs, order);
+					
+					Util.d(ctxt, TAG, newCalls.getCount()
+							+ " new call(s) found");
+					if (newCalls.getCount() != 0)
 					{
-						//this avoids a potential race condition
-						lastLookup = newCalls.getLong(
-								newCalls.getColumnIndexOrThrow(
-								CallLog.Calls.DATE));
+						TrackingDBHandler cdbh = new TrackingDBHandler(ctxt);
+						cdbh.openWrite();
+						newCalls.moveToFirst();
+						while (!newCalls.isAfterLast())
+						{
+							cdbh.writeCall(
+								newCalls.getString(
+										newCalls.getColumnIndexOrThrow(
+										CallLog.Calls.NUMBER)),
+								newCalls.getInt(
+										newCalls.getColumnIndexOrThrow(
+										CallLog.Calls.TYPE)),
+								(int) newCalls.getLong(
+										newCalls.getColumnIndexOrThrow(
+										CallLog.Calls.DURATION)),
+								newCalls.getLong(
+										newCalls.getColumnIndexOrThrow(
+										CallLog.Calls.DATE)));
+							if (newCalls.isLast())
+							{
+								//this avoids a potential race condition
+								lastLookup = newCalls.getLong(
+										newCalls.getColumnIndexOrThrow(
+										CallLog.Calls.DATE));
+							}
+							newCalls.moveToNext();
+						}
+						cdbh.close();
 					}
-					newCalls.moveToNext();
-				}
-				cdbh.close();
-			}
-			newCalls.close();
+					newCalls.close();
+		        }
+	    	};
+	    	//delay the call log lookup by 3 seconds to make sure the call
+	    	//actually gets put into the log
+	    	
+	    	//even if it doesn't, it will still get found on the next run
+	    	Handler h = new Handler();
+	    	h.postDelayed(r, 3 * 1000);
 		}
 		else if (state != TelephonyManager.CALL_STATE_IDLE)
 		{

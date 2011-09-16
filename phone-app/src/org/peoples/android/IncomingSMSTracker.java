@@ -19,6 +19,7 @@ import android.telephony.SmsMessage;
  * text is coming in and logs it.
  *
  * @author Tony Xiao
+ * @author Austin Walker
  */
 public class IncomingSMSTracker extends BroadcastReceiver
 {
