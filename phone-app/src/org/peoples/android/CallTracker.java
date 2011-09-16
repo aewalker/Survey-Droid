@@ -60,10 +60,17 @@ public class CallTracker extends PhoneStateListener
 		else if (state == TelephonyManager.CALL_STATE_IDLE && inCall == true)
 		{ //call just ended
 			inCall = false;
-			Util.d(ctxt, TAG, "Call ended; call log lookup starting");
-			if (!Config.getSetting(ctxt, Config.CALL_LOG_LOCAL, false) ||
-				!Config.getSetting(ctxt, Config.CALL_LOG_SERVER,
-						Config.CALL_LOG_SERVER_DEFAULT)) return;
+			boolean server = Config.getSetting(ctxt, Config.CALL_LOG_SERVER,
+					Config.CALL_LOG_SERVER_DEFAULT);
+	    	boolean local = Config.getSetting(ctxt, Config.CALL_LOG_LOCAL, true);
+	    	if (!local || !server)
+			{
+				Util.d(null, TAG, "Call log local: " + local);
+				Util.d(null, TAG, "Call log server: " + server);
+				lastLookup = System.currentTimeMillis();
+				return;				
+			}
+			
 			
 			Util.d(ctxt, TAG, "Searching log");
 			//go look up the most recent calls in the CallLog
@@ -74,7 +81,6 @@ public class CallTracker extends PhoneStateListener
 			String where = CallLog.Calls.DATE + " > ?";
 			String[] whereArgs = {Long.toString(lastLookup)};
 			String order = CallLog.Calls.DATE;
-			lastLookup = System.currentTimeMillis();
 			
 			Cursor newCalls = ctxt.getContentResolver().query(
 					CallLog.Calls.CONTENT_URI, cols, where, whereArgs, order);
@@ -85,6 +91,7 @@ public class CallTracker extends PhoneStateListener
 			{
 				TrackingDBHandler cdbh = new TrackingDBHandler(ctxt);
 				cdbh.openWrite();
+				newCalls.moveToFirst();
 				while (!newCalls.isAfterLast())
 				{
 					cdbh.writeCall(
@@ -92,10 +99,18 @@ public class CallTracker extends PhoneStateListener
 								CallLog.Calls.NUMBER)),
 						newCalls.getInt(newCalls.getColumnIndexOrThrow(
 								CallLog.Calls.TYPE)),
-						newCalls.getInt(newCalls.getColumnIndexOrThrow(
+						(int) newCalls.getLong(newCalls.getColumnIndexOrThrow(
 								CallLog.Calls.DURATION)),
 						newCalls.getLong(newCalls.getColumnIndexOrThrow(
 								CallLog.Calls.DATE)));
+					if (newCalls.isLast())
+					{
+						//this avoids a potential race condition
+						lastLookup = newCalls.getLong(
+								newCalls.getColumnIndexOrThrow(
+								CallLog.Calls.DATE));
+					}
+					newCalls.moveToNext();
 				}
 				cdbh.close();
 			}

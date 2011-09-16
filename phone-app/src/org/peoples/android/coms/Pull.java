@@ -332,9 +332,15 @@ public class Pull
 	    		else
 	    			Config.putSetting(ctxt, Config.SURVEYS_SERVER, false);
 	    		if (features.optInt("callog", 0) == 1)
+	    		{
 	    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, true);
+	    			Util.d(null, TAG, "call log on");
+	    		}
 	    		else
+	    		{
 	    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, false);
+	    			Util.d(null, TAG, "call log off");
+	    		}
 	    		if (features.optInt("location", 0) == 1)
 	    			Config.putSetting(ctxt, Config.TRACKING_SERVER, true);
 	    		else
