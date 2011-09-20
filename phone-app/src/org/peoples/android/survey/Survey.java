@@ -115,7 +115,7 @@ public class Survey
 		Cursor s = db.getSurvey(id);
 		if (!s.moveToFirst())
 			throw new IllegalArgumentException("no such survey: " + id);
-		name = processText(ctxt, s.getString(
+		name = processText(s.getString(
 				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.NAME)));
 		int firstQID = s.getInt(
 				s.getColumnIndexOrThrow(PeoplesDB.SurveyTable.QUESTION_ID));
@@ -212,6 +212,7 @@ public class Survey
 		int q_type = q.getInt(
 				q.getColumnIndexOrThrow(PeoplesDB.QuestionTable.Q_TYPE));
 		Question newQ;
+		text = processText(text);
 		switch (q_type)
 		{
 		case PeoplesDB.QuestionTable.FREE_RESPONSE:
@@ -225,10 +226,10 @@ public class Survey
 			break;
 		case PeoplesDB.QuestionTable.SCALE_TEXT:
 			newQ = new SlidingScaleTextQuestion(text, id, branches,
-					q.getString(q.getColumnIndexOrThrow(
-							PeoplesDB.QuestionTable.Q_SCALE_TEXT_LOW)),
-					q.getString(q.getColumnIndexOrThrow(
-							PeoplesDB.QuestionTable.Q_SCALE_TEXT_HIGH)),
+					processText(q.getString(q.getColumnIndexOrThrow(
+							PeoplesDB.QuestionTable.Q_SCALE_TEXT_LOW))),
+					processText(q.getString(q.getColumnIndexOrThrow(
+							PeoplesDB.QuestionTable.Q_SCALE_TEXT_HIGH))),
 					ctxt);
 			break;
 		case PeoplesDB.QuestionTable.SCALE_IMG:
@@ -289,8 +290,8 @@ public class Survey
 				PeoplesDB.ChoiceTable.CHOICE_TYPE)))
 		{
 		case PeoplesDB.ChoiceTable.TEXT_CHOICE:
-			newC = new Choice(c.getString(c.getColumnIndexOrThrow(
-					PeoplesDB.ChoiceTable.CHOICE_TEXT)), id, ctxt);
+			newC = new Choice(processText(c.getString(c.getColumnIndexOrThrow(
+					PeoplesDB.ChoiceTable.CHOICE_TEXT))), id, ctxt);
 			break;
 		case PeoplesDB.ChoiceTable.IMG_CHOICE:
 			//be careful about which constructor this is!
@@ -885,11 +886,10 @@ public class Survey
 	 * descriptive keys so that, in the event that the data meant to replace
 	 * that key is not found, the resulting text looks acceptable.
 	 * 
-	 * @param ctxt - the {@link Context} (used for {@link Config} lookup calls)
 	 * @param text - the string to look through
 	 * @return a new string with the replaced values
 	 */
-	public static String processText(Context ctxt, String text)
+	public String processText(String text)
 	{
 		char ctl = '#';
 		char esc = '\\';
@@ -910,8 +910,9 @@ public class Survey
 					{
 						//DO NOT replace "#" with ctl!
 						newString.append(Config.getSetting(ctxt,
-								key.toString(), Config.USER_DATA + "#" + key));
-						newString.append(processText(ctxt, text.substring(i)));
+								Config.USER_DATA + "#" + id + "#" + key,
+								key.toString()));
+						newString.append(processText(text.substring(i)));
 						return newString.toString();
 					}
 					key.append(c);
@@ -919,8 +920,9 @@ public class Survey
 					if (i < text.length()) c = chars[i];
 				}
 				//DO NOT replace "#" with ctl!
-				newString.append(Config.getSetting(ctxt, key.toString(),
-						Config.USER_DATA + "#" + key));
+				newString.append(Config.getSetting(ctxt,
+						Config.USER_DATA + "#" + id + "#" + key,
+						key.toString()));
 				i--;
 				continue;
 			}
@@ -932,6 +934,6 @@ public class Survey
 			newString.append(c);
 			escape = false;
 		}
-		return text;
+		return newString.toString();
 	}
 }

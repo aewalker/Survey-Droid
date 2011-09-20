@@ -54,23 +54,6 @@ public class MainActivity extends Activity
         	setContentView(R.layout.main_activity_vert);
         }
         
-        //add the survey progress bar
-        TakenDBHandler tdbh = new TakenDBHandler(this);
-        tdbh.openRead();
-        int p = tdbh.getCompletionRate();
-        tdbh.close();
-        VerticalProgressBar progress = (VerticalProgressBar)
-        	findViewById(R.id.main_progressBar);
-        progress.setMax(100);
-        int goal = Config.getSetting(this, Config.COMPLETION_GOAL,
-        		Config.COMPLETION_GOAL_DEFAULT);
-        progress.setSecondaryProgress(goal);
-        if (p == TakenDBHandler.NO_PERCENTAGE)
-        	//TODO find a way to make the bar indicate this better
-        	progress.setProgress(0);
-        else
-        	progress.setProgress(p);
-        
         //go to settings button
         Button settings = (Button) findViewById(R.id.main_settingsButton);
         settings.setOnClickListener(new View.OnClickListener()
@@ -129,5 +112,29 @@ public class MainActivity extends Activity
             	finish();
             }
         });
+    }
+    
+    @Override
+    protected void onStart()
+    {
+    	super.onStart();
+        //add the survey progress bar
+    	//do this here so the bar updates after a survey is
+    	//finished without having to restart the activity
+        TakenDBHandler tdbh = new TakenDBHandler(this);
+        tdbh.openRead();
+        int p = tdbh.getCompletionRate();
+        tdbh.close();
+        VerticalProgressBar progress = (VerticalProgressBar)
+        	findViewById(R.id.main_progressBar);
+        progress.setMax(100);
+        int goal = Config.getSetting(this, Config.COMPLETION_GOAL,
+        		Config.COMPLETION_GOAL_DEFAULT);
+        progress.setSecondaryProgress(goal);
+        if (p == TakenDBHandler.NO_PERCENTAGE)
+        	//TODO find a way to make the bar indicate this better
+        	progress.setProgress(0);
+        else
+        	progress.setProgress(p);
     }
 }

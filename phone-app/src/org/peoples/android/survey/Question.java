@@ -65,7 +65,7 @@ public abstract class Question
 	protected Question(String text, int id, Collection<Branch> b,
 			int type, Context ctxt)
 	{
-		q_text = Survey.processText(ctxt, text);
+		q_text = text;
 		branches = b;
 		this.type = type;
 		this.id = id;

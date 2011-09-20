@@ -18,12 +18,13 @@
 		    android:layout_height="wrap_content"
 		    android:id="@+id/multiple_choice_question"
 		    android:layout_width="wrap_content"
+			android:layout_weight="1"
 		    android:layout_gravity="center"></TextView>
 		<ListView
-			android:layout_weight="1"
 			android:id="@android:id/list"
+			android:layout_weight="1"
 			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"></ListView>
+			android:layout_width="wrap_content"></ListView>
 	</LinearLayout>
 	<LinearLayout
     	android:layout_width="fill_parent"

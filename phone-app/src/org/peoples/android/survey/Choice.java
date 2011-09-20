@@ -54,7 +54,7 @@ public class Choice
 	 */
 	public Choice(String text, int id, Context c)
 	{
-		choice_text = Survey.processText(c, text);
+		choice_text = text;
 		type = PeoplesDB.ChoiceTable.TEXT_CHOICE;
 		choice_img = null;
 		this.id = id;
@@ -180,7 +180,7 @@ public class Choice
 	public String toString()
 	{
 		if (type == PeoplesDB.ChoiceTable.TEXT_CHOICE)
-			return choice_text;
+			return getText();
 		else
 			return "image choice";
 	}

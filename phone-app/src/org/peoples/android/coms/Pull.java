@@ -130,7 +130,8 @@ public class Pull
 	    	{
 	    		JSONObject survey = surveys.getJSONObject(i);
 	    		ContentValues values = new ContentValues();
-	    		values.put(SurveyTable._ID, survey.getInt("id"));
+	    		int id = survey.getInt("id");
+	    		values.put(SurveyTable._ID, id);
 	    		values.put(SurveyTable.NAME,
 	    				survey.getString(SurveyTable.NAME));
 	    		values.put(SurveyTable.CREATED,
@@ -146,6 +147,27 @@ public class Pull
 	    		values.put(SurveyTable.FR, survey.getString(SurveyTable.FR));
 	    		values.put(SurveyTable.SA, survey.getString(SurveyTable.SA));
 	    		values.put(SurveyTable.SU, survey.getString(SurveyTable.SU));
+
+	    		//subject variables is special (it's an object)
+	    		try
+	    		{
+	    			JSONObject vars = survey.getJSONObject("subject_variables");
+	    			JSONArray keys = vars.names();
+		    		if (keys != null)
+		    		{
+			    		for (int j = 0; i < keys.length(); j++)
+			    		{
+			    			String key = keys.getString(j);
+							Config.putSetting(c, Config.USER_DATA + "#" + id +
+									"#" + key, vars.getString(key));
+			    		}
+		    		}
+	    					
+	    		}
+	    		catch (JSONException e)
+	    		{
+	    			Util.w(null, TAG, "no or mal-formed subject variables");
+	    		}
 
 	    		//TODO change this so that it uses replace()?
 	    		db.beginTransaction();
