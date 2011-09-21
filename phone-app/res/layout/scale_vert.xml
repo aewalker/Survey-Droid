@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2011 Sema Berkiten, Vladimir Costescu, Henry Liu, Diego Vargas,
+Austin Walker, and Tony Xiao
+
+This file is part of Survey Droid.
+
+Survey Droid is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Survey Droid is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>. 
+ -->
 <LinearLayout
    	xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scale_topLayout"
@@ -20,13 +39,13 @@
 		android:orientation="horizontal"
 		android:layout_weight="1"
 		android:id="@+id/scale_scaleLayout">
-		<org.peoples.android.VerticalSeekBar
+		<org.surveydroid.android.VerticalSeekBar
 	   		android:layout_width="wrap_content"
 	   		android:layout_height="fill_parent"
 	   		android:layout_margin="25dip"
     		android:thumb="@drawable/seek_thumb"
 			android:progressDrawable="@drawable/progress_vertical"
-	   		android:id="@+id/scale_sliderVert"></org.peoples.android.VerticalSeekBar>
+	   		android:id="@+id/scale_sliderVert"></org.surveydroid.android.VerticalSeekBar>
 		<SeekBar
 			android:id="@+id/scale_sliderHoriz"
 			android:layout_height="wrap_content"
