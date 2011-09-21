@@ -39,7 +39,7 @@ public class Config
 	//names/default values for configurable settings
 	/** Is https enabled? */
 	public static final String HTTPS = "https";
-	public static final boolean HTTPS_DEFAULT = false;
+	public static final boolean HTTPS_DEFAULT = true;
 	
 	/** Frequency with which to run the survey scheduler (in minutes) */
 	public static final String SCHEDULER_INTERVAL = "scheduler_interval";
@@ -56,7 +56,7 @@ public class Config
 	/** Server to connect to */
 	public static final String SERVER = "server";
 	//TODO remove this somehow
-	public static final String SERVER_DEFAULT = "50.19.254.168";
+	public static final String SERVER_DEFAULT = "survey-droid.org";
 
 	/** Salting value for hashing phone number */
 	public static final String SALT = "salt";
