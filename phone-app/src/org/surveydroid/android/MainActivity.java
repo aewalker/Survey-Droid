@@ -96,6 +96,8 @@ public class MainActivity extends Activity
             }
         });
         
+        //TODO add code for photo button here
+        
         //call survey admin button
         Button call = (Button) findViewById(R.id.main_callButton);
         call.setText(call.getText() + Config.getSetting(this,

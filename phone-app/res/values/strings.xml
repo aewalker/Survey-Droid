@@ -90,6 +90,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 	<!-- The four buttons on the main screen. -->
 	<string name="main_settingsButton">Settings</string>
 	<string name="main_sampleButton">Start a\nsurvey</string>
+	<string name="main_photoButton">Submit a\nphoto</string>
 	<string name="main_callButton">Call\n</string>
 	<string name="main_exitButton">Exit</string>
 	
