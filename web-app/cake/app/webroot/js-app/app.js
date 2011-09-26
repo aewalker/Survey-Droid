@@ -14,43 +14,43 @@ Ext.Date.patterns = {
     YearMonth: 'F, Y'
 };
 
-Ext.define('SD.model.Category', {
-    extend: 'Ext.data.Model',
-    fields: [
-        {name: 'id',   type: 'int'},
-        {name: 'name', type: 'string'}
-    ],
-    proxy: {
-        type: 'rest',
-        url: '/'
-    }
-});
-
-Ext.define('SD.model.Product', {
-    extend: 'Ext.data.Model',
-    fields: [
-        {name: 'id',          type: 'int'},
-        {name: 'category_id', type: 'int'},
-        {name: 'name',        type: 'string'}
-    ],
-    // we can use the belongsTo shortcut on the model to create a belongsTo association
-    belongsTo: {type: 'belongsTo', model: 'Category'}
-});
-
-var product = new SD.model.Product({
-    id: 100,
-    category_id: 20,
-    name: 'Sneakers'
-});
-console.log(product);
-//product.getCategory(function(category, operation) {
-//    //do something with the category object
-//    alert(category.get('id')); //alerts 20
+//Ext.define('SD.model.Category', {
+//    extend: 'Ext.data.Model',
+//    fields: [
+//        {name: 'id',   type: 'int'},
+//        {name: 'name', type: 'string'}
+//    ],
+//    proxy: {
+//        type: 'rest',
+//        url: '/'
+//    }
 //});
+//
+//Ext.define('SD.model.Product', {
+//    extend: 'Ext.data.Model',
+//    fields: [
+//        {name: 'id',          type: 'int'},
+//        {name: 'category_id', type: 'int'},
+//        {name: 'name',        type: 'string'}
+//    ],
+//    // we can use the belongsTo shortcut on the model to create a belongsTo association
+//    belongsTo: {type: 'belongsTo', model: 'Category'}
+//});
+//
+//var product = new SD.model.Product({
+//    id: 100,
+//    category_id: 20,
+//    name: 'Sneakers'
+//});
+//console.log(product);
+////product.getCategory(function(category, operation) {
+////    //do something with the category object
+////    alert(category.get('id')); //alerts 20
+////});
 
 Ext.application({
     name: 'SD',
-    controllers: ['Surveys', 'Subjects', 'Users'],
+    controllers: ['Surveys', 'Subjects', 'Users', 'Configurations'],
     autoCreateViewport : true,
 
     launch: function() {

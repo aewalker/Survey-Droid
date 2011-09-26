@@ -37,7 +37,7 @@ Ext.define("SD.view.survey.Tab", {
 //                        }
 //                    ]
                     xtype: 'panel',
-                    html: 'hellol'
+                    html: 'Questions editor will be here soon'
                 }
             ]
         }
