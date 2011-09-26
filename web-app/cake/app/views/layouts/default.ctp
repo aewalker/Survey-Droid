@@ -38,6 +38,7 @@
 			echo $html->link('Settings', array('controller' => 'configurations', 'action' => 'index'));
 		}
 		?>
+		<a href="/js-app">New Interface (In Progress)</a>
 	</div>
 </div>
 <div id="userInfo">
