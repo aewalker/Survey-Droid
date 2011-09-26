@@ -1,0 +1,41 @@
+$base-color: #ddd;
+
+$font-family: "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+
+@import 'compass';
+@import 'ext4/default/all';
+
+$highlight-background-color: #7b8b9d;
+
+$header-background-color: darken($highlight-background-color, 30);
+$sidebar-background-color: #eaeaea;
+
+.app-header {
+    padding: 10px;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0 1px 0 darken($header-background-color, 15);
+
+    @include background-gradient($header-background-color, 'matte');
+
+    border-bottom: 1px solid darken($header-background-color, 15) !important;
+}
+
+/* Just some button icons */
+.icon-user {
+    background-image: url(../images/user.png) !important;
+}
+
+.icon-add {
+    background-image: url(../images/add.png) !important;
+}
+
+.icon-delete {
+    background-image: url(../images/delete.png) !important;
+}
+
+.x-action-col-icon {
+    cursor: pointer;
+}
