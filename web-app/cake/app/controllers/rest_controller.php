@@ -25,11 +25,11 @@ class RestController extends AppController
                 if ($field != 'url' && array_key_exists($field, $this->$modelClass->_schema))
                     $conditions[$modelClass.'.'.$field] = $value;
 
-        $models= $this->$modelClass->find('all', array(
+        $models = $this->$modelClass->find('all', array(
             'recursive' => -1,
             'conditions' => $conditions
         ));
-        e(json_encode($models));
+        e(json_encode(standardize($models, $modelClass)));
     }
 
     /** Create */
@@ -40,11 +40,11 @@ class RestController extends AppController
         $this->data = json_decode(file_get_contents('php://input'), true);
         if (!empty($this->data)) {
             unset($this->data[$modelClass]['id']); // disallow client-assigned id
+            unset($this->data['id']);              // disallow client-assigned id
             if ($this->$modelClass->save($this->data)) {;
                 $this->header('HTTP/1.1 201 Created');
-                // TODO: Ext Js 4 json reader bug force me to enclose a single item in array
                 // TODO: read() returns associated models, which is unintended
-                e(json_encode(array($this->$modelClass->read())));
+                e(json_encode(standardize($this->$modelClass->read(), $modelClass)));
                 return;
             }
         }
@@ -61,7 +61,7 @@ class RestController extends AppController
             'recursive' => -1
         ));
         if ($model) {
-            e(json_encode($model));
+            e(json_encode(standardize($model, $modelClass)));
             return;
         }
         $this->header('HTTP/1.1 404 Not Found');
@@ -76,9 +76,9 @@ class RestController extends AppController
             $this->data = json_decode(file_get_contents('php://input'), true);
             if (!empty($this->data)) {
                 unset($this->data[$modelClass ]['id']); // disallow client-assigned id
+                unset($this->data['id']);               // disallow client-assigned id
                 if ($this->$modelClass->save($this->data)) {
-                    // TODO: Ext Js 4 json reader bug force me to enclose a single item in array
-                    e(json_encode(array($this->$modelClass->read())));
+                    e(json_encode(standardize($this->$modelClass->read(), $modelClass)));
                     return;
                 }
             }
@@ -100,4 +100,18 @@ class RestController extends AppController
         $this->header('HTTP/1.1 404 Not Found');
     }
 }
+
+
+function standardize($models, $modelName) {
+    // singular case
+    if (array_key_exists($modelName, $models))
+        return $models[$modelName];
+    // array case
+    $arr = array();
+    foreach($models as $item) {
+        $arr[] = $item[$modelName];
+    }
+    return $arr;
+}
+
 ?>
