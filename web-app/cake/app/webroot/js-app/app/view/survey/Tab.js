@@ -1,6 +1,6 @@
 Ext.define("SD.view.survey.Tab", {
     extend: "Ext.panel.Panel",
-    requires: ['SD.view.survey.Grid', 'SD.view.survey.DetailsForm'],
+    requires: ['SD.view.survey.Grid', 'SD.view.survey.Details', 'SD.view.survey.QuestionsPanel'],
     alias: 'widget.surveysTab',
     title: 'Surveys',
     layout: 'border',
@@ -20,24 +20,10 @@ Ext.define("SD.view.survey.Tab", {
             items: [
                 {
                     itemId: 'details',
-                    xtype: 'surveysDetailsForm'
+                    xtype: 'surveyDetails'
                 }, {
-                    itemId: 'questionsEditor',
-//                    xtype: 'grid',
-//                    columns: [
-//                        {
-//                            text: 'Id',
-//                            dataIndex: 'id'
-//                        }, {
-//                            text: 'Question Type',
-//                            dataIndex: 'q_type'
-//                        }, {
-//                            text: 'Question Text',
-//                            dataIndex: 'q_text'
-//                        }
-//                    ]
-                    xtype: 'panel',
-                    html: 'Questions editor will be here soon'
+                    itemId: 'questionsPanel',
+                    xtype: 'questionsPanel'
                 }
             ]
         }

@@ -8,10 +8,6 @@ Ext.define('SD.model.Configuration', {
     ],
     proxy: {
         type: 'rest',
-        url : '/rest/configurations',
-        reader: {
-            type: 'json',
-            record: 'Configuration'
-        }
+        url : '/rest/configurations'
     }
 });

@@ -10,16 +10,32 @@ Ext.define('SD.model.Question', {
         {name: 'q_text_low',  type: 'string'},
         {name: 'q_text_high', type: 'string'}
     ],
+    associations: [
+        {
+            type: 'belongsTo',
+            model: 'SD.model.Survey',
+            associationKey: 'survey',
+            foreignKey: 'question_id',
+            getterName: 'getSurvey',
+            setterName: 'setSurvey'
+        }, {
+            type: 'hasMany',
+            model: 'SD.model.Choice',
+            associationKey: 'choices',
+            foreignKey: 'question_id',
+            name: 'choices',
+            autoLoad: true
+        }, {
+            type: 'hasMany',
+            model: 'SD.model.Branch',
+            associationKey: 'branches',
+            foreignKey: 'question_id',
+            name: 'branches',
+            autoLoad: true
+        }
+    ],
     proxy: {
         type: 'rest',
-        url : '/rest/questions',
-        reader: {
-            type: 'json',
-            record: 'Question'
-        },
-        writer: {
-            type: 'json',
-            root: 'Question'
-        }
+        url : '/rest/questions'
     }
 });

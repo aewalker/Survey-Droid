@@ -7,13 +7,16 @@ Ext.define('SD.model.Choice', {
         {name: 'choice_img',    type: 'string'},
         {name: 'question_id',    type: 'int'}
     ],
-    belongsTo: 'Question', // each choice belongs to a question
+    associations: [{
+        type: 'belongsTo',
+        model: 'SD.model.Question',
+        associationKey: 'question',
+        foreignKey: 'question_id',
+        getterName: 'getQuestion',
+        setterName: 'setQuestion'
+    }],
     proxy: {
         type: 'rest',
-        url : '/rest/choices',
-        reader: {
-            type: 'json',
-            record: 'Choice'
-        }
+        url : '/rest/choices'
     }
 });

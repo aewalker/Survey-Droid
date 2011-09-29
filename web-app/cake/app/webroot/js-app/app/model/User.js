@@ -15,14 +15,6 @@ Ext.define('SD.model.User', {
     ],
     proxy: {
         type: 'rest',
-        url : '/rest/users',
-        reader: {
-            type: 'json',
-            record: 'User'
-        },
-        writer: {
-            type: 'json',
-            root: 'User'
-        }
+        url : '/rest/users'
     }
 });

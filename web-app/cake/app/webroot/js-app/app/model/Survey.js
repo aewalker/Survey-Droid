@@ -22,17 +22,25 @@ Ext.define('SD.model.Survey', {
             field: 'name'
         }
     ],
-    belongsTo: 'SD.model.Question',
+    associations: [
+        {
+            type: 'belongsTo',
+            model: 'SD.model.Question',
+            associationKey: 'question',
+            foreignKey: 'question_id',
+            getterName: 'getFirstQuestion',
+            setterName: 'setFirstQuestion'
+        }, {
+            type: 'hasMany',
+            model: 'SD.model.Question',
+            associationKey: 'questions',
+            foreignKey: 'survey_id',
+            name: 'questions',
+            autoLoad: true
+        }
+    ],
     proxy: {
         type: 'rest',
-        url : '/rest/surveys',
-        reader: {
-            type: 'json',
-            record: 'Survey'
-        },
-        writer: {
-            type: 'json',
-            root: 'Survey'
-        }
+        url : '/rest/surveys'
     }
 });

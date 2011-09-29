@@ -15,14 +15,6 @@ Ext.define('SD.model.Subject', {
     ],
     proxy: {
         type: 'rest',
-        url : '/rest/subjects',
-        reader: {
-            type: 'json',
-            record: 'Subject'
-        },
-        writer: {
-            type: 'json',
-            root: 'Subject'
-        }
+        url : '/rest/subjects'
     }
 });

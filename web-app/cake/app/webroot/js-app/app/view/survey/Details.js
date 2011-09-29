@@ -1,6 +1,6 @@
-Ext.define("SD.view.survey.DetailsForm", {
+Ext.define("SD.view.survey.Details", {
     extend: "Ext.form.Panel",
-    alias: 'widget.surveysDetailsForm',
+    alias: 'widget.surveyDetails',
     autoScroll: true,
     buttonAlign: 'left',
     buttons: [{

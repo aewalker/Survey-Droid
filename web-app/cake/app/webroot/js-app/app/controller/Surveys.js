@@ -3,51 +3,54 @@ Ext.define('SD.controller.Surveys', {
     models: ['Survey'],
     stores: ['Surveys'],
     refs: [
-        {ref: 'surveysGrid', selector: 'surveysTab surveysGrid' },
-        {ref: 'surveyForm', selector: 'surveysTab form' },
-        {ref: 'centerRegion', selector: 'surveysTab panel[region=center]' }
+        {ref: 'surveysGrid',    selector: 'surveysTab surveysGrid' },
+        {ref: 'surveyDetails',  selector: 'surveysTab surveyDetails' },
+        {ref: 'centerRegion',   selector: 'surveysTab panel[region=center]' },
+        {ref: 'questionsList',  selector: 'surveysTab #questionsList' }
     ],
     init: function() {
         var me = this;
         me.control({
             'surveysTab surveysGrid': {
-                selectionchange: me.onSurveysGridSelectionChange
+                itemclick: function(grid, survey) {
+                    console.log("clicking");
+                    me.getSurveyDetails().loadRecord(survey);
+                    me.getCenterRegion().getLayout().setActiveItem('details');
+                },
+                itemdblclick: function(grid, survey) {
+                    me.getQuestionsList().bindStore(survey.questions());
+                    me.getCenterRegion().getLayout().setActiveItem('questionsPanel');
+                }
             },
-            'surveysTab form button[action=save]': {
-                click: me.onSurveysFormSave
-            },
-            'surveysTab surveysGrid actioncolumn': {
-                editSurveyDetails: me.onEditSurveyDetailsClick,
-                editSurveyQuestions: me.onEditSurveyQuestionsClick
+            'surveysTab surveyDetails button[action=save]': {
+                click: function() {
+                    var form = me.getSurveyDetails().getForm();
+                    if (form.isValid()) {
+                        form.updateRecord(form.getRecord());
+                    }
+                }
             }
         })
     },
-    onSurveysGridSelectionChange: function(selModel, selections) {
-        if (selections[0])
-            this.getSurveyForm().loadRecord(selections[0]);
-    },
-    onSurveysFormSave: function() {
-        var form = this.getSurveyForm().getForm();
-        if (form.isValid())
-            form.updateRecord(form.getRecord());
-    },
-    onEditSurveyQuestionsClick: function(grid, rowIndex, colIndex, item) {
-        var survey = grid.getStore().getAt(rowIndex);
-        this.getCenterRegion().getLayout().setActiveItem('questionsEditor');
-        console.log(survey);
-        return;
-        survey.question(function(question, operation) {
-            console.log(question);
-            console.log(operation);
-        });
-//        survey.getQuestion(function(question, operation) {
-//            console.log(question);
-//            console.log(operation);
-//        });
-    },
-    onEditSurveyDetailsClick: function(grid, rowIndex, colIndex, item) {
-        var rec = grid.getStore().getAt(rowIndex);
-        this.getCenterRegion().getLayout().setActiveItem('details');
-        this.getSurveyForm().loadRecord(rec);
+    onLaunch: function() {
+//        var surveys = this.getSurveysStore();
+//        surveys.load(function() {
+//            var s = surveys.getById(1);
+//            console.log(s);
+////            s.getFirstQuestion(function(question, operation) {
+////                console.log(question);
+////            })
+//            var questions = s.questions();
+//            questions.on('load', function() {
+//                console.log(questions);
+////                questions.removeAt(3);
+////                questions.add({
+////                    q_text: 'another question'
+////                })
+////                questions.sync();
+//            })
+//
+//        })
+
     }
 });

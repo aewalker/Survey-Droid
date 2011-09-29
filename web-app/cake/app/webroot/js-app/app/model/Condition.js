@@ -13,10 +13,6 @@ Ext.define('SD.model.Condition', {
     belongsTo: ['Branch', 'Question', 'Choice'],
     proxy: {
         type: 'rest',
-        url : '/rest/conditions',
-        reader: {
-            type: 'json',
-            record: 'Condition'
-        }
+        url : '/rest/conditions'
     }
 });
