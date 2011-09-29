@@ -20,10 +20,12 @@ class RestController extends AppController
         $modelClass = $this->modelClass;
         // add any applicable filters
         $conditions = array();
-        if ($this->params['url'])
-            foreach ($this->params['url'] as $field => $value)
-                if ($field != 'url' && array_key_exists($field, $this->$modelClass->_schema))
-                    $conditions[$modelClass.'.'.$field] = $value;
+        if (array_key_exists('filter', $this->params['url'])) {
+            $filters = json_decode($this->params['url']['filter'], true);
+            foreach ($filters as $filter)
+                if (array_key_exists($filter['property'], $this->$modelClass->_schema))
+                    $conditions[$modelClass.'.'.$filter['property']] = $filter['value'];
+        }
 
         $models = $this->$modelClass->find('all', array(
             'recursive' => -1,
