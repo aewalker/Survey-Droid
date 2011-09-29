@@ -13,7 +13,6 @@ Ext.define('SD.controller.Surveys', {
         me.control({
             'surveysTab surveysGrid': {
                 itemclick: function(grid, survey) {
-                    console.log("clicking");
                     me.getSurveyDetails().loadRecord(survey);
                     me.getCenterRegion().getLayout().setActiveItem('details');
                 },
@@ -23,34 +22,38 @@ Ext.define('SD.controller.Surveys', {
                 }
             },
             'surveysTab surveyDetails button[action=save]': {
-                click: function() {
-                    var form = me.getSurveyDetails().getForm();
-                    if (form.isValid()) {
-                        form.updateRecord(form.getRecord());
-                    }
-                }
+                click: me.onSurveySaveBtnClick
+            },
+            'surveysTab surveyDetails button[action=delete]': {
+                click: me.onSurveyDeleteBtnClick
+            },
+            'surveysGrid button[action=new]': {
+                click: me.onNewSurveyBtnClick
             }
         })
     },
     onLaunch: function() {
-//        var surveys = this.getSurveysStore();
-//        surveys.load(function() {
-//            var s = surveys.getById(1);
-//            console.log(s);
-////            s.getFirstQuestion(function(question, operation) {
-////                console.log(question);
-////            })
-//            var questions = s.questions();
-//            questions.on('load', function() {
-//                console.log(questions);
-////                questions.removeAt(3);
-////                questions.add({
-////                    q_text: 'another question'
-////                })
-////                questions.sync();
-//            })
-//
-//        })
-
+        this.getCenterRegion().getLayout().setActiveItem('questionsPanel');
+    },
+    onSurveySaveBtnClick: function() {
+        var form = this.getSurveyDetails().getForm();
+        if (form.isValid()) {
+            if (form.getRecord())
+                form.updateRecord(form.getRecord());
+            else
+                this.getSurveysStore().add(form.getValues());
+        }
+    },
+    onSurveyDeleteBtnClick: function() {
+        var survey = this.getSurveyDetails().getForm().getRecord();
+        if (survey) {
+            this.getSurveysStore().remove(survey);
+            this.onNewSurveyBtnClick();
+        }
+    },
+    onNewSurveyBtnClick: function() {
+        this.getCenterRegion().getLayout().setActiveItem('details');
+        this.getSurveyDetails().getForm().reset();
+        this.getSurveyDetails().getForm()._record = undefined; // resetting the record, a bit of a hack!
     }
 });

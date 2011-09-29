@@ -12,6 +12,14 @@ Ext.define('SD.view.survey.QuestionsPanel', {
             xtype: 'grid',
             title: 'Questions',
             flex: 1,
+            dockedItems: [{
+                xtype: 'toolbar',
+                items: [{
+                    action: 'add',
+                    text: 'Add Question',
+                    iconCls: 'icon-add'
+                }]
+            }],
             store: Ext.create('Ext.data.Store', {model: 'SD.model.Question'} ),
             columns: [
                 {
@@ -21,8 +29,12 @@ Ext.define('SD.view.survey.QuestionsPanel', {
                 }, {
                     text: 'Question',
                     dataIndex: 'q_text',
-                    flex: 1
+                    flex: 1,
+                    editor: {}
                 }
+            ],
+            plugins: [
+                'cellediting'
             ]
         }, {
             xtype: 'questionEditor',

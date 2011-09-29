@@ -3,6 +3,14 @@ Ext.define("SD.view.survey.Grid", {
     alias: 'widget.surveysGrid',
     store: 'Surveys',
     title: 'Surveys List',
+    dockedItems: [{
+        xtype: 'toolbar',
+        items: [{
+            action: 'new',
+            text: 'New Survey',
+            iconCls: 'icon-add'
+        }]
+    }],
     columns: [
         {
             text: 'Id',
@@ -19,5 +27,4 @@ Ext.define("SD.view.survey.Grid", {
             flex: 2
         }
     ]
-
 });

@@ -36,7 +36,10 @@ Ext.define('SD.model.Survey', {
             associationKey: 'questions',
             foreignKey: 'survey_id',
             name: 'questions',
-            autoLoad: true
+            storeConfig: {
+                autoLoad: true,
+                autoSync: true
+            }
         }
     ],
     proxy: {

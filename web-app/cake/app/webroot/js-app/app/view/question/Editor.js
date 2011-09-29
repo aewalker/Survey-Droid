@@ -8,48 +8,9 @@ Ext.define("SD.view.question.Editor", {
     },
     items: [
         {
-            xtype: 'panel',
-            flex: 1,
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            items: [
-                {
-                    itemId: 'questionDetails',
-                    xtype: 'questionDetails',
-                    flex: 1
-                }, {
-                    itemId: 'choicesList',
-                    xtype: 'grid',
-                    flex: 1,
-                    title: 'Choices',
-                    store: Ext.create('Ext.data.Store', {model: 'SD.model.Choice'} ),
-                    columns: [
-                        {
-                            text: 'Id',
-                            dataIndex: 'id',
-                            width: 35
-                        }, {
-                            xtype: 'templatecolumn',
-                            text: 'Choice Type',
-                            tpl: new Ext.XTemplate(
-                                '{[ this.types[values.choice_type] ]}',
-                                { types: { 0: 'Text', 1: 'Image' } }
-                            ),
-                            flex: 1
-                        }, {
-                            text: 'Choice Text',
-                            dataIndex: 'choice_text',
-                            flex: 1
-                        }, {
-                            text: 'Choice Image',
-                            dataIndex: 'choice_img',
-                            flex: 1
-                        }
-                    ]
-                }
-            ]
+            itemId: 'questionDetails',
+            xtype: 'questionDetails',
+            flex: 1
         }, {
             xtype: 'panel',
             flex: 1,

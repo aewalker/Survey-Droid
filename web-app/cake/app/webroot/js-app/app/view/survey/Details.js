@@ -6,6 +6,9 @@ Ext.define("SD.view.survey.Details", {
     buttons: [{
         text: 'Save',
         action: 'save'
+    }, {
+        text: 'Delete',
+        action: 'delete'
     }],
     items: [
         {
