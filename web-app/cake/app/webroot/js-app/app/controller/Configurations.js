@@ -4,50 +4,41 @@ Ext.define('SD.controller.Configurations', {
     stores: ['Configurations'],
     refs: [
         {ref: 'mainTabs', selector: 'mainTabs' },
-        {ref: 'settingsTab', selector: '#settingsTab' }
+        {ref: 'settingsTab', selector: '#settingsTab' },
+        {ref: 'settingsForm', selector: '#settingsForm' }
     ],
     init: function() {
-        console.log('configurations initting');
+        var me = this;
+        me.control({
+            '#settingsTab': {
+                activate: me.refreshSettingsForm
+            },
+            '#settingsForm button[action=save]': {
+                click: me.saveSettingsForm
+            }
+        })
+        me.getConfigurationsStore().on('load', me.refreshSettingsForm, me);
+    },
+    refreshSettingsForm: function() {
+        var me = this,
+            form = me.getSettingsForm().getForm(),
+            records = me.getConfigurationsStore().getRange();
+        Ext.each(records, function(item, index) {
+            var tmp = {};
+            tmp[item.data.c_key] = item.data.c_value;
+            form.setValues(tmp);
+        })
+    },
+    saveSettingsForm: function() {
+        var me = this,
+            store = me.getConfigurationsStore(),
+            values = me.getSettingsForm().getForm().getValues();
+        Ext.each(store.getRange(), function(item, index) {
+            item.set('c_value', values[item.data.c_key]);
+        })
+        store.sync();
     },
     onLaunch: function() {
-//        this.getMainTabs().setActiveTab('settingsTab');
-//
-//        var treeStore = Ext.create('Ext.data.TreeStore', {
-//            model: 'SD.model.Subject',
-//            root: {
-//                text: 'Subjects',
-//                leaf: false,
-//                expanded: true
-//            },
-//            listeners: {
-//                append: function( thisNode, newChildNode, index, eOpts ) {
-//                    if( !newChildNode.isRoot() ) {
-//                        newChildNode.set('leaf', true);
-//                        newChildNode.set('text', newChildNode.get('first_name'));
-////                        newChildNode.set('icon', newChildNode.get('profile_image_url'));
-////                        newChildNode.set('cls', 'demo-userNode');
-////                        newChildNode.set('iconCls', 'demo-userNodeIcon');
-//                    }
-//                }
-//            }
-//        })
-//
-//        this.getSettingsTab().add({
-//            xtype: 'treepanel',
-//            store: treeStore
-//        });
-//        Ext.getStore('Surveys').on('load',  function() {
-////            console.log(Ext.getStore('Surveys').getById(1));
-//            var survey = Ext.getStore('Surveys').getById(1);
-////            treeStore.getRootNode().appendChild(
-////                survey
-////            );
-//
-//            survey.set('name', 'tttt survey');
-//            survey.save();
-////            treeStore.sync();
-//        })
-
-
+        this.getMainTabs().setActiveTab('settingsTab');
     }
 });

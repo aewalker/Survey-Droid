@@ -13,7 +13,7 @@ Ext.define("SD.view.Tabs", {
         }, {
             itemId: 'settingsTab',
             title: 'Settings',
-            layout: 'fit'
+            xtype: 'configurationsTab'
         }
 
     ]

@@ -101,11 +101,15 @@ Ext.define("SD.view.question.Details", {
                                 margin: '0 10'
                             },
                             layout: {
-                                type: 'hbox',
-                                pack: 'center'
+                                type: 'vbox',
+                                align: 'center'
                             },
                             items: [
                                 {
+                                    xtype: 'panel',
+                                    html: 'Please paste the <a href="http://www.dopiaza.org/tools/datauri/" target="_blank">base64 encoded</a> image into the text field',
+                                    border: false
+                                }, {
                                     fieldLabel: 'Low-end Image',
                                     name: 'q_img_low'
                                 }, {

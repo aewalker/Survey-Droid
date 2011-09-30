@@ -3,6 +3,7 @@ Ext.define("SD.view.configuration.Tab", {
     alias: 'widget.configurationsTab',
     title: 'Settings',
     items: [{
+        itemId: 'settingsForm',
         xtype: 'form',
         autoScroll: true,
         buttonAlign: 'left',
@@ -14,64 +15,136 @@ Ext.define("SD.view.configuration.Tab", {
             {
                 margin: '5',
                 xtype: 'fieldset',
-                title:'Survey Details',
+                title:'General',
                 defaults: {
-                    anchor: '100%',
-                    labelWidth: 100
+                    anchor: '60%',
+                    labelWidth: 400
                 },
                 defaultType: 'textfield',
                 items: [
                     {
-                        xtype: 'displayfield',
-                        fieldLabel: 'Survey Id',
-                        name: 'id'
+                        fieldLabel: 'Location Tracking Enabled',
+                        name: 'features_enabled.location',
+                        xtype: 'checkbox'
                     },{
-                        fieldLabel: 'Name',
-                        name: 'name',
-                        allowBlank: false
+                        fieldLabel: 'Call / Text Logging Enabled',
+                        name: 'features_enabled.callog',
+                        xtype: 'checkbox'
                     },{
-                        fieldLabel: 'First Question',
-                        name: 'question_id'
+                        fieldLabel: 'Surveys Enabled',
+                        name: 'features_enabled.survey',
+                        xtype: 'checkbox'
                     },{
-                        xtype: 'textarea',
-                        fieldLabel: 'Subject Specific Variables',
-                        name: 'subject_variables'
+                        fieldLabel: 'Study Contact\'s name',
+                        name: 'admin_name'
+                    },{
+                        fieldLabel: 'Study Contact\'s phone number (numbers only)',
+                        name: 'admin_phone_number'
                     }
                 ]
             }, {
                 margin: '5',
                 xtype: 'fieldset',
-                title:'Survey Triggers',
+                title:'Surveys',
                 defaults: {
-                    labelWidth: 100
+                    anchor: '60%',
+                    labelWidth: 400
+                },
+                defaultType: 'checkbox',
+                items: [
+                    {
+                        fieldLabel: 'Allow free response questions to accept blank answers',
+                        name: 'allow_blank_free_response'
+                    },{
+                        fieldLabel: 'Allow multi choice questions to be answered with no choices',
+                        name: 'allow_no_choices'
+                    },{
+                        fieldLabel: 'Show survey names in app',
+                        name: 'show_survey_name'
+                    }
+                ]
+            }, {
+                margin: '5',
+                xtype: 'fieldset',
+                title:'Tracking',
+                defaults: {
+                    anchor: '60%',
+                    labelWidth: 400
                 },
                 defaultType: 'textfield',
                 items: [
                     {
-                        fieldLabel: 'Monday',
-                        name: 'mo'
+                        fieldLabel: 'Tracking area center longitude',
+                        name: 'location_tracked.0.long'
                     },{
-                        fieldLabel: 'Tuesday',
-                        name: 'tu'
+                        fieldLabel: 'Tracking area center latitude',
+                        name: 'location_tracked.0.lat'
                     },{
-                        fieldLabel: 'Wednesday',
-                        name: 'we'
+                        fieldLabel: 'Tracking area radius (in kilometers)',
+                        name: 'location_tracked.0.radius'
                     },{
-                        fieldLabel: 'Thursday',
-                        name: 'th'
+                        fieldLabel: 'Start of time tracked (hhmm)',
+                        name: 'time_tracked.0.start'
                     },{
-                        fieldLabel: 'Friday',
-                        name: 'fr'
+                        fieldLabel: 'End of time tracked (hhmm)',
+                        name: 'time_tracked.0.end'
                     },{
-                        fieldLabel: 'Saturday',
-                        name: 'sa'
+                        fieldLabel: 'How often (in minutes) should location information be collected',
+                        name: 'location_interval'
+                    }
+                ]
+            }, {
+                margin: '5',
+                xtype: 'fieldset',
+                title:'Security',
+                defaults: {
+                    anchor: '60%',
+                    labelWidth: 400
+                },
+                defaultType: 'checkbox',
+                items: [
+                    {
+                        fieldLabel: 'Use secure (HTTPS) transmission',
+                        name: 'https'
+                    }
+                ]
+            }, {
+                margin: '5',
+                xtype: 'fieldset',
+                title:'Technical',
+                defaults: {
+                    anchor: '60%',
+                    labelWidth: 400
+                },
+                defaultType: 'textfield',
+                items: [
+                    {
+                        fieldLabel: 'Pull interval (in minutes)',
+                        name: 'pull_interval'
                     },{
-                        fieldLabel: 'Sunday',
-                        name: 'su'
+                        fieldLabel: 'Push interval (in minutes)',
+                        name: 'push_interval'
                     },{
-                        xtype: 'checkbox',
-                        fieldLabel: 'Can be initialized by subject',
-                        name: 'subject_init'
+                        fieldLabel: 'Survey Scheduler interval (in minutes)',
+                        name: 'scheduler_interval'
+                    },{
+                        fieldLabel: 'Survey name / IP (WARNING: DO NOT CHANGE UNLESS YOU KNOW WHAT YOU ARE DOING)',
+                        name: 'server'
+                    },{
+                        fieldLabel: 'Format for recorded audio',
+                        name: 'voice_format',
+                        xtype: 'combo',
+                        anchor: '',
+                        valueField: 'value',
+                        forceSelection: true,
+                        store: Ext.create('Ext.data.ArrayStore', {
+                            fields: ['value', 'text'],
+                            data: [
+                                ['3gp', '3GP'],
+                                ['mpeg4', 'MPEG-4']
+                            ]
+                        }),
+                        queryMode: 'local'
                     }
                 ]
             }
