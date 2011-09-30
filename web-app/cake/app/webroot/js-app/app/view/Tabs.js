@@ -11,8 +11,9 @@ Ext.define("SD.view.Tabs", {
         }, {
             xtype: 'usersGrid'
         }, {
+            itemId: 'settingsTab',
             title: 'Settings',
-            html: 'Settings will be displayed here'
+            layout: 'fit'
         }
 
     ]

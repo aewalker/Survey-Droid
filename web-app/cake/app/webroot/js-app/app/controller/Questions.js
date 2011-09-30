@@ -9,7 +9,9 @@ Ext.define('SD.controller.Questions', {
         {ref: 'choicesList',        selector: 'surveysTab #choicesList' },
         {ref: 'delChoiceBtn',       selector: 'surveysTab #choicesList button[action=delete]' },
         {ref: 'branchesList',       selector: 'surveysTab #branchesList' },
-        {ref: 'conditionsList',     selector: 'surveysTab #conditionsList' }
+        {ref: 'delBranchBtn',       selector: 'surveysTab #branchesList button[action=delete]' },
+        {ref: 'conditionsList',     selector: 'surveysTab #conditionsList' },
+        {ref: 'delConditionBtn',    selector: 'surveysTab #conditionsList button[action=delete]' }
     ],
     init: function() {
         var me = this;
@@ -20,10 +22,10 @@ Ext.define('SD.controller.Questions', {
             'surveysTab #questionsList button[action=add]': {
                 click: me.onAddQuestionBtnClick
             },
-            'surveysTab #questionDetails button[action=save]': {
+            'surveysTab #questionDetails button[action=save-question]': {
                 click: me.onSaveQuestionBtnClick
             },
-            'surveysTab #questionDetails button[action=delete]': {
+            'surveysTab #questionDetails button[action=delete-question]': {
                 click: me.onDeleteQuestionBtnClick
             },
             '#questionDetails radiofield[name=q_type]': {
@@ -37,6 +39,22 @@ Ext.define('SD.controller.Questions', {
             },
             '#choicesList button[action=delete]': {
                 click: me.deleteChoice
+            },
+            'surveysTab #branchesList': {
+                itemclick: me.onBranchClick,
+                selectionchange: me.onBranchesListSelectionChange
+            },
+            '#branchesList button[action=add]': {
+                click: me.addBranch
+            },
+            '#branchesList button[action=delete]': {
+                click: me.deleteBranch
+            },
+            '#conditionsList button[action=add]': {
+                click: me.addCondition
+            },
+            '#conditionsList button[action=delete]': {
+                click: me.deleteCondition
             }
         });
     },
@@ -46,6 +64,9 @@ Ext.define('SD.controller.Questions', {
         this.getChoicesList().bindStore(question.choices());
         this.getBranchesList().bindStore(question.branches());
         this.getQuestionDetails().loadRecord(question);
+    },
+    onBranchClick: function(grid, branch) {
+        this.getConditionsList().bindStore(branch.conditions());
     },
     onAddQuestionBtnClick: function() {
         this.getQuestionsList().getStore().insert(0, Ext.create('SD.model.Question'));
@@ -62,10 +83,13 @@ Ext.define('SD.controller.Questions', {
         }
     },
     onDeleteQuestionBtnClick: function() {
-        var question = this.getQuestionDetails().getForm().getRecord();
+        var form = this.getQuestionDetails().getForm(),
+            question = form.getRecord();
         if (question) {
             question.store.remove(question);
             this.onAddQuestionBtnClick();
+            form.reset();
+            form._record = undefined; // resetting the record, a bit of a hack!
         }
     },
     onQuestionTypeChange: function(field, newValue, oldValue, eOpts) {
@@ -99,5 +123,27 @@ Ext.define('SD.controller.Questions', {
     },
     onChoicesListSelectionChange: function(selModel, selections) {
         this.getDelChoiceBtn().setDisabled(selections.length === 0);
+    },
+    addBranch: function() {
+        this.getBranchesList().getStore().insert(0, Ext.create('SD.model.Branch'));
+        this.getBranchesList().getPlugin().startEditByPosition({row: 0, column: 0});
+    },
+    deleteBranch: function() {
+        var selection = this.getBranchesList().getSelectionModel().getSelection()[0];
+        if (selection)
+            this.getBranchesList().getStore().remove(selection);
+    },
+    onBranchesListSelectionChange: function(selModel, selections) {
+        this.getDelBranchBtn().setDisabled(selections.length === 0);
+    },
+    addCondition: function() {
+        this.getConditionsList().getStore().insert(0, Ext.create('SD.model.Condition'));
+        this.getConditionsList().getPlugin().startEdit(0, 1);
+    },
+    deleteCondition: function() {
+        var selection = this.getConditionsList().getSelectionModel().getSelection()[0];
+        if (selection)
+            this.getConditionsList().getStore().remove(selection);
     }
+
 });

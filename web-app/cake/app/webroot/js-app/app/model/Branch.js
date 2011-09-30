@@ -5,6 +5,10 @@ Ext.define('SD.model.Branch', {
         {name: 'question_id',    type: 'int'},
         {name: 'next_q',    type: 'int'}
     ],
+    validations: [
+        {type: 'presence',  field: 'question_id'},
+        {type: 'presence',  field: 'next_q'}
+    ],
     associations: [
         {
             type: 'belongsTo',
@@ -20,6 +24,17 @@ Ext.define('SD.model.Branch', {
             foreignKey: 'next_q',
             getterName: 'getNextQuestion',
             setterName: 'setNextQuestion'
+        }, {
+            type: 'hasMany',
+            model: 'SD.model.Condition',
+            associationKey: 'conditions',
+            foreignKey: 'branch_id',
+            name: 'conditions',
+            storeConfig: {
+                storeId: 'BranchesByQuestion',
+                autoLoad: true,
+                autoSync: true
+            }
         }
     ],
     proxy: {

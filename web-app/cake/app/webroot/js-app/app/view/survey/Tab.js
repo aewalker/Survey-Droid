@@ -13,19 +13,30 @@ Ext.define("SD.view.survey.Tab", {
             split: true,
             flex: 1
         }, {
+            itemId: 'surveyEditor',
             region: 'center',
-            layout: 'card',
-            border: false,
+            xtype: 'panel',
+            title: 'Survey Title',
             flex: 3,
-            items: [
-                {
-                    itemId: 'details',
-                    xtype: 'surveyDetails'
-                }, {
-                    itemId: 'questionsPanel',
-                    xtype: 'questionsPanel'
-                }
-            ]
+            layout: 'fit',
+            items: [{
+
+                xtype: 'tabpanel',
+                border: false,
+
+                items: [
+                    {
+                        itemId: 'details',
+                        xtype: 'surveyDetails',
+                        title: 'Survey Details'
+                    }, {
+                        itemId: 'questionsPanel',
+                        xtype: 'questionsPanel',
+                        title: 'Survey Questions'
+                    }
+                ]
+            }]
         }
+
     ]
 });

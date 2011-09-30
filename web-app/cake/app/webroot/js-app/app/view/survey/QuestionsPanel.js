@@ -10,6 +10,7 @@ Ext.define('SD.view.survey.QuestionsPanel', {
         {
             itemId: 'questionsList',
             xtype: 'grid',
+            border: false,
             title: 'Questions',
             flex: 1,
             dockedItems: [{
@@ -38,6 +39,7 @@ Ext.define('SD.view.survey.QuestionsPanel', {
             ]
         }, {
             xtype: 'questionEditor',
+            border: false,
             flex: 4
         }
     ]

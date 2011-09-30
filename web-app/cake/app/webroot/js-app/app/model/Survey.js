@@ -37,6 +37,7 @@ Ext.define('SD.model.Survey', {
             foreignKey: 'survey_id',
             name: 'questions',
             storeConfig: {
+                storeId: 'QuestionsBySurvey',
                 autoLoad: true,
                 autoSync: true
             }

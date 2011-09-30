@@ -29,6 +29,7 @@ Ext.define('SD.model.Question', {
             foreignKey: 'question_id',
             name: 'choices',
             storeConfig: {
+                storeId: 'ChoicesByQuestion',
                 autoLoad: true,
                 autoSync: true
             }

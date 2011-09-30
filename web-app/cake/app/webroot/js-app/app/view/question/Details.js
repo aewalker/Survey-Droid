@@ -8,10 +8,10 @@ Ext.define("SD.view.question.Details", {
     buttonAlign: 'left',
     buttons: [{
         text: 'Save',
-        action: 'save'
+        action: 'save-question'
     }, {
         text: 'Delete',
-        action: 'delete'
+        action: 'delete-question'
     }],
     items: [
         {

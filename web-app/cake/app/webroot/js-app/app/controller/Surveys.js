@@ -5,8 +5,10 @@ Ext.define('SD.controller.Surveys', {
     refs: [
         {ref: 'surveysGrid',    selector: 'surveysTab surveysGrid' },
         {ref: 'surveyDetails',  selector: 'surveysTab surveyDetails' },
-        {ref: 'centerRegion',   selector: 'surveysTab panel[region=center]' },
-        {ref: 'questionsList',  selector: 'surveysTab #questionsList' }
+        {ref: 'tabPanel',   selector: 'surveysTab tabpanel' },
+        {ref: 'surveyEditor', selector: 'surveysTab #surveyEditor' },
+        {ref: 'questionsList',  selector: 'surveysTab #questionsList' },
+        {ref: 'questionsPanel', selector: 'surveysTab questionsPanel' }
     ],
     init: function() {
         var me = this;
@@ -14,11 +16,16 @@ Ext.define('SD.controller.Surveys', {
             'surveysTab surveysGrid': {
                 itemclick: function(grid, survey) {
                     me.getSurveyDetails().loadRecord(survey);
-                    me.getCenterRegion().getLayout().setActiveItem('details');
-                },
-                itemdblclick: function(grid, survey) {
-                    me.getQuestionsList().bindStore(survey.questions());
-                    me.getCenterRegion().getLayout().setActiveItem('questionsPanel');
+                    me.getSurveyEditor().setTitle('Survey Editor - ' + survey.data.name);
+                    me.getTabPanel().setActiveTab('details');
+                    me.getSurveysGrid().collapse();
+                }
+            },
+            'surveysTab questionsPanel': {
+                activate: function() {
+                    var survey = this.getSurveyDetails().getRecord();
+                    if (survey)
+                        me.getQuestionsList().bindStore(survey.questions());
                 }
             },
             'surveysTab surveyDetails button[action=save]': {
@@ -33,7 +40,7 @@ Ext.define('SD.controller.Surveys', {
         })
     },
     onLaunch: function() {
-        this.getCenterRegion().getLayout().setActiveItem('questionsPanel');
+//        this.getTabPanel().setActiveTab('questionsPanel');
     },
     onSurveySaveBtnClick: function() {
         var form = this.getSurveyDetails().getForm();
@@ -45,14 +52,16 @@ Ext.define('SD.controller.Surveys', {
         }
     },
     onSurveyDeleteBtnClick: function() {
-        var survey = this.getSurveyDetails().getForm().getRecord();
+        var form = this.getSurveyDetails().getForm(),
+            survey = form.getRecord();
         if (survey) {
             this.getSurveysStore().remove(survey);
-            this.onNewSurveyBtnClick();
+            form.reset();
+            form._record = undefined;
         }
     },
     onNewSurveyBtnClick: function() {
-        this.getCenterRegion().getLayout().setActiveItem('details');
+        this.getTabPanel().setActiveTab('details');
         this.getSurveyDetails().getForm().reset();
         this.getSurveyDetails().getForm()._record = undefined; // resetting the record, a bit of a hack!
     }

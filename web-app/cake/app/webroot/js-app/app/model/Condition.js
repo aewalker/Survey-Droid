@@ -10,7 +10,35 @@ Ext.define('SD.model.Condition', {
         {name: 'choice_id',    type: 'int'},
         {name: 'type',    type: 'int'}
     ],
-    belongsTo: ['Branch', 'Question', 'Choice'],
+    validations: [
+        {type: 'presence',  field: 'branch_id'},
+        {type: 'presence',  field: 'question_id'},
+        {type: 'presence',  field: 'choice_id'}
+    ],
+    associations: [
+        {
+            type: 'belongsTo',
+            model: 'SD.model.Question',
+            associationKey: 'question',
+            foreignKey: 'question_id',
+            getterName: 'getQuestion',
+            setterName: 'setQuestion'
+        }, {
+            type: 'belongsTo',
+            model: 'SD.model.Choice',
+            associationKey: 'choice',
+            foreignKey: 'choice_id',
+            getterName: 'getChoice',
+            setterName: 'setChoice'
+        }, {
+            type: 'belongsTo',
+            model: 'SD.model.Branch',
+            associationKey: 'branch',
+            foreignKey: 'branch_id',
+            getterName: 'getBranch',
+            setterName: 'setBranch'
+        }
+    ],
     proxy: {
         type: 'rest',
         url : '/rest/conditions'
