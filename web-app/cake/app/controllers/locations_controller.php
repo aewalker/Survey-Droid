@@ -32,8 +32,7 @@ class LocationsController extends AppController
 
         $models = $this->$modelClass->find('all', array(
             'recursive' => 0,
-            'conditions' => $conditions,
-            'limit' => 10
+            'conditions' => $conditions
         ));
 
         // custom stuff
