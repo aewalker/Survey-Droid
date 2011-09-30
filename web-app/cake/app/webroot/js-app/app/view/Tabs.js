@@ -6,6 +6,7 @@ Ext.define("SD.view.Tabs", {
         {
             xtype: 'usersGrid'
         }, {
+            itemId: 'subjectsTab',
             xtype: 'subjectsGrid'
         }, {
             xtype: 'surveysTab'
@@ -17,6 +18,5 @@ Ext.define("SD.view.Tabs", {
             title: 'Settings',
             xtype: 'configurationsTab'
         }
-
     ]
 });

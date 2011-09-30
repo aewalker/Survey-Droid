@@ -4,6 +4,7 @@ Ext.define("SD.view.data.Tab", {
     title: 'Data',
     items: [
         {
+            itemId: 'answerTab',
             title: 'Survey Answers',
             layout: 'border',
             items: [{
@@ -132,11 +133,84 @@ Ext.define("SD.view.data.Tab", {
                 ]
             }]
         }, {
-            title: 'Location'
+            itemId: 'locationTab',
+            title: 'Location',
+            xtype: 'grid',
+            store: 'Locations',
+            columns: [
+                {
+                    text: 'Time',
+                    dataIndex: 'created',
+                    xtype: 'datecolumn',
+                    format: Ext.Date.patterns.ISO8601Long,
+                    width: 150
+                }, {
+                    text: 'Subject Id',
+                    dataIndex: 'subject_id',
+                    width: 80
+                }, {
+                    text: 'Longitude',
+                    dataIndex: 'longitude'
+                }, {
+                    text: 'Latitude',
+                    dataIndex: 'latitude'
+                }, {
+                    text: 'Radius',
+                    dataIndex: 'radius'
+                }
+            ]
         }, {
-            title: 'Call Log'
+            itemId: 'callTab',
+            title: 'Call Log',
+            xtype: 'grid',
+            store: 'Calls',
+            columns: [
+                {
+                    text: 'Time',
+                    dataIndex: 'created',
+                    xtype: 'datecolumn',
+                    format: Ext.Date.patterns.ISO8601Long,
+                    width: 150
+                }, {
+                    xtype: 'templatecolumn',
+                    text: 'Subject Id',
+                    dataIndex: 'subject_id',
+                    tpl: '{subject.first_name} {subject.last_name}',
+                    width: 80
+                }, {
+                    text: 'Contact Id',
+                    dataIndex: 'contact_id',
+                    width: 80
+                }, {
+                    text: 'Call Type',
+                    xtype: 'templatecolumn',
+                    dataIndex: 'type',
+                    tpl: new Ext.XTemplate(
+                        '{[this.getCallType(values.type)]}', {
+                        getCallType: function(type) {
+                            switch (type) {
+                                case 0:
+                                    return 'Outgoing Call';
+                                case 1:
+                                    return 'Incoming Call';
+                                case 2:
+                                    return 'Outgoing Text';
+                                case 3:
+                                    return 'Incoming Text';
+                                case 4:
+                                    return 'Missed Call';
+                            }
+                        }
+                    })
+                }, {
+                    text: 'Call Duration (in seconds)',
+                    dataIndex: 'duration',
+                    width: 150
+                }
+            ]
         }, {
-            title: 'Voicemail & Photos'
+            title: 'Voicemail & Photos',
+            html: '<h1>Nothing to show yet</h1>'
         }
     ]
 });

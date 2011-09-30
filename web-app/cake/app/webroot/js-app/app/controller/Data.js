@@ -1,9 +1,10 @@
 Ext.define('SD.controller.Data', {
     extend: 'Ext.app.Controller',
-    models: ['Answer'],
-    stores: ['Answers'],
+    models: ['Answer', 'Location', 'Call'],
+    stores: ['Answers', 'Locations', 'Calls'],
     refs: [
         {ref: 'mainTabs', selector: 'mainTabs' },
+        {ref: 'dataTab', selector: '#dataTab' },
         {ref: 'subjectFilter', selector: '#subjectFilter' },
         {ref: 'surveyFilter', selector: '#surveyFilter' }
     ],
@@ -15,11 +16,26 @@ Ext.define('SD.controller.Data', {
             },
             '#surveyFilter': {
                 selectionchange: me.filterAnswers
+            },
+            '#callTab': {
+                activate: function() { me.loadIfEmpty('Calls'); }
+            },
+            '#locationTab': {
+                activate: function() { me.loadIfEmpty('Locations'); }
+            },
+            '#answerTab': {
+                activate: function() { me.loadIfEmpty('Answers'); }
             }
         })
     },
     onLaunch: function() {
-        this.getMainTabs().setActiveTab('dataTab');
+//        this.getMainTabs().setActiveTab('dataTab');
+//        this.getDataTab().setActiveTab('callTab');
+    },
+    loadIfEmpty: function(storeName) {
+        var store = Ext.getStore(storeName);
+        if (!store.isLoading() && store.count() == 0)
+        store.load();
     },
     filterAnswers: function() {
         var answers = this.getAnswersStore(),
