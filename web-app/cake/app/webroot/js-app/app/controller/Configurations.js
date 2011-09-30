@@ -39,6 +39,5 @@ Ext.define('SD.controller.Configurations', {
         store.sync();
     },
     onLaunch: function() {
-        this.getMainTabs().setActiveTab('settingsTab');
     }
 });

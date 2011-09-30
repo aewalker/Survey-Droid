@@ -16,7 +16,7 @@ Ext.Date.patterns = {
 
 Ext.application({
     name: 'SD',
-    controllers: ['Surveys', 'Subjects', 'Users', 'Configurations', 'Questions'],
+    controllers: ['Surveys', 'Subjects', 'Users', 'Configurations', 'Questions', 'Data'],
     autoCreateViewport : true,
 
     launch: function() {
