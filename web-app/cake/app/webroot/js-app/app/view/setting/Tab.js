@@ -2,6 +2,7 @@ Ext.define("SD.view.setting.Tab", {
     extend: "Ext.panel.Panel",
     alias: 'widget.settingsTab',
     title: 'Settings',
+    autoScroll: true,
     items: [{
         itemId: 'settingsForm',
         xtype: 'form',
