@@ -191,7 +191,7 @@ class APIController extends AppController
 								//add the deviceId to the contact_id to create an anonomyous and
 								//unique number in place of the real phone number:
 								if ($key == 'contact_id')
-									$val = $info['deviceId'].$val;
+									$val = $deviceid.$val;
 								
 								//deal with choice_ids, which uses HABTM
 								if ($key == 'choice_ids')

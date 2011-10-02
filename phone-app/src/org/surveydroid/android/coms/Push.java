@@ -430,7 +430,7 @@ public class Push
                 log.put(SurveyDroidDB.CallLogTable.DURATION, calls.getInt(
                 		calls.getColumnIndexOrThrow(
                 				SurveyDroidDB.CallLogTable.DURATION)));
-                log.put(SurveyDroidDB.CallLogTable.TIME, calls.getLong(
+                log.put("created", calls.getLong(
                 		calls.getColumnIndexOrThrow(
                 				SurveyDroidDB.CallLogTable.TIME)));
                 log.put("contact_id", hash(calls.getString(
