@@ -484,7 +484,7 @@ public class LocationTrackerService extends Service
 					//loc.getTime() is acting a bit oddly
 					//probably just due to the lack of GPS signal
 					tdbh.writeLocation(lat, lon, loc.getAccuracy(),
-							loc.getTime());
+							loc.getTime() / 1000);
 					tdbh.close();
 					
 					//tell the coms service to upload this data

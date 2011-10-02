@@ -23,9 +23,11 @@
  *****************************************************************************/
 package org.surveydroid.android;
 
+import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.database.TrackingDBHandler;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
 import android.provider.CallLog;
@@ -130,7 +132,7 @@ public class CallTracker extends PhoneStateListener
 										CallLog.Calls.DURATION)),
 								newCalls.getLong(
 										newCalls.getColumnIndexOrThrow(
-										CallLog.Calls.DATE)));
+										CallLog.Calls.DATE)) / 1000);
 							if (newCalls.isLast())
 							{
 								//this avoids a potential race condition
@@ -141,6 +143,14 @@ public class CallTracker extends PhoneStateListener
 							newCalls.moveToNext();
 						}
 						cdbh.close();
+						
+						//tell the coms service to upload the call information
+						Intent uploadIntent = new Intent(ctxt,
+								ComsService.class);
+						uploadIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+						uploadIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
+								ComsService.CALL_DATA);
+						ctxt.startService(uploadIntent);
 					}
 					newCalls.close();
 		        }
