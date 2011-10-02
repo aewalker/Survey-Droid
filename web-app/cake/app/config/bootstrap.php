@@ -51,3 +51,6 @@ include_once '301rewriting.php'; //do some 301 redirects
  * Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
  *
  */
+ 
+ 
+ Inflector::rules('plural', array('irregular' => array('surveys_taken' => 'surveys_taken')));
