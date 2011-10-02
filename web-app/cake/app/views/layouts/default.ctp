@@ -36,9 +36,9 @@
 			echo $html->link('Data Collection', array('controller' => 'datas', 'action' => 'index'));
 			echo $html->link('Surveys', array('controller' => 'surveys', 'action' => 'index'));
 			echo $html->link('Settings', array('controller' => 'configurations', 'action' => 'index'));
+            echo '<a href="/js-app"><b>New Interface</b></a>';
 		}
 		?>
-		<a href="/js-app">New Interface (In Progress)</a>
 	</div>
 </div>
 <div id="userInfo">
