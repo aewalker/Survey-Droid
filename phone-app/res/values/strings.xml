@@ -61,7 +61,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 	<string name="notification_activity_postpone">Postpone</string>
 	
 	<!-- The title text for the notification activity -->
-	<string name="notification_activity_title">You have a new survey awaiting:</string>
+	<string name="notification_activity_title">You have a new survey waiting:</string>
 	
 	<!-- The main title for the survey confirmation page -->
 	<string name="survey_confirmation_title">Survey Completed</string>

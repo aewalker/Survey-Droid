@@ -159,6 +159,7 @@ public class SurveyScheduler extends IntentService
 		 * For now, I think XOR works fine.  However, I don't think that it is
 		 * guaranteed to work 100% of the time for all possible situations.
 		 */
+		//TODO fix this
 		PendingIntent pendingSurvey = PendingIntent.getService(
 				getApplicationContext(), ((int) time) ^ id,
 				surveyIntent, 0);

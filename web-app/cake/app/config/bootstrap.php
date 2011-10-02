@@ -22,6 +22,7 @@
  */
 include_once 'config.php'; //the main user config file
 require_once 'constants.php'; //defines all the needed constants
+include_once '301rewriting.php'; //do some 301 redirects
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
