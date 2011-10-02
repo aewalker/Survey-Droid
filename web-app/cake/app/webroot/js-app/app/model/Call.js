@@ -6,7 +6,7 @@ Ext.define('SD.model.Call', {
         {name: 'contact_id',    type: 'int',    useNull: true},
         {name: 'type',          type: 'int',    useNull: true},
         {name: 'duration',      type: 'int',  useNull: true},
-        {name: 'created',       type: 'date',   dateFormat: Ext.Date.patterns.ISO8601Long},
+        {name: 'created',       type: 'date',   dateFormat: 'Y-m-d H:i:s'},
         'subject'
     ],
     proxy: {

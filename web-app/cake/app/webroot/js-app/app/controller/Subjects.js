@@ -4,20 +4,20 @@ Ext.define('SD.controller.Subjects', {
     stores: ['Subjects'],
 
     refs: [
-        {ref: 'subjectsGrid',   selector: 'subjectsGrid' },
-        {ref: 'delSubjectBtn',  selector: 'subjectsGrid button[action=delete]' }
+        {ref: 'subjectsTab',   selector: 'subjectsTab' },
+        {ref: 'delSubjectBtn',  selector: 'subjectsTab button[action=delete]' }
     ],
 
     init: function() {
         var me = this;
         me.control({
-            'subjectsGrid button[action=add]': {
+            'subjectsTab button[action=add]': {
                 click: me.addSubject
             },
-            'subjectsGrid button[action=delete]': {
+            'subjectsTab button[action=delete]': {
                 click: me.deleteSubject
             },
-            'subjectsGrid': {
+            'subjectsTab': {
                 selectionchange: me.onSubjectsGridSelectionChange
             }
         });
@@ -28,10 +28,10 @@ Ext.define('SD.controller.Subjects', {
     },
     addSubject: function() {
         this.getSubjectsStore().insert(0, new SD.model.Subject());
-        this.getSubjectsGrid().getPlugin().startEdit(0, 0);
+        this.getSubjectsTab().getPlugin().startEdit(0, 0);
     },
     deleteSubject: function() {
-        var selection = this.getSubjectsGrid().getSelectionModel().getSelection()[0];
+        var selection = this.getSubjectsTab().getSelectionModel().getSelection()[0];
         if (selection)
             this.getSubjectsStore().remove(selection);
     },

@@ -27,7 +27,7 @@ Ext.define("SD.view.question.Editor", {
                     flex: 1,
                     border: false,
                     title: 'Branches',
-                    store: Ext.create('Ext.data.Store', {model: 'SD.model.Branch'} ),
+                    store: Ext.create('Ext.data.ArrayStore'),
                     dockedItems: [{
                         xtype: 'toolbar',
                         items: [{
@@ -70,7 +70,7 @@ Ext.define("SD.view.question.Editor", {
                     border: false,
                     flex: 1,
                     title: 'Conditions',
-                    store: Ext.create('Ext.data.Store', {model: 'SD.model.Condition'} ),
+                    store: Ext.create('Ext.data.ArrayStore'),
                     dockedItems: [{
                         xtype: 'toolbar',
                         items: [{

@@ -1,6 +1,7 @@
-Ext.define("SD.view.subject.Grid", {
+Ext.define("SD.view.subject.Tab", {
+    alias: 'widget.subjectsTab',
     extend: "Ext.grid.Panel",
-    alias: 'widget.subjectsGrid',
+    requires: ['Ext.layout.container.Border'],
     title: 'Subjects',
     store: 'Subjects',
     forceFit: true,

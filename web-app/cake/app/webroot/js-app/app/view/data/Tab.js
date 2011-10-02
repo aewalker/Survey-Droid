@@ -1,10 +1,11 @@
 Ext.define("SD.view.data.Tab", {
-    extend: "Ext.tab.Panel",
     alias: 'widget.dataTab',
+    extend: "Ext.tab.Panel",
+    requires: ['Ext.selection.CheckboxModel', 'Ext.grid.column.Date', 'Ext.grid.column.Template'],
     title: 'Data',
     items: [
         {
-            itemId: 'answerTab',
+            itemId: 'answersTab',
             title: 'Survey Answers',
             layout: 'border',
             items: [{
@@ -125,7 +126,7 @@ Ext.define("SD.view.data.Tab", {
                                 text: 'Time Answered',
                                 xtype: 'datecolumn',
                                 dataIndex: 'created',
-                                format: Ext.Date.patterns.ISO8601Long,
+                                format: 'Y-m-d H:i:s',
                                 width: 150
                             }
                         ]
@@ -133,7 +134,7 @@ Ext.define("SD.view.data.Tab", {
                 ]
             }]
         }, {
-            itemId: 'locationTab',
+            itemId: 'locationsTab',
             title: 'Location',
             xtype: 'grid',
             store: 'Locations',
@@ -142,7 +143,7 @@ Ext.define("SD.view.data.Tab", {
                     text: 'Time',
                     dataIndex: 'created',
                     xtype: 'datecolumn',
-                    format: Ext.Date.patterns.ISO8601Long,
+                    format: 'Y-m-d H:i:s',
                     width: 150
                 }, {
                     text: 'Subject Id',
@@ -160,7 +161,7 @@ Ext.define("SD.view.data.Tab", {
                 }
             ]
         }, {
-            itemId: 'callTab',
+            itemId: 'callsTab',
             title: 'Call Log',
             xtype: 'grid',
             store: 'Calls',
@@ -169,7 +170,7 @@ Ext.define("SD.view.data.Tab", {
                     text: 'Time',
                     dataIndex: 'created',
                     xtype: 'datecolumn',
-                    format: Ext.Date.patterns.ISO8601Long,
+                    format: 'Y-m-d H:i:s',
                     width: 150
                 }, {
                     xtype: 'templatecolumn',

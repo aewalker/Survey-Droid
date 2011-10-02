@@ -1,6 +1,6 @@
-Ext.define("SD.view.configuration.Tab", {
+Ext.define("SD.view.setting.Tab", {
     extend: "Ext.panel.Panel",
-    alias: 'widget.configurationsTab',
+    alias: 'widget.settingsTab',
     title: 'Settings',
     items: [{
         itemId: 'settingsForm',

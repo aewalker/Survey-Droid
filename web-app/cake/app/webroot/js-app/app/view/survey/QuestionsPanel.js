@@ -1,6 +1,6 @@
 Ext.define('SD.view.survey.QuestionsPanel', {
     extend: 'Ext.panel.Panel',
-    requires: ['SD.view.question.Editor'],
+    requires: ['SD.view.question.Editor', 'Ext.form.field.ComboBox', 'Ext.toolbar.Toolbar'],
     alias: 'widget.questionsPanel',
     layout: {
         type: 'hbox',
@@ -21,7 +21,7 @@ Ext.define('SD.view.survey.QuestionsPanel', {
                     iconCls: 'icon-add'
                 }]
             }],
-            store: Ext.create('Ext.data.Store', {model: 'SD.model.Question'} ),
+            store: Ext.create('Ext.data.ArrayStore'),
             columns: [
                 {
                     text: 'Id',

@@ -1,6 +1,7 @@
 Ext.define("SD.view.survey.Details", {
     extend: "Ext.form.Panel",
     alias: 'widget.surveyDetails',
+    requires: ['Ext.form.field.Display', 'Ext.grid.plugin.CellEditing'],
     autoScroll: true,
     buttonAlign: 'left',
     buttons: [{

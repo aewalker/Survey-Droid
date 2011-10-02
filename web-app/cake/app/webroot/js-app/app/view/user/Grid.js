@@ -1,6 +1,7 @@
 Ext.define("SD.view.user.Grid", {
     extend: "Ext.grid.Panel",
     alias: 'widget.usersGrid',
+    requires: 'Ext.grid.column.Boolean',
     title: 'Users',
     store: 'Users',
     forceFit: true,

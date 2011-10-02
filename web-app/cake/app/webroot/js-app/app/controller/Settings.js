@@ -1,4 +1,4 @@
-Ext.define('SD.controller.Configurations', {
+Ext.define('SD.controller.Settings', {
     extend: 'Ext.app.Controller',
     models: ['Configuration'],
     stores: ['Configurations'],

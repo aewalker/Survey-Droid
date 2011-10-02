@@ -1,13 +1,13 @@
 Ext.define("SD.view.Tabs", {
     extend: "Ext.tab.Panel",
     alias: 'widget.mainTabs',
-    requires: ['SD.view.subject.Grid', 'SD.view.survey.Tab', 'SD.view.user.Grid', 'SD.view.configuration.Tab', 'SD.view.data.Tab'],
+    requires: ['SD.view.subject.Tab', 'SD.view.survey.Tab', 'SD.view.user.Grid', 'SD.view.setting.Tab', 'SD.view.data.Tab'],
     items: [
         {
             xtype: 'usersGrid'
         }, {
             itemId: 'subjectsTab',
-            xtype: 'subjectsGrid'
+            xtype: 'subjectsTab'
         }, {
             xtype: 'surveysTab'
         }, {
@@ -16,7 +16,7 @@ Ext.define("SD.view.Tabs", {
         }, {
             itemId: 'settingsTab',
             title: 'Settings',
-            xtype: 'configurationsTab'
+            xtype: 'settingsTab'
         }
     ]
 });

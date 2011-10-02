@@ -17,13 +17,13 @@ Ext.define('SD.controller.Data', {
             '#surveyFilter': {
                 selectionchange: me.filterAnswers
             },
-            '#callTab': {
+            '#callsTab': {
                 activate: function() { me.loadIfEmpty('Calls'); }
             },
-            '#locationTab': {
+            '#locationsTab': {
                 activate: function() { me.loadIfEmpty('Locations'); }
             },
-            '#answerTab': {
+            '#answersTab': {
                 activate: function() { me.loadIfEmpty('Answers'); }
             }
         })

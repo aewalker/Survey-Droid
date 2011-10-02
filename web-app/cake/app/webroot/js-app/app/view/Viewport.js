@@ -1,6 +1,6 @@
 Ext.define('SD.view.Viewport', {
     extend: 'Ext.container.Viewport',
-    requires: ['SD.store.Subjects', 'SD.view.Header', 'SD.view.Tabs'],
+    requires: ['SD.store.Subjects', 'SD.view.Header', 'SD.view.Tabs', 'Ext.grid.plugin.RowEditing'],
     layout: 'fit',
     items: [
         {
@@ -14,10 +14,5 @@ Ext.define('SD.view.Viewport', {
                 { xtype: 'mainTabs' }
             ]
         }
-    ],
-    initComponent: function() {
-        console.log("viewport initing");
-        this.doLayout();
-        this.callParent(arguments);
-    }
+    ]
 });

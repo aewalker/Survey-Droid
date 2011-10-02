@@ -1,6 +1,7 @@
 Ext.define("SD.view.question.Details", {
     extend: "Ext.form.Panel",
     alias: 'widget.questionDetails',
+    requires: ['Ext.form.FieldContainer', 'Ext.form.FieldSet', 'Ext.form.field.Radio'],
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -122,7 +123,7 @@ Ext.define("SD.view.question.Details", {
                             xtype: 'grid',
                             flex: 1,
                             title: 'Choices',
-                            store: Ext.create('Ext.data.Store', {model: 'SD.model.Choice'} ),
+                            store: Ext.create('Ext.data.ArrayStore'),
                             dockedItems: [{
                                 xtype: 'toolbar',
                                 items: [{
