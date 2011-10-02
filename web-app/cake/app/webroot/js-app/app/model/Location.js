@@ -5,7 +5,7 @@ Ext.define('SD.model.Location', {
         {name: 'subject_id',    type: 'int',    useNull: true},
         {name: 'longitude',     type: 'float',  useNull: true},
         {name: 'latitude',      type: 'float',  useNull: true},
-        {name: 'radius',        type: 'float',  useNull: true},
+        {name: 'accuracy',      type: 'float',  useNull: true},
         {name: 'created',       type: 'date',   dateFormat: 'Y-m-d H:i:s'},
         'subject'
     ],
