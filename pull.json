@@ -15,7 +15,7 @@
             "name": "",
             "created": 0, //unix timestamp
             "question_id": 0,
-            "subject_init": 0, //allow subjects to start the survey whenver they want?
+            "subject_init": 0, //allow subjects to start the survey whenever they want
             "mo": "",
             "tu": "", 
             "we": "",

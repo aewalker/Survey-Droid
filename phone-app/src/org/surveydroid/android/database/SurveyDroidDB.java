@@ -62,7 +62,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     //Change the version number here to force the database to
     //update itself.  This throws out all data.
     private static final String DATABASE_NAME = "sd.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     //table names
     public static final String TAKEN_TABLE_NAME = "surveysTaken";
@@ -136,6 +136,14 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     	public static final int RANDOM_UNFINISHED = 9;
     	public static final int RANDOM_DISMISSED = 10;
     	public static final int RANDOM_IGNORED = 11;
+    	public static final int CALL_INITIATED_FINISHED = 12;
+    	public static final int CALL_INITIATED_UNFINISHED = 13;
+    	public static final int CALL_INITIATED_DISMISSED = 14;
+    	public static final int CALL_INITIATED_IGNORED = 15;
+    	public static final int LOCATION_BASED_FINISHED = 16;
+    	public static final int LOCATION_BASED_UNFINISHED = 17;
+    	public static final int LOCATION_BASED_DISMISSED = 18;
+    	public static final int LOCATION_BASED_IGNORED = 19;
     	
 		private static String createSql() {
     		return "CREATE TABLE " + TAKEN_TABLE_NAME + " ("
@@ -220,7 +228,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
 
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
         public static final String PHONE_NUMBER = "phone_number";
-        public static final String CALL_TYPE = "call_type";
+        public static final String CALL_TYPE = "type";
         public static final String DURATION = "duration";
         public static final String TIME = "time";
 
@@ -292,7 +300,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
         	return "CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
             + CallLogTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + CallLogTable.PHONE_NUMBER + " TEXT,"
-            + CallLogTable.CALL_TYPE + " TEXT,"
+            + CallLogTable.CALL_TYPE + " INTEGER,"
             + CallLogTable.DURATION + " INTEGER,"
             + CallLogTable.TIME + " TEXT)";
         }

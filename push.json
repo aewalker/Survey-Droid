@@ -39,7 +39,7 @@
     "calls": [
         {
             "contact_id": "0004KX9ADSKFG9-AV93OASDV093",
-            "type": 0, // enum {outgoing calll 0, incoming call 1, outgoing text 2, incoming text 3, missed call 4}
+            "type": 0, // see Calls class in Android
             "duration": 0 // null for text, 0 for missed calls,  # of seconds for calls
             "created": 0 // unix timestamp again, in fact all created are unix.
         }, {

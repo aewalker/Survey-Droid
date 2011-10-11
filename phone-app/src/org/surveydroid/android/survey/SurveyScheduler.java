@@ -28,6 +28,7 @@ package org.surveydroid.android.survey;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -86,6 +87,13 @@ public class SurveyScheduler extends IntentService
 		"org.surveydroid.android.survey.EXTRA_SURVEY_TIME";
 	
 	/**
+	 * Is this survey randomly timed?  Used with
+	 * {@link #ACTION_ADD_SURVEY}.
+	 */
+	public static final String EXTRA_SURVEY_IS_RANDOM =
+		"org.surveydroid.android.survey.EXTRA_SURVEY_IS_RANDOM";
+	
+	/**
 	 * The time this service was set to run.  Used with
 	 * {@link #ACTION_SCHEDULE_SURVEYS}.
 	 */
@@ -116,7 +124,11 @@ public class SurveyScheduler extends IntentService
 			int id = intent.getIntExtra(EXTRA_SURVEY_ID,
 					SurveyService.DUMMY_SURVEY_ID);
 			
-			addSurvey(id, time);
+			//is this random?  assume not
+			boolean random = intent.getBooleanExtra(
+					EXTRA_SURVEY_IS_RANDOM, false);
+			
+			addSurvey(id, time, random);
 		}
 		else if (action.equals(ACTION_SCHEDULE_SURVEYS))
 		{
@@ -134,7 +146,7 @@ public class SurveyScheduler extends IntentService
 	}
 	
 	//schedule survey id for the given time
-	private void addSurvey(int id, long time)
+	private void addSurvey(int id, long time, boolean random)
 	{
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(time);
@@ -144,6 +156,16 @@ public class SurveyScheduler extends IntentService
 		Intent surveyIntent = new Intent(getApplicationContext(),
 				SurveyService.class);
 		surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
+		if (random)
+		{
+			surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_TYPE,
+					SurveyService.SURVEY_TYPE_RANDOM);
+		}
+		else
+		{
+			surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_TYPE,
+					SurveyService.SURVEY_TYPE_TIMED);
+		}
 		surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID, id);
 		surveyIntent.putExtra(EXTRA_RUNNING_TIME, time);
 		/*
@@ -204,15 +226,46 @@ public class SurveyScheduler extends IntentService
 				{
 					if (time == "") continue;  //"".split(",") returns { "" }
 					long scheduledTime;
+					boolean random = false;
 					try
 					{
 						scheduledTime = Util.getUnixTime(days[i], time);
 					}
-					catch (IllegalArgumentException e)
+					catch (IllegalArgumentException e1)
 					{
-						Util.e(null, TAG, "Invalid survey time: \""
-								+ time + "\"; skipping");
-						continue;
+						//could be a random survey, so check that
+						try
+						{
+							long start = Util.getUnixTime(days[i],
+									time.substring(0, 4));
+							long end = Util.getUnixTime(days[i],
+									time.substring(5, 9));
+							/*
+							 * We want to ensure that, in case the scheduler
+							 * runs multiple times between when a random
+							 * survey is first scheduled and when it is
+							 * started, that we schedule it for the same
+							 * time in both cases.
+							 */
+							long diff = end - start;
+							byte[] bytes = Config.getSetting(
+									this, Config.SALT, "").getBytes();
+							for (int j = 0; j < bytes.length; j++)
+							{
+								diff ^= bytes[j] << j; //meh why not...
+							}
+							Random r = new Random(diff);
+							//always safe because end - start < Integer.MAX_VALUE
+							long offset = (long) (r.nextDouble() * (end - start));
+							scheduledTime = start + offset;
+							random = true;
+						}
+						catch (Exception e2)
+						{
+							Util.e(null, TAG, "Invalid survey time: \""
+									+ time + "\"; skipping");
+							continue;
+						}
 					}
 
 					if (Config.D)
@@ -220,10 +273,20 @@ public class SurveyScheduler extends IntentService
 						Date d = new Date(scheduledTime);
 						Util.v(null, TAG, "Survey would be scheduled for "
 								+ d.toGMTString() + " GMT");
-						Util.v(null, TAG, "should be scheduled for "
-								+ days[i] + " at " + time);
+						if (!random)
+						{
+							Util.v(null, TAG, "should be scheduled for "
+									+ days[i] + " at " + time);
+						}
+						else
+						{
+							Util.v(null, TAG, "should be scheduled for "
+									+ days[i] + " between "
+									+ time.substring(0, 4) + " and "
+									+ time.substring(5, 9));
+						}
 					}
-					addSurvey(id, scheduledTime);
+					addSurvey(id, scheduledTime, random);
 				}
 			}
 			surveys.moveToNext();
