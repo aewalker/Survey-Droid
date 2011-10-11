@@ -25,6 +25,8 @@ package org.surveydroid.android.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.provider.CallLog;
 
 import org.surveydroid.android.Util;
 import org.surveydroid.android.database.SurveyDroidDB.CallLogTable.CallType;
@@ -96,5 +98,49 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 		values.put(LocationTable.TIME, time);
 
 		db.insert(SurveyDroidDB.LOCATION_TABLE_NAME, null, values);
+	}
+	
+	/**
+	 * Has a phone number been seen before?
+	 * 
+	 * @param number - the phone number to check
+	 * @param texts - if true, look at texts; if false, calls
+	 * 
+	 * @return true if the number has not been seen before
+	 */
+	public boolean isNewNumber(String number, boolean texts)
+	{
+		Util.d(contx, TAG, "Looking for " + number);
+		
+		String    table    = SurveyDroidDB.CALLLOG_TABLE_NAME;
+		String[]  cols     = {SurveyDroidDB.CallLogTable.PHONE_NUMBER};
+		//don't count missed calls...
+		String    selc = SurveyDroidDB.CallLogTable.CALL_TYPE + " = ? or " +
+			SurveyDroidDB.CallLogTable.CALL_TYPE + " = ?";
+		String[]  selcArgs = new String[2];
+		if (texts)
+		{
+			selcArgs[0] = Integer.toString(
+					SurveyDroidDB.CallLogTable.CallType.OUTGOING);
+			selcArgs[1] = Integer.toString(
+					SurveyDroidDB.CallLogTable.CallType.INCOMING);
+		}
+		else
+		{
+			selcArgs[0] = Integer.toString(
+					SurveyDroidDB.CallLogTable.CallType.OUTGOING_TEXT);
+			selcArgs[1] = Integer.toString(
+					SurveyDroidDB.CallLogTable.CallType.INCOMING_TEXT);
+		}
+		String    group    = null;
+		String    having   = null;
+		String    orderBy  = null;
+		
+		Cursor result =
+			db.query(table, cols, selc, selcArgs, group, having, orderBy);
+		boolean toReturn = true;
+		if (result.getCount() > 0) toReturn = false;
+		result.close();
+		return toReturn;
 	}
 }

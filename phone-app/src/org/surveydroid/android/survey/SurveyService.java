@@ -127,8 +127,18 @@ public class SurveyService extends Service
 	 * Used with {@link #EXTRA_SURVEY_TYPE} for randomized time-based surveys
 	 */
 	public static final int SURVEY_TYPE_RANDOM = 1;
+	
 	/** Used with {@link #EXTRA_SURVEY_TYPE} for user-initiated surveys */
 	public static final int SURVEY_TYPE_USER_INIT = 2;
+	
+	/** Used with {@link #EXTRA_SURVEY_TYPE} for call-initiated surveys */
+	public static final int SURVEY_TYPE_CALL_INIT = 3;
+	
+	/**
+	 * Used with {@link #EXTRA_SURVEY_TYPE} for location poximity initiated
+	 * surveys.
+	 */
+	public static final int SURVEY_TYPE_LOC_INIT = 4;
 	
 	/*-----------------------------------------------------------------------*/
 	
@@ -412,6 +422,12 @@ public class SurveyService extends Service
 					status =
 						SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED;
 					break;
+				case SURVEY_TYPE_CALL_INIT:
+					status = SurveyDroidDB.TakenTable.CALL_INITIATED_DISMISSED;
+					break;
+				case SURVEY_TYPE_LOC_INIT:
+					status = SurveyDroidDB.TakenTable.LOCATION_BASED_DISMISSED;
+					break;
 				default:
 					throw new IllegalArgumentException(
 							"Invalid survey type: " + type);
@@ -473,6 +489,12 @@ public class SurveyService extends Service
 						status =
 							SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED;
 						break;
+					case SURVEY_TYPE_CALL_INIT:
+						status = SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED;
+						break;
+					case SURVEY_TYPE_LOC_INIT:
+						status = SurveyDroidDB.TakenTable.LOCATION_BASED_IGNORED;
+						break;
 					default:
 						throw new IllegalArgumentException(
 								"Invalid survey type: " + type);
@@ -520,6 +542,12 @@ public class SurveyService extends Service
 				break;
 			case SURVEY_TYPE_USER_INIT:
 				status = SurveyDroidDB.TakenTable.USER_INITIATED_FINISHED;
+				break;
+			case SURVEY_TYPE_CALL_INIT:
+				status = SurveyDroidDB.TakenTable.CALL_INITIATED_FINISHED;
+				break;
+			case SURVEY_TYPE_LOC_INIT:
+				status = SurveyDroidDB.TakenTable.LOCATION_BASED_FINISHED;
 				break;
 			default:
 				throw new IllegalArgumentException(
@@ -572,6 +600,12 @@ public class SurveyService extends Service
 			break;
 		case SURVEY_TYPE_USER_INIT:
 			status = SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED;
+			break;
+		case SURVEY_TYPE_CALL_INIT:
+			status = SurveyDroidDB.TakenTable.CALL_INITIATED_UNFINISHED;
+			break;
+		case SURVEY_TYPE_LOC_INIT:
+			status = SurveyDroidDB.TakenTable.LOCATION_BASED_UNFINISHED;
 			break;
 		default:
 			throw new IllegalArgumentException(

@@ -115,15 +115,15 @@ public class CallTracker extends PhoneStateListener
 							+ " new call(s) found");
 					if (newCalls.getCount() != 0)
 					{
-						TrackingDBHandler cdbh = new TrackingDBHandler(ctxt);
-						cdbh.openWrite();
+						TrackingDBHandler tdbh = new TrackingDBHandler(ctxt);
+						tdbh.openWrite();
 						newCalls.moveToFirst();
 						while (!newCalls.isAfterLast())
 						{
-							cdbh.writeCall(
-								newCalls.getString(
-										newCalls.getColumnIndexOrThrow(
-										CallLog.Calls.NUMBER)),
+							String number = newCalls.getString(
+									newCalls.getColumnIndexOrThrow(
+											CallLog.Calls.NUMBER));
+							tdbh.writeCall(number,
 								newCalls.getInt(
 										newCalls.getColumnIndexOrThrow(
 										CallLog.Calls.TYPE)),
@@ -133,16 +133,30 @@ public class CallTracker extends PhoneStateListener
 								newCalls.getLong(
 										newCalls.getColumnIndexOrThrow(
 										CallLog.Calls.DATE)) / 1000);
-							if (newCalls.isLast())
-							{
-								//this avoids a potential race condition
-								lastLookup = newCalls.getLong(
-										newCalls.getColumnIndexOrThrow(
-										CallLog.Calls.DATE));
-							}
 							newCalls.moveToNext();
+							/*
+							 * In the rare case that multiple calls are found
+							 * here, we don't want to confuse people by
+							 * starting multiple surveys at once.  Therefore,
+							 * only start a survey for the most recent call.
+							 */
+							if (!newCalls.isLast()) continue;
+							if (tdbh.isNewNumber(number, false))
+							{
+								//TODO find surveys that should be started
+								//for new phone numbers
+							}
+							else
+							{
+								//TODO find surveys that should be started
+								//for old phone numbers
+							}
+							//this avoids a potential race condition
+							lastLookup = newCalls.getLong(
+									newCalls.getColumnIndexOrThrow(
+									CallLog.Calls.DATE));
 						}
-						cdbh.close();
+						tdbh.close();
 						
 						//tell the coms service to upload the call information
 						Intent uploadIntent = new Intent(ctxt,

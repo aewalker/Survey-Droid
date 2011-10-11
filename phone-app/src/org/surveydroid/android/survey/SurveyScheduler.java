@@ -252,11 +252,12 @@ public class SurveyScheduler extends IntentService
 									this, Config.SALT, "").getBytes();
 							for (int j = 0; j < bytes.length; j++)
 							{
-								diff ^= bytes[j] << j; //meh why not...
+								diff ^= ((long) bytes[j]) << j; //meh why not
 							}
 							Random r = new Random(diff);
-							//always safe because end - start < Integer.MAX_VALUE
-							long offset = (long) (r.nextDouble() * (end - start));
+							//always safe because end - start < max int size
+							long offset =
+								(long) (r.nextDouble() * (end - start));
 							scheduledTime = start + offset;
 							random = true;
 						}

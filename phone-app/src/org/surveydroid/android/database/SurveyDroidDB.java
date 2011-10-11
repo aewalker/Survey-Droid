@@ -354,6 +354,8 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     * 
     * @author Austin Walker
     */
+   //TODO I think the plan here should be to remove survey_id, merge the phto
+   //and video fields together into data, and then put in a type field
    public static final class ExtrasTable extends SDTable {
 	   public static final String SURVEY_ID ="survey_id";
 	   public static final String PHOTO = "photo";

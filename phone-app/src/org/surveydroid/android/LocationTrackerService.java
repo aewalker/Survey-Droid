@@ -49,6 +49,8 @@ import android.os.IBinder;
  * which are a function of the LocationManager.  Battery life could be extended
  * quite a bit if they are somehow more efficient that the current system.
  * This is something that can be tested extensively later on.
+ * 
+ * This will be great for location-based surveys actually.
  */
 
 //TODO this class CANNOT deal with time periods that stretch through midnight
