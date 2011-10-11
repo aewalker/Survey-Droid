@@ -23,7 +23,11 @@ Ext.define("SD.view.data.Tab", {
                         xtype: 'grid',
                         title: 'Filter By Subject',
                         store: 'Subjects',
-                        columns: [{
+                        columns: [
+                        {
+                            dataIndex: 'id',
+                            width: 20
+                        }, {
                             dataIndex: 'id',
                             xtype: 'templatecolumn',
                             tpl: '{first_name} {last_name}',
@@ -67,6 +71,10 @@ Ext.define("SD.view.data.Tab", {
                         store: 'Answers',
                         columns: [
                             {
+                                text: 'Subject Id',
+                                dataIndex: 'subject_id',
+                                width: 70
+                            }, {
                                 text: 'Subject',
                                 xtype: 'templatecolumn',
                                 dataIndex: 'subject_id',
@@ -151,13 +159,16 @@ Ext.define("SD.view.data.Tab", {
                     width: 80
                 }, {
                     text: 'Longitude',
-                    dataIndex: 'longitude'
+                    dataIndex: 'longitude',
+                    width: 100
                 }, {
                     text: 'Latitude',
-                    dataIndex: 'latitude'
+                    dataIndex: 'latitude',
+                    width: 100
                 }, {
-                    text: 'Radius',
-                    dataIndex: 'radius'
+                    text: 'Accuracy Radius (meters)',
+                    dataIndex: 'accuracy',
+                    width: 150
                 }
             ]
         }, {
