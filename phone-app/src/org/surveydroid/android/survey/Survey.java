@@ -25,7 +25,6 @@
 package org.surveydroid.android.survey;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -84,15 +83,6 @@ public class Survey
 
 	//the Question history via a stack
 	private final Stack<Question> history = new Stack<Question>();
-	
-	//the id of the row in the extras table for the current run of this survey
-	private int row = 0;
-	
-	//does this survey have a photo with it?
-	private boolean hasPhoto = false;
-	
-	//does this survey have a voice recording with it?
-	private boolean hasVoice = false;
 
 	/*-----------------------------------------------------------------------*/
 	/**
@@ -710,26 +700,6 @@ public class Survey
 		return currentQ.getType();
 	}
 	
-	/**
-	 * Has a photo been submitted with this survey?
-	 * 
-	 * @return true if one has
-	 */
-	public boolean hasPhoto()
-	{
-		return hasPhoto;
-	}
-	
-	/**
-	 * Has a voice recording been submitted with this survey?
-	 * 
-	 * @return true if one has
-	 */
-	public boolean hasVoice()
-	{
-		return hasVoice;
-	}
-	
 	/*-----------------------------------------------------------------------*/
 
 	/**
@@ -790,65 +760,6 @@ public class Survey
 			registry.push(q.answer(val));
 		}
 		else throw new RuntimeException("Wrong question type");
-	}
-	
-	/**
-	 * Adds a photo to this survey.  Writes it into the database.
-	 * 
-	 * @param photo - the photo's data in an {@link InputStream}
-	 * 
-	 * @return true on success
-	 */
-	public boolean addPhoto(InputStream photo)
-	{
-		Util.v(null, TAG, "adding photo");
-		if (id == 0)
-		{
-			hasPhoto = true;
-			return true;
-		}
-			
-		SurveyDBHandler sdbh = new SurveyDBHandler(ctxt);
-		sdbh.openWrite();
-		int returned = sdbh.writeExtra(id, SurveyDBHandler.PHOTO,
-				photo, System.currentTimeMillis() / 1000, row);
-		sdbh.close();
-		if (returned == SurveyDBHandler.WRITE_ERROR)
-		{
-			return false;
-		}
-		row = returned;
-		hasPhoto = true;
-		return true;
-	}
-	
-	/**
-	 * Adds a voice recording to this survey.  Writes it into the database.
-	 * 
-	 * @param voice - the recording's data in an {@link InputStream}
-	 * 
-	 * @return true on success
-	 */
-	public boolean addVoice(InputStream voice)
-	{
-		if (id == 0)
-		{
-			hasVoice = true;
-			return true;
-		}
-		
-		SurveyDBHandler sdbh = new SurveyDBHandler(ctxt);
-		sdbh.openWrite();
-		int returned = sdbh.writeExtra(id, SurveyDBHandler.VOICE,
-				voice, System.currentTimeMillis() / 1000, row);
-		sdbh.close();
-		if (returned == SurveyDBHandler.WRITE_ERROR)
-		{
-			return false;
-		}
-		row = returned;
-		hasVoice = true;
-		return true;
 	}
 
 	/**

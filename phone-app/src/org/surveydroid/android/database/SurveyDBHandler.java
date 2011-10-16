@@ -24,11 +24,6 @@
  *****************************************************************************/
 package org.surveydroid.android.database;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.surveydroid.android.Base64Coder;
 import org.surveydroid.android.Config;
 import org.surveydroid.android.Util;
 
@@ -45,24 +40,6 @@ public class SurveyDBHandler extends SurveyDroidDBHandler
 {
 	//for writing to the log
 	private static final String TAG = "SurveyDBHandler";
-	
-	/**
-	 * Returned by methods that require and int return type when an error
-	 * has occurred.
-	 */
-	public static final int WRITE_ERROR = -1;
-	
-	/**
-	 * Used with {@link #writeExtra} to write a photo taken as part of a
-	 * survey to the database.
-	 */
-	public static final int PHOTO = 0;
-	
-	/**
-	 * Used with {@link #writeExtra} to write a voice recording made as part of
-	 * a survey to the database.
-	 */
-	public static final int VOICE = 1;
 	
 	/**
 	 * Create a new SurveyDBHandler object.
@@ -423,123 +400,5 @@ public class SurveyDBHandler extends SurveyDroidDBHandler
 		if (db.insert(SurveyDroidDB.ANSWER_TABLE_NAME, null, values) == -1)
 			return false;
 		return true;
-	}
-	
-	/**
-	 * Write a photo or voice recording to the database.
-	 * 
-	 * @param survey_id - the survey id that this photo was taken for
-	 * @param type - either {@link #PHOTO} or {@link #VOICE}
-	 * @param stream - the stream containing the photo or recording's data
-	 * @param created - timestamp of when the photo or recording was made
-	 * @param row_id - the row to put the photo or recording into, or 0 if a
-	 * new row is to be made
-	 * 
-	 * @return the row in the extras table where the photo or recording was
-	 * put, or {@link #WRITE_ERROR} on error
-	 */
-	public int writeExtra(int survey_id, int type,
-			InputStream stream, long created, int row_id)
-	{
-		Util.d(null, TAG, "writing extra for survey "
-				+ survey_id + " to database");
-		if (Config.D && row_id != 0)
-		{
-			//check that row_id is a valid row; if debugging is off,
-			//assume that it is
-			
-			//set up the query
-			String    table    = SurveyDroidDB.EXTRAS_TABLE_NAME;
-			String[]  cols     = {SurveyDroidDB.ExtrasTable._ID};
-			String    selc     = SurveyDroidDB.ExtrasTable._ID + " =  ?";
-			String[]  selcArgs = {Integer.toString(row_id)};
-			String    group    = null;
-			String    having   = null;
-			String    orderBy  = null;
-			
-			//run it
-			Cursor result =
-				db.query(table, cols, selc, selcArgs, group, having, orderBy);
-			if (result.getCount() == 0) throw new IllegalArgumentException(
-					"row_id " + row_id + " does not exist");
-			if (result.getCount() > 1) throw new IllegalStateException(
-					"SEVERE ERROR: table contains multiple rows with same id: "
-					+ row_id);
-		}
-		
-		//now that we know that row_id is valid, let's actually do something
-		if (row_id == 0)
-		{ //set up a new row
-			String extra64;
-			try
-			{
-				extra64 = new String(
-						Base64Coder.encode(readStream(stream)));
-			}
-			catch (Exception e)
-			{
-				Util.e(contx, TAG, Util.fmt(e));
-				return WRITE_ERROR;
-			}
-			
-			ContentValues values = new ContentValues();
-			
-			//set up the query
-			values.put(SurveyDroidDB.ExtrasTable.SURVEY_ID, survey_id);
-			values.put(SurveyDroidDB.ExtrasTable.CREATED, created);
-			if (type == PHOTO)
-				values.put(SurveyDroidDB.ExtrasTable.PHOTO, extra64);
-			else if (type == VOICE)
-				values.put(SurveyDroidDB.ExtrasTable.VOICE, extra64);
-			else throw new RuntimeException("Unknown extra type: " + type);
-			
-			//run it
-			return (int) db.insert(SurveyDroidDB.EXTRAS_TABLE_NAME, null, values);
-		}
-		else
-		{ //amend the existing row
-			String extra64;
-			try
-			{
-				extra64 = new String(
-						Base64Coder.encode(readStream(stream)));
-			}
-			catch (Exception e)
-			{
-				Util.e(contx, TAG, Util.fmt(e));
-				return WRITE_ERROR;
-			}
-			
-			//set up the query
-			ContentValues values = new ContentValues();
-			if (type == PHOTO)
-				values.put(SurveyDroidDB.ExtrasTable.PHOTO, extra64);
-			else if (type == VOICE)
-				values.put(SurveyDroidDB.ExtrasTable.VOICE, extra64);
-			else throw new RuntimeException("Unknown extra type: " + type);
-			String whereClause = SurveyDroidDB.ExtrasTable._ID + " = ?";
-			String[] whereArgs = {Integer.toString(row_id)};
-			
-			//run it
-			if (db.update(SurveyDroidDB.EXTRAS_TABLE_NAME,
-					values, whereClause, whereArgs) == 1)
-				return row_id;
-			return WRITE_ERROR;
-		}
-	}
-	
-	//reads all of the data out of an input stream into an array
-	private byte[] readStream(InputStream is) throws IOException
-	{
-		ByteArrayOutputStream byteBuff = new ByteArrayOutputStream();
-		byte[] buffer = new byte[1024];
-		int len = 0;
-		
-		while ((len = is.read(buffer)) != -1)
-		{
-			byteBuff.write(buffer, 0, len);
-		}
-		
-		return byteBuff.toByteArray();
 	}
 }

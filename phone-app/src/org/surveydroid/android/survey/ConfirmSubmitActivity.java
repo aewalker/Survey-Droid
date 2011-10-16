@@ -117,17 +117,17 @@ public class ConfirmSubmitActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				//show the extras page
-				Intent extrasIntent = new Intent(
-						ConfirmSubmitActivity.this,
-						SurveyExtrasActivity.class);
-				startActivity(extrasIntent);
-				
 				//submit the answers
 				Intent finishIntent = new Intent(
 						ConfirmSubmitActivity.this, SurveyService.class);
 				finishIntent.setAction(SurveyService.ACTION_SUBMIT_ANSWERS);
 				startService(finishIntent);
+				
+				//tell the user they're done
+				Intent doneIntent =
+					new Intent(ConfirmSubmitActivity.this,
+							SurveyDoneActivity.class);
+				startActivity(doneIntent);
 				
 				finish();
 			}

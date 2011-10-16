@@ -26,7 +26,6 @@ package org.surveydroid.android.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.CallLog;
 
 import org.surveydroid.android.Util;
 import org.surveydroid.android.database.SurveyDroidDB.CallLogTable.CallType;

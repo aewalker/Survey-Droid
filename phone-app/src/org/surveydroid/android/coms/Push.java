@@ -569,6 +569,90 @@ public class Push
         return false;
     }
     
+    /**
+     * Push all un-uploaded extra data (photos, etc.) to the server.
+     * Once successful, the pushed records are deleted from the database.
+     *
+     * @param ctxt - the current {@link Context}
+     *
+     * @return true if push was successful
+     */
+    public static boolean pushExtrasData(Context ctx)
+    {
+    	Util.i(ctx, TAG, "Pushing extras data to server");
+    	
+    	TelephonyManager tManager =
+        	(TelephonyManager) ctx.getSystemService(
+        			Context.TELEPHONY_SERVICE);
+    	String uid = tManager.getDeviceId();
+    	
+    	if (uid == null)
+    	{
+    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Try again later");
+    		return false;
+    	}
+    	
+    	try
+        {
+    		//we have to be very careful here because extras could
+    		//be very large items, and we don't want to run out of memory
+            ComsDBHandler cdbh = new ComsDBHandler(ctx);
+            cdbh.openRead();
+            Cursor records = cdbh.getNextExtra();
+            int i = 1;
+            while (records != null)
+            {
+	            JSONArray recordsJSON = new JSONArray();
+	
+	            Util.d(ctx, TAG, "pushing extras, round " + i);
+	            
+	            int uploadedID;
+	
+	            records.moveToFirst();
+                JSONObject record = new JSONObject();
+                record.put("data", records.getString(
+                		records.getColumnIndexOrThrow(
+                				SurveyDroidDB.ExtrasTable.DATA)));
+                record.put("type", records.getInt(
+                		records.getColumnIndexOrThrow(
+                				SurveyDroidDB.ExtrasTable.TYPE)));
+                record.put("created", records.getLong(
+                		records.getColumnIndexOrThrow(
+                				SurveyDroidDB.ExtrasTable.CREATED)));
+                recordsJSON.put(record);
+                uploadedID = records.getInt(
+                		records.getColumnIndexOrThrow(
+                				SurveyDroidDB.ExtrasTable._ID));
+	            records.close();
+	            cdbh.close();
+	
+	            // now send to actual server
+	            JSONObject data = new JSONObject();
+	
+	            data.put("extras", recordsJSON);
+	            record = null;
+	            boolean success = WebClient.postJsonToUrl(ctx, getPushURL(ctx)
+	            		+ uid, data.toString());
+	            data = null;
+	
+	            // delete records if appropriate
+	            if (!success) return false;
+            	cdbh.openWrite();
+                cdbh.delExtra(uploadedID);
+                records = cdbh.getNextExtra();
+                cdbh.close();
+                i++;
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            Util.e(ctx, TAG, Util.fmt(e));
+        }
+        return false;
+    }
+    
     //get's the full push url
     private static String getPushURL(Context c)
     {

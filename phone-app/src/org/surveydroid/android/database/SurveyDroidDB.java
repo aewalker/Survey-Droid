@@ -62,7 +62,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     //Change the version number here to force the database to
     //update itself.  This throws out all data.
     private static final String DATABASE_NAME = "sd.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 1;
 
     //table names
     public static final String TAKEN_TABLE_NAME = "surveysTaken";
@@ -231,6 +231,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
         public static final String CALL_TYPE = "type";
         public static final String DURATION = "duration";
         public static final String TIME = "time";
+        public static final String UPLOADED = "uploaded";
 
         //TODO this could be dangerous if one of the Android types
         //is changed in a later version to be 4 or 5
@@ -302,7 +303,8 @@ public class SurveyDroidDB extends SQLiteOpenHelper
             + CallLogTable.PHONE_NUMBER + " TEXT,"
             + CallLogTable.CALL_TYPE + " INTEGER,"
             + CallLogTable.DURATION + " INTEGER,"
-            + CallLogTable.TIME + " TEXT)";
+            + CallLogTable.TIME + " TEXT, "
+            + CallLogTable.UPLOADED + " INT UNSIGNED DEFAULT 0)";
         }
     }
 
@@ -354,22 +356,20 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     * 
     * @author Austin Walker
     */
-   //TODO I think the plan here should be to remove survey_id, merge the phto
-   //and video fields together into data, and then put in a type field
    public static final class ExtrasTable extends SDTable {
-	   public static final String SURVEY_ID ="survey_id";
-	   public static final String PHOTO = "photo";
-	   public static final String VOICE = "voice";
+	   public static final String DATA = "data";
+	   public static final String TYPE = "type"; //for future use
 	   public static final String CREATED = "created";
-	   public static final String UPLOADED = "uploaded";
+	   
+	   /** Types of extras */
+	   public static final int PHOTO_TYPE = 0;
 	   
 	   private static String createSql() {
 		   	return "CREATE TABLE " + EXTRAS_TABLE_NAME + " (" +
 		   		_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-		   		SURVEY_ID + " INT UNSIGNED NOT NULL, " +
-		   		PHOTO + " TEXT, " + VOICE + " TEXT, " +
-		   		CREATED + " DATETIME, " +
-		   		UPLOADED + "INT UNSIGNED DEFAULT 0);";
+		   		DATA + " TEXT, " +
+		   		TYPE + " INT UNSIGNED NOT NULL DEFAULT " + PHOTO_TYPE +  ", " +
+		   		CREATED + " DATETIME);";
 	   }
    }
    

@@ -67,11 +67,11 @@ public class SurveyDroidDBHandler
 	}
 	
 	/**
-	 * Open a write-only connection to the database.
+	 * Open a read/write connection to the database.
 	 */
 	public void openWrite()
 	{
-		Util.d(null, TAG, "opening write-only database connection");
+		Util.d(null, TAG, "opening read/write database connection");
 		pdb = new SurveyDroidDB(contx);
 		db  = pdb.getWritableDatabase();
 	}

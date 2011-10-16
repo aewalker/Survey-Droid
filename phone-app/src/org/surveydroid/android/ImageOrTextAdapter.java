@@ -25,6 +25,7 @@ package org.surveydroid.android;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,13 @@ public class ImageOrTextAdapter<T> extends ArrayAdapter<T>
 	private final Bitmap[] pics;
 	
 	//does the current type of view support unscaledBackground images
-	boolean unscaledBackground = true;
+	private boolean unscaledBackground = true;
+	
+	//what text size to use for the choices
+	private float size = 0;
+	
+	//how much to scale the size of the choices by
+	private static final float SCALE_FACTOR = 0.6f;
 	
 	/**
 	 * Constructor
@@ -67,6 +74,19 @@ public class ImageOrTextAdapter<T> extends ArrayAdapter<T>
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
 		View v = super.getView(position, convertView, parent);
+		try
+		{
+			//TODO create a theme for the whole app so we don't have to do this
+			TextView tv = (TextView) v;
+			tv.setTypeface(tv.getTypeface(), Typeface.ITALIC);
+			if (size == 0.0f) size = tv.getTextSize() * SCALE_FACTOR;
+			tv.setTextSize(size);
+			v = tv;
+		}
+		catch (Exception e)
+		{
+			Util.e(null, TAG, "Can't set italic type: " + e);
+		}
 		if (pics[position] != null)
 		{
 			BitmapDrawable pic = new BitmapDrawable(

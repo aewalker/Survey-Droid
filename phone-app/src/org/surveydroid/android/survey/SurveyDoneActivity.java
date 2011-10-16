@@ -27,6 +27,7 @@
 package org.surveydroid.android.survey;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -60,6 +61,12 @@ public class SurveyDoneActivity extends Activity
 			@Override
 			public void onClick(View view)
 			{
+				//finish up the backend stuff
+				Intent finishIntent =
+					new Intent(SurveyDoneActivity.this, SurveyService.class);
+				finishIntent.setAction(SurveyService.ACTION_END_SURVEY);
+				startService(finishIntent);
+				
 				finish();
 			}
 		});

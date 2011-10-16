@@ -177,6 +177,50 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 	}
 	
 	/**
+	 * Get another extra from the database if one exists.
+	 * 
+	 * @return a (@link Cursor} with another extra in it if one exists, or null
+	 * if there are no more
+	 */
+	public Cursor getNextExtra()
+	{
+		Util.d(null, TAG, "Atempting to get another extra item");
+		
+		//do a preliminary query to find the first item
+		String    table    = SurveyDroidDB.EXTRAS_TABLE_NAME;
+		String[]  cols     = {SurveyDroidDB.ExtrasTable.CREATED};
+		String    selc     = null;
+		String[]  selcArgs = null;
+		String    group    = null;
+		String    having   = null;
+		String    orderBy  = SurveyDroidDB.ExtrasTable.CREATED;
+		
+		//run it
+		Cursor items =
+			db.query(table, cols, selc, selcArgs, group, having, orderBy);
+		
+		if (items.getCount() == 0) return null;
+		items.moveToFirst();
+		String firstTime = items.getString(items.getColumnIndexOrThrow(
+				SurveyDroidDB.ExtrasTable.CREATED));
+		
+		//now do the real query
+				  table    = SurveyDroidDB.EXTRAS_TABLE_NAME;
+		String[]  cols2    = {SurveyDroidDB.ExtrasTable._ID,
+							  SurveyDroidDB.ExtrasTable.CREATED,
+					          SurveyDroidDB.ExtrasTable.DATA,
+					          SurveyDroidDB.ExtrasTable.TYPE};
+				  selc     = SurveyDroidDB.ExtrasTable.CREATED + " = ?";
+		String[]  selcArgs2 = {firstTime};
+				  group    = null;
+				  having   = null;
+				  orderBy  = SurveyDroidDB.ExtrasTable.CREATED;
+		
+		//run it
+		return db.query(table, cols2, selc, selcArgs2, group, having, orderBy);
+	}
+	
+	/**
 	 * Marks the answer with id as having been uploaded.
 	 * 
 	 * @param id - id of the answer to mark
@@ -276,5 +320,21 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 		String[] whereArgs = {"" + id};
 		
 		db.delete(SurveyDroidDB.STATUS_TABLE_NAME, whereClause, whereArgs);
+	}
+	
+	/**
+	 * Delete an extra item from the database.
+	 * 
+	 * @param id - the id of the extra to delete
+	 */
+	public void delExtra(int id)
+	{
+		Util.d(null, TAG, "Deleting extra " + id);
+		
+		//set up the query
+		String whereClause = SurveyDroidDB.ExtrasTable._ID + " = ?";
+		String[] whereArgs = {"" + id};
+		
+		db.delete(SurveyDroidDB.EXTRAS_TABLE_NAME, whereClause, whereArgs);
 	}
 }

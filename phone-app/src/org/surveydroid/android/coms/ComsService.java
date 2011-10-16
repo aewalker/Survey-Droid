@@ -102,6 +102,9 @@ public class ComsService extends IntentService
 	/** Application status data; used for {@link #EXTRA_DATA_TYPE} */
 	public static final int STATUS_DATA = 3;
 	
+	/** Photos, etc.; used for {@link #EXTRA_DATA_TYPE} */
+	public static final int EXTRAS_DATA = 4;
+	
 	/**
 	 * Constructor.
 	 */
@@ -164,12 +167,15 @@ public class ComsService extends IntentService
 				break;
 			case STATUS_DATA:
 				Push.pushStatusData(this);
+			case EXTRAS_DATA:
+				Push.pushExtrasData(this);
 			default:
 				Push.pushAnswers(this);
 				Push.pushCompletionData(this);
 				Push.pushLocations(this);
 				Push.pushCallLog(this);
 				Push.pushStatusData(this);
+				Push.pushExtrasData(this);
 			}
 			
 			reschedule(intent);

@@ -20,7 +20,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-	android:versionCode="13" android:versionName="alpha-0.3.10" package="org.surveydroid.android">
+	android:versionCode="14" android:versionName="alpha-0.3.11" package="org.surveydroid.android">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.INTERNET" />
@@ -28,15 +28,17 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	
 	
 	<!--
-	Doesn't use these yet, but may want/need to in future
+	Doesn't use these yet/anymore, but may want/need to in future
 	 
 	<uses-permission android:name="android.permission.BATTERY_STATS" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 	
 	-->
 	
@@ -72,17 +74,6 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 				<category android:name="android.intent.category.HOME" />
 			</intent-filter>
 		</receiver>
-		<receiver android:label="SurveyReceiver" android:name=".survey.SurveyReceiver">
-			<intent-filter>
-				<action android:name="org.surveydroid.android.survey.ACTION_SCHEDULE_SURVEYS" />
-			</intent-filter>
-		</receiver>
-		<receiver android:label="ComsReceiver" android:name=".coms.ComsReceiverdroid.coms.ComsReceiverdroid.coms.ComsReceiver">
-			<intent-filter>
-				<action android:name="org.surveydroid.android.coms.ACTION_UPLOAD_DATA" />
-				<action android:name="org.surveydroid.android.coms.ACTION_DOWNLOAD_DATA" />
-			</intent-filter>
-		</receiver>
 		
 		<!-- Services -->
 		<service android:label="SurveyScheduler" android:name=".survey.SurveyScheduler">
@@ -116,7 +107,6 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 		<activity android:label="Survey Droid Survey" android:name=".survey.ImgScaleActivity"></activity>
 		<activity android:label="Survey Droid Survey" android:name=".survey.FreeResponseActivity"></activity>
 		<activity android:label="Survey Droid Survey" android:name=".survey.ConfirmSubmitActivity"></activity>
-		<activity android:label="Survey Droid Survey" android:name=".survey.SurveyExtrasActivity"></activity>
 		<activity android:label="@string/app_name" android:name="UserSurveysActivity"></activity>
 		<activity android:label="@string/app_name" android:name="MainActivity">
 			<intent-filter>
