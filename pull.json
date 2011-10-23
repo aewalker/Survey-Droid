@@ -15,7 +15,6 @@
             "name": "",
             "created": 0, //unix timestamp
             "question_id": 0,
-            "subject_init": 0, //allow subjects to start the survey whenever they want
             "mo": "",
             "tu": "", 
             "we": "",
@@ -29,7 +28,13 @@
                 "name3": "Jack",
                 "name4": "Joan",
                 "name5": "Jeff"
-            }
+            },
+            //boolean options (0 = false, 1 = true)
+            "subject_init": 0, //allow subjects to start the survey whenever they want
+            "new_calls": 1, //trigger on new phone numbers
+            "old_calls": 0, //trigger on old phone numbers
+            "new_texts": 1, //trigger on new text numbers
+            "old_texts": 0, //trigger on old text numbers
         }, {
             ...
         }, {

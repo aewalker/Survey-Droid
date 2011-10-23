@@ -24,7 +24,9 @@
 package org.surveydroid.android;
 
 import org.surveydroid.android.coms.ComsService;
+import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.TrackingDBHandler;
+import org.surveydroid.android.survey.SurveyService;
 
 import android.content.Context;
 import android.content.Intent;
@@ -115,6 +117,9 @@ public class CallTracker extends PhoneStateListener
 							+ " new call(s) found");
 					if (newCalls.getCount() != 0)
 					{
+						//FIXME in the event that multiple calls are detected,
+						//this code should only log calls other than the last
+						//one if they are from old numbers
 						TrackingDBHandler tdbh = new TrackingDBHandler(ctxt);
 						tdbh.openWrite();
 						newCalls.moveToFirst();
@@ -141,15 +146,35 @@ public class CallTracker extends PhoneStateListener
 							 * only start a survey for the most recent call.
 							 */
 							if (!newCalls.isLast()) continue;
+							Cursor surveys;
 							if (tdbh.isNewNumber(number, false))
 							{
-								//TODO find surveys that should be started
-								//for new phone numbers
+								surveys = tdbh.getNewCallSurveys();
 							}
 							else
 							{
-								//TODO find surveys that should be started
-								//for old phone numbers
+								surveys = tdbh.getOldCallSurveys();
+							}
+							int count = surveys.getCount();
+							if (count != 0)
+							{
+								surveys.moveToFirst();
+								int id_i = surveys.getColumnIndexOrThrow(
+										SurveyDroidDB.SurveyTable._ID);
+								for (int i = 0; i < count; i++)
+								{
+									Intent surveyIntent = new Intent(ctxt,
+										SurveyService.class);
+									surveyIntent.setAction(
+										SurveyService.ACTION_SURVEY_READY);
+									surveyIntent.putExtra(
+										SurveyService.EXTRA_SURVEY_ID,
+										surveys.getInt(id_i));
+									surveyIntent.putExtra(
+										SurveyService.EXTRA_SURVEY_TYPE,
+										SurveyService.SURVEY_TYPE_CALL_INIT);
+									ctxt.startService(surveyIntent);
+								}
 							}
 							//this avoids a potential race condition
 							lastLookup = newCalls.getLong(

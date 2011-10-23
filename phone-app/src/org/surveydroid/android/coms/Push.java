@@ -458,12 +458,7 @@ public class Push
             if (success)
             {
             	cdbh.openWrite();
-                for (int i = 0; i < uploadedIDs.length; i++)
-                {
-                	//TODO keep one call from each number
-                	//remember that missed calls don't count
-                    cdbh.delCall(uploadedIDs[i]);
-                }
+                cdbh.delDuplicateCalls();
                 cdbh.close();
             }
             return success;

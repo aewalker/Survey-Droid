@@ -142,4 +142,64 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 		result.close();
 		return toReturn;
 	}
+	
+	/**
+	 * Gets all surveys that should be started after a call from a new number.
+	 * 
+	 * @return a {@link Cursor} with the needed surveys in it
+	 */
+	public Cursor getNewCallSurveys()
+	{
+		return getSurveys(SurveyDroidDB.SurveyTable.NEW_CALLS);
+	}
+	
+	/**
+	 * Gets all surveys that should be started after a call from a previously
+	 * seen number.
+	 * 
+	 * @return a {@link Cursor} with the needed surveys in it
+	 */
+	public Cursor getOldCallSurveys()
+	{
+		return getSurveys(SurveyDroidDB.SurveyTable.OLD_CALLS);
+	}
+	
+	/**
+	 * Gets all surveys that should be started after a text from a new number.
+	 * 
+	 * @return a {@link Cursor} with the needed surveys in it
+	 */
+	public Cursor getNewTextSurveys()
+	{
+		return getSurveys(SurveyDroidDB.SurveyTable.NEW_TEXTS);
+	}
+	
+	/**
+	 * Gets all surveys that should be started after a text from a previously
+	 * seen number.
+	 * 
+	 * @return a {@link Cursor} with the needed surveys in it
+	 */
+	public Cursor getOldTextSurveys()
+	{
+		return getSurveys(SurveyDroidDB.SurveyTable.OLD_TEXTS);
+	}
+	
+	//gets all surveys where field is one (field is
+	//either new_calls, old_calls, new_texts, or old_texts)
+	private Cursor getSurveys(String field)
+	{
+		Util.d(null, TAG, "getting " + field + " surveys");
+		
+		String    table    = SurveyDroidDB.SURVEY_TABLE_NAME;
+		String[]  cols     = {SurveyDroidDB.SurveyTable._ID};
+		String    selc     = field + " =  ?";
+		String[]  selcArgs = {"" + 1};
+		String    group    = null;
+		String    having   = null;
+		String    orderBy  = null;
+		
+		//run it
+		return db.query(table, cols, selc, selcArgs, group, having, orderBy);
+	}
 }

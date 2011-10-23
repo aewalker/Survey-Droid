@@ -23,6 +23,9 @@
  *****************************************************************************/
 package org.surveydroid.android.database;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -291,19 +294,63 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 	}
 	
 	/**
-	 * Delete a call from the database.
-	 * 
-	 * @param id - the id of the call to delete
+	 * Delete calls from the database such that only one call from each unique
+	 * number is left.  Marks all the calls that are left as uploaded.
 	 */
-	public void delCall(int id)
+	public void delDuplicateCalls()
 	{
-		Util.d(null, TAG, "Deleting call " + id);
+		Util.d(null, TAG, "Deleting calls");
 		
-		//set up the query
-		String whereClause = SurveyDroidDB.CallLogTable._ID + " = ?";
-		String[] whereArgs = {"" + id};
+		//set of unique phone numbers
+		Map<String, Boolean> unique_nums = new HashMap<String, Boolean>();
 		
-		db.delete(SurveyDroidDB.CALLLOG_TABLE_NAME, whereClause, whereArgs);
+		Cursor calls = getCalls();
+		
+		if (calls.getCount() == 0)
+		{
+			//database is empty!
+			calls.close();
+			return;
+		}
+		
+		calls.moveToFirst();
+		int num_i = calls.getColumnIndexOrThrow(
+				SurveyDroidDB.CallLogTable.PHONE_NUMBER);
+		int id_i = calls.getColumnIndexOrThrow(
+				SurveyDroidDB.CallLogTable.PHONE_NUMBER);
+		int type_i = calls.getColumnIndexOrThrow(
+				SurveyDroidDB.CallLogTable.CALL_TYPE);
+		while (!calls.isAfterLast())
+		{
+			String num = calls.getString(num_i);
+			if (!unique_nums.containsValue(num) && calls.getInt(type_i) !=
+				SurveyDroidDB.CallLogTable.CallType.MISSED)
+			{
+				//this is a new number, so mark it
+				unique_nums.put(num, true);
+			}
+			else
+			{
+				int id = calls.getInt(id_i);
+				//this is an old number (or a missed call), so delete it
+				Util.v(null, TAG, "Deleting call " + id);
+				String whereClause = SurveyDroidDB.CallLogTable._ID + " = ?";
+				String[] whereArgs = {"" + id};
+				
+				db.delete(SurveyDroidDB.CALLLOG_TABLE_NAME,
+						whereClause, whereArgs);
+			}
+		}
+		calls.close();
+
+		//now mark everything left as being uploaded
+		ContentValues values = new ContentValues();
+		values.put(SurveyDroidDB.CallLogTable.UPLOADED, 1);
+		String whereClause = null;
+		String[] whereArgs = null;
+		
+		db.update(SurveyDroidDB.CALLLOG_TABLE_NAME,
+				values, whereClause, whereArgs);
 	}
 	
 	/**

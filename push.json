@@ -63,7 +63,7 @@
 	{
 	    "survey_id": 1,
 	    "status" : 4, //one of:
-		//SURVEYS_DISABLED_LOCALLY = 0;
+			//SURVEYS_DISABLED_LOCALLY = 0;
 	    	//SURVEYS_DISABLED_SERVER = 1;
 	    	//USER_INITIATED_FINISHED = 2;
 	    	//USER_INITIATED_UNFINISHED = 3;
@@ -79,6 +79,12 @@
 	}, {
 	    ...
 	}
+    ],
+    "extras" : [
+    {
+        "type": 0, //0 for a photo
+        "created": 0, //timestamp
+        "data":"209289318...", //base64 data
     ]
 }
 

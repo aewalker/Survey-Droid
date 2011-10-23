@@ -121,6 +121,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     	public static final String CREATED = "created";
     	public static final String SURVEY_ID = "survey_id";
     	public static final String STATUS = "status";
+    	public static final String NUMBER = "number";
     	public static final String UPLOADED = "uploaded";
     	
     	//status types
@@ -147,11 +148,12 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     	
 		private static String createSql() {
     		return "CREATE TABLE " + TAKEN_TABLE_NAME + " ("
-    		+ TakenTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-    		+ TakenTable.SURVEY_ID + " INTEGER,"
-    		+ TakenTable.STATUS + " INTEGER,"
-    		+ TakenTable.UPLOADED + " INTEGER DEFAULT 0,"
-    		+ TakenTable.CREATED + " INTEGER);";
+    		+ _ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+    		+ SURVEY_ID + " INTEGER,"
+    		+ STATUS + " INTEGER,"
+    		+ NUMBER + " TEXT,"
+    		+ UPLOADED + " INTEGER DEFAULT 0,"
+    		+ CREATED + " INTEGER);";
     	}
     }
     
@@ -179,10 +181,10 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     	
 		private static String createSql() {
     		return "CREATE TABLE " + STATUS_TABLE_NAME + " ("
-    		+ StatusTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-    		+ StatusTable.TYPE + " INTEGER,"
-    		+ StatusTable.STATUS + " INTEGER,"
-    		+ StatusTable.CREATED + " INTEGER);";
+    		+ _ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+    		+ TYPE + " INTEGER,"
+    		+ STATUS + " INTEGER,"
+    		+ CREATED + " INTEGER);";
     	}
     }
 
@@ -192,6 +194,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
      *
      * @author Diego Vargas
      * @author Vladimir Costescu
+     * @author Austin Walker
      */
     public static final class LocationTable extends SDTable {
         // This class cannot be instantiated
@@ -205,11 +208,11 @@ public class SurveyDroidDB extends SQLiteOpenHelper
 
 		private static String createSql() {
         	return "CREATE TABLE " + LOCATION_TABLE_NAME + " ("
-        	+ LocationTable._ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + LocationTable.LONGITUDE	+ " DOUBLE,"
-            + LocationTable.LATITUDE		+ " DOUBLE,"
-            + LocationTable.ACCURACY		+ " DOUBLE,"
-            + LocationTable.TIME			+ " INTEGER"
+        	+ _ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + LONGITUDE	+ " DOUBLE,"
+            + LATITUDE		+ " DOUBLE,"
+            + ACCURACY		+ " DOUBLE,"
+            + TIME			+ " INTEGER"
             						+ " );";
         }
     }
@@ -221,6 +224,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
 	*
 	* @author Diego Vargas
 	* @author Vladimir Costescu
+	* @author Austin Walker
 	*/
    public static final class CallLogTable extends SDTable {
         // This class cannot be instantiated
@@ -299,12 +303,12 @@ public class SurveyDroidDB extends SQLiteOpenHelper
         
         private static String createSql() {
         	return "CREATE TABLE " + CALLLOG_TABLE_NAME + " ("
-            + CallLogTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + CallLogTable.PHONE_NUMBER + " TEXT,"
-            + CallLogTable.CALL_TYPE + " INTEGER,"
-            + CallLogTable.DURATION + " INTEGER,"
-            + CallLogTable.TIME + " TEXT, "
-            + CallLogTable.UPLOADED + " INT UNSIGNED DEFAULT 0)";
+            + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + PHONE_NUMBER + " TEXT,"
+            + CALL_TYPE + " INTEGER,"
+            + DURATION + " INTEGER,"
+            + TIME + " TEXT, "
+            + UPLOADED + " INT UNSIGNED DEFAULT 0)";
         }
     }
 
@@ -318,6 +322,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     * 
     * @author Diego Vargas
     * @author Vladimir Costescu
+    * @author Austin Walker
     */
    public static final class AnswerTable extends SDTable {
     	public static final String QUESTION_ID = "question_id";
@@ -382,6 +387,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     * 
     * @author Diego Vargas
     * @author Vladimir Costescu
+    * @author Austin Walker
     */
     public static final class BranchTable extends SDTable {
     	public static final String QUESTION_ID = "question_id";
@@ -390,8 +396,8 @@ public class SurveyDroidDB extends SQLiteOpenHelper
 		private static String createSql() {
     		return "CREATE TABLE branches (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-    				"question_id INT UNSIGNED NOT NULL, " +
-    				"next_q INT UNSIGNED NOT NULL);";
+    				QUESTION_ID + " INT UNSIGNED NOT NULL, " +
+    				NEXT_Q + " INT UNSIGNED NOT NULL);";
     	}
 
     }
@@ -404,6 +410,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
      * 
      * @author Diego Vargas
      * @author Vladimir Costescu
+     * @author Austin Walker
      */
     public static final class ChoiceTable extends SDTable {
     	public static final String CHOICE_TYPE = "choice_type";
@@ -418,10 +425,10 @@ public class SurveyDroidDB extends SQLiteOpenHelper
 		private static String createSql() {
     		return "CREATE TABLE choices (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-    				"choice_type INT UNSIGNED NOT NULL," +
-    				"choice_text VARCHAR(255)," +
-    				"choice_img BLOB," +
-    				"question_id INT UNSIGNED);";
+    				CHOICE_TYPE + " INT UNSIGNED NOT NULL," +
+    				CHOICE_TEXT + " VARCHAR(255)," +
+    				CHOICE_IMG + " BLOB," +
+    				QUESTION_ID + " INT UNSIGNED);";
     	}
 
     }
@@ -436,6 +443,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
      * 
      * @author Diego Vargas
      * @author Vladimir Costescu
+     * @author Austin Walker
      */
     public static final class ConditionTable extends SDTable {
     	public static final String BRANCH_ID = "branch_id";
@@ -446,10 +454,10 @@ public class SurveyDroidDB extends SQLiteOpenHelper
 		private static String createSql() {
     		return "CREATE TABLE conditions (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-    				"branch_id INT UNSIGNED NOT NULL, " +
-    				"question_id INT UNSIGNED NOT NULL, " +
-    				"choice_id INT UNSIGNED NOT NULL, " +
-    				"type TINYINT UNSIGNED NOT NULL);";
+    				BRANCH_ID + " INT UNSIGNED NOT NULL, " +
+    				QUESTION_ID + " INT UNSIGNED NOT NULL, " +
+    				CHOICE_ID + " INT UNSIGNED NOT NULL, " +
+    				TYPE + " TINYINT UNSIGNED NOT NULL);";
     	}
 
     }
@@ -462,6 +470,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
      * 
      * @author Diego Vargas
      * @author Vladimir Costescu
+     * @author Austin Walker
      */
     public static final class QuestionTable extends SDTable {
     	public static final String SURVEY_ID = "survey_id";
@@ -482,13 +491,13 @@ public class SurveyDroidDB extends SQLiteOpenHelper
 		private static String createSql() {
     		return "CREATE TABLE questions (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-    				"survey_id INT UNSIGNED NOT NULL," +
-    				"q_text TEXT," +
-    				"q_img_low TEXT," +
-    				"q_img_high TEXT," +
-    				"q_text_low TEXT," +
-    				"q_text_high TEXT," +
-    				"q_type INT NOT NULL);";
+    				SURVEY_ID + " INT UNSIGNED NOT NULL," +
+    				Q_TEXT + " TEXT," +
+    				Q_SCALE_IMG_LOW + " TEXT," +
+    				Q_SCALE_IMG_HIGH + " TEXT," +
+    				Q_SCALE_TEXT_LOW + " TEXT," +
+    				Q_SCALE_TEXT_HIGH + " TEXT," +
+    				Q_TYPE + " INT NOT NULL);";
     	}
 
     }
@@ -503,12 +512,17 @@ public class SurveyDroidDB extends SQLiteOpenHelper
      * 
      * @author Diego Vargas
      * @author Vladimir Costescu
+     * @author Austin Walker
      */
     public static final class SurveyTable extends SDTable {
     	public static final String NAME = "name";
     	public static final String CREATED = "created";
     	public static final String QUESTION_ID = "question_id";
     	public static final String SUBJECT_INIT = "subject_init";
+    	public static final String OLD_CALLS = "old_calls";
+    	public static final String NEW_CALLS = "new_calls";
+    	public static final String OLD_TEXTS = "old_texts";
+    	public static final String NEW_TEXTS = "new_texts";
 
     	public static final String MO = "mo";
     	public static final String TU = "tu";
@@ -524,16 +538,20 @@ public class SurveyDroidDB extends SQLiteOpenHelper
 		private static String createSql() {
     		return "CREATE TABLE surveys (" +
     				_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-    				"name VARCHAR(255),created DATETIME," +
-    				"question_id INT UNSIGNED NOT NULL," +
-    				"subject_init INT UNSIGNED NOT NULL," +
-    				"mo VARCHAR(255)," +
-    				"tu VARCHAR(255)," +
-    				"we VARCHAR(255)," +
-    				"th VARCHAR(255)," +
-    				"fr VARCHAR(255)," +
-    				"sa VARCHAR(255)," +
-    				"su VARCHAR(255));";
+    				NAME + " VARCHAR(255),created DATETIME," +
+    				QUESTION_ID + " INT UNSIGNED NOT NULL," +
+    				SUBJECT_INIT + " INT UNSIGNED NOT NULL," +
+    				OLD_CALLS + " INT UNSIGNED NOT NULL DEFAULT 0," +
+    				NEW_CALLS + " INT UNSIGNED NOT NULL DEFAULT 0," +
+    				OLD_TEXTS + " INT UNSIGNED NOT NULL DEFAULT 0," +
+    				NEW_TEXTS + " INT UNSIGNED NOT NULL DEFAULT 0," +
+    				MO + " VARCHAR(255)," +
+    				TU + " VARCHAR(255)," +
+    				WE + " VARCHAR(255)," +
+    				TH + " VARCHAR(255)," +
+    				FR + " VARCHAR(255)," +
+    				SA + " VARCHAR(255)," +
+    				SU + " VARCHAR(255));";
     	}
     }
 

@@ -46,6 +46,10 @@ import org.surveydroid.android.database.SurveyDroidDB;
 //TODO move all the database stuff into the ComsDBHelper.  Problem is, that
 //would basically render this class a wrapper.  Have to think about it...
 
+//TODO I think this should be set up as a sort of framework: set up generally
+//what happens with pull, and then define how that works for each type of
+//data elsewhere
+
 /**
  * Provides the ability to snyc the database with the website's.
  *
@@ -157,15 +161,27 @@ public class Pull
 	    				survey.getLong(SurveyTable.CREATED));
 	    		values.put(SurveyTable.QUESTION_ID,
 	    				survey.getInt(SurveyTable.QUESTION_ID));
-	    		values.put(SurveyTable.SUBJECT_INIT,
-	    				survey.getString(SurveyTable.SUBJECT_INIT));
-	    		values.put(SurveyTable.MO, survey.getString(SurveyTable.MO));
-	    		values.put(SurveyTable.TU, survey.getString(SurveyTable.TU));
-	    		values.put(SurveyTable.WE, survey.getString(SurveyTable.WE));
-	    		values.put(SurveyTable.TH, survey.getString(SurveyTable.TH));
-	    		values.put(SurveyTable.FR, survey.getString(SurveyTable.FR));
-	    		values.put(SurveyTable.SA, survey.getString(SurveyTable.SA));
-	    		values.put(SurveyTable.SU, survey.getString(SurveyTable.SU));
+	    		String[] opt_fields = {SurveyTable.SUBJECT_INIT,
+	    							   SurveyTable.NEW_CALLS,
+	    							   SurveyTable.OLD_CALLS,
+	    							   SurveyTable.NEW_TEXTS,
+	    							   SurveyTable.OLD_TEXTS,
+	    							   SurveyTable.MO, SurveyTable.TU,
+	    							   SurveyTable.WE, SurveyTable.TH,
+	    							   SurveyTable.FR, SurveyTable.SA,
+	    							   SurveyTable.SU};
+	    		for (String field : opt_fields)
+	    		{
+	    			try
+	    			{
+	    				values.put(field, survey.getString(field));
+	    			}
+	    			catch (Exception e)
+	    			{
+	    				Util.v(null, TAG,
+	    						"survey " + i + ": no \"" + field + "\"");
+	    			}
+	    		}
 
 	    		//subject variables is special (it's an object)
 	    		try
@@ -185,7 +201,7 @@ public class Pull
 	    		}
 	    		catch (JSONException e)
 	    		{
-	    			Util.w(null, TAG, "no or mal-formed subject variables");
+	    			Util.v(null, TAG, "no or mal-formed subject variables");
 	    		}
 
 	    		//TODO change this so that it uses replace()?

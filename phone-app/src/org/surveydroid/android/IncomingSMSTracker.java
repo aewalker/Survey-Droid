@@ -25,10 +25,12 @@ package org.surveydroid.android;
 
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.TrackingDBHandler;
+import org.surveydroid.android.survey.SurveyService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 
@@ -94,14 +96,36 @@ public class IncomingSMSTracker extends BroadcastReceiver
 					smsMessage[i].getTimestampMillis());
 			if (i == messages.length - 1)
 			{
+				Cursor surveys;
 				if (tdbh.isNewNumber(smsMessage[i].getOriginatingAddress(),
 						true))
 				{
-					//TODO find surveys here
+					surveys = tdbh.getNewTextSurveys();
 				}
 				else
 				{
-					//TODO find surveys here
+					surveys = tdbh.getOldTextSurveys();
+				}
+				int count = surveys.getCount();
+				if (count != 0)
+				{
+					surveys.moveToFirst();
+					int id_i = surveys.getColumnIndexOrThrow(
+							SurveyDroidDB.SurveyTable._ID);
+					for (int j = 0; j < count; j++)
+					{
+						Intent surveyIntent = new Intent(ctxt,
+							SurveyService.class);
+						surveyIntent.setAction(
+							SurveyService.ACTION_SURVEY_READY);
+						surveyIntent.putExtra(
+							SurveyService.EXTRA_SURVEY_ID,
+							surveys.getInt(id_i));
+						surveyIntent.putExtra(
+							SurveyService.EXTRA_SURVEY_TYPE,
+							SurveyService.SURVEY_TYPE_CALL_INIT);
+						ctxt.startService(surveyIntent);
+					}
 				}
 			}
 		}

@@ -135,7 +135,7 @@ public class SurveyService extends Service
 	public static final int SURVEY_TYPE_CALL_INIT = 3;
 	
 	/**
-	 * Used with {@link #EXTRA_SURVEY_TYPE} for location poximity initiated
+	 * Used with {@link #EXTRA_SURVEY_TYPE} for location proximity initiated
 	 * surveys.
 	 */
 	public static final int SURVEY_TYPE_LOC_INIT = 4;
