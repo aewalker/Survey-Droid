@@ -52,12 +52,9 @@ class Survey extends AppModel
 
         App::import('Model', "Subject");
 	    $Subject = new Subject();
-        foreach ($subjectVariables as $deviceId => $variable)  {
-            $deviceIdCount = $Subject->find('count', array
-            (
-                'conditions' => array('device_id' => $deviceId)
-            ));
-            if ($deviceIdCount == 0)
+        foreach ($subjectVariables as $subjectId => $variable)  {
+            $subject = $Subject->findById($subjectId);
+            if ($subject == null)
                 return false;
         }
         
