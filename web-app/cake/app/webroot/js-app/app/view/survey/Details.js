@@ -36,7 +36,8 @@ Ext.define("SD.view.survey.Details", {
                 },{
                     xtype: 'textarea',
                     fieldLabel: 'Subject Specific Variables',
-                    name: 'subject_variables'
+                    name: 'subject_variables',
+                    height: 400
                 }
             ]
         }, {
