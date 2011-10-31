@@ -35,8 +35,8 @@ Ext.define('SD.controller.Data', {
         })
     },
     onLaunch: function() {
-        this.getMainTabs().setActiveTab('dataTab');
-        this.getDataTab().setActiveTab('callsTab');
+        this.getMainTabs().setActiveTab('surveysTab');
+//        this.getDataTab().setActiveTab('callsTab');
     },
     loadIfEmpty: function(storeName) {
         var store = Ext.getStore(storeName);

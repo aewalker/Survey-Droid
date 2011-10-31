@@ -13,6 +13,10 @@ Ext.define('SD.model.Survey', {
         {name: 'sa',                type: 'string'},
         {name: 'su',                type: 'string'},
         {name: 'subject_init',      type: 'boolean'},
+        {name: 'new_calls',         type: 'boolean'},
+        {name: 'old_calls',         type: 'boolean'},
+        {name: 'new_texts',         type: 'boolean'},
+        {name: 'old_texts',         type: 'boolean'},
         {name: 'subject_variables', type: 'string'},
         {name: 'created',           type: 'date',   dateFormat: 'Y-m-d H:i:s'}
     ],
