@@ -184,15 +184,19 @@ Ext.define("SD.view.data.Tab", {
                     format: 'Y-m-d H:i:s',
                     width: 150
                 }, {
-                    xtype: 'templatecolumn',
                     text: 'Subject Id',
                     dataIndex: 'subject_id',
+                    width: 70
+                }, {
+                    xtype: 'templatecolumn',
+                    text: 'Subject',
+                    dataIndex: 'subject_id',
                     tpl: '{subject.first_name} {subject.last_name}',
-                    width: 80
+                    width: 150
                 }, {
                     text: 'Contact Id',
                     dataIndex: 'contact_id',
-                    width: 80
+                    width: 230
                 }, {
                     text: 'Call Type',
                     xtype: 'templatecolumn',
