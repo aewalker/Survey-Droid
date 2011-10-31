@@ -143,7 +143,7 @@ Ext.define("SD.view.data.Tab", {
             }]
         }, {
             itemId: 'locationsTab',
-            title: 'Location',
+            title: 'Location (Only first 25 are displaied, full excel export coming soon)',
             xtype: 'grid',
             store: 'Locations',
             columns: [
