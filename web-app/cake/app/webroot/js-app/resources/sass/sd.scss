@@ -63,6 +63,15 @@ $sidebar-background-color: #eaeaea;
     cursor: pointer;
 }
 
+img.thumbnail {
+    max-height: 50px;
+
+}
+
+img.fullsize {
+    margin: 10px;
+    max-width: 97%;
+}
 
 /* Just some button icons */
 .icon-user {
