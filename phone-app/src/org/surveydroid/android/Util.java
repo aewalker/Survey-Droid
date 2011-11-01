@@ -82,6 +82,19 @@ public final class Util
 	 */
 	public static long getUnixTime(String day, String time)
 	{
+		return getUnixTime(day, time, System.currentTimeMillis());
+	}
+	
+	/**
+	 * Get the Unix timestamp of the next occurrence of the given day/time
+	 * 
+	 * @param day - the day of the week as in {@link Config#DAY_FORMAT}
+	 * @param time - the time of day as in {@link Config#TIME_FORMAT}
+	 * @param base - the base time; all returned times must be after this time
+	 * @return Unix timestamp in milliseconds
+	 */
+	public static long getUnixTime(String day, String time, long base)
+	{
 		//first, get the day right
 		Calendar now = Calendar.getInstance(TimeZone.getDefault(), Locale.US);
 		now.setTimeInMillis(System.currentTimeMillis());
@@ -102,7 +115,7 @@ public final class Util
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("Invalid time string: " + time);
+			throw new IllegalArgumentException("Invalid time string: " + time);
 		}
 		now.set(Calendar.HOUR_OF_DAY, hours);
 		now.set(Calendar.MINUTE, mins);
@@ -110,9 +123,8 @@ public final class Util
 		now.set(Calendar.MILLISECOND, 0);
 		long returnTime = now.getTimeInMillis();
 		
-		//account for the situation where the day desired is the same as the
-		//current day, but the time is in the past
-		if (returnTime < System.currentTimeMillis())
+		//make sure we're not behind the base time
+		if (returnTime < base)
 		{
 			now.add(Calendar.DAY_OF_YEAR, 7);
 			returnTime = now.getTimeInMillis();

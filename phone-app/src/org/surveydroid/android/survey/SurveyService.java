@@ -433,7 +433,7 @@ public class SurveyService extends Service
 							"Invalid survey type: " + type);
 				}
 				if (tdbh.writeSurvey(id, status,
-						System.currentTimeMillis()) == false)
+						System.currentTimeMillis() / 1000) == false)
 				{
 					Util.e(this, TAG, "Failed to write completion record!");
 				}
@@ -500,7 +500,7 @@ public class SurveyService extends Service
 								"Invalid survey type: " + type);
 					}
 					if (tdbh.writeSurvey(id, status,
-							System.currentTimeMillis()) == false)
+							System.currentTimeMillis() / 1000) == false)
 					{
 						Util.e(this, TAG, "Failed to write completion record!");
 					}
@@ -554,7 +554,7 @@ public class SurveyService extends Service
 						"Invalid survey type: " + type);
 			}
 			if (tdbh.writeSurvey(currentID, status,
-					System.currentTimeMillis()) == false)
+					System.currentTimeMillis() / 1000) == false)
 			{
 				Util.e(this, TAG, "Failed to write completion record!");
 			}
@@ -612,11 +612,23 @@ public class SurveyService extends Service
 					"Invalid survey type: " + type);
 		}
 		if (tdbh.writeSurvey(currentID, status,
-				System.currentTimeMillis()) == false)
+				System.currentTimeMillis() / 1000) == false)
 		{
 			Util.e(this, TAG, "Failed to write completion record!");
 		}
 		tdbh.close();
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		
+		//make sure to mark the remaining surveys as unfinished or ignored
+		//in the case that this service is killed (likely because the phone
+		//is being shut down)
+		if (inSurvey) quitSurvey();
+		cancel();
 	}
 
 	/**

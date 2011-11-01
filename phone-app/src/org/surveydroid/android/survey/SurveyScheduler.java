@@ -151,7 +151,7 @@ public class SurveyScheduler extends IntentService
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(time);
 		Util.d(this, TAG, "Scheduling survey "
-				+ id + " for " + c.getTime().toGMTString() + " GMT");
+				+ id + " for " + c.getTime().toGMTString());
 		
 		Intent surveyIntent = new Intent(getApplicationContext(),
 				SurveyService.class);
@@ -236,10 +236,18 @@ public class SurveyScheduler extends IntentService
 						//could be a random survey, so check that
 						try
 						{
-							long start = Util.getUnixTime(days[i],
-									time.substring(0, 4));
+							
+							String[] both = time.split("-");
+							long start = Util.getUnixTime(days[i], both[0]);
 							long end = Util.getUnixTime(days[i],
-									time.substring(5, 9));
+									both[1], start);
+
+							Date d = new Date(start);
+							Util.v(null, TAG, "start "
+									+ d.toGMTString());
+							d = new Date(end);
+							Util.v(null, TAG, "end "
+									+ d.toGMTString());
 							/*
 							 * We want to ensure that, in case the scheduler
 							 * runs multiple times between when a random
@@ -250,14 +258,17 @@ public class SurveyScheduler extends IntentService
 							long diff = end - start;
 							byte[] bytes = Config.getSetting(
 									this, Config.SALT, "").getBytes();
+							long seed = start;
+							seed ^= end;
+							seed ^= (long) id;
 							for (int j = 0; j < bytes.length; j++)
 							{
-								diff ^= ((long) bytes[j]) << j; //meh why not
+								seed ^= ((long) bytes[j]) << j; //meh why not
 							}
-							Random r = new Random(diff);
+							Random r = new Random(seed);
 							//always safe because end - start < max int size
 							long offset =
-								(long) (r.nextDouble() * (end - start));
+								(long) (r.nextDouble() * diff);
 							scheduledTime = start + offset;
 							random = true;
 						}
@@ -273,7 +284,7 @@ public class SurveyScheduler extends IntentService
 					{
 						Date d = new Date(scheduledTime);
 						Util.v(null, TAG, "Survey would be scheduled for "
-								+ d.toGMTString() + " GMT");
+								+ d.toGMTString());
 						if (!random)
 						{
 							Util.v(null, TAG, "should be scheduled for "
@@ -283,8 +294,8 @@ public class SurveyScheduler extends IntentService
 						{
 							Util.v(null, TAG, "should be scheduled for "
 									+ days[i] + " between "
-									+ time.substring(0, 4) + " and "
-									+ time.substring(5, 9));
+									+ time.split("-")[0] + " and "
+									+ time.split("-")[1]);
 						}
 					}
 					addSurvey(id, scheduledTime, random);
