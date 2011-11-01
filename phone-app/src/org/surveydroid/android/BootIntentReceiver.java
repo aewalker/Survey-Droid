@@ -42,6 +42,9 @@ public class BootIntentReceiver extends BroadcastReceiver
 {
 	protected static final String TAG = "BootIntentReceiver";
 	
+	/** Config key; if true, the app is started */
+	public static final String STARTED_KEY = "started";
+	
     @Override
     public void onReceive(Context context, Intent intent)
     {
@@ -65,7 +68,7 @@ public class BootIntentReceiver extends BroadcastReceiver
     	 * system services have not been started up in time.
     	 */
     	final Context c = context;
-    	Runnable r = new Runnable()
+    	Runnable level1 = new Runnable()
     	{
 			@Override
 			public void run()
@@ -74,18 +77,23 @@ public class BootIntentReceiver extends BroadcastReceiver
 			}
     	};
     	Handler h = new Handler();
-    	h.postDelayed(r, 10 * 1000); //delay 10 seconds
+    	h.postDelayed(level1, 10 * 1000); //delay 10 seconds
     }
     
-    //TODO should this be private?
     /**
      * Starts up the basic Survey Droid services.
      * 
      * @param context - the {@link Context} given to the receiver
      */
-    public static void startup(final Context context)
+    public static synchronized void startup(final Context context)
     {
+    	if (Config.getSetting(context, STARTED_KEY, false))
+    	{
+    		Util.i(null, TAG, "Already started; aborting");
+    		return;
+    	}
     	Util.i(null, TAG, "+++Starting Survey Droid+++");
+    	Config.putSetting(context, STARTED_KEY, true);
         
         //start the coms service pulling
         Util.d(null, TAG, "Starting pull service");
@@ -95,18 +103,18 @@ public class BootIntentReceiver extends BroadcastReceiver
         		System.currentTimeMillis());
         comsPullIntent.putExtra(ComsService.EXTRA_REPEATING, true);
         context.startService(comsPullIntent);
-    	
+        
         /*
-         * Delay other things for a bit so that pull can complete first.  This
-         * way, if some feature is disabled on the server, it won't even be
-         * started.
+         * We only need the configuration values to be loaded in order to
+         * start the tracking services.  Since those values are the first thing
+         * loaded by the pull, we can start these rather quickly.
          */
-        Runnable r = new Runnable()
+        Runnable level2 = new Runnable()
     	{
 			@Override
 	        public void run()
 	        {
-		        //start call monitoring
+				//start call monitoring
 		        Util.d(null, TAG, "Starting call monitoring");
 		        TelephonyManager tm = (TelephonyManager)
 		        	context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -120,7 +128,17 @@ public class BootIntentReceiver extends BroadcastReceiver
 		        trackingIntent.setAction(
 		        		LocationTrackerService.ACTION_START_TRACKING);
 		        context.startService(trackingIntent);
-		        
+	        }
+    	};
+        
+        /*
+         * Delay push and survey scheduler until everything has been pulled.
+         */
+        Runnable level3 = new Runnable()
+    	{
+			@Override
+	        public void run()
+	        {
 		        //start the coms service pushing
 		        Util.d(null, TAG, "Starting push service");
 		        Intent comsPushIntent = new Intent(context, ComsService.class);
@@ -142,6 +160,7 @@ public class BootIntentReceiver extends BroadcastReceiver
 	        }
     	};
     	Handler h = new Handler();
-    	h.postDelayed(r, 10 * 1000);
+    	h.postDelayed(level2, 10 * 1000);
+    	h.postDelayed(level3, 2 * 60 * 1000);
     }
 }

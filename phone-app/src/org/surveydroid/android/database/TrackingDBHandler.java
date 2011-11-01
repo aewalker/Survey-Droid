@@ -114,10 +114,10 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 		String    table    = SurveyDroidDB.CALLLOG_TABLE_NAME;
 		String[]  cols     = {SurveyDroidDB.CallLogTable.PHONE_NUMBER};
 		//don't count missed calls...
-		String    selc = SurveyDroidDB.CallLogTable.CALL_TYPE + " = ? or " +
+		String    selc = SurveyDroidDB.CallLogTable.CALL_TYPE + " = ? OR " +
 			SurveyDroidDB.CallLogTable.CALL_TYPE + " = ?";
 		String[]  selcArgs = new String[2];
-		if (texts)
+		if (!texts)
 		{
 			selcArgs[0] = Integer.toString(
 					SurveyDroidDB.CallLogTable.CallType.OUTGOING);
@@ -138,7 +138,7 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 		Cursor result =
 			db.query(table, cols, selc, selcArgs, group, having, orderBy);
 		boolean toReturn = true;
-		if (result.getCount() > 0) toReturn = false;
+		if (result.getCount() > 1) toReturn = false;
 		result.close();
 		return toReturn;
 	}

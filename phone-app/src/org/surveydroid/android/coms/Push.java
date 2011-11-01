@@ -595,6 +595,11 @@ public class Push
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
             cdbh.openRead();
             Cursor records = cdbh.getNextExtra();
+            if (records == null)
+            {
+            	cdbh.close();
+            	return true;
+            }
             int i = 1;
             while (records != null)
             {
@@ -665,7 +670,7 @@ public class Push
     private static Integer hash(String s, Context ctxt)
     {
     	if (s == null) return null;
-    	String salted = s + Config.getSetting(ctxt, Config.SALT, 0);
+    	String salted = s + Config.getSetting(ctxt, Config.SALT, "");
     	return salted.hashCode();
     }
 }

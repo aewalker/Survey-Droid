@@ -29,7 +29,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 	
 	<!-- The button to show the phone id. -->
 	<string name="settings_idButton">Show Phone ID</string>
-	<string name="settings_syncButton">Sync with server now</string>
+	<string name="settings_syncButton">Sync Now</string>
 	
 	
 	<!-- The default phone id. -->

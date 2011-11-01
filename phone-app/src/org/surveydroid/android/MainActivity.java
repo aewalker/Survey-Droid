@@ -71,6 +71,11 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
 
         Util.d(null, TAG, "starting mainActivity");
+        if (!Config.getSetting(this, BootIntentReceiver.STARTED_KEY, false))
+        {
+        	Util.w(null, TAG, "Background services not started; starting now");
+        	BootIntentReceiver.startup(this);
+        }
         
         //setting the layout of the activity
         Display display = ((WindowManager)

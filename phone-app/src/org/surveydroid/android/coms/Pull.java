@@ -117,12 +117,13 @@ public class Pull
 	    		}
 	            SurveyDroidDB pdb = new SurveyDroidDB(ctxt);
 	            SQLiteDatabase sdb = pdb.getWritableDatabase();
+	            //it's important that config be the first thing
+	            syncConfig(sdb, json.getJSONObject("config"), ctxt);
 	            syncSurveys(sdb, json.getJSONArray("surveys"));
 	            syncQuestions(sdb, json.getJSONArray("questions"));
 	            syncChocies(sdb, json.getJSONArray("choices"));
 	            syncBranches(sdb, json.getJSONArray("branches"));
 	            syncConditions(sdb, json.getJSONArray("conditions"));
-	            syncConfig(sdb, json.getJSONObject("config"), ctxt);
 	            sdb.close();
 	            pdb.close();
         	}
@@ -360,45 +361,19 @@ public class Pull
     	{
     		//do the special keys first
     		
-    		//user data
-    		try
-    		{
-	    		JSONObject user_data = config.getJSONObject("subject_variables");
-	    		JSONArray udNames = user_data.names();
-	    		if (udNames != null)
-	    		{
-		    		for (int i = 0; i < udNames.length(); i++)
-		    		{
-		    			String key = udNames.getString(i);
-						Config.putSetting(ctxt, Config.USER_DATA + "#" + key,
-								user_data.getString(key));
-		    		}
-	    		}
-    		}
-    		catch (JSONException e)
-    		{
-    			Util.w(ctxt, TAG, "No user_data");
-    		}
-    		
     		try
     		{
 	    		//application features
 	    		JSONObject features = config.getJSONObject("features_enabled");
-	    		if (features.optInt("survey", 0) == 1)
+	    		if (features.optString("survey", "off").equals("on"))
 	    			Config.putSetting(ctxt, Config.SURVEYS_SERVER, true);
 	    		else
 	    			Config.putSetting(ctxt, Config.SURVEYS_SERVER, false);
-	    		if (features.optInt("callog", 0) == 1)
-	    		{
+	    		if (features.optString("callog", "off").equals("on"))
 	    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, true);
-	    			Util.d(null, TAG, "call log on");
-	    		}
 	    		else
-	    		{
 	    			Config.putSetting(ctxt, Config.CALL_LOG_SERVER, false);
-	    			Util.d(null, TAG, "call log off");
-	    		}
-	    		if (features.optInt("location", 0) == 1)
+	    		if (features.optString("location", "off").equals("on"))
 	    			Config.putSetting(ctxt, Config.TRACKING_SERVER, true);
 	    		else
 	    			Config.putSetting(ctxt, Config.TRACKING_SERVER, false);
@@ -513,10 +488,16 @@ public class Pull
     			{
     				if (key.equals(k))
     				{
-    					int val = config.getInt(key);
-    					boolean boolVal = true;
-    					if (val == 0) boolVal = false;
-    					Config.putSetting(ctxt, key, boolVal);
+						String val = config.getString(key);
+						if (val.equals("1") || val.equals("on")
+								|| val.equals("enabled"))
+	    					Config.putSetting(ctxt, key, true);
+						else if (val.equals("0") || val.equals("off")
+								|| val.equals("disabled") || val.equals(""))
+							Config.putSetting(ctxt, key, false);
+						else
+							Util.w(null, TAG, "Can't interpret \"" + val
+									+ "\" as a boolean, keeping old value");
     					done = true;
     					break;
     				}

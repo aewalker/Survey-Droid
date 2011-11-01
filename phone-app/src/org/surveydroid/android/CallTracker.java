@@ -83,16 +83,6 @@ public class CallTracker extends PhoneStateListener
 		else if (state == TelephonyManager.CALL_STATE_IDLE && inCall == true)
 		{ //call just ended
 			inCall = false;
-			boolean server = Config.getSetting(ctxt, Config.CALL_LOG_SERVER,
-					Config.CALL_LOG_SERVER_DEFAULT);
-	    	boolean local = Config.getSetting(ctxt, Config.CALL_LOG_LOCAL, true);
-	    	if (!local || !server)
-			{
-				Util.d(null, TAG, "Call log local: " + local);
-				Util.d(null, TAG, "Call log server: " + server);
-				lastLookup = System.currentTimeMillis();
-				return;				
-			}
 			
 	    	Runnable r = new Runnable()
 	    	{
@@ -128,31 +118,44 @@ public class CallTracker extends PhoneStateListener
 							String number = newCalls.getString(
 									newCalls.getColumnIndexOrThrow(
 											CallLog.Calls.NUMBER));
-							tdbh.writeCall(number,
-								newCalls.getInt(
-										newCalls.getColumnIndexOrThrow(
-										CallLog.Calls.TYPE)),
-								(int) newCalls.getLong(
-										newCalls.getColumnIndexOrThrow(
-										CallLog.Calls.DURATION)),
-								newCalls.getLong(
-										newCalls.getColumnIndexOrThrow(
-										CallLog.Calls.DATE)) / 1000);
-							newCalls.moveToNext();
+							boolean server = Config.getSetting(ctxt,
+									Config.CALL_LOG_SERVER,
+									Config.CALL_LOG_SERVER_DEFAULT);
+					    	boolean local = Config.getSetting(ctxt,
+					    			Config.CALL_LOG_LOCAL, true);
+					    	if (local && server)
+					    	{
+									tdbh.writeCall(number,
+										newCalls.getInt(
+												newCalls.getColumnIndexOrThrow(
+												CallLog.Calls.TYPE)),
+										(int) newCalls.getLong(
+												newCalls.getColumnIndexOrThrow(
+												CallLog.Calls.DURATION)),
+										newCalls.getLong(
+												newCalls.getColumnIndexOrThrow(
+												CallLog.Calls.DATE)) / 1000);
+					    	}
 							/*
 							 * In the rare case that multiple calls are found
 							 * here, we don't want to confuse people by
 							 * starting multiple surveys at once.  Therefore,
 							 * only start a survey for the most recent call.
 							 */
-							if (!newCalls.isLast()) continue;
+							if (!newCalls.isLast())
+							{
+								newCalls.moveToNext();
+								continue;
+							}
 							Cursor surveys;
 							if (tdbh.isNewNumber(number, false))
 							{
+								Util.d(null, TAG, "New number!");
 								surveys = tdbh.getNewCallSurveys();
 							}
 							else
 							{
+								Util.d(null, TAG, "Old number");
 								surveys = tdbh.getOldCallSurveys();
 							}
 							int count = surveys.getCount();
@@ -180,6 +183,7 @@ public class CallTracker extends PhoneStateListener
 							lastLookup = newCalls.getLong(
 									newCalls.getColumnIndexOrThrow(
 									CallLog.Calls.DATE));
+							newCalls.moveToNext();
 						}
 						tdbh.close();
 						
