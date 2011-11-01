@@ -1,12 +1,13 @@
 Ext.define('SD.controller.Data', {
     extend: 'Ext.app.Controller',
-    models: ['Answer', 'Location', 'Call', 'StatusChange', 'SurveyTaken'],
-    stores: ['Answers', 'Locations', 'Calls', 'StatusChanges', 'SurveysTaken'],
+    models: ['Answer', 'Location', 'Call', 'StatusChange', 'SurveyTaken', 'Extra'],
+    stores: ['Answers', 'Locations', 'Calls', 'StatusChanges', 'SurveysTaken', 'Extras'],
     refs: [
         {ref: 'mainTabs', selector: 'mainTabs' },
         {ref: 'dataTab', selector: '#dataTab' },
         {ref: 'subjectFilter', selector: '#subjectFilter' },
-        {ref: 'surveyFilter', selector: '#surveyFilter' }
+        {ref: 'surveyFilter', selector: '#surveyFilter' },
+        {ref: 'imageViewer', selector: '#photosTab #fullImage' }
     ],
     init: function() {
         var me = this;
@@ -31,12 +32,20 @@ Ext.define('SD.controller.Data', {
             },
             '#surveystakenTab': {
                 activate: function() { me.loadIfEmpty('SurveysTaken'); }
+            },
+            '#photosTab': {
+                activate: function() { me.loadIfEmpty('Extras'); }
+            },
+            '#photosTab #photosList': {
+                itemclick: function(grid, record) {
+                    me.getImageViewer().bind(record);
+                }
             }
         })
     },
     onLaunch: function() {
         this.getMainTabs().setActiveTab('dataTab');
-        this.getDataTab().setActiveTab('surveystakenTab');
+        this.getDataTab().setActiveTab('photosTab');
     },
     loadIfEmpty: function(storeName) {
         var store = Ext.getStore(storeName);

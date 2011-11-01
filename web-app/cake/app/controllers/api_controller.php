@@ -26,7 +26,7 @@ class APIController extends AppController
 	
 	//this controller is associated with all the models that the phones use
 	var $uses = array('Survey', 'Answer', 'Location', 'StatusChange', 'Call',
-		'Subject', 'Configuration', 'SurveysTaken');
+		'Subject', 'Configuration', 'SurveysTaken', 'Extra');
 	var $helpers = array('Js' => 'jquery');
 	var $layout = 'json';
 	
@@ -149,7 +149,8 @@ class APIController extends AppController
 			'locations' => 'Location',
 			'calls' => 'Call',
 			'statusChanges' => 'StatusChange',
-			'surveysTaken' =>  "SurveysTaken"
+			'surveysTaken' =>  "SurveysTaken",
+			'extras' => 'Extra'
 		);
 		
 		//assuming there is some textual JSON array in $info:

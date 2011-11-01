@@ -29,10 +29,13 @@ class LocationsController extends AppController
                 if (array_key_exists($filter['property'], $this->$modelClass->_schema))
                     $conditions[$modelClass.'.'.$filter['property']] = $filter['value'];
         }
-
+        $limit = $this->params['url']['limit'];
+        if (!isset($limit))
+            $limit = 100;
         $models = $this->$modelClass->find('all', array(
             'recursive' => 0,
-            'conditions' => $conditions
+            'conditions' => $conditions,
+            'limit' => $limit
         ));
 
         // custom stuff

@@ -73,7 +73,28 @@ Ext.define("SD.view.survey.Details", {
                 },{
                     xtype: 'checkbox',
                     fieldLabel: 'Can be initialized by subject',
-                    name: 'subject_init'
+                    name: 'subject_init',
+                    labelWidth: 235
+                },{
+                    xtype: 'checkbox',
+                    fieldLabel: 'Trigger after a new call is received',
+                    name: 'new_calls',
+                    labelWidth: 235
+                },{
+                    xtype: 'checkbox',
+                    fieldLabel: 'Trigger after an old call is received',
+                    name: 'old_calls',
+                    labelWidth: 235
+                },{
+                    xtype: 'checkbox',
+                    fieldLabel: 'Trigger after a new text is received',
+                    name: 'new_texts',
+                    labelWidth: 235
+                },{
+                    xtype: 'checkbox',
+                    fieldLabel: 'Trigger after an old text is received',
+                    name: 'old_texts',
+                    labelWidth: 235
                 }
             ]
         }

@@ -143,7 +143,7 @@ Ext.define("SD.view.data.Tab", {
             }]
         }, {
             itemId: 'locationsTab',
-            title: 'Location',
+            title: 'Location (Only first 25 are displaied, full excel export coming soon)',
             xtype: 'grid',
             store: 'Locations',
             columns: [
@@ -184,15 +184,19 @@ Ext.define("SD.view.data.Tab", {
                     format: 'Y-m-d H:i:s',
                     width: 150
                 }, {
-                    xtype: 'templatecolumn',
                     text: 'Subject Id',
                     dataIndex: 'subject_id',
+                    width: 70
+                }, {
+                    xtype: 'templatecolumn',
+                    text: 'Subject',
+                    dataIndex: 'subject_id',
                     tpl: '{subject.first_name} {subject.last_name}',
-                    width: 80
+                    width: 150
                 }, {
                     text: 'Contact Id',
                     dataIndex: 'contact_id',
-                    width: 80
+                    width: 230
                 }, {
                     text: 'Call Type',
                     xtype: 'templatecolumn',
@@ -327,10 +331,65 @@ Ext.define("SD.view.data.Tab", {
                     })
                 }
             ]
-        }, 
-        {
+        }, {
+            itemId: 'photosTab',
             title: 'Photos',
-            html: '<h1>Nothing to show yet</h1>'
+            xtype: 'panel',
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            items: [
+                {
+                    itemId: 'photosList',
+                    xtype: 'grid',
+                    flex: 2,
+                    store: 'Extras',
+                    columns: [
+                        {
+                            text: 'Time',
+                            dataIndex: 'created',
+                            xtype: 'datecolumn',
+                            format: 'Y-m-d H:i:s',
+                            width: 150
+                        }, {
+                            text: 'Subject Id',
+                            dataIndex: 'subject_id'
+                        }, {
+                            text: 'Type',
+                            xtype: 'templatecolumn',
+                            width: 100,
+                            dataIndex: 'type',
+                            tpl: new Ext.XTemplate(
+                                '{[this.getType(values.type)]}', {
+                                getType: function(type) {
+                                    switch (type) {
+                                        case 0: return 'Photos';
+                                    }
+                                }
+                            })
+                        }, {
+                            text: 'Thumbnail',
+                            xtype: 'templatecolumn',
+                            flex: 1,
+                            tpl: '<img class="thumbnail" src="data:image/jpeg;base64,{data}" />'
+                        }
+                    ]
+                }, {
+                    itemId: 'fullImage',
+                    xtype: 'panel',
+                    flex: 3,
+                    title: 'Full size image',
+                    html: '<img src="" />',
+                    autoScroll: true,
+                    bind: function(record) {
+                        this.getEl().child('div.x-panel-body').update(
+                            '<img class="fullsize" src="data:image/jpeg;base64,'+record.data.data+'" />'
+                        );
+                        this.doLayout();
+                    }
+                }
+            ]
         }
     ]
 });
