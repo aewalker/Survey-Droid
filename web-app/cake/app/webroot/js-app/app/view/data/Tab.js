@@ -201,16 +201,16 @@ Ext.define("SD.view.data.Tab", {
                         '{[this.getCallType(values.type)]}', {
                         getCallType: function(type) {
                             switch (type) {
-                                case 0:
-                                    return 'Outgoing Call';
-                                case 1:
-                                    return 'Incoming Call';
+	                            case 1:
+	                                return 'Incoming Call';
                                 case 2:
-                                    return 'Outgoing Text';
+                                    return 'Outgoing Call';
                                 case 3:
-                                    return 'Incoming Text';
-                                case 4:
                                     return 'Missed Call';
+                                case 4:
+                                    return 'Incoming Text';
+                                case 5:
+                                    return 'Outgoing Text';
                             }
                         }
                     })
@@ -314,6 +314,14 @@ Ext.define("SD.view.data.Tab", {
                                 case 9: return 'Random Survey Unfinished';
                                 case 10: return 'Random Survey Dismissed';
                                 case 11: return 'Random Survey Ignored';
+                                case 12: return 'Call Initiated Survey Finished';
+                                case 13: return 'Call Initiated Survey Unfinished';
+                                case 14: return 'Call Initiated Survey Dismissed';
+                                case 15: return 'Call Initiated Survey Ignored';
+                                case 16: return 'Location Based Survey Finished';
+                                case 16: return 'Location Based Survey Unfinished';
+                                case 16: return 'Location Based Survey Dismissed';
+                                case 16: return 'Location Based Survey Ignored';
                             }
                         }
                     })

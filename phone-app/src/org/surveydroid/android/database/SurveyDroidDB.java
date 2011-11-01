@@ -242,11 +242,11 @@ public class SurveyDroidDB extends SQLiteOpenHelper
         /** Holds call type codes */
         public static final class CallType {
             public static final int INCOMING =
-            	android.provider.CallLog.Calls.INCOMING_TYPE;
+            	android.provider.CallLog.Calls.INCOMING_TYPE; //1
             public static final int OUTGOING =
-            	android.provider.CallLog.Calls.OUTGOING_TYPE;
+            	android.provider.CallLog.Calls.OUTGOING_TYPE; //2
             public static final int MISSED =
-            	android.provider.CallLog.Calls.MISSED_TYPE;
+            	android.provider.CallLog.Calls.MISSED_TYPE; //3
             public static final int INCOMING_TEXT = 4;
             public static final int OUTGOING_TEXT = 5;
         }
