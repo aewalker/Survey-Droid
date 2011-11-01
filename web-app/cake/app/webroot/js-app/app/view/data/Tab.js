@@ -221,7 +221,107 @@ Ext.define("SD.view.data.Tab", {
                 }
             ]
         }, {
-            title: 'Voicemail & Photos',
+            itemId: 'statuschangesTab',
+            title: 'Status Changes',
+            xtype: 'grid',
+            store: 'StatusChanges',
+            columns: [
+                {
+                    text: 'Time',
+                    dataIndex: 'created',
+                    xtype: 'datecolumn',
+                    format: 'Y-m-d H:i:s',
+                    width: 150
+                }, {
+                    text: 'Subject Id',
+                    dataIndex: 'subject_id',
+                    width: 80
+                }, {
+                    text: 'Feature',
+                    xtype: 'templatecolumn',
+                    dataIndex: 'feature',
+                    tpl: new Ext.XTemplate(
+                        '{[this.getFeature(values.feature)]}', {
+                        getFeature: function(type) {// enum {gps, calllog, textlog, app} - what is being enabled / disabled
+                            switch (type) {
+                                case 0:
+                                    return 'GPS';
+                                case 1:
+                                    return 'Call Log';
+                                case 2:
+                                    return 'Text Log';
+                                case 3:
+                                    return 'Application';
+                            }
+                        }
+                    })
+                }, {
+                    text: 'Action',
+                    xtype: 'templatecolumn',
+                    dataIndex: 'status',
+                    tpl: new Ext.XTemplate(
+                        '{[this.getAction(values.status)]}', { // 1 for enabling, or turning on, 0 for turning off or disabling a feature
+                        getAction: function(type) {
+                            switch (type) {
+                                case 0:
+                                    return 'Disabling';
+                                case 1:
+                                    return 'Enabling';
+                            }
+                        }
+                    })
+                }
+            ]
+        },
+        {
+            itemId: 'surveystakenTab',
+            title: 'Surveys Taken',
+            xtype: 'grid',
+            store: 'SurveysTaken',
+            columns: [
+                {
+                    text: 'Time',
+                    dataIndex: 'created',
+                    xtype: 'datecolumn',
+                    format: 'Y-m-d H:i:s',
+                    width: 150
+                }, {
+                    text: 'Subject Id',
+                    dataIndex: 'subject_id',
+                    width: 80
+                }, {
+                    text: 'Survey Id',
+                    dataIndex: 'survey_id',
+                    width: 80
+                }, {
+                    text: 'Status',
+                    xtype: 'templatecolumn',
+                    width: 250,
+                    dataIndex: 'status',
+                    tpl: new Ext.XTemplate(
+                        '{[this.getStatus(values.status)]}', {
+                        getStatus: function(type) {
+                            switch (type) {
+                                case 0: return 'Surveys Disabled Locally';
+                                case 1: return 'Surveys Disabled by Server';
+                                case 2: return 'User Initiated Survey Finished';
+                                case 3: return 'User Initiated Survey Unfinished';
+                                case 4: return 'Scheduled Survey Finished';
+                                case 5: return 'Scheduled Survey Unfinished';
+                                case 6: return 'Scheduled Survey Dismissed';
+                                case 7: return 'Scheduled Survey Ignored';
+                                case 8: return 'Random Survey Finished';
+                                case 9: return 'Random Survey Unfinished';
+                                case 10: return 'Random Survey Dismissed';
+                                case 11: return 'Random Survey Ignored';
+                            }
+                        }
+                    })
+                }
+            ]
+        }, 
+        {
+            title: 'Photos',
             html: '<h1>Nothing to show yet</h1>'
         }
     ]

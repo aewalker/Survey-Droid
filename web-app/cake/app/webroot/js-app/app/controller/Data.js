@@ -1,7 +1,7 @@
 Ext.define('SD.controller.Data', {
     extend: 'Ext.app.Controller',
-    models: ['Answer', 'Location', 'Call'],
-    stores: ['Answers', 'Locations', 'Calls'],
+    models: ['Answer', 'Location', 'Call', 'StatusChange', 'SurveyTaken'],
+    stores: ['Answers', 'Locations', 'Calls', 'StatusChanges', 'SurveysTaken'],
     refs: [
         {ref: 'mainTabs', selector: 'mainTabs' },
         {ref: 'dataTab', selector: '#dataTab' },
@@ -25,12 +25,18 @@ Ext.define('SD.controller.Data', {
             },
             '#answersTab': {
                 activate: function() { me.loadIfEmpty('Answers'); }
+            },
+            '#statuschangesTab': {
+                activate: function() { me.loadIfEmpty('StatusChanges'); }
+            },
+            '#surveystakenTab': {
+                activate: function() { me.loadIfEmpty('SurveysTaken'); }
             }
         })
     },
     onLaunch: function() {
-//        this.getMainTabs().setActiveTab('dataTab');
-//        this.getDataTab().setActiveTab('callTab');
+        this.getMainTabs().setActiveTab('dataTab');
+        this.getDataTab().setActiveTab('surveystakenTab');
     },
     loadIfEmpty: function(storeName) {
         var store = Ext.getStore(storeName);

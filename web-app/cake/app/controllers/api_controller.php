@@ -107,8 +107,8 @@ class APIController extends AppController
 					if ($field == 'subject_variables') {
 					    $subjectVariables = json_decode($value, true);
                         if (isset($subjectVariables)) {
-                            if (array_key_exists($deviceid, $subjectVariables)) {
-                                $value = $subjectVariables[$deviceid];
+                            if (array_key_exists($subjectid, $subjectVariables)) {
+                                $value = $subjectVariables[$subjectid];
                             } else {
                                 $value = null;
                             }

@@ -18,7 +18,7 @@ Ext.define('SD.controller.Surveys', {
                     me.getSurveyDetails().loadRecord(survey);
                     me.getSurveyEditor().setTitle('Survey Editor - ' + survey.data.name);
                     me.getTabPanel().setActiveTab('details');
-                    me.getSurveysGrid().collapse();
+//                    me.getSurveysGrid().collapse();
                 }
             },
             'surveysTab questionsPanel': {
