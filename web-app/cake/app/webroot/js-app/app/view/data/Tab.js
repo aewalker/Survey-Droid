@@ -323,9 +323,9 @@ Ext.define("SD.view.data.Tab", {
                                 case 14: return 'Call Initiated Survey Dismissed';
                                 case 15: return 'Call Initiated Survey Ignored';
                                 case 16: return 'Location Based Survey Finished';
-                                case 16: return 'Location Based Survey Unfinished';
-                                case 16: return 'Location Based Survey Dismissed';
-                                case 16: return 'Location Based Survey Ignored';
+                                case 17: return 'Location Based Survey Unfinished';
+                                case 18: return 'Location Based Survey Dismissed';
+                                case 19: return 'Location Based Survey Ignored';
                             }
                         }
                     })
