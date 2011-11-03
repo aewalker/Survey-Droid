@@ -324,6 +324,7 @@ public class SurveyDBHandler extends SurveyDroidDBHandler
 			ids = new StringBuilder(Integer.toString(c_ids[0]));
 			for (int i = 1; i < c_ids.length; i++)
 			{
+				ids.append(',');
 				ids.append(Integer.toString(c_ids[i]));
 			}
 		}

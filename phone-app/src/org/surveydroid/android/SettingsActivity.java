@@ -163,6 +163,10 @@ public class SettingsActivity extends Activity
 				}
 			});
         }
+        else
+        {
+        	findViewById(R.id.settings_syncButton).setVisibility(View.GONE);
+        }
         
         //exit button
         Button back = (Button) findViewById(R.id.settings_backButton);

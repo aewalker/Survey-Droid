@@ -113,7 +113,8 @@ public class Push
                 				SurveyDroidDB.AnswerTable.ANS_TYPE)))
                 {
                 case SurveyDroidDB.AnswerTable.CHOICE:
-                    ans.put(SurveyDroidDB.AnswerTable.CHOICE_IDS, answers.getInt(
+                    ans.put(SurveyDroidDB.AnswerTable.CHOICE_IDS,
+                    		answers.getString(
                     		answers.getColumnIndexOrThrow(
                     				SurveyDroidDB.AnswerTable.CHOICE_IDS)));
                 	break;
