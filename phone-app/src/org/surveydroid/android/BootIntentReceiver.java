@@ -68,6 +68,7 @@ public class BootIntentReceiver extends BroadcastReceiver
     	 * system services have not been started up in time.
     	 */
     	final Context c = context;
+		Config.putSetting(context, STARTED_KEY, false);
     	Runnable level1 = new Runnable()
     	{
 			@Override

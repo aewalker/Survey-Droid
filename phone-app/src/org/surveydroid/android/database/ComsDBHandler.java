@@ -134,9 +134,12 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 	 * are <strong>not</strong> yet hashed, so remember to do so in order
 	 * to protect privacy.
 	 * 
+	 * @param notUploaded - if true, only return calls that have not been
+	 * uploaded
+	 * 
 	 * @return a {@link Cursor} with the data
 	 */
-	public Cursor getCalls()
+	public Cursor getCalls(boolean notUploaded)
 	{
 		Util.d(null, TAG, "Fetching calls");
 		
@@ -144,7 +147,9 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 
 		String    table    = SurveyDroidDB.CALLLOG_TABLE_NAME;
 		String[]  cols     = null;
-		String    selc     = null;
+		String	  selc	   = null;
+		if (notUploaded)
+			selc = SurveyDroidDB.CallLogTable.UPLOADED + " = 0";
 		String[]  selcArgs = null;
 		String    group    = null;
 		String    having   = null;
@@ -166,9 +171,7 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 		
 		//set up the query
 		String    table    = SurveyDroidDB.STATUS_TABLE_NAME;
-		String[]  cols     = {SurveyDroidDB.StatusTable.TYPE,
-							  SurveyDroidDB.StatusTable.STATUS,
-							  SurveyDroidDB.StatusTable.CREATED};
+		String[]  cols     = null;
 		String    selc     = null;
 		String[]  selcArgs = null;
 		String    group    = null;
@@ -304,7 +307,7 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 		//set of unique phone numbers
 		Map<String, Boolean> unique_nums = new HashMap<String, Boolean>();
 		
-		Cursor calls = getCalls();
+		Cursor calls = getCalls(false);
 		
 		if (calls.getCount() == 0)
 		{
@@ -340,6 +343,7 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 				db.delete(SurveyDroidDB.CALLLOG_TABLE_NAME,
 						whereClause, whereArgs);
 			}
+			calls.moveToNext();
 		}
 		calls.close();
 

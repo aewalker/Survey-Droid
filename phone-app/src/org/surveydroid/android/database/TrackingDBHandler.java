@@ -65,7 +65,7 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 
 		//set up the query
 		values.put(CallLogTable.CALL_TYPE, type);
-		values.put(CallLogTable.PHONE_NUMBER, number);
+		values.put(CallLogTable.PHONE_NUMBER, Util.cleanPhoneNumber(number));
 		values.put(CallLogTable.TIME, time);
 		if (CallLogTable.hasDuration(type))
 			values.put(CallLogTable.DURATION, duration);

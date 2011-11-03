@@ -167,8 +167,10 @@ public class ComsService extends IntentService
 				break;
 			case STATUS_DATA:
 				Push.pushStatusData(this);
+				break;
 			case EXTRAS_DATA:
 				Push.pushExtrasData(this);
+				break;
 			default:
 				Push.pushAnswers(this);
 				Push.pushCompletionData(this);

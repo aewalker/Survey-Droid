@@ -23,6 +23,7 @@
  *****************************************************************************/
 package org.surveydroid.android;
 
+import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.TrackingDBHandler;
 import org.surveydroid.android.survey.SurveyService;
@@ -93,7 +94,7 @@ public class IncomingSMSTracker extends BroadcastReceiver
 			tdbh.writeCall(smsMessage[i].getOriginatingAddress(),
 					SurveyDroidDB.CallLogTable.CallType.INCOMING_TEXT,
 					-1, //doesn't matter; ignored for this type
-					smsMessage[i].getTimestampMillis());
+					smsMessage[i].getTimestampMillis() / 1000);
 			if (i == messages.length - 1)
 			{
 				Cursor surveys;
@@ -130,6 +131,14 @@ public class IncomingSMSTracker extends BroadcastReceiver
 			}
 		}
 		tdbh.close();
+		
+		//tell the coms service to upload the call information
+		Intent uploadIntent = new Intent(ctxt,
+				ComsService.class);
+		uploadIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+		uploadIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
+				ComsService.CALL_DATA);
+		ctxt.startService(uploadIntent);
     }
 
 }

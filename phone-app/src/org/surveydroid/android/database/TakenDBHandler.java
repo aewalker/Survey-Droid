@@ -171,19 +171,23 @@ public class TakenDBHandler extends SurveyDroidDBHandler
     	case SurveyDroidDB.TakenTable.RANDOM_UNFINISHED:
     	case SurveyDroidDB.TakenTable.RANDOM_DISMISSED:
     	case SurveyDroidDB.TakenTable.RANDOM_IGNORED:
+    	case SurveyDroidDB.TakenTable.USER_INITIATED_FINISHED:
+    	case SurveyDroidDB.TakenTable.CALL_INITIATED_UNFINISHED:
+    	case SurveyDroidDB.TakenTable.CALL_INITIATED_DISMISSED:
+    	case SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED:
 			return -1;
 
     	case SurveyDroidDB.TakenTable.SURVEYS_DISABLED_SERVER:
     	case SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED:
+    	case SurveyDroidDB.TakenTable.LOCATION_BASED_DISMISSED:
+    	case SurveyDroidDB.TakenTable.LOCATION_BASED_FINISHED:
+    	case SurveyDroidDB.TakenTable.LOCATION_BASED_IGNORED:
+    	case SurveyDroidDB.TakenTable.LOCATION_BASED_UNFINISHED:
 			return 0;
-		
-		//for testing, let these surveys count
-    	case SurveyDroidDB.TakenTable.USER_INITIATED_FINISHED:
-    		if (Config.D) return 1;
-    		else return 0;
 
     	case SurveyDroidDB.TakenTable.SCHEDULED_FINISHED:
     	case SurveyDroidDB.TakenTable.RANDOM_FINISHED:
+    	case SurveyDroidDB.TakenTable.CALL_INITIATED_FINISHED:
 			return 1;
 			
     	default:

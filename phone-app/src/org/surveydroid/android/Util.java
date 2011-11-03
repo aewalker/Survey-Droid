@@ -134,6 +134,28 @@ public final class Util
 		return returnTime;
 	}
 	
+	/**
+	 * Cleans up a phone number so that it contains no non-numerical chars.
+	 * 
+	 * @param number - the number to clean up
+	 * @return number without non-numerical characters
+	 */
+	public static String cleanPhoneNumber(String number)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (char c : number.toCharArray())
+		{
+			switch(c)
+			{
+			case '0': case '1': case '2': case '3': case '4':
+			case '5': case '6': case '7': case '8': case '9':
+				sb.append(c);
+			default:
+			}
+		}
+		return sb.toString();
+	}
+	
 	/*-----------------------------------------------------------------------*/
 	
 	/*

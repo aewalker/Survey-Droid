@@ -405,7 +405,7 @@ public class Push
         {
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
             cdbh.openRead();
-            Cursor calls = cdbh.getCalls();
+            Cursor calls = cdbh.getCalls(true);
             JSONArray callsJSON = new JSONArray();
 
            Util.d(ctx, TAG, "# of call logs to push : " + calls.getCount());
@@ -417,7 +417,6 @@ public class Push
             	return true;
             }
             
-            int[] uploadedIDs = new int[calls.getCount()];
             int index = 0;
 
             calls.moveToFirst();
@@ -437,9 +436,6 @@ public class Push
                 		calls.getColumnIndexOrThrow(
                 				SurveyDroidDB.CallLogTable.PHONE_NUMBER)), ctx));
                 callsJSON.put(log);
-                uploadedIDs[index] = calls.getInt(
-                		calls.getColumnIndexOrThrow(
-                				SurveyDroidDB.CallLogTable._ID));
                 index++;
                 calls.moveToNext();
             }
@@ -518,7 +514,7 @@ public class Push
             while (!records.isAfterLast())
             {
                 JSONObject record = new JSONObject();
-                record.put(SurveyDroidDB.StatusTable.TYPE, records.getString(
+                record.put("feature", records.getString(
                 		records.getColumnIndexOrThrow(
                 				SurveyDroidDB.StatusTable.TYPE)));
                 record.put(SurveyDroidDB.StatusTable.STATUS, records.getInt(

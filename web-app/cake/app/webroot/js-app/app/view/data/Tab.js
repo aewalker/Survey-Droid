@@ -246,7 +246,7 @@ Ext.define("SD.view.data.Tab", {
                     dataIndex: 'feature',
                     tpl: new Ext.XTemplate(
                         '{[this.getFeature(values.feature)]}', {
-                        getFeature: function(type) {// enum {gps, calllog, textlog, app} - what is being enabled / disabled
+                        getFeature: function(type) {// enum {gps, calllog, textlog, surveys} - what is being enabled / disabled
                             switch (type) {
                                 case 0:
                                     return 'GPS';
@@ -255,7 +255,7 @@ Ext.define("SD.view.data.Tab", {
                                 case 2:
                                     return 'Text Log';
                                 case 3:
-                                    return 'Application';
+                                    return 'Surveys';
                             }
                         }
                     })

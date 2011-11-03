@@ -212,7 +212,7 @@ public class SettingsActivity extends Activity
             	boolean enabled =
             		Config.getSetting(this, Config.SURVEYS_LOCAL, false);
         		sdbh.statusChanged(SurveyDroidDB.StatusTable.SURVEYS,
-        				enabled, System.currentTimeMillis());
+        				enabled, System.currentTimeMillis() / 1000);
         		surveyChanged = false;
         	}
         	
@@ -221,7 +221,7 @@ public class SettingsActivity extends Activity
         		boolean enabled =
             		Config.getSetting(this, Config.TRACKING_LOCAL, false);
         		sdbh.statusChanged(SurveyDroidDB.StatusTable.LOCATION_TRACKING,
-        				enabled, System.currentTimeMillis());
+        				enabled, System.currentTimeMillis() / 1000);
         		locationChanged = false;
         	}
         	
@@ -230,7 +230,7 @@ public class SettingsActivity extends Activity
         		boolean enabled =
             		Config.getSetting(this, Config.CALL_LOG_LOCAL, false);
         		sdbh.statusChanged(SurveyDroidDB.StatusTable.CALL_LOGGING,
-        				enabled, System.currentTimeMillis());
+        				enabled, System.currentTimeMillis() / 1000);
         		calllogChanged = false;
         	}
         	
