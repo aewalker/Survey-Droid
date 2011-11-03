@@ -147,6 +147,19 @@ public class CallTracker extends PhoneStateListener
 								newCalls.moveToNext();
 								continue;
 							}
+							
+							//make sure the number is not study admin's number
+							String numberMod = "";
+							for (String s : number.split("-"))
+								numberMod = numberMod + s;
+							if (Config.getSetting(ctxt,
+									Config.ADMIN_PHONE_NUMBER, null).equals(
+											numberMod))
+							{
+								newCalls.moveToNext();
+								continue;
+							}
+							
 							Cursor surveys;
 							if (tdbh.isNewNumber(number, false))
 							{
