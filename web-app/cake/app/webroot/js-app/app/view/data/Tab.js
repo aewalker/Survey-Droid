@@ -106,7 +106,7 @@ Ext.define("SD.view.data.Tab", {
                                             case 1:
                                                 return answer.ans_value;
                                             case 2:
-                                                return answer.answer_text;
+                                                return answer.ans_text;
                                         }
                                         return 'Undefined Type';
                                     }
