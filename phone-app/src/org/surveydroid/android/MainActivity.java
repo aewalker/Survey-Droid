@@ -250,7 +250,7 @@ public class MainActivity extends Activity
     private void errorToast(String action)
     {
     	Toast.makeText(this, "Failed to " + action + " photo; "
-        		+ "please tell the study administrator",
+        		+ "please try again",
         		Toast.LENGTH_SHORT).show();
     }
 

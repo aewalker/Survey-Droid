@@ -207,7 +207,7 @@ public class Config
 	 * completion rate.
 	 */
 	public static final String COMPLETION_SAMPLE = "completion_sample";
-	public static final int COMPLETION_SAMPLE_DEFAULT = 10;
+	public static final int COMPLETION_SAMPLE_DEFAULT = 14;
 	
 	/**
 	 * How long (in minutes) to wait between re-notifying the user that a
@@ -244,6 +244,9 @@ public class Config
 	 * key, append "#key_name" to this value.
 	 */
 	public static final String USER_DATA = "user_data";
+	
+	/**  key to denote whether or not a the sample survey has been taken */
+	public static final String SAMPLE_SURVEY_TAKEN = "sample_survey_taken";
 	
 	//settings by type
 	/** List of settings which are strings */

@@ -27,7 +27,6 @@ package org.surveydroid.android.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 
 import org.surveydroid.android.Config;
 import org.surveydroid.android.Util;
@@ -42,6 +41,12 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 {
 	//logging tag
 	private static final String TAG = "SurveysTakenDBHandler";
+	
+	//the current completion percentage
+	private static final String NUM_COMPLETED = "num_completed";
+	
+	//the number of surveys used to create the percentage
+	private static final String NUM_SAMPLED = "num_sampled";
 	
 	/**
 	 * Returned from {@link #getCompletionRate} if there have not been any
@@ -72,6 +77,29 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 	{
 		Util.d(contx, TAG, "Writing survey code: survey "
 				+ survey_id + " marked " + code);
+		
+		//first update the completion percentage if needed
+		int counts = countsAsCompleted(code);
+		int numUsed = Config.getSetting(contx, NUM_SAMPLED, 0);
+		int maxUsed = Config.getSetting(contx, Config.COMPLETION_SAMPLE,
+				Config.COMPLETION_SAMPLE_DEFAULT);
+		int numComp = Config.getSetting(contx, NUM_COMPLETED, 0);
+		if (counts == 1 || counts == -1)
+		{
+			if (numUsed >= maxUsed)
+			{ //reset the thermometer
+				numUsed = 1;
+				numComp = 0;
+			}
+			else
+			{
+				numUsed++;
+			}
+			if (counts == 1) numComp++;
+			Config.putSetting(contx, NUM_SAMPLED, numUsed);
+			Config.putSetting(contx, NUM_COMPLETED, numComp);
+		}
+		
 		ContentValues values = new ContentValues();
 		
 		//set up the query
@@ -97,59 +125,69 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 	{
 		Util.d(null, TAG, "Getting survey completion rate");
 		
-		//set up the query
-		String    table    = SurveyDroidDB.TAKEN_TABLE_NAME;
-		String[]  cols     = {SurveyDroidDB.TakenTable.STATUS};
-		String    selc     = null;
-		String[]  selcArgs = null;
-		String    group    = null;
-		String    having   = null;
-		String    orderBy  = SurveyDroidDB.TakenTable.CREATED + " DESC";
+		int numUsed = Config.getSetting(contx, NUM_SAMPLED, 0);
+		if (numUsed == 0) return NO_PERCENTAGE;
 		
-		//run it
-		Cursor result =
-			db.query(table, cols, selc, selcArgs, group, having, orderBy);
-		if (result.getCount() == 0) 
-		{
-			result.close();
-			return NO_PERCENTAGE;
-		}
-		result.moveToFirst();
-		
-		int size = Config.getSetting(contx, Config.COMPLETION_SAMPLE,
+		int numComp = Config.getSetting(contx, NUM_COMPLETED, 0);
+		int maxUsed = Config.getSetting(contx, Config.COMPLETION_SAMPLE,
 				Config.COMPLETION_SAMPLE_DEFAULT);
-		int numCompleted = 0;
-		int sampleSize = 0;
-		int i = 0;
-		while (i < size)
-		{
-			if (result.isAfterLast()) break;
-			int code = result.getInt(
-					result.getColumnIndexOrThrow(SurveyDroidDB.TakenTable.STATUS));
-			result.moveToNext();
-			if (code == SurveyDroidDB.TakenTable.SURVEYS_DISABLED_SERVER) continue;
-			
-			int counts = countsAsCompleted(code);
-			sampleSize++;
-			i++;
-			switch (counts)
-			{
-			case -1:
-				break;
-			case 0:
-				sampleSize--;
-				break;
-			case 1:
-				numCompleted++;
-				break;
-			default:
-				Util.w(null, TAG, "Bad count code");
-			}
-		}
-		result.close();
-		Util.v(null, TAG, "numCompleted: " + numCompleted);
-		Util.v(null, TAG, "sampleSize: " + sampleSize);
-		return (int) (numCompleted * (100.0 / (double) sampleSize));
+		
+		double amount = 100.0 / maxUsed;
+		return (int) (amount * numComp);
+		
+		//set up the query
+//		String    table    = SurveyDroidDB.TAKEN_TABLE_NAME;
+//		String[]  cols     = {SurveyDroidDB.TakenTable.STATUS};
+//		String    selc     = null;
+//		String[]  selcArgs = null;
+//		String    group    = null;
+//		String    having   = null;
+//		String    orderBy  = SurveyDroidDB.TakenTable.CREATED + " DESC";
+//		
+//		//run it
+//		Cursor result =
+//			db.query(table, cols, selc, selcArgs, group, having, orderBy);
+//		if (result.getCount() == 0) 
+//		{
+//			result.close();
+//			return NO_PERCENTAGE;
+//		}
+//		result.moveToFirst();
+//		
+//		int size = Config.getSetting(contx, Config.COMPLETION_SAMPLE,
+//				Config.COMPLETION_SAMPLE_DEFAULT);
+//		int numCompleted = 0;
+//		int sampleSize = 0;
+//		int i = 0;
+//		while (i < size)
+//		{
+//			if (result.isAfterLast()) break;
+//			int code = result.getInt(
+//					result.getColumnIndexOrThrow(SurveyDroidDB.TakenTable.STATUS));
+//			result.moveToNext();
+//			if (code == SurveyDroidDB.TakenTable.SURVEYS_DISABLED_SERVER) continue;
+//			
+//			int counts = countsAsCompleted(code);
+//			sampleSize++;
+//			i++;
+//			switch (counts)
+//			{
+//			case -1:
+//				break;
+//			case 0:
+//				sampleSize--;
+//				break;
+//			case 1:
+//				numCompleted++;
+//				break;
+//			default:
+//				Util.w(null, TAG, "Bad count code");
+//			}
+//		}
+//		result.close();
+//		Util.v(null, TAG, "numCompleted: " + numCompleted);
+//		Util.v(null, TAG, "sampleSize: " + sampleSize);
+//		return (int) (numCompleted * (100.0 / (double) sampleSize));
 	}
 	
 	/**
@@ -164,30 +202,36 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 	{
 		switch (code)
 		{
-		case SurveyDroidDB.TakenTable.SURVEYS_DISABLED_LOCALLY:
     	case SurveyDroidDB.TakenTable.SCHEDULED_UNFINISHED:
     	case SurveyDroidDB.TakenTable.SCHEDULED_DISMISSED:
     	case SurveyDroidDB.TakenTable.SCHEDULED_IGNORED:
     	case SurveyDroidDB.TakenTable.RANDOM_UNFINISHED:
     	case SurveyDroidDB.TakenTable.RANDOM_DISMISSED:
     	case SurveyDroidDB.TakenTable.RANDOM_IGNORED:
-    	case SurveyDroidDB.TakenTable.USER_INITIATED_FINISHED:
-    	case SurveyDroidDB.TakenTable.CALL_INITIATED_UNFINISHED:
-    	case SurveyDroidDB.TakenTable.CALL_INITIATED_DISMISSED:
-    	case SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED:
 			return -1;
 
-    	case SurveyDroidDB.TakenTable.SURVEYS_DISABLED_SERVER:
     	case SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED:
+    		if (Config.D) return -1;
+    		return 0;
+    	
+    	case SurveyDroidDB.TakenTable.USER_INITIATED_FINISHED:
+    		if (Config.D) return 1;
+    		return 0;
+			
+    	case SurveyDroidDB.TakenTable.SURVEYS_DISABLED_SERVER:
     	case SurveyDroidDB.TakenTable.LOCATION_BASED_DISMISSED:
     	case SurveyDroidDB.TakenTable.LOCATION_BASED_FINISHED:
     	case SurveyDroidDB.TakenTable.LOCATION_BASED_IGNORED:
     	case SurveyDroidDB.TakenTable.LOCATION_BASED_UNFINISHED:
+    	case SurveyDroidDB.TakenTable.CALL_INITIATED_UNFINISHED:
+    	case SurveyDroidDB.TakenTable.CALL_INITIATED_DISMISSED:
+    	case SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED:
+    	case SurveyDroidDB.TakenTable.CALL_INITIATED_FINISHED:
+		case SurveyDroidDB.TakenTable.SURVEYS_DISABLED_LOCALLY:
 			return 0;
 
     	case SurveyDroidDB.TakenTable.SCHEDULED_FINISHED:
     	case SurveyDroidDB.TakenTable.RANDOM_FINISHED:
-    	case SurveyDroidDB.TakenTable.CALL_INITIATED_FINISHED:
 			return 1;
 			
     	default:

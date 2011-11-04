@@ -252,21 +252,10 @@ public class Push
             // delete records if appropriate
             if (success)
             {
-            	//get the number of records to keep
-            	int size = Config.getSetting(ctx, Config.COMPLETION_SAMPLE,
-            			Config.COMPLETION_SAMPLE_DEFAULT);
-            	
             	cdbh.openWrite();
-            	int numKept = 0;
                 for (int i = uploadedIDs.length - 1; i >= 0; i--)
-                { //remember: these are in reverse order by creation date
-                    if (numKept < size)
-                    {
-                    	cdbh.updateCompletionRecord(uploadedIDs[i]);
-                    	numKept++;
-                    }
-                    else
-                    	cdbh.delCompletionRecord(uploadedIDs[i]);
+                {
+                	cdbh.delCompletionRecord(uploadedIDs[i]);
                 }
                 cdbh.close();
             }

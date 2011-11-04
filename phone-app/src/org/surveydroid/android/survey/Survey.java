@@ -326,7 +326,7 @@ public class Survey
 		id = 0;
 
 		Question prevQ = null;
-		for (int i = 4; i >= 0; i--)
+		for (int i = 3; i >= 0; i--)
 		{
 			LinkedList<Branch> branches = new LinkedList<Branch>();
 			if (prevQ != null)
@@ -416,10 +416,6 @@ public class Survey
 						Base64Coder.encode(baosHigh.toByteArray()), ctxt);
 				break;
 			case 3:
-				prevQ = new SlidingScaleTextQuestion("How old are you?", i,
-						branches, "1", "100", ctxt);
-				break;
-			case 4:
 				prevQ = new FreeResponseQuestion("What country are you from?",
 						i, branches, ctxt);
 				break;

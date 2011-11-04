@@ -78,10 +78,16 @@ public class UserSurveysActivity extends ListActivity
         sdbh.openRead();
         Cursor surveys = sdbh.getSubjectInitSurveys();
         //remember to add one so we can insert the sample survey
-        final int[] ids = new int[surveys.getCount() + 1];
-        String[] names = new String[surveys.getCount() + 1];
+        int count = surveys.getCount();
+        boolean sampleTaken =
+        	Config.getSetting(this, Config.SAMPLE_SURVEY_TAKEN, false);
+        if (!sampleTaken) count++;
+        final int[] ids = new int[count];
+        String[] names = new String[count];
         surveys.moveToFirst();
-        for (int i = 1; !surveys.isAfterLast(); i++)
+        int i = 0;
+        if (!sampleTaken) i++;
+        for (; !surveys.isAfterLast(); i++)
         {
         	ids[i] = surveys.getInt(surveys.getColumnIndexOrThrow(
         			SurveyDroidDB.SurveyTable._ID));
@@ -91,8 +97,11 @@ public class UserSurveysActivity extends ListActivity
         }
         surveys.close();
         sdbh.close();
-        ids[0] = 0;
-        names[0] = "Sample Survey";
+        if (!sampleTaken)
+        {
+	        ids[0] = 0;
+	        names[0] = "Sample Survey";
+        }
         
         final ListView lv = getListView();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,

@@ -204,6 +204,38 @@ public class SurveyService extends Service
 						SURVEY_TYPE_TIMED);
 				currentTime = intent.getLongExtra(
 						SurveyScheduler.EXTRA_RUNNING_TIME, 0);
+				if (!Config.getSetting(this, Config.SURVEYS_LOCAL, true)
+						&& type != SURVEY_TYPE_USER_INIT)
+				{
+					int status;
+					switch (type)
+					{
+					case SURVEY_TYPE_TIMED:
+						status = SurveyDroidDB.TakenTable.SCHEDULED_IGNORED;
+						break;
+					case SURVEY_TYPE_RANDOM:
+						status = SurveyDroidDB.TakenTable.RANDOM_IGNORED;
+						break;
+					case SURVEY_TYPE_CALL_INIT:
+						status = SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED;
+						break;
+					case SURVEY_TYPE_LOC_INIT:
+						status = SurveyDroidDB.TakenTable.LOCATION_BASED_IGNORED;
+						break;
+					default:
+						throw new IllegalArgumentException(
+								"Invalid survey type: " + type);
+					}
+					TakenDBHandler tdbh = new TakenDBHandler(this);
+					tdbh.openWrite();
+					if (tdbh.writeSurvey(id, status,
+							System.currentTimeMillis() / 1000) == false)
+					{
+						Util.e(this, TAG, "Failed to write completion record!");
+					}
+					tdbh.close();
+					return;
+				}
 				if (surveys.isEmpty())
 				{
 					Util.v(null, TAG, "surveys is empty");
@@ -297,9 +329,9 @@ public class SurveyService extends Service
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(currentTime);
 		if (surveys.size() == 1)
-			tickerText = "New Survey Awaiting";
+			tickerText = "New Survey Waiting";
 		else
-			tickerText = surveys.size() + " New Surveys Awaiting";
+			tickerText = surveys.size() + " New Surveys Waiting";
 		long when = System.currentTimeMillis();
 		Context context = getApplicationContext();
 		String contentTitle = getString(R.string.app_name);
@@ -314,7 +346,7 @@ public class SurveyService extends Service
 					+ " click here to take it now";
 			else
 				contentText = "You have " + surveys.size() + " new surveys"
-					+ " awaiting; click here to take one now";
+					+ " waiting; click here to take one now";
 		}
 		
 		//now create the notification
@@ -566,6 +598,10 @@ public class SurveyService extends Service
 			comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
 					ComsService.SURVEY_DATA);
 			startService(comsIntent);
+		}
+		else
+		{
+			Config.putSetting(this, Config.SAMPLE_SURVEY_TAKEN, true);
 		}
 		if (surveys.isEmpty())
 			stopSelf();
