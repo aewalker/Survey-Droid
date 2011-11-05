@@ -5,7 +5,7 @@ Ext.define('SD.model.SurveyTaken', {
         {name: 'survey_id',    type: 'int',    useNull: true},
         {name: 'subject_id',    type: 'int',    useNull: true},
         {name: 'status',        type: 'int',  useNull: true},
-        {name: 'created',       type: 'date',   dateFormat: 'Y-m-d H:i:s'}
+        {name: 'created',       type: 'date',   dateFormat: 'Y-m-d H:i:sO'}
     ],
     proxy: {
         type: 'rest',

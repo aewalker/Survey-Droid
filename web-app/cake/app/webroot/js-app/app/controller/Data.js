@@ -45,7 +45,7 @@ Ext.define('SD.controller.Data', {
     },
     onLaunch: function() {
         this.getMainTabs().setActiveTab('dataTab');
-        this.getDataTab().setActiveTab('photosTab');
+        this.getDataTab().setActiveTab('locationsTab');
     },
     loadIfEmpty: function(storeName) {
         var store = Ext.getStore(storeName);

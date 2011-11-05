@@ -6,7 +6,7 @@ Ext.define('SD.model.Location', {
         {name: 'longitude',     type: 'float',  useNull: true},
         {name: 'latitude',      type: 'float',  useNull: true},
         {name: 'accuracy',      type: 'float',  useNull: true},
-        {name: 'created',       type: 'date',   dateFormat: 'Y-m-d H:i:s'},
+        {name: 'created',       type: 'date',   dateFormat: 'Y-m-d H:i:sO'},
         'subject'
     ],
     proxy: {

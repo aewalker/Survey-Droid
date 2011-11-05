@@ -18,7 +18,7 @@ Ext.define('SD.model.Survey', {
         {name: 'new_texts',         type: 'boolean'},
         {name: 'old_texts',         type: 'boolean'},
         {name: 'subject_variables', type: 'string'},
-        {name: 'created',           type: 'date',   dateFormat: 'Y-m-d H:i:s'}
+        {name: 'created',           type: 'date',   dateFormat: 'Y-m-d H:i:sO'}
     ],
     validations: [
         {
