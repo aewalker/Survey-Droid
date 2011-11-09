@@ -24,7 +24,7 @@ Ext.define('SD.controller.Data', {
             '#locationsTab': {
                 activate: function() { me.loadIfEmpty('Locations'); }
             },
-            '#locationsTab #locationsExport': {
+            '#locationsTab button[text=Export]': {
                 click: function() {
                     location.href = '/locations/dump';
                 }
@@ -50,7 +50,7 @@ Ext.define('SD.controller.Data', {
     },
     onLaunch: function() {
         this.getMainTabs().setActiveTab('dataTab');
-        this.getDataTab().setActiveTab('locationsTab');
+        this.getDataTab().setActiveTab('callsTab');
     },
     loadIfEmpty: function(storeName) {
         var store = Ext.getStore(storeName);

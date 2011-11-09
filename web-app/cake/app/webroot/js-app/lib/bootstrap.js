@@ -19,3 +19,21 @@ Ext.override(Ext.data.reader.Json, {
         // this.callOverridden();
     }
 });
+
+Ext.override(Ext.view.Table, {
+    afterRender: function() {
+        var me = this;
+
+        me.callParent();
+        me.mon(me.el, {
+            scroll: me.fireBodyScroll,
+            scope: me
+        });
+        if (!me.featuresMC &&
+            (me.featuresMC.findIndex('ftype', 'unselectable') >= 0)) {
+            me.el.unselectable();
+        }
+
+        me.attachEventsForFeatures();
+    }
+});

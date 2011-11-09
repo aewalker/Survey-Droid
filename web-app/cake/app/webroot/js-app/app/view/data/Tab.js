@@ -147,8 +147,7 @@ Ext.define("SD.view.data.Tab", {
             xtype: 'grid',
             store: 'Locations',
             tbar: [{
-                itemId: 'locationsExport',
-                text: 'Export to CSV'
+                text: 'Export'
             }],
             columns: [
                 {
