@@ -19,7 +19,7 @@ class LocationsController extends AppController
 
     function rest_index() {
         $this->autoRender = false;
-        $this->header('Content-Type: application/json');
+//        $this->header('Content-Type: application/json');
         $modelClass = $this->modelClass;
         // add any applicable filters
         $conditions = array();
@@ -29,14 +29,12 @@ class LocationsController extends AppController
                 if (array_key_exists($filter['property'], $this->$modelClass->_schema))
                     $conditions[$modelClass.'.'.$filter['property']] = $filter['value'];
         }
-        $limit = $this->params['url']['limit'];
-        if (!isset($limit))
-            $limit = 100;
+        $limit = array_key_exists('limit', $this->params['url']) ? $this->params['url']['limit'] : 100;
         $models = $this->$modelClass->find('all', array(
             'recursive' => 0,
             'conditions' => $conditions,
             'limit' => $limit,
-            'Location.created DESC'
+            'order' => 'Location.created DESC'
         ));
 
         // custom stuff

@@ -5,7 +5,7 @@ Ext.define('SD.model.Answer', {
         {name: 'question_id',   type: 'int',  useNull: true},
         {name: 'subject_id',    type: 'int',  useNull: true},
         {name: 'ans_type',      type: 'int',  useNull: true},
-        {name: 'ans_text',      type: 'int',  useNull: true},
+        {name: 'ans_text',      type: 'string',  useNull: true},
         {name: 'ans_value',     type: 'int',  useNull: true},
         {name: 'created',       type: 'date',   dateFormat: 'Y-m-d H:i:sO'},
         'survey_id',
