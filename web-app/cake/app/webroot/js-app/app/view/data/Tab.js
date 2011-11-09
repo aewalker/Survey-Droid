@@ -143,9 +143,13 @@ Ext.define("SD.view.data.Tab", {
             }]
         }, {
             itemId: 'locationsTab',
-            title: 'Location (Only first 25 are displaied, full excel export coming soon)',
+            title: 'Location (Only last 25 are displayed)',
             xtype: 'grid',
             store: 'Locations',
+            tbar: [{
+                itemId: 'locationsExport',
+                text: 'Export to CSV'
+            }],
             columns: [
                 {
                     text: 'Time',

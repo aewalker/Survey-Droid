@@ -45,15 +45,6 @@ class ExtrasController extends RestController
         $this->header('HTTP/1.1 501 Not Implemented');
 
     }
-    
-    function test() {
-        $this->autoRender = false;
-        $data = file_get_contents('/Users/Tony/Pictures/IMG_0385.jpg');
-        // $this->header('Content-Type: image/jpeg');
-        $base64 = base64_encode($data);
-        e($base64);
-    }
-
 }
 
 ?>

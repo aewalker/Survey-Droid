@@ -101,6 +101,39 @@ class RestController extends AppController
         }
         $this->header('HTTP/1.1 404 Not Found');
     }
+
+    /** csv dump */
+    function dump() {
+        $this->autoRender = false;
+        ini_set('max_execution_time', 600); //increase max_execution_time to 10 min if data set is very large
+
+        //create a file
+        $modelClass = $this->modelClass;
+        $filename = $modelClass . "_dump_".date("Y.m.d").".csv";
+        $csv_file = fopen('php://output', 'w');
+
+        header('Content-type: application/csv');
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+
+        // The column headings of your .csv file
+        $headers = array_keys($this->$modelClass->_schema);
+        fputcsv($csv_file, $headers, ',', '"');
+
+        // Each iteration of this while loop will be a row in your .csv file where each field corresponds to the heading of the column
+        $results = $this->$modelClass->find('all', array(
+            'recursive' => -1
+        ));
+        foreach($results as $result) {
+            // Array indexes correspond to the field names in your db table(s)
+            $row = array();
+            foreach ($headers as $header) {
+                array_push($row, $result[$modelClass][$header]);
+            }
+            fputcsv($csv_file,$row,',','"');
+        }
+
+        fclose($csv_file);
+    }
 }
 
 

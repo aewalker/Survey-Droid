@@ -24,6 +24,11 @@ Ext.define('SD.controller.Data', {
             '#locationsTab': {
                 activate: function() { me.loadIfEmpty('Locations'); }
             },
+            '#locationsTab #locationsExport': {
+                click: function() {
+                    location.href = '/locations/dump';
+                }
+            },
             '#answersTab': {
                 activate: function() { me.loadIfEmpty('Answers'); }
             },
