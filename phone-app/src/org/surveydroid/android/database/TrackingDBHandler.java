@@ -114,9 +114,11 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 		String    table    = SurveyDroidDB.CALLLOG_TABLE_NAME;
 		String[]  cols     = {SurveyDroidDB.CallLogTable.PHONE_NUMBER};
 		//don't count missed calls...
-		String    selc = SurveyDroidDB.CallLogTable.CALL_TYPE + " = ? OR " +
-			SurveyDroidDB.CallLogTable.CALL_TYPE + " = ?";
-		String[]  selcArgs = new String[2];
+		String    selc = "(" + SurveyDroidDB.CallLogTable.CALL_TYPE + " = ? OR " +
+			SurveyDroidDB.CallLogTable.CALL_TYPE + " = ?) AND (" +
+			SurveyDroidDB.CallLogTable.PHONE_NUMBER + " = ?)";
+		String[]  selcArgs = new String[3];
+		selcArgs[2] = Util.cleanPhoneNumber(number);
 		if (!texts)
 		{
 			selcArgs[0] = Integer.toString(

@@ -307,6 +307,9 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 		//set of unique phone numbers
 		Map<String, Boolean> unique_nums = new HashMap<String, Boolean>();
 		
+		//highest id encountered
+		int max_id = 0;
+		
 		Cursor calls = getCalls(false);
 		
 		if (calls.getCount() == 0)
@@ -325,6 +328,8 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 				SurveyDroidDB.CallLogTable.CALL_TYPE);
 		while (!calls.isAfterLast())
 		{
+			int id = calls.getInt(id_i);
+			if (id > max_id) max_id = id;
 			String num = calls.getString(num_i);
 			if (!unique_nums.containsValue(num) && calls.getInt(type_i) !=
 				SurveyDroidDB.CallLogTable.CallType.MISSED)
@@ -334,7 +339,6 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 			}
 			else
 			{
-				int id = calls.getInt(id_i);
 				//this is an old number (or a missed call), so delete it
 				Util.v(null, TAG, "Deleting call " + id);
 				String whereClause = SurveyDroidDB.CallLogTable._ID + " = ?";
@@ -350,8 +354,11 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 		//now mark everything left as being uploaded
 		ContentValues values = new ContentValues();
 		values.put(SurveyDroidDB.CallLogTable.UPLOADED, 1);
-		String whereClause = null;
-		String[] whereArgs = null;
+		String whereClause = SurveyDroidDB.CallLogTable._ID + " < ?";
+		String[] whereArgs = {Integer.toString(max_id + 1)};
+		
+		//avoid a race condition: only update calls that have been seen
+		//in case one is added during this method
 		
 		db.update(SurveyDroidDB.CALLLOG_TABLE_NAME,
 				values, whereClause, whereArgs);

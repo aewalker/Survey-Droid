@@ -53,6 +53,9 @@ public class Config
 	/** Format of survey days. */
 	public static final String DAY_FORMAT = "EE";
 	
+	/** phone code for the country */
+	public static final String COUNTRY_CODE = "1"; //USA
+	
 	
 	//names/default values for configurable settings
 	/** Is https enabled? */

@@ -153,8 +153,7 @@ public class SurveyScheduler extends IntentService
 		Util.d(this, TAG, "Scheduling survey "
 				+ id + " for " + c.getTime().toGMTString());
 		
-		Intent surveyIntent = new Intent(getApplicationContext(),
-				SurveyService.class);
+		Intent surveyIntent = new Intent(this, SurveyService.class);
 		surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
 		if (random)
 		{
@@ -183,8 +182,7 @@ public class SurveyScheduler extends IntentService
 		 */
 		//TODO fix this
 		PendingIntent pendingSurvey = PendingIntent.getService(
-				getApplicationContext(), ((int) time) ^ id,
-				surveyIntent, 0);
+				this, ((int) time) ^ id, surveyIntent, 0);
 		AlarmManager alarm =
 			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarm.set(AlarmManager.RTC_WAKEUP, time, pendingSurvey);

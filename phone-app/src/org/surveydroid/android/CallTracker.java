@@ -54,7 +54,7 @@ public class CallTracker extends PhoneStateListener
 	private final Context ctxt;
 	
 	//the most recent CallLog lookup
-	private long lastLookup = System.currentTimeMillis();
+	private long lastLookup;
 	
 	/**
 	 * Constructor.  Typically only one instance of this class should be
@@ -66,6 +66,7 @@ public class CallTracker extends PhoneStateListener
 	{
 		super();
 		this.ctxt = ctxt;
+		lastLookup = System.currentTimeMillis();
 	}
 	
 	@Override
@@ -149,12 +150,9 @@ public class CallTracker extends PhoneStateListener
 							}
 							
 							//make sure the number is not study admin's number
-							String numberMod = "";
-							for (String s : number.split("-"))
-								numberMod = numberMod + s;
-							if (Config.getSetting(ctxt,
-									Config.ADMIN_PHONE_NUMBER, null).equals(
-											numberMod))
+							if (Util.cleanPhoneNumber(Config.getSetting(ctxt,
+									Config.ADMIN_PHONE_NUMBER, null)).equals(
+											Util.cleanPhoneNumber(number)))
 							{
 								newCalls.moveToNext();
 								continue;

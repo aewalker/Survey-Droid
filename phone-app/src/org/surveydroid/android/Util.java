@@ -110,6 +110,7 @@ public final class Util
 		if (time.length() == 3) time = "0" + time;
 		try
 		{
+			if (time.length() != 4) throw new RuntimeException();
 			hours = Integer.parseInt(time.substring(0, 2));
 			mins = Integer.parseInt(time.substring(2, 4));
 		}
@@ -153,6 +154,7 @@ public final class Util
 			default:
 			}
 		}
+		if (sb.length() == 10) sb.append(Config.COUNTRY_CODE);
 		return sb.toString();
 	}
 	

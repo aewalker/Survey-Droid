@@ -234,6 +234,7 @@ public class SurveyService extends Service
 						Util.e(this, TAG, "Failed to write completion record!");
 					}
 					tdbh.close();
+					uploadNow();
 					return;
 				}
 				if (surveys.isEmpty())
@@ -342,7 +343,7 @@ public class SurveyService extends Service
 		else
 		{
 			if (surveys.size() == 1)
-				contentText = "You have a new survey awaiting;"
+				contentText = "You have a new survey waiting;"
 					+ " click here to take it now";
 			else
 				contentText = "You have " + surveys.size() + " new surveys"
@@ -491,7 +492,6 @@ public class SurveyService extends Service
 		
 		NotificationManager nm = (NotificationManager)
 			getSystemService(Context.NOTIFICATION_SERVICE);
-		nm.cancel(N_ID);
 		int currentType = 0;
 		if (!finish) currentType = surveyTypes.poll();
 		if (!surveys.isEmpty())
@@ -540,7 +540,9 @@ public class SurveyService extends Service
 			}
 			tdbh.close();
 		}
-		
+
+		nm.cancel(N_ID);
+		uploadNow();
 		if (finish) stopSelf();
 		else surveyTypes.add(currentType);
 	}
@@ -593,11 +595,7 @@ public class SurveyService extends Service
 			tdbh.close();
 			
 			//try to upload answers ASAP
-			Intent comsIntent = new Intent(this, ComsService.class);
-			comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
-			comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
-					ComsService.SURVEY_DATA);
-			startService(comsIntent);
+			uploadNow();
 		}
 		else
 		{
@@ -653,6 +651,7 @@ public class SurveyService extends Service
 			Util.e(this, TAG, "Failed to write completion record!");
 		}
 		tdbh.close();
+		uploadNow();
 	}
 	
 	@Override
@@ -690,5 +689,14 @@ public class SurveyService extends Service
 	{
 		Util.d(null, TAG, "in onBind");
 		return surveyBinder;
+	}
+	
+	private void uploadNow()
+	{
+		Intent comsIntent = new Intent(this, ComsService.class);
+		comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+		comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
+				ComsService.SURVEY_DATA);
+		startService(comsIntent);
 	}
 }

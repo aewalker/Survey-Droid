@@ -20,7 +20,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-	android:versionCode="21" android:versionName="beta-0.5.7" package="org.surveydroid.android">
+	android:versionCode="22" android:versionName="beta-0.5.8" package="org.surveydroid.android">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.INTERNET" />
