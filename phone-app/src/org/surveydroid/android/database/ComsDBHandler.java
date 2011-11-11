@@ -323,7 +323,7 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 		int num_i = calls.getColumnIndexOrThrow(
 				SurveyDroidDB.CallLogTable.PHONE_NUMBER);
 		int id_i = calls.getColumnIndexOrThrow(
-				SurveyDroidDB.CallLogTable.PHONE_NUMBER);
+				SurveyDroidDB.CallLogTable._ID);
 		int type_i = calls.getColumnIndexOrThrow(
 				SurveyDroidDB.CallLogTable.CALL_TYPE);
 		while (!calls.isAfterLast())
@@ -331,8 +331,9 @@ public class ComsDBHandler extends SurveyDroidDBHandler
 			int id = calls.getInt(id_i);
 			if (id > max_id) max_id = id;
 			String num = calls.getString(num_i);
-			if (!unique_nums.containsValue(num) && calls.getInt(type_i) !=
-				SurveyDroidDB.CallLogTable.CallType.MISSED)
+			if (!unique_nums.containsValue(num) && (calls.getInt(type_i) ==
+				SurveyDroidDB.CallLogTable.CallType.INCOMING || calls.getInt(
+				type_i) == SurveyDroidDB.CallLogTable.CallType.INCOMING_TEXT))
 			{
 				//this is a new number, so mark it
 				unique_nums.put(num, true);

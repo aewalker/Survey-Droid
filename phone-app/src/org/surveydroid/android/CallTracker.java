@@ -119,6 +119,9 @@ public class CallTracker extends PhoneStateListener
 							String number = newCalls.getString(
 									newCalls.getColumnIndexOrThrow(
 											CallLog.Calls.NUMBER));
+							int type = newCalls.getInt(
+									newCalls.getColumnIndexOrThrow(
+											CallLog.Calls.TYPE));
 							boolean server = Config.getSetting(ctxt,
 									Config.CALL_LOG_SERVER,
 									Config.CALL_LOG_SERVER_DEFAULT);
@@ -126,10 +129,7 @@ public class CallTracker extends PhoneStateListener
 					    			Config.CALL_LOG_LOCAL, true);
 					    	if (local && server)
 					    	{
-									tdbh.writeCall(number,
-										newCalls.getInt(
-												newCalls.getColumnIndexOrThrow(
-												CallLog.Calls.TYPE)),
+									tdbh.writeCall(number,type,
 										(int) newCalls.getLong(
 												newCalls.getColumnIndexOrThrow(
 												CallLog.Calls.DURATION)),
@@ -153,6 +153,12 @@ public class CallTracker extends PhoneStateListener
 							if (Util.cleanPhoneNumber(Config.getSetting(ctxt,
 									Config.ADMIN_PHONE_NUMBER, null)).equals(
 											Util.cleanPhoneNumber(number)))
+							{
+								newCalls.moveToNext();
+								continue;
+							}
+							
+							if (type != SurveyDroidDB.CallLogTable.CallType.INCOMING)
 							{
 								newCalls.moveToNext();
 								continue;

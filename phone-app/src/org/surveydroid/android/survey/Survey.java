@@ -816,6 +816,7 @@ public class Survey
 	 */
 	public String processText(String text)
 	{
+		Util.v(null, TAG, "processing text: \"" + text + "\"");
 		char ctl = '#';
 		char esc = '\\';
 		StringBuilder newString = new StringBuilder();
@@ -834,9 +835,12 @@ public class Survey
 					if (c == ctl)
 					{
 						//DO NOT replace "#" with ctl!
-						newString.append(Config.getSetting(ctxt,
+						String replacement = Config.getSetting(ctxt,
 								Config.USER_DATA + "#" + id + "#" + key,
-								key.toString()));
+								key.toString());
+						Util.v(null, TAG, "for \"" + Config.USER_DATA + "#"
+								+ id + "#" + key + "\", found " + replacement);
+						newString.append(replacement);
 						newString.append(processText(text.substring(i)));
 						return newString.toString();
 					}
@@ -845,9 +849,12 @@ public class Survey
 					if (i < text.length()) c = chars[i];
 				}
 				//DO NOT replace "#" with ctl!
-				newString.append(Config.getSetting(ctxt,
+				String replacement = Config.getSetting(ctxt,
 						Config.USER_DATA + "#" + id + "#" + key,
-						key.toString()));
+						key.toString());
+				Util.v(null, TAG, "for \"" + Config.USER_DATA + "#"
+						+ id + "#" + key + "\", found " + replacement);
+				newString.append(replacement);
 				i--;
 				continue;
 			}

@@ -100,7 +100,7 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 	}
 	
 	/**
-	 * Has a phone number been seen before?
+	 * Has a phone number been seen before?  Only checks incoming calls/texts.
 	 * 
 	 * @param number - the phone number to check
 	 * @param texts - if true, look at texts; if false, calls
@@ -114,23 +114,18 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 		String    table    = SurveyDroidDB.CALLLOG_TABLE_NAME;
 		String[]  cols     = {SurveyDroidDB.CallLogTable.PHONE_NUMBER};
 		//don't count missed calls...
-		String    selc = "(" + SurveyDroidDB.CallLogTable.CALL_TYPE + " = ? OR " +
-			SurveyDroidDB.CallLogTable.CALL_TYPE + " = ?) AND (" +
+		String    selc = "(" + SurveyDroidDB.CallLogTable.CALL_TYPE + " = ?) AND (" +
 			SurveyDroidDB.CallLogTable.PHONE_NUMBER + " = ?)";
-		String[]  selcArgs = new String[3];
-		selcArgs[2] = Util.cleanPhoneNumber(number);
+		String[]  selcArgs = new String[2];
+		selcArgs[1] = Util.cleanPhoneNumber(number);
 		if (!texts)
 		{
 			selcArgs[0] = Integer.toString(
-					SurveyDroidDB.CallLogTable.CallType.OUTGOING);
-			selcArgs[1] = Integer.toString(
 					SurveyDroidDB.CallLogTable.CallType.INCOMING);
 		}
 		else
 		{
 			selcArgs[0] = Integer.toString(
-					SurveyDroidDB.CallLogTable.CallType.OUTGOING_TEXT);
-			selcArgs[1] = Integer.toString(
 					SurveyDroidDB.CallLogTable.CallType.INCOMING_TEXT);
 		}
 		String    group    = null;

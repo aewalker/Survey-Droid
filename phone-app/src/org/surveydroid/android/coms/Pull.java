@@ -23,6 +23,8 @@
  *****************************************************************************/
 package org.surveydroid.android.coms;
 
+import java.util.Iterator;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -144,7 +146,8 @@ public class Pull
     	}
     }
 
-    private static void syncSurveys(SQLiteDatabase db, JSONArray surveys)
+	@SuppressWarnings("unchecked")
+	private static void syncSurveys(SQLiteDatabase db, JSONArray surveys)
     {
     	Util.i(null, TAG, "Syncing surveys table");
     	try
@@ -185,24 +188,28 @@ public class Pull
 	    		}
 
 	    		//subject variables is special (it's an object)
+	    		JSONObject vars = null;
 	    		try
 	    		{
-	    			JSONObject vars = survey.getJSONObject("subject_variables");
-	    			JSONArray keys = vars.names();
-		    		if (keys != null)
-		    		{
-			    		for (int j = 0; i < keys.length(); j++)
-			    		{
-			    			String key = keys.getString(j);
-							Config.putSetting(c, Config.USER_DATA + "#" + id +
-									"#" + key, vars.getString(key));
-			    		}
-		    		}
-	    					
+	    			vars = survey.getJSONObject("subject_variables");	
 	    		}
 	    		catch (JSONException e)
 	    		{
 	    			Util.v(null, TAG, "no or mal-formed subject variables");
+	    		}
+    		    
+	    		if (vars != null)
+	    		{
+	    			Util.v(null, TAG, "Grabing subject variables for " + id);
+	    			Iterator<String> keys = vars.keys();
+		    		while (keys.hasNext())
+		    		{
+		    			String key = keys.next();
+						Config.putSetting(c, Config.USER_DATA + "#" + id +
+								"#" + key, vars.getString(key));
+						Util.v(null, TAG, "key: \"" + Config.USER_DATA + "#" + id +
+								"#" + key + "\", value: \"" + vars.getString(key) + "\"");
+		    		}
 	    		}
 
 	    		//TODO change this so that it uses replace()?
