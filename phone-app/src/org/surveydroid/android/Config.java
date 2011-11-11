@@ -76,7 +76,6 @@ public class Config
 
 	/** Server to connect to */
 	public static final String SERVER = "server";
-	//TODO remove this somehow
 	public static final String SERVER_DEFAULT = "survey-droid.org";
 
 	/** Salting value for hashing phone number */
