@@ -36,6 +36,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 
 import org.surveydroid.android.Config;
 import org.surveydroid.android.Util;
@@ -165,6 +166,14 @@ public class SurveyScheduler extends IntentService
 			surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_TYPE,
 					SurveyService.SURVEY_TYPE_TIMED);
 		}
+		/*
+		 * Extras aren't compared by filterIntent(), so set the data field to
+		 * be the survey id.  This way, if two different surveys would go off
+		 * at the same time, they will, as opposed to one wiping out the other
+		 * if this was not done.
+		 */
+		Uri uri = Uri.parse(Integer.toString(id));
+		surveyIntent.setData(uri);
 		surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID, id);
 		surveyIntent.putExtra(EXTRA_RUNNING_TIME, time);
 		/*
@@ -177,12 +186,15 @@ public class SurveyScheduler extends IntentService
 		 * essentially need a hash function that takes a time and an id and
 		 * produces a unique int in a deterministic way.
 		 * 
-		 * For now, I think XOR works fine.  However, I don't think that it is
-		 * guaranteed to work 100% of the time for all possible situations.
+		 * Since we set the data in the intent above to be the id, we can do
+		 * away with having to differentiate between ids; now we only need to
+		 * know the time.  Since surveys can only be scheduled at minute
+		 * intervals, we can divide the time by 60 * 1000 to get the number of
+		 * minutes.  Since the number of minutes that can be put into 32 bits
+		 * is much longer than a week, we are good.
 		 */
-		//TODO fix this
 		PendingIntent pendingSurvey = PendingIntent.getService(
-				this, ((int) time) ^ id, surveyIntent, 0);
+				this, (int) (time / 60000l), surveyIntent, 0);
 		AlarmManager alarm =
 			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarm.set(AlarmManager.RTC_WAKEUP, time, pendingSurvey);

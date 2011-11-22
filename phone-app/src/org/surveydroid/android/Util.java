@@ -97,7 +97,6 @@ public final class Util
 	{
 		//first, get the day right
 		Calendar now = Calendar.getInstance(TimeZone.getDefault(), Locale.US);
-		now.setTimeInMillis(System.currentTimeMillis());
 		int targetDay = getDay(day);
 		while (now.get(Calendar.DAY_OF_WEEK) != targetDay)
 		{
@@ -113,13 +112,13 @@ public final class Util
 			if (time.length() != 4) throw new RuntimeException();
 			hours = Integer.parseInt(time.substring(0, 2));
 			mins = Integer.parseInt(time.substring(2, 4));
+			now.set(Calendar.HOUR_OF_DAY, hours);
+			now.set(Calendar.MINUTE, mins);
 		}
 		catch (Exception e)
 		{
 			throw new IllegalArgumentException("Invalid time string: " + time);
 		}
-		now.set(Calendar.HOUR_OF_DAY, hours);
-		now.set(Calendar.MINUTE, mins);
 		now.set(Calendar.SECOND, 0);
 		now.set(Calendar.MILLISECOND, 0);
 		long returnTime = now.getTimeInMillis();
@@ -127,7 +126,7 @@ public final class Util
 		//make sure we're not behind the base time
 		if (returnTime < base)
 		{
-			now.add(Calendar.DAY_OF_YEAR, 7);
+			now.roll(Calendar.DAY_OF_YEAR, 7);
 			returnTime = now.getTimeInMillis();
 		}
 		Util.d(null, TAG, "Time difference: " + 
