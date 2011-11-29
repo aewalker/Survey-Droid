@@ -117,10 +117,10 @@ public class ConfirmSubmitActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				//submit the answers
-				Intent finishIntent = new Intent(
-						ConfirmSubmitActivity.this, SurveyService.class);
-				finishIntent.setAction(SurveyService.ACTION_SUBMIT_ANSWERS);
+				//finish up the backend stuff
+				Intent finishIntent =
+					new Intent(ConfirmSubmitActivity.this, SurveyService.class);
+				finishIntent.setAction(SurveyService.ACTION_END_SURVEY);
 				startService(finishIntent);
 				
 				//tell the user they're done

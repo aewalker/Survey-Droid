@@ -67,7 +67,7 @@ public class SurveyScheduler extends IntentService
 	
 	/**
 	 * Tells the survey scheduler to look for surveys that need to be
-	 * scheduled and do so.  Must be used with {@link #EXTRA_RUNNING_TIME}.
+	 * scheduled and do so.  Can be used with {@link #EXTRA_RUNNING_TIME}.
 	 */
 	public static final String ACTION_SCHEDULE_SURVEYS =
 		"org.surveydroid.android.survey.ACTION_SCHEDULE_SURVEYS";
@@ -134,7 +134,6 @@ public class SurveyScheduler extends IntentService
 		else if (action.equals(ACTION_SCHEDULE_SURVEYS))
 		{
 			long time = intent.getLongExtra(EXTRA_RUNNING_TIME, -1);
-			if (time == -1) throw new RuntimeException("No running time");
 			scheduleSurveys(time);
 		}
 		else
@@ -317,12 +316,13 @@ public class SurveyScheduler extends IntentService
 		sdbh.close();
 		
 		//make sure to run this again later
+		if (runningTime == -1) return;
 		Util.d(null, TAG, "rescheduling survey scheduler run");
 		Intent schedulerIntent = new Intent(this, SurveyScheduler.class);
 		schedulerIntent.setAction(ACTION_SCHEDULE_SURVEYS);
 		schedulerIntent.putExtra(EXTRA_RUNNING_TIME, nextRun);
 		PendingIntent pendingScheduler = PendingIntent.getService(
-				this, 0, schedulerIntent, PendingIntent.FLAG_ONE_SHOT);
+				this, 0, schedulerIntent, 0);
 		AlarmManager alarm =
 			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarm.set(AlarmManager.RTC_WAKEUP, nextRun, pendingScheduler);

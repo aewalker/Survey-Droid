@@ -69,13 +69,13 @@ public class SurveyService extends Service
 	public static final String ACTION_SHOW_SURVEY =
 		"org.surveydroid.android.survey.ACTION_SHOW_SURVEY";
 	
-	/**
-	 * Submit all live answers for this survey. Should only be
-	 * sent after {@link #ACTION_SURVEY_READY}, otherwise the survey will not
-	 * be built and an exception will be thrown.
-	 */
-	public static final String ACTION_SUBMIT_ANSWERS = 
-		"org.surveydroid.android.survey.ACTION_SUBMIT_ANSWERS";
+//	/**
+//	 * Submit all live answers for this survey. Should only be
+//	 * sent after {@link #ACTION_SURVEY_READY}, otherwise the survey will not
+//	 * be built and an exception will be thrown.
+//	 */
+//	public static final String ACTION_SUBMIT_ANSWERS =
+//		"org.surveydroid.android.survey.ACTION_SUBMIT_ANSWERS";
 	
 	/**
 	 * Stop the survey service.  Used when the user has finished a survey.
@@ -272,10 +272,10 @@ public class SurveyService extends Service
 			{
 				if (timeoutOn) removeNotification(true);
 			}
-			else if (action.equals(ACTION_SUBMIT_ANSWERS))
-			{
-				submit();
-			}
+//			else if (action.equals(ACTION_SUBMIT_ANSWERS))
+//			{
+//				submit();
+//			}
 			else if (action.equals(ACTION_CANCEL_SURVEYS))
 			{
 				cancel();
@@ -552,6 +552,11 @@ public class SurveyService extends Service
 	{
 		if (!survey.submit())
 			Util.e(this, TAG, "Survey reports error in submission!");
+		
+		//schedule surveys again (why not?)
+		Intent scheduleIntent = new Intent(this, SurveyScheduler.class);
+		scheduleIntent.setAction(SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
+		startService(scheduleIntent);
 	}
 	
 	//a user has finished a survey
@@ -559,6 +564,7 @@ public class SurveyService extends Service
 	{
 		if (!inSurvey) throw new
 			RuntimeException("Cannot end a survey before starting one");
+		submit();
 		inSurvey = false;
 		if (currentID != DUMMY_SURVEY_ID)
 		{
@@ -618,6 +624,7 @@ public class SurveyService extends Service
 	{
 		if (!inSurvey) throw new
 			RuntimeException("Cannot quit a survey before starting one");
+		submit();
 		inSurvey = false;
 		int type = surveyTypes.poll();
 		if (currentID == DUMMY_SURVEY_ID) return;

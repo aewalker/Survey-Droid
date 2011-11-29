@@ -24,7 +24,7 @@
 package org.surveydroid.android.coms;
 
 import java.io.File;
-import java.util.Calendar;
+//import java.util.Calendar;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -206,7 +206,7 @@ public class ComsService extends IntentService
 //			long time = intent.getLongExtra(EXTRA_RUNNING_TIME, -1);
 //			if (time == -1)
 //				throw new RuntimeException("Must give running time");
-			long time = Calendar.getInstance().getTimeInMillis();
+			long time = System.currentTimeMillis();
 			Intent comsIntent = new Intent(this, ComsService.class);
 			comsIntent.setAction(intent.getAction());
 			comsIntent.putExtra(EXTRA_REPEATING, true);
@@ -223,7 +223,7 @@ public class ComsService extends IntentService
 								Config.PULL_INTERVAL_DEFAULT) * 60 * 1000));
 			}
 			PendingIntent pendingComs = PendingIntent.getService(
-					this, 0, comsIntent, PendingIntent.FLAG_ONE_SHOT);
+					this, 0, comsIntent, 0);
 			AlarmManager alarm =
 				(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 			alarm.set(AlarmManager.RTC_WAKEUP,

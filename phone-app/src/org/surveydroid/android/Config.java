@@ -142,15 +142,15 @@ public class Config
 	
 	/** Does the server have surveys enabled? */
 	public static final String SURVEYS_SERVER = "survey";
-	public static final boolean SURVEYS_SERVER_DEFAULT = false;
+	public static final boolean SURVEYS_SERVER_DEFAULT = true;
 	
 	/** Does the server have location tracking enabled? */
 	public static final String TRACKING_SERVER = "location";
-	public static final boolean TRACKING_SERVER_DEFAULT = false;
+	public static final boolean TRACKING_SERVER_DEFAULT = true;
 	
 	/** Does the server have call/text logging enabled? */
 	public static final String CALL_LOG_SERVER = "calllog";
-	public static final boolean CALL_LOG_SERVER_DEFAULT = false;
+	public static final boolean CALL_LOG_SERVER_DEFAULT = true;
 	
 	/**
 	 * How long should the system wait for a user to answer a question

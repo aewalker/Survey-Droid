@@ -270,7 +270,9 @@ public class LocationTrackerService extends Service
 		}
 		
 		int numTimes = Config.getSetting(this, Config.NUM_TIMES_TRACKED, 0);
-		if (numTimes == 0)
+		//TODO fix this; remove all the old code
+		if (true)
+//		if (numTimes == 0)
 		{
 			Util.d(null, TAG, "No times tracked; tracking all the time");
 			if (!isTracking)
@@ -350,7 +352,7 @@ public class LocationTrackerService extends Service
 			{
 				time = times[nextTime];
 			}
-			int thenHour = (int) (((double) (time)) / 100.0);
+			int thenHour = time / 100;
 			int thenMins = time - (thenHour * 100);
 			nextRun += (thenHour - (hour + 1)) * 60 * 60 * 1000;
 			nextRun += (60 - mins) * 60 * 1000;
@@ -396,15 +398,15 @@ public class LocationTrackerService extends Service
 			LocationManager lm = (LocationManager)
 				LocationTrackerService.this.getSystemService(
 						Context.LOCATION_SERVICE);
-			//Get updates from EVERYTHING! At this point, why not?
-			for (String provider : lm.getProviders(false))
-			{
-				Util.v(null, TAG, "Found provider: " + provider);
-				lm.requestLocationUpdates(provider,
+			
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				Config.getSetting(LocationTrackerService.this,
+						Config.LOCATION_INTERVAL,
+				Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0, this);
+			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
 					Config.getSetting(LocationTrackerService.this,
 							Config.LOCATION_INTERVAL,
 					Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0, this);
-			}
 		}
 		
 		/** Stops the location tracker. */
@@ -422,20 +424,24 @@ public class LocationTrackerService extends Service
 		@Override
 		public void onLocationChanged(Location loc)
 		{
+			//XXX fix this quickly
+			Util.i(null, TAG, "Got a new location");
 			if (Config.getSetting(LocationTrackerService.this,
-						Config.TRACKING_LOCAL, true) &&
+						Config.TRACKING_LOCAL, true) /*&&
 				Config.getSetting(LocationTrackerService.this,
 						Config.TRACKING_SERVER,
-							Config.TRACKING_SERVER_DEFAULT))
+							Config.TRACKING_SERVER_DEFAULT)*/)
 			{
-				Util.i(LocationTrackerService.this, TAG, "Got a new location");
+				Util.d(LocationTrackerService.this, TAG, "tracking is enabled; logging");
 				double lat = loc.getLatitude();
 				double lon = loc.getLongitude();
 				Util.v(null, TAG, "Lat: " + lat + ", long: " + lon);
 				int numLocs = Config.getSetting(LocationTrackerService.this,
 						Config.NUM_LOCATIONS_TRACKED, 0);
 				boolean log = false;
-				if (numLocs >= 1)
+				//TODO fix up the location sensitivity code
+				if (false)
+//				if (numLocs >= 1)
 				{
 					for (int i = 0; i < numLocs; i++)
 					{
@@ -477,14 +483,20 @@ public class LocationTrackerService extends Service
 				  //should be tracked (to track nowhere just turn off tracking)
 					log = true;
 				}
+				
+				//TODO generalize this
+				//right now it's just a crutch to get by
+				Calendar c = Calendar.getInstance();
+				c.setTimeInMillis(loc.getTime());
+				int hour = c.get(Calendar.HOUR_OF_DAY);
+				if (hour < 8 || hour >= 1900) log = false;
+				
 				if (log)
 				{
 					Util.d(null, TAG, "Storing location");
 					TrackingDBHandler tdbh =
 						new TrackingDBHandler(LocationTrackerService.this);
 					tdbh.openWrite();
-					//loc.getTime() is acting a bit oddly
-					//probably just due to the lack of GPS signal
 					tdbh.writeLocation(lat, lon, loc.getAccuracy(),
 							loc.getTime() / 1000);
 					tdbh.close();
