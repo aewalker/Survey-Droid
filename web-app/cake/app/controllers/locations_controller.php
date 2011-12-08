@@ -20,10 +20,7 @@ class LocationsController extends RestController
 
     var $helpers = array('Cache');
 	
-	var $cacheAction = array(
-	   'rest/locations' => 7200
-	);
-
+    var $cacheAction = "1 hour";
 
     function rest_index() {
         $this->autoRender = false;

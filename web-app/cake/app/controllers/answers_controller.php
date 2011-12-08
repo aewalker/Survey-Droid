@@ -18,13 +18,10 @@ class AnswersController extends AppController
 	var $components = array('Auth');
 	var $helpers = array('Cache');
 	
-	var $cacheAction = array(
-	   'rest/answers' => 7200
-	);
+	var $cacheAction = "1 hour";
 
     function rest_index() {
         $this->autoRender = false;
-        $this->cacheAction = '2 hours';
         $this->header('Content-Type: application/json');
         $modelClass = $this->modelClass;
         // add any applicable filters
