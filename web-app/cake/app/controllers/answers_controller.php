@@ -16,19 +16,10 @@ class AnswersController extends AppController
 	//for php4
 	var $name = 'Answers';
 	var $components = array('Auth');
-	var $helpers = array('Cache');
-	
-	var $cacheAction = "1 hour";
 
     function rest_index() {
         $this->autoRender = false;
         $this->header('Content-Type: application/json');
-        
-        if($cachedAnswers = Cache::read('cached_answers')) {
-            e($cachedAnswers);
-            return;
-        }
-        
         $modelClass = $this->modelClass;
         // add any applicable filters
         $conditions = array();
@@ -41,7 +32,8 @@ class AnswersController extends AppController
 
         $models = $this->$modelClass->find('all', array(
             'recursive' => 1,
-            'conditions' => $conditions
+            'conditions' => $conditions,
+            'limit' => 300
         ));
 
         // custom stuff
@@ -54,9 +46,7 @@ class AnswersController extends AppController
             $arr[] = $item['Answer'];
         }
 
-        $json = json_encode($arr);
-        Cache::write('cached_answers', $json, array('duration' => '1 hour'));
-        e($json);
+        e(json_encode($arr));
     }
 }
 
