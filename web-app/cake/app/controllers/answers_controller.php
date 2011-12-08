@@ -23,6 +23,12 @@ class AnswersController extends AppController
     function rest_index() {
         $this->autoRender = false;
         $this->header('Content-Type: application/json');
+        
+        if($cachedAnswers = Cache::read('cached_answers')) {
+            e($cachedAnswers);
+            return;
+        }
+        
         $modelClass = $this->modelClass;
         // add any applicable filters
         $conditions = array();
@@ -48,7 +54,9 @@ class AnswersController extends AppController
             $arr[] = $item['Answer'];
         }
 
-        e(json_encode($arr));
+        $json = json_encode($arr);
+        Cache::write('cached_answers', $json, array('duration' => '1 hour'));
+        e($json);
     }
 }
 
