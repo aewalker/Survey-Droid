@@ -20,7 +20,7 @@ class AnswersController extends AppController
 	
 	var $cacheAction = array(
 	   'rest/answers' => 7200
-	)
+	);
 
     function rest_index() {
         $this->autoRender = false;

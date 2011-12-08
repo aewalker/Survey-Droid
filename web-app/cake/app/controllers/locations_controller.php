@@ -22,7 +22,7 @@ class LocationsController extends RestController
 	
 	var $cacheAction = array(
 	   'rest/locations' => 7200
-	)
+	);
 
 
     function rest_index() {
