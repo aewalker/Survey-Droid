@@ -32,7 +32,9 @@ class CallsController extends AppController
 
         $models = $this->$modelClass->find('all', array(
             'recursive' => 0,
-            'conditions' => $conditions
+            'conditions' => $conditions,
+            'limit' => 300,
+            'order' => 'Call.created DESC'
         ));
 
         // custom stuff
