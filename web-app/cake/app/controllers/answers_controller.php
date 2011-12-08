@@ -16,6 +16,11 @@ class AnswersController extends AppController
 	//for php4
 	var $name = 'Answers';
 	var $components = array('Auth');
+	var $helpers = array('Cache');
+	
+	var $cacheAction = array(
+	   'rest/answers' => 7200
+	)
 
     function rest_index() {
         $this->autoRender = false;

@@ -18,6 +18,13 @@ class LocationsController extends RestController
 	var $name = 'Locations';
 	var $components = array('Auth');
 
+    var $helpers = array('Cache');
+	
+	var $cacheAction = array(
+	   'rest/locations' => 7200
+	)
+
+
     function rest_index() {
         $this->autoRender = false;
 //        $this->header('Content-Type: application/json');
