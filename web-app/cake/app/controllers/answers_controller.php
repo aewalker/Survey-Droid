@@ -24,6 +24,7 @@ class AnswersController extends AppController
 
     function rest_index() {
         $this->autoRender = false;
+        $this->cacheAction = '2 hours';
         $this->header('Content-Type: application/json');
         $modelClass = $this->modelClass;
         // add any applicable filters
