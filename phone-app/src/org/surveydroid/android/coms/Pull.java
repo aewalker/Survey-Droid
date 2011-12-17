@@ -23,7 +23,9 @@
  *****************************************************************************/
 package org.surveydroid.android.coms;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +35,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.media.MediaRecorder;
 import android.telephony.TelephonyManager;
 
@@ -45,12 +48,12 @@ import org.surveydroid.android.coms.WebClient;
 import org.surveydroid.android.coms.WebClient.ApiException;
 import org.surveydroid.android.database.SurveyDroidDB;
 
-//TODO move all the database stuff into the ComsDBHelper.  Problem is, that
-//would basically render this class a wrapper.  Have to think about it...
-
-//TODO I think this should be set up as a sort of framework: set up generally
-//what happens with pull, and then define how that works for each type of
-//data elsewhere
+/* Note that this class doesn't use the ComsDBHandler like it seems that is
+ * should.  The reason for this is that the database operations that are
+ * executed here are mass insert/update, which require the SQL to be prepared
+ * as we iterate over the data.  To have to bundle up that data and ship it
+ * to another class would waste a lot of resources. 
+ */
 
 /**
  * Provides the ability to snyc the database with the website's.
@@ -67,6 +70,12 @@ public class Pull
     private static final String PULL_URL = "/api/pull/";
     
     private static Context c;
+    
+    //data types - see syncTable
+    private static final int INT = 0;
+    private static final int LONG = 1;
+    private static final int DOUBLE = 2;
+    private static final int STRING = 3;
 
     /**
      * Syncs surveys, questions, choices, branches, and conditions with the
@@ -145,8 +154,107 @@ public class Pull
         	c = null;
     	}
     }
+    
+    /**
+     * Syncs a table with data gathered from the web.
+     * 
+     * @param db - the database object to insert into
+     * @param table - name of the table to insert into
+     * @param fields - map:JSON field name -> SQL field name
+     * @param types - map:JSON field name -> type of data
+     * @param data - the JSON data
+     */
+    //This method is based on the technique described here:
+    //sagistech.blogspot.com/2010/07/notes-on-android-sqlite-bukl-insert.html
+    private static void syncTable(SQLiteDatabase db, String table,
+    		Map<String, String> fields, Map<String, Integer> types,
+    		JSONArray data)
+    {
+    	Util.i(null, TAG, "Synching " + table + " table");
+    	Util.d(null, TAG, "Fetched " + data.length() + " records");
+    	
+    	//do some error checking first
+    	if (Config.D)
+    	{
+    		String[] JSONnames = fields.keySet().toArray(new String[0]);
+    		for (String name : JSONnames)
+    		{
+    			if (!types.containsKey(name))
+    				throw new IllegalArgumentException(
+    					"No type information about \"" + name + "\"");
+    		}
+    	}
+    	
+    	db.beginTransaction();
+    	try
+    	{
+    		StringBuilder sqlBuilder = new StringBuilder("INSERT INTO ");
+    		sqlBuilder.append(table);
+    		sqlBuilder.append(" (");
+    		String[] JSONnames = fields.keySet().toArray(new String[0]);
+    		for (int i = 0; i < JSONnames.length - 1; i++)
+    		{
+    			sqlBuilder.append(fields.get(JSONnames[i]));
+    			sqlBuilder.append(", ");
+    		}
+    		sqlBuilder.append(fields.get(JSONnames[JSONnames.length - 1]));
+    		sqlBuilder.append(") VALUES (");
+    		for (int i = 0; i < JSONnames.length - 1; i++)
+    		{
+    			sqlBuilder.append("?, ");
+    		}
+    		sqlBuilder.append("?)");
+    		SQLiteStatement sql = db.compileStatement(sqlBuilder.toString());
+    		for (int i = 0; i < data.length(); i++)
+    		{
+    			JSONObject item = data.getJSONObject(i);
+    			for (int j = 0; j < JSONnames.length; j++)
+    			{
+    				String name = JSONnames[j];
+    				try
+    				{
+	    				switch (types.get(name))
+	    				{
+	    				case INT:
+	    					sql.bindLong(j + 1, item.getInt(name));
+	    					break;
+	    				case LONG:
+	    					sql.bindLong(j + 1, item.getLong(name));
+	    					break;
+	    				case DOUBLE:
+	    					sql.bindDouble(j + 1, item.getDouble(name));
+	    					break;
+	    				case STRING:
+	    					sql.bindString(j + 1, item.getString(name));
+	    					break;
+	    				default:
+	    					throw new IllegalArgumentException(
+	    							"Illegal JSON data type");
+	    				}
+    				}
+    				catch(JSONException je)
+    				{
+    					sql.bindNull(j);
+    				}
+    			}
+    		}
+    		if (sql.executeInsert() == -1)
+    			Util.e(null, TAG, "Insertion failed!");
+    		db.setTransactionSuccessful();
+    	}
+    	catch (Exception e)
+    	{
+    		Util.e(null, TAG, "Error during database sync: " + Util.fmt(e));
+    	}
+    	finally
+    	{
+    		db.endTransaction();
+    	}
+    }
 
 	@SuppressWarnings("unchecked")
+	//this doesn't use syncTable because it has strange fields and will
+	//only have a few rows
 	private static void syncSurveys(SQLiteDatabase db, JSONArray surveys)
     {
     	Util.i(null, TAG, "Syncing surveys table");
@@ -230,137 +338,94 @@ public class Pull
 			Util.e(c, TAG, Util.fmt(e));
 		}
     }
+	
     private static void syncQuestions(SQLiteDatabase db, JSONArray questions)
     {
-    	Util.i(null, TAG, "Syncing questions table");
-    	try
-    	{
-	    	for (int i = 0; i < questions.length(); i++)
-	    	{
-	    		JSONObject survey = questions.getJSONObject(i);
-	    		ContentValues values = new ContentValues();
-	    		values.put(QuestionTable._ID, survey.getInt("id"));
-	    		values.put(QuestionTable.SURVEY_ID,
-	    				survey.getInt(QuestionTable.SURVEY_ID));
-	    		values.put(QuestionTable.Q_TEXT,
-	    				survey.getString(QuestionTable.Q_TEXT));
-	    		int type = survey.getInt(QuestionTable.Q_TYPE);
-	    		values.put(QuestionTable.Q_TYPE, type);
-	    		switch (type)
-	    		{
-	    		case SurveyDroidDB.QuestionTable.SCALE_IMG:
-	    			values.put(QuestionTable.Q_SCALE_IMG_LOW,
-		    				survey.getString(QuestionTable.Q_SCALE_IMG_LOW));
-		    		values.put(QuestionTable.Q_SCALE_IMG_HIGH,
-		    				survey.getString(QuestionTable.Q_SCALE_IMG_HIGH));
-	    			break;
-	    		case SurveyDroidDB.QuestionTable.SCALE_TEXT:
-	    			values.put(QuestionTable.Q_SCALE_TEXT_LOW,
-		    				survey.getString(QuestionTable.Q_SCALE_TEXT_LOW));
-		    		values.put(QuestionTable.Q_SCALE_TEXT_HIGH,
-		    				survey.getString(QuestionTable.Q_SCALE_TEXT_HIGH));
-	    			break;
-	    		}
-	    		if (db.replace(QUESTION_TABLE_NAME, null, values) == -1 )
-				{
-					throw new RuntimeException("Database replace error");
-				}
-	    	}
-    	}
-    	catch (JSONException e)
-    	{
-			Util.e(c, TAG, Util.fmt(e));
-		}
-    }
-    private static void syncConditions(SQLiteDatabase db, JSONArray conditions)
-    {
-    	Util.i(null, TAG, "Syncing conditions table");
-    	try
-    	{
-	    	for (int i = 0; i < conditions.length(); i++)
-	    	{
-	    		JSONObject survey = conditions.getJSONObject(i);
-	    		ContentValues values = new ContentValues();
-	    		values.put(ConditionTable._ID, survey.getInt("id"));
-	    		values.put(ConditionTable.BRANCH_ID,
-	    				survey.getInt(ConditionTable.BRANCH_ID));
-	    		values.put(ConditionTable.QUESTION_ID,
-	    				survey.getInt(ConditionTable.QUESTION_ID));
-	    		values.put(ConditionTable.CHOICE_ID,
-	    				survey.getInt(ConditionTable.CHOICE_ID));
-	    		values.put(ConditionTable.TYPE, survey.getInt(ConditionTable.TYPE));
-	    		if (db.replace(CONDITION_TABLE_NAME, null, values) == -1 )
-				{
-					throw new RuntimeException("Database replace error");
-				}
-	    	}
-    	}
-    	catch (JSONException e)
-    	{
-			Util.e(c, TAG, Util.fmt(e));
-		}
-    }
-    private static void syncBranches(SQLiteDatabase db, JSONArray branches)
-    {
-    	Util.i(null, TAG, "Syncing branches table");
-    	try
-    	{
-	    	for (int i=0; i<branches.length(); i++)
-	    	{
-	    		JSONObject survey = branches.getJSONObject(i);
-	    		ContentValues values = new ContentValues();
-	    		values.put(BranchTable._ID, survey.getInt("id"));
-	    		values.put(BranchTable.QUESTION_ID,
-	    				survey.getInt(BranchTable.QUESTION_ID));
-	    		values.put(BranchTable.NEXT_Q, survey.getInt(BranchTable.NEXT_Q));
-	    		if (db.replace(BRANCH_TABLE_NAME, null, values) == -1 )
-				{
-					throw new RuntimeException("Database replace error");
-				}
-	    	}
-    	}
-    	catch (JSONException e)
-    	{
-			Util.e(c, TAG, Util.fmt(e));
-		}
-    }
-    private static void syncChocies(SQLiteDatabase db, JSONArray choices)
-    {
-    	Util.i(null, TAG, "Syncing choices table");
-    	try
-    	{
-	    	for (int i = 0; i < choices.length(); i++)
-	    	{
-	    		JSONObject survey = choices.getJSONObject(i);
-	    		ContentValues values = new ContentValues();
-	    		values.put(ChoiceTable._ID, survey.getInt("id"));
-	    		values.put(ChoiceTable.QUESTION_ID,
-	    				survey.getInt(ChoiceTable.QUESTION_ID));
-	    		int type = survey.getInt(ChoiceTable.CHOICE_TYPE);
-	    		switch (type)
-	    		{
-	    		case SurveyDroidDB.ChoiceTable.TEXT_CHOICE:
-	    			values.put(ChoiceTable.CHOICE_TEXT,
-		    				survey.getString(ChoiceTable.CHOICE_TEXT));
-	    			break;
-	    		case SurveyDroidDB.ChoiceTable.IMG_CHOICE:
-	    			values.put(ChoiceTable.CHOICE_IMG,
-		    				survey.getString(ChoiceTable.CHOICE_IMG));
-	    			break;
-	    		}
-	    		values.put(ChoiceTable.CHOICE_TYPE, type);
-	    		if (db.replace(CHOICE_TABLE_NAME, null, values) == -1 )
-				{
-					throw new RuntimeException("Database replace error");
-				}
-	    	}
-    	}
-    	catch (JSONException e)
-    	{
-			Util.e(c, TAG, Util.fmt(e));
-		}
+    	String table = SurveyDroidDB.QUESTION_TABLE_NAME;
+    	Map<String, String> names = new HashMap<String, String>();
+    	Map<String, Integer> types = new HashMap<String, Integer>();
+
+    	//fields
+    	names.put("id", QuestionTable._ID);
+    	types.put("id", INT);
+    	names.put("survey_id", QuestionTable.SURVEY_ID);
+    	types.put("survey_id", INT);
+    	names.put("q_text", QuestionTable.Q_TEXT);
+    	types.put("q_text", STRING);
+    	names.put("q_type", QuestionTable.Q_TYPE);
+    	types.put("q_type", INT);
+    	names.put("q_img_low", QuestionTable.Q_SCALE_IMG_LOW);
+    	types.put("q_img_low", STRING);
+    	names.put("q_img_high", QuestionTable.Q_SCALE_IMG_HIGH);
+    	types.put("q_img_high", STRING);
+    	names.put("q_text_low", QuestionTable.Q_SCALE_TEXT_LOW);
+    	types.put("q_text_low", STRING);
+    	names.put("q_text_high", QuestionTable.Q_SCALE_TEXT_HIGH);
+    	types.put("q_text_high", STRING);
+    	
+    	syncTable(db, table, names, types, questions);
     }
     
+    private static void syncConditions(SQLiteDatabase db, JSONArray conditions)
+    {
+    	String table = SurveyDroidDB.CONDITION_TABLE_NAME;
+    	Map<String, String> names = new HashMap<String, String>();
+    	Map<String, Integer> types = new HashMap<String, Integer>();
+
+    	//fields
+    	names.put("id", ConditionTable._ID);
+    	types.put("id", INT);
+    	names.put("branch_id", ConditionTable.BRANCH_ID);
+    	types.put("branch_id", INT);
+    	names.put("question_id", ConditionTable.QUESTION_ID);
+    	types.put("question_id", INT);
+    	names.put("choice_id", ConditionTable.CHOICE_ID);
+    	types.put("choice_id", INT);
+    	names.put("type", ConditionTable.TYPE);
+    	types.put("type", INT);
+    	
+    	syncTable(db, table, names, types, conditions);
+    }
+    
+    private static void syncBranches(SQLiteDatabase db, JSONArray branches)
+    {
+    	String table = SurveyDroidDB.BRANCH_TABLE_NAME;
+    	Map<String, String> names = new HashMap<String, String>();
+    	Map<String, Integer> types = new HashMap<String, Integer>();
+
+    	//fields
+    	names.put("id", BranchTable._ID);
+    	types.put("id", INT);
+    	names.put("question_id", BranchTable.QUESTION_ID);
+    	types.put("question_id", INT);
+    	names.put("next_q", BranchTable.NEXT_Q);
+    	types.put("next_q", INT);
+    	
+    	syncTable(db, table, names, types, branches);
+    }
+    
+    private static void syncChocies(SQLiteDatabase db, JSONArray choices)
+    {
+    	String table = SurveyDroidDB.CHOICE_TABLE_NAME;
+    	Map<String, String> names = new HashMap<String, String>();
+    	Map<String, Integer> types = new HashMap<String, Integer>();
+
+    	//fields
+    	names.put("id", ChoiceTable._ID);
+    	types.put("id", INT);
+    	names.put("question_id", ChoiceTable.QUESTION_ID);
+    	types.put("question_id", INT);
+    	names.put("choice_type", ChoiceTable.CHOICE_TYPE);
+    	types.put("choice_type", INT);
+    	names.put("choice_text", ChoiceTable.CHOICE_TEXT);
+    	types.put("choice_text", STRING);
+    	names.put("choice_img", ChoiceTable.CHOICE_IMG);
+    	types.put("choice_img", STRING);
+    	
+    	syncTable(db, table, names, types, choices);
+    }
+    
+    //this doesn't use the syncTable method because all it's fields are so strange
     private static void syncConfig(SQLiteDatabase db, JSONObject config, Context ctxt)
     {
     	Util.i(ctxt, TAG, "Updating configuration values");
