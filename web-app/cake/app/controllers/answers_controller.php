@@ -32,7 +32,9 @@ class AnswersController extends AppController
 
         $models = $this->$modelClass->find('all', array(
             'recursive' => 1,
-            'conditions' => $conditions
+            'conditions' => $conditions,
+            'limit' => 300,
+            'order' => 'Answer.created DESC'
         ));
 
         // custom stuff

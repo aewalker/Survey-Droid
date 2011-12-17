@@ -6,7 +6,7 @@ Ext.define("SD.view.data.Tab", {
     items: [
         {
             itemId: 'answersTab',
-            title: 'Survey Answers',
+            title: 'Survey Answers(Only last 300 are displayed)',
             layout: 'border',
             items: [{
                 region: 'west',
@@ -176,7 +176,7 @@ Ext.define("SD.view.data.Tab", {
             ]
         }, {
             itemId: 'callsTab',
-            title: 'Call Log',
+            title: 'Call Log(Only last 300 are displayed)',
             xtype: 'grid',
             store: 'Calls',
             columns: [
