@@ -399,7 +399,6 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     				QUESTION_ID + " INT UNSIGNED NOT NULL, " +
     				NEXT_Q + " INT UNSIGNED NOT NULL);";
     	}
-
     }
 
     /**

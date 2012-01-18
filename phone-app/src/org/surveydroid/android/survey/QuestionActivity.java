@@ -29,7 +29,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.Toast;
@@ -60,31 +59,15 @@ public abstract class QuestionActivity extends Activity
 	//has the next question activity been started?
 	private boolean isDone = false;
 	
-	//handle to deal with timeouts
-	private final Handler timeoutHandler = new Handler();
-	
-	//runnable that times out the survey
-	private final Runnable timeout = new Runnable()
-	{
-		@Override
-		public void run()
-		{
-			Util.i(QuestionActivity.this, TAG, "Survey timed out");
-			Intent timeoutIntent = new Intent(QuestionActivity.this,
-					SurveyService.class);
-			timeoutIntent.setAction(SurveyService.ACTION_QUIT_SURVEY);
-			startService(timeoutIntent);
-			finish();
-		}
-	};
-	
 	//connection to the SurveyService
 	private ServiceConnection connection = new ServiceConnection()
 	{
+		private SurveyBinder sBinder;
+		
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder binder)
 		{
-			SurveyBinder sBinder = (SurveyBinder) binder;
+			sBinder = (SurveyBinder) binder;
 			survey = sBinder.getSurvey();
 			if (Config.D)
 			{
@@ -102,7 +85,13 @@ public abstract class QuestionActivity extends Activity
 		}
 		
 		@Override
-		public void onServiceDisconnected(ComponentName name) {}
+		public void onServiceDisconnected(ComponentName name)
+		{
+			if (!isDone)
+			{
+				sBinder.startTimeout();
+			}
+		}
 	};
 	
 	/**
@@ -166,6 +155,15 @@ public abstract class QuestionActivity extends Activity
         	}
         }
     };
+    
+    @Override
+	public void onBackPressed()
+    {
+    	if (survey != null)
+    	{
+    		prevListener.onClick(null);
+    	}
+    }
 	
 	@Override
 	protected void onCreate(Bundle savedState)
@@ -179,45 +177,22 @@ public abstract class QuestionActivity extends Activity
 	}
 	
 	@Override
-	protected void onStart()
-	{
-		super.onStart();
-		Util.d(null, TAG, "in onStart()");
-		
-		//remove the timeout if it exists
-		timeoutHandler.removeCallbacks(timeout);
-	}
-	
-	@Override
 	protected void onStop()
 	{
 		/*
-		 * When the activity is stopped (that is, when it is no longer
-		 * visible), kill it, but only if the next question has been
-		 * started.  This makes the app run more smoothly; the user doesn't
-		 * see black screens in between questions.
-		 * 
-		 * On the other hand, if the next question hasn't been started, start
-		 * the timeout that will kill the survey if the user doesn't come back
-		 * to this after a certain amount of time.
+		 * Always kill this activity when it's stopped.  However, if it isn't
+		 * done (ie the user hasn't answered yet), tell the service about it.
 		 */
 		super.onStop();
-		if (isDone) finish();
-		else
-		{
-			int delay = Config.getSetting(this, Config.QUESTION_TIMEOUT,
-					Config.QUESTION_TIMEOUT_DEFAULT);
-			delay *= 60 * 1000;
-			timeoutHandler.postDelayed(timeout, delay);
-		}
+		connection.onServiceDisconnected(null); //TODO this is kind of a hack...
+		unbindService(connection);
+		finish();
 	}
 	
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		timeoutHandler.removeCallbacks(timeout);
-		unbindService(connection);
 	}
 	
 	/**

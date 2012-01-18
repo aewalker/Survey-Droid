@@ -157,7 +157,7 @@ public class Config
 	 * (in minutes)?
 	 */
 	public static final String QUESTION_TIMEOUT = "question_timeout";
-	public static final int QUESTION_TIMEOUT_DEFAULT = 15; 
+	public static final int QUESTION_TIMEOUT_DEFAULT = 30; 
 	
 	/**
 	 * The number of different locations in which locations should be logged.
@@ -219,20 +219,13 @@ public class Config
 	public static final int REFRESH_INTERVAL_DEFAULT = 10;
 	
 	/**
-	 * How many extra times should the user be notified about a pending survey.
-	 * This is in addition to the first time, so, for example, a value of 0
-	 * would result in survey notifications only being displayed once.
-	 */
-	public static final String REFRESH_COUNT = "refresh_count";
-	public static final int REFRESH_COUNT_DEFAULT = 2;
-	
-	/**
 	 * How long should the system wait for the user to take a survey before it
-	 * considers that survey ignored and removes it.  This is how long to wait
-	 * after the <strong>final</strong> notification refresh is sent.
+	 * considers that survey ignored and removes it.  It works best if this is
+	 * a multiple of {@link #REFRESH_INTERVAL}.
 	 */
 	public static final String SURVEY_TIMEOUT = "survey_timeout";
-	public static final int SURVEY_TIMEOUT_DEFAULT = 30;
+	public static final int SURVEY_TIMEOUT_DEFAULT = 60;
+	
 	/**
 	 * This value, if used for {@link #SURVEY_TIMEOUT} will result in
 	 * surveys being kept until the phone is turned off.  <strong>Use of this

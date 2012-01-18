@@ -19,49 +19,101 @@ You should have received a copy of the GNU General Public License
 along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>. 
  -->
 <resources>
+    <!-- ============== -->
+    <!-- Global Strings -->
+    <!-- ============== -->
+    
 	<!-- Name of the whole application. -->
 	<string name="app_name">Survey Droid</string>
 	
-	<!-- The titles for each activity (shown at the top usually. -->
+	<!-- ============= -->
+    <!-- Main Activity -->
+    <!-- ============= -->
+	
+	<!-- Title for the main activity page. -->
 	<string name="main_title">Welcome to Survey Droid!</string>
-	<string name="id_title">This Phone has ID:</string>
-	<string name="settings_title">Survey Droid Settings</string>
 	
-	<!-- The button to show the phone id. -->
-	<string name="settings_idButton">Show Phone ID</string>
-	<string name="settings_syncButton">Sync Now</string>
+	<!-- The text for the settings button on the main page. -->
+	<string name="main_settingsButton">Settings</string>
 	
+	<!-- The text for the user surveys button on the main page. -->
+	<string name="main_sampleButton">Start a\nsurvey</string>
 	
-	<!-- The default phone id. -->
-	<string name="id_defaultHoriz">0000-0000-0000-0000</string>
-	<string name="id_defaultVert">0000\n0000\n0000\n0000</string>
+	<!-- The text for the submit photo button on the main page. -->
+	<string name="main_photoButton">Submit a\nphoto</string>
 	
-	<!-- The back button on the id screen. --> 
-	<string name="id_backButton">Back</string>
+	<!-- The text for the admin call button on the main page. -->
+	<string name="main_callButton">Call\n</string>
 	
-	<!-- The back button on the settings screen. -->
-	<string name="settings_backButton">Back</string>
-	
-	<!-- The back button on the survey questions. -->
-	<string name="question_backButton">Previous</string>
-	
-	<!-- The next button on the survey questions. -->
-	<string name="question_nextButton">Next</string>
-	
-	<!-- The text to display while a question is loading -->
-	<string name="question_loading_text">Question Loading...</string>
+	<!-- The text for the exit button on the main page. -->
+	<string name="main_exitButton">Exit</string>
 	
 	<!-- The title for the survey progress bar. -->
 	<string name="main_progressTitle">Survey\nCompletion:</string>
 	
-	<!-- The text for the take now button -->
-	<string name="notification_activity_takeNow">Take Now</string>
+	<!-- ================= -->
+    <!-- Settings Activity -->
+    <!-- ================= -->
 	
-	<!-- The text for the postpone button -->
-	<string name="notification_activity_postpone">Postpone</string>
+	<!-- Title for the settings activity. -->
+	<string name="settings_title">Survey Droid Settings</string>
 	
-	<!-- The title text for the notification activity -->
-	<string name="notification_activity_title">You have a new survey waiting:</string>
+	<!-- Text for the button to show the phone id. -->
+	<string name="settings_idButton">Show Phone ID</string>
+	
+	<!-- Text for the server sync button. -->
+	<string name="settings_syncButton">Sync Now</string>
+	
+	<!-- Text for the back button on the settings screen. -->
+	<string name="settings_backButton">Back</string>
+	
+	<!-- Text above the survey settings switcher on the settings page. -->
+	<string name="settings_surveysSetting">Surveys</string>
+	
+	<!-- Text above the location tracking settings switcher on the settings page. -->
+	<string name="settings_locationSetting">Location Tracking</string>
+	
+	<!-- Text above the communications logging settings switcher on the settings page. -->
+	<string name="settings_loggingSetting">Call/Text Logging</string>
+	
+	<!-- ================= -->
+    <!-- Phone ID Activity -->
+    <!-- ================= -->
+	
+	<!-- Text for the phone id page. -->
+	<string name="id_title">This Phone has ID:</string>
+	
+	<!-- The default phone id in horizontal mode. -->
+	<string name="id_defaultHoriz">0000-0000-0000-0000</string>
+	
+	<!-- The default phone id in vertical mode. -->
+	<string name="id_defaultVert">0000\n0000\n0000\n0000</string>
+	
+	<!-- Text for the back button on the id screen. --> 
+	<string name="id_backButton">Back</string>
+	
+	<!-- ===================== -->
+    <!-- User Surveys Activity -->
+    <!-- ===================== -->
+	
+	<!-- Title text for the user-initiated surveys page -->
+	<string name="user_surveys_title">Start a survey</string>
+	
+	<!-- Text for the back button on the user-initiated surveys page -->
+	<string name="user_surveys_back">Back</string>
+	
+	<!-- ====================== -->
+    <!-- Survey Related Strings -->
+    <!-- ====================== -->
+	
+	<!-- Text for the back button on the survey questions. -->
+	<string name="question_backButton">Previous</string>
+	
+	<!-- Text for the next button on the survey questions. -->
+	<string name="question_nextButton">Next</string>
+	
+	<!-- The text to display while a question is loading -->
+	<string name="question_loading_text">Question Loading...</string>
 	
 	<!-- The main title for the survey confirmation page -->
 	<string name="survey_confirmation_title">Survey Completed</string>
@@ -69,48 +121,31 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 	<!-- The subtitle for the survey confirmation page -->
 	<string name="survey_confirmation_subtitle">Are you sure you want to submit your responses?</string>
 	
-	<!-- The confirm button on the survey confirmation page -->
+	<!-- Text for the confirm button on the survey confirmation page -->
 	<string name="survey_confirmation_confirm">Yes</string>
 	
-	<!-- The go back button on the survey confirmation page -->
+	<!-- Text for the go back button on the survey confirmation page -->
 	<string name="survey_confirmation_back">No, go back</string>
 	
-	<!-- The main text on the survey extras page -->
-	<string name="survey_extras_mainText">Would you like to send a photo or voicemail with your survey?</string>
-	
-	<!-- Text for the take photo button on the survey extras page -->
-	<string name="survey_extras_photoButton">Take photo</string>
-	
-	<!-- Text for the record voice button on the survey extras page -->
-	<string name="survey_extras_voiceButton">Record voice</string>
-	
-	<!-- Text for the done button on the survey extras page -->
-	<string name="survey_extras_doneButton">Finish</string>
-	
-	<!-- The four buttons on the main screen. -->
-	<string name="main_settingsButton">Settings</string>
-	<string name="main_sampleButton">Start a\nsurvey</string>
-	<string name="main_photoButton">Submit a\nphoto</string>
-	<string name="main_callButton">Call\n</string>
-	<string name="main_exitButton">Exit</string>
-	
-	<!-- The three phone settings. -->
-	<string name="settings_surveysSetting">Surveys</string>
-	<string name="settings_locationSetting">Location Tracking</string>
-	<string name="settings_loggingSetting">Call/Text Logging</string>
-	
-	<!-- Title text for the user-initiated surveys page -->
-	<string name="user_surveys_title">Start a survey</string>
-	
-	<!-- Back button on the user-initiated surveys page -->
-	<string name="user_surveys_back">Back</string>
-	
-	<!-- Take button on the user-initiated surveys page -->
-	<string name="user_surveys_take">Take Now</string>
-	
-	<!-- Exit button on the survey-completion (survey_done) page. -->
+	<!-- Text for the exit button on the survey-completion (survey_done) page. -->
 	<string name="survey_done_exit">Exit</string>
 	
 	<!-- Main text on the survey-completion (survey_done) page. -->
 	<string name="survey_done_text">Thank you! Your survey has been submitted.</string>
+	
+	<!-- ==================== -->
+	<!-- Notification Strings -->
+	<!-- ==================== -->
+	
+	<!-- Ticker text for a waiting survey notification. -->
+	<string name="survey_waiting_ticker">New Survey!</string>
+	
+	<!-- Ticker text for a notification that the user is in a survey. -->
+	<string name="in_survey_ticker">Survey Running</string>
+	
+	<!-- Content text for a waiting survey notification. -->
+	<string name="survey_waiting_content">Select to start your survey</string>
+	
+	<!-- Content text for a notification that the user is in a survey. -->
+	<string name="in_survey_content">Select to return to your survey</string>
 </resources>

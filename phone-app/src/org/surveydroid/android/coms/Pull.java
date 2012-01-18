@@ -237,9 +237,9 @@ public class Pull
     					sql.bindNull(j);
     				}
     			}
+        		if (sql.executeInsert() == -1)
+        			Util.e(null, TAG, "Insertion failed!");
     		}
-    		if (sql.executeInsert() == -1)
-    			Util.e(null, TAG, "Insertion failed!");
     		db.setTransactionSuccessful();
     	}
     	catch (Exception e)

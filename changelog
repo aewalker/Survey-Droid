@@ -1,0 +1,21 @@
+Survey Droid Changelog
+----------------------
+Version 0.6.0-beta:
+	-Started keeping a changelog.
+	-Surveys work much better:
+	    -User-initiated surveys that are dismissed or time out are not reported at all.
+	    -Notifications only show one survey at a time (the one that will time out soonest).
+	    -Clearing the notification only cancels one survey.
+	    -While a survey is active, the notification changes to reflect this.
+	    -Clicking on a notification while a survey is running will return you to the survey if you have left it.
+	    -Users are alerted multiple times when a survey is ready (default is every 10 minutes).
+	    -After a survey is dismissed or completed, the next survey's alarm will fire.
+	-Server communication is MUCH faster.
+	-When a user presses the phone's physical back button in a survey, it will act just like pressing the on-screen back button.
+	-Technical:
+		-Mass database insert is implemented (responsible for communication speed increase).
+		-Refresh rate and survey timeout in Config.java work a bit differently now
+		-SurveyService almost totally rewritten; doesn't break old code but allows for new things such as timeout speed that is set on a per-survey basis.
+		-The survey creation time is no longer shown in notifications while in debugging mode.
+		-Added better comments/organization to strings.xml.
+		-Deleted some deprecated files (stuff associated with the old notification system and the old end-of-survey sequence).

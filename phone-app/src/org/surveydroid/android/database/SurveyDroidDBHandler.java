@@ -26,9 +26,6 @@
  *****************************************************************************/
 package org.surveydroid.android.database;
 
-import java.util.Collection;
-
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 

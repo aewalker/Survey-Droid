@@ -25,11 +25,9 @@
  *****************************************************************************/
 package org.surveydroid.android.survey;
 
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Iterator;
+import java.util.concurrent.PriorityBlockingQueue;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -37,8 +35,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import org.surveydroid.android.R;
 import org.surveydroid.android.Config;
@@ -69,14 +67,6 @@ public class SurveyService extends Service
 	public static final String ACTION_SHOW_SURVEY =
 		"org.surveydroid.android.survey.ACTION_SHOW_SURVEY";
 	
-//	/**
-//	 * Submit all live answers for this survey. Should only be
-//	 * sent after {@link #ACTION_SURVEY_READY}, otherwise the survey will not
-//	 * be built and an exception will be thrown.
-//	 */
-//	public static final String ACTION_SUBMIT_ANSWERS =
-//		"org.surveydroid.android.survey.ACTION_SUBMIT_ANSWERS";
-	
 	/**
 	 * Stop the survey service.  Used when the user has finished a survey.
 	 */
@@ -90,19 +80,10 @@ public class SurveyService extends Service
 	public static final String ACTION_QUIT_SURVEY =
 		"org.surveydroid.android.survey.ACTION_QUIT_SURVEY";
 	
-	//refresh the current notification, which vibrates/plays sound again
-	private static final String ACTION_REFRESH =
-		"org.surveydroid.android.survey.ACTION_REFRESH";
-	
-	//removes the current survey notification and marks any surveys
-	//that were held in it as being ignored
-	private static final String ACTION_REMOVE_SURVEYS =
-		"org.surveydroid.android.survey.ACTION_REMOVE_SURVEYS";
-	
 	//action to use in the intent sent when the user clicks the
 	//clear all button
-	private static final String ACTION_CANCEL_SURVEYS =
-		"org.surveydroid.android.survey.ACTION_CANCEL_SURVEYS";
+	private static final String ACTION_CANCEL_SURVEY =
+		"org.surveydroid.android.survey.ACTION_CANCEL_SURVEY";
 	
 	//key values for extras
 	/** The id of the survey this service is starting for. */
@@ -116,9 +97,12 @@ public class SurveyService extends Service
 	public static final String EXTRA_SURVEY_TYPE =
 		"org.surveydroid.android.survey.EXTRA_SURVEY_TYPE";
 	
-	//how many times the survey notification has been refreshed
-	private static final String EXTRA_REFRESH_COUNT =
-		"org.surveydroid.android.survey.EXTRA_REFRESH_COUNT";
+	/**
+	 * How long (in milis) should the survey be active for?  Use
+	 * {@link #SURVEY_TIMEOUT_NEVER} for a survey that should not time out.
+	 */
+	public static final String EXTRA_SURVEY_TIMEOUT =
+		"org.surveydroid.android.survey.EXTRA_SURVEY_TIMEOUT";
 	
 	//survey types
 	/** Used with {@link #EXTRA_SURVEY_TYPE} for time-based surveys */
@@ -154,17 +138,27 @@ public class SurveyService extends Service
 	//is a survey currently running?
 	private boolean inSurvey = false;
 	
-	//the id of the survey that is currently running
-	private int currentID;
+	//the current survey's information
+	private SurveyInfo currentInfo;
 	
-	//is the service currently active?
-	private boolean active = false;
-	
-	//is the current notification going to time out?
-	private boolean timeoutOn = false;
-	
-	//for testing, holds the time that the most recent survey was scheduled for
-	private long currentTime;
+	//used for refreshing the notification bar
+	private Handler refreshHandler = new Handler();
+	private Runnable runRefresh = new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			refresh();
+		}
+	};
+	private Runnable runRemove = new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			removeSurveys(false);
+		}
+	};
 	
 	//the binder to send to clients
 	private final SurveyBinder surveyBinder = new SurveyBinder();
@@ -172,21 +166,40 @@ public class SurveyService extends Service
 	//logging tag
 	private static final String TAG = "SurveyService";
 	
-	//collection of all the survey ids currently in the notification
-	//(can be multiple copies of the same one)
-	//also keep the types
-	private final Queue<Integer> surveys = new LinkedList<Integer>();
-	private final Queue<Integer> surveyTypes = new LinkedList<Integer>();
+	//surveys that are ready or running
+	private final PriorityBlockingQueue<SurveyInfo> surveys =
+		new PriorityBlockingQueue<SurveyInfo>();
 	
 	//the notification id (only need one)
 	private static final int N_ID = 0;
+	
+	//holds info about a survey instance
+	private class SurveyInfo implements Comparable<SurveyInfo>
+	{
+		int id;             //survey id
+		int type;           //survey type
+		long startTime;     //when the survey was scheduled for
+		long endTime;		//when does this survey timeout
+		
+		@Override
+		public int compareTo(SurveyInfo that)
+		{
+			return (int) (that.endTime - this.endTime);
+		}
+		
+		public String toString()
+		{
+			return "SurveyInfo: id = " + id + ", type = " + type +
+			", startTime = " + startTime + ", endTime = " + endTime;
+		}
+	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
 		handleIntent(intent);
 		//TODO because this service is so complex, just let it die if it
-		//gets killed.  In the future, it would be better to do with it.
+		//gets killed.  In the future, it would be better to deal with it.
 		return START_NOT_STICKY;
 	}
 	
@@ -199,16 +212,20 @@ public class SurveyService extends Service
 			Util.d(null, TAG, "Recieved action: " + action);
 			if (action.equals(ACTION_SURVEY_READY))
 			{
-				int id = intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID);
-				int type = intent.getIntExtra(EXTRA_SURVEY_TYPE,
+				SurveyInfo sInfo = new SurveyInfo();
+				sInfo.id = intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID);
+				sInfo.type = intent.getIntExtra(EXTRA_SURVEY_TYPE,
 						SURVEY_TYPE_TIMED);
-				currentTime = intent.getLongExtra(
-						SurveyScheduler.EXTRA_RUNNING_TIME, 0);
-				if (!Config.getSetting(this, Config.SURVEYS_LOCAL, true)
-						&& type != SURVEY_TYPE_USER_INIT)
+				sInfo.startTime = intent.getLongExtra(
+						SurveyScheduler.EXTRA_RUNNING_TIME,
+						System.currentTimeMillis());
+				if (!(Config.getSetting(this, Config.SURVEYS_LOCAL, true)
+						&& Config.getSetting(this, Config.SURVEYS_SERVER,
+								Config.SURVEYS_SERVER_DEFAULT)
+						&& sInfo.type == SURVEY_TYPE_USER_INIT))
 				{
 					int status;
-					switch (type)
+					switch (sInfo.type)
 					{
 					case SURVEY_TYPE_TIMED:
 						status = SurveyDroidDB.TakenTable.SCHEDULED_IGNORED;
@@ -217,34 +234,60 @@ public class SurveyService extends Service
 						status = SurveyDroidDB.TakenTable.RANDOM_IGNORED;
 						break;
 					case SURVEY_TYPE_CALL_INIT:
-						status = SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED;
+						status =
+							SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED;
 						break;
 					case SURVEY_TYPE_LOC_INIT:
-						status = SurveyDroidDB.TakenTable.LOCATION_BASED_IGNORED;
+						status =
+							SurveyDroidDB.TakenTable.LOCATION_BASED_IGNORED;
 						break;
 					default:
 						throw new IllegalArgumentException(
-								"Invalid survey type: " + type);
+								"Invalid survey type: " + sInfo.type);
 					}
 					TakenDBHandler tdbh = new TakenDBHandler(this);
 					tdbh.openWrite();
-					if (tdbh.writeSurvey(id, status,
+					if (tdbh.writeSurvey(sInfo.id, status,
 							System.currentTimeMillis() / 1000) == false)
 					{
-						Util.e(this, TAG, "Failed to write completion record!");
+						Util.e(this, TAG,
+								"Failed to write completion record!");
 					}
 					tdbh.close();
 					uploadNow();
 					return;
 				}
-				if (surveys.isEmpty())
+				int timeout = Config.getSetting(this,
+						Config.SURVEY_TIMEOUT, Config.SURVEY_TIMEOUT_DEFAULT);
+				if (timeout == Config.SURVEY_TIMEOUT_NEVER)
 				{
-					Util.v(null, TAG, "surveys is empty");
-					active = true;
+					sInfo.endTime = Config.SURVEY_TIMEOUT_NEVER;
 				}
-				surveys.add(id);
-				surveyTypes.add(type);
-				refresh(0, true);
+				else
+				{
+					sInfo.endTime = sInfo.startTime + intent.getLongExtra(
+							EXTRA_SURVEY_TIMEOUT, timeout * 60 * 1000);
+				}
+				if ((currentInfo == null || sInfo.compareTo(currentInfo) > 0)
+						&& !inSurvey)
+				{
+					if (currentInfo != null)
+					{
+						if (surveys.add(currentInfo) == false)
+						{
+							Util.e(null, TAG, "ERROR: could not add survey to queue!");
+						}
+					}
+					currentInfo = sInfo;
+					refresh();
+				}
+				else
+				{
+					if (surveys.add(sInfo) == false)
+					{
+						Util.e(null, TAG, "ERROR: could not add survey to queue!");
+					}
+				}
 			}
 			else if (action.equals(ACTION_SHOW_SURVEY))
 			{
@@ -258,25 +301,7 @@ public class SurveyService extends Service
 			{
 				quitSurvey();
 			}
-			else if (action.equals(ACTION_REFRESH))
-			{
-				if (!active)
-				{
-					stopSelf();
-					return;
-				}
-				int count = intent.getIntExtra(EXTRA_REFRESH_COUNT, 0);
-				refresh(count, true);
-			}
-			else if (action.equals(ACTION_REMOVE_SURVEYS))
-			{
-				if (timeoutOn) removeNotification(true);
-			}
-//			else if (action.equals(ACTION_SUBMIT_ANSWERS))
-//			{
-//				submit();
-//			}
-			else if (action.equals(ACTION_CANCEL_SURVEYS))
+			else if (action.equals(ACTION_CANCEL_SURVEY))
 			{
 				cancel();
 			}
@@ -289,18 +314,50 @@ public class SurveyService extends Service
 	}
 	
 	//starts the survey
+	//removes the survey that will time out soonest from the queue
 	private void startSurvey()
 	{
-		if (inSurvey)
+		if (!inSurvey)
 		{
-			Toast.makeText(this, "Please finish the current survey "
-					+ "before starting another.", Toast.LENGTH_SHORT).show();
-			return;
+			refreshHandler.removeCallbacks(runRefresh);
+			refreshHandler.removeCallbacks(runRemove);
+			if (currentInfo == null) return;
+			inSurvey = true;
+			if (currentInfo.id == DUMMY_SURVEY_ID)
+			{
+				survey = new Survey(this);
+			}
+			else
+			{
+				survey = new Survey(currentInfo.id, this);
+			}
+			
+			//update the notification
+			int icon = R.drawable.survey_small;
+			String tickerText;
+			tickerText = getString(R.string.in_survey_ticker);
+			long when = System.currentTimeMillis();
+			String contentTitle = getString(R.string.app_name);
+			String contentText;
+			contentText = getString(R.string.in_survey_content);
+			
+			//now create the notification
+			Intent notificationIntent = new Intent(this, SurveyService.class);
+			notificationIntent.setAction(ACTION_SHOW_SURVEY);
+			PendingIntent contentIntent =
+				PendingIntent.getService(this, 0, notificationIntent, 0);
+			Notification notification =
+				new Notification(icon, tickerText, when);
+			notification.setLatestEventInfo(
+					this, contentTitle, contentText, contentIntent);
+			notification.flags |= Notification.FLAG_NO_CLEAR;
+			notification.flags |= Notification.FLAG_ONGOING_EVENT;
+			
+			//send it
+			NotificationManager nm = (NotificationManager)
+				getSystemService(Context.NOTIFICATION_SERVICE);
+			nm.notify(N_ID, notification);
 		}
-		currentID = surveys.poll();
-		inSurvey = true;
-		if (!surveys.isEmpty()) refresh(0, false);
-		else removeNotification(false);
 		
 		Class<? extends QuestionActivity> c =
 			QuestionActivity.getNextQusetionClass(survey.getQuestionType());
@@ -309,46 +366,21 @@ public class SurveyService extends Service
 		startActivity(surveyIntent);
 	}
 	
-	//refresh the notification bar; it has been refreshed count times
-	//if alarm is true, then some kind of alarm should go off (vibration/sound)
-	private void refresh(int count, boolean alarm)
+	//refresh the notification bar
+	private void refresh()
 	{
-		Util.d(null, TAG, "refresh: count = " + count + ", alarm = " + alarm);
-		timeoutOn = false;
-		if (survey == null)
-		{
-			Util.v(null, TAG, "creating new survey; current is null");
-			int id  = surveys.peek();
-			if (id == DUMMY_SURVEY_ID)
-				survey = new Survey(this);
-			else
-				survey = new Survey(id, this);
-		}
+		if (inSurvey) return;
+		Util.d(null, TAG, "refreshing active surveys");
+		refreshHandler.removeCallbacks(runRefresh);
+		refreshHandler.removeCallbacks(runRemove);
 		//things we're going to need for the notification
 		int icon = R.drawable.survey_small;
 		String tickerText;
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(currentTime);
-		if (surveys.size() == 1)
-			tickerText = "New Survey Waiting";
-		else
-			tickerText = surveys.size() + " New Surveys Waiting";
+		tickerText = getString(R.string.survey_waiting_ticker);
 		long when = System.currentTimeMillis();
-		Context context = getApplicationContext();
 		String contentTitle = getString(R.string.app_name);
 		String contentText;
-		if (Config.D)
-			contentText = "(" + surveys.size() + ")" +
-				c.getTime().toGMTString();
-		else
-		{
-			if (surveys.size() == 1)
-				contentText = "You have a new survey waiting;"
-					+ " click here to take it now";
-			else
-				contentText = "You have " + surveys.size() + " new surveys"
-					+ " waiting; click here to take one now";
-		}
+		contentText = getString(R.string.survey_waiting_content);
 		
 		//now create the notification
 		Intent notificationIntent = new Intent(this, SurveyService.class);
@@ -358,11 +390,11 @@ public class SurveyService extends Service
 		Notification notification =
 			new Notification(icon, tickerText, when);
 		notification.setLatestEventInfo(
-				context, contentTitle, contentText, contentIntent);
+				this, contentTitle, contentText, contentIntent);
 		
 		//create the deleteIntent
 		Intent deleteIntent = new Intent(this, SurveyService.class);
-		deleteIntent.setAction(ACTION_CANCEL_SURVEYS);
+		deleteIntent.setAction(ACTION_CANCEL_SURVEY);
 		PendingIntent pendingDelIntent =
 			PendingIntent.getService(this, 1, deleteIntent, 0);
 		notification.deleteIntent = pendingDelIntent;
@@ -370,16 +402,8 @@ public class SurveyService extends Service
 		//add some extra things
 		//the system policy will determine if either of these will actually
 		//happen, so don't need to worry about it
-		if (alarm)
-		{
-			notification.defaults |= Notification.DEFAULT_SOUND;
-			notification.defaults |= Notification.DEFAULT_VIBRATE;
-		}
-		if (surveys.size() > 1)
-		{
-			notification.number = surveys.size();
-		}
-		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.defaults |= Notification.DEFAULT_VIBRATE;
 		
 		//send it
 		NotificationManager nm = (NotificationManager)
@@ -387,164 +411,78 @@ public class SurveyService extends Service
 		nm.notify(N_ID, notification);
 		
 		//now reschedule the refresh if needed
-		int maxCount = Config.getSetting(this, Config.REFRESH_COUNT,
-				Config.REFRESH_COUNT_DEFAULT);
-		int refreshTime = Config.getSetting(this, Config.REFRESH_INTERVAL,
-				Config.REFRESH_INTERVAL_DEFAULT);
-		AlarmManager am = (AlarmManager)
-			getSystemService(Context.ALARM_SERVICE);
-		
-		//make the alarm intent, etc.
-		if (count < maxCount)
+		long refreshInterval = Config.getSetting(this, Config.REFRESH_INTERVAL,
+				Config.REFRESH_INTERVAL_DEFAULT) * 60 * 1000;
+		if (currentInfo.endTime >= System.currentTimeMillis() +
+				refreshInterval || currentInfo.endTime == Config.SURVEY_TIMEOUT_NEVER)
 		{
-			Intent surveyIntent = new Intent(this, SurveyService.class);
-			surveyIntent.setAction(SurveyService.ACTION_REFRESH);
-			surveyIntent.putExtra(SurveyService.EXTRA_REFRESH_COUNT,
-					count + 1);
-			PendingIntent pendingSurvey = PendingIntent.getService(
-					this, 0, surveyIntent, PendingIntent.FLAG_ONE_SHOT);
-			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-					+ (refreshTime * 60 * 1000), pendingSurvey);
+			refreshHandler.postDelayed(runRefresh, refreshInterval);
 		}
 		else
 		{
-			int timeout = Config.getSetting(this,
-					Config.SURVEY_TIMEOUT, Config.SURVEY_TIMEOUT_DEFAULT);
-			if (timeout != Config.SURVEY_TIMEOUT_NEVER)
-			{
-				timeoutOn = true;
-				Intent timeoutIntent = new Intent(this, SurveyService.class);
-				timeoutIntent.setAction(ACTION_REMOVE_SURVEYS);
-				PendingIntent pendingTimeout = PendingIntent.getService(
-						this, 0, timeoutIntent, PendingIntent.FLAG_ONE_SHOT);
-				am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-						+ (timeout * 60 * 1000), pendingTimeout);
-			}
+			refreshHandler.postDelayed(runRemove, currentInfo.endTime - System.currentTimeMillis());
 		}
 		
 	}
 	
-	//marks all current surveys as dismissed 
+	//marks the current survey as dismissed 
 	private void cancel()
 	{
-		Util.i(null, TAG, "Canceling all surveys");
+		if (inSurvey) return;
+		Util.i(null, TAG, "Canceling survey");
 		TakenDBHandler tdbh = new TakenDBHandler(this);
 		tdbh.openWrite();
-		int currentType = 0;
-		if (inSurvey) currentType = surveyTypes.poll();
-		while (!surveys.isEmpty())
+		int id = currentInfo.id;
+		int type = currentInfo.type;
+		if (id != DUMMY_SURVEY_ID && type != SURVEY_TYPE_USER_INIT)
 		{
-			int id = surveys.poll();
-			int type = surveyTypes.poll();
-			if (id != DUMMY_SURVEY_ID)
+			int status;
+			switch (type)
 			{
-				int status;
-				switch (type)
-				{
-				case SURVEY_TYPE_TIMED:
-					status = SurveyDroidDB.TakenTable.SCHEDULED_DISMISSED;
-					break;
-				case SURVEY_TYPE_RANDOM:
-					status = SurveyDroidDB.TakenTable.RANDOM_DISMISSED;
-					break;
-				case SURVEY_TYPE_USER_INIT:
-					//it seems really unlikely that this case will ever
-					//be used, so I don't think it makes sense to create
-					//a case for USER_INITIATED_DISMISSED...
-					//TODO maybe just don't even log this?
-					status =
-						SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED;
-					break;
-				case SURVEY_TYPE_CALL_INIT:
-					status = SurveyDroidDB.TakenTable.CALL_INITIATED_DISMISSED;
-					break;
-				case SURVEY_TYPE_LOC_INIT:
-					status = SurveyDroidDB.TakenTable.LOCATION_BASED_DISMISSED;
-					break;
-				default:
-					throw new IllegalArgumentException(
-							"Invalid survey type: " + type);
-				}
-				if (tdbh.writeSurvey(id, status,
-						System.currentTimeMillis() / 1000) == false)
-				{
-					Util.e(this, TAG, "Failed to write completion record!");
-				}
+			case SURVEY_TYPE_TIMED:
+				status = SurveyDroidDB.TakenTable.SCHEDULED_DISMISSED;
+				break;
+			case SURVEY_TYPE_RANDOM:
+				status = SurveyDroidDB.TakenTable.RANDOM_DISMISSED;
+				break;
+			case SURVEY_TYPE_CALL_INIT:
+				status = SurveyDroidDB.TakenTable.CALL_INITIATED_DISMISSED;
+				break;
+			case SURVEY_TYPE_LOC_INIT:
+				status = SurveyDroidDB.TakenTable.LOCATION_BASED_DISMISSED;
+				break;
+			default:
+				throw new IllegalArgumentException(
+						"Invalid survey type: " + type);
+			}
+			if (tdbh.writeSurvey(id, status,
+					System.currentTimeMillis() / 1000) == false)
+			{
+				Util.e(this, TAG, "Failed to write completion record!");
 			}
 		}
 		tdbh.close();
 		
-		//just let the removeNotification function do the cleanup
-		if (inSurvey)
+		if (surveys.size() != 0)
 		{
-			surveyTypes.add(currentType);
-			removeNotification(false);
+			currentInfo = surveys.poll();
+			refresh();
 		}
-		else removeNotification(true);
+		else
+		{
+			removeNotification();
+		}
 	}
 	
-	//removes the notification and marks all current surveys as being ignored
-	//if finish is true, then stop the service
-	private void removeNotification(boolean finish)
+	//removes the notification and stops the service
+	private void removeNotification()
 	{
-		Util.d(null, TAG, "Removing notification (finish = " + finish + ")");
-		active = false;
+		Util.d(null, TAG, "Removing notification and stopping");
 		
 		NotificationManager nm = (NotificationManager)
 			getSystemService(Context.NOTIFICATION_SERVICE);
-		int currentType = 0;
-		if (!finish) currentType = surveyTypes.poll();
-		if (!surveys.isEmpty())
-		{
-			TakenDBHandler tdbh = new TakenDBHandler(this);
-			tdbh.openWrite();
-			while (!surveys.isEmpty())
-			{
-				int id = surveys.poll();
-				int type = surveyTypes.poll();
-				if (id != DUMMY_SURVEY_ID)
-				{
-					int status;
-					switch (type)
-					{
-					case SURVEY_TYPE_TIMED:
-						status = SurveyDroidDB.TakenTable.SCHEDULED_IGNORED;
-						break;
-					case SURVEY_TYPE_RANDOM:
-						status = SurveyDroidDB.TakenTable.RANDOM_IGNORED;
-						break;
-					case SURVEY_TYPE_USER_INIT:
-						//it seems really unlikely that this case will ever
-						//be used, so I don't think it makes sense to create
-						//a case for USER_INITIATED_IGNORED...
-						//TODO again, we could just not do anything here
-						status =
-							SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED;
-						break;
-					case SURVEY_TYPE_CALL_INIT:
-						status = SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED;
-						break;
-					case SURVEY_TYPE_LOC_INIT:
-						status = SurveyDroidDB.TakenTable.LOCATION_BASED_IGNORED;
-						break;
-					default:
-						throw new IllegalArgumentException(
-								"Invalid survey type: " + type);
-					}
-					if (tdbh.writeSurvey(id, status,
-							System.currentTimeMillis() / 1000) == false)
-					{
-						Util.e(this, TAG, "Failed to write completion record!");
-					}
-				}
-			}
-			tdbh.close();
-		}
-
 		nm.cancel(N_ID);
-		uploadNow();
-		if (finish) stopSelf();
-		else surveyTypes.add(currentType);
+		stopSelf();
 	}
 	
 	//submit answers for the current survey and finish up
@@ -553,7 +491,7 @@ public class SurveyService extends Service
 		if (!survey.submit())
 			Util.e(this, TAG, "Survey reports error in submission!");
 		
-		//schedule surveys again (why not?)
+		//schedule surveys again (just to be safe; it can't hurt)
 		Intent scheduleIntent = new Intent(this, SurveyScheduler.class);
 		scheduleIntent.setAction(SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
 		startService(scheduleIntent);
@@ -566,13 +504,12 @@ public class SurveyService extends Service
 			RuntimeException("Cannot end a survey before starting one");
 		submit();
 		inSurvey = false;
-		if (currentID != DUMMY_SURVEY_ID)
+		if (currentInfo.id != DUMMY_SURVEY_ID)
 		{
 			TakenDBHandler tdbh = new TakenDBHandler(this);
 			tdbh.openWrite();
-			int type = surveyTypes.poll();
 			int status;
-			switch (type)
+			switch (currentInfo.type)
 			{
 			case SURVEY_TYPE_TIMED:
 				status = SurveyDroidDB.TakenTable.SCHEDULED_FINISHED;
@@ -591,9 +528,9 @@ public class SurveyService extends Service
 				break;
 			default:
 				throw new IllegalArgumentException(
-						"Invalid survey type: " + type);
+						"Invalid survey type: " + currentInfo.type);
 			}
-			if (tdbh.writeSurvey(currentID, status,
+			if (tdbh.writeSurvey(currentInfo.id, status,
 					System.currentTimeMillis() / 1000) == false)
 			{
 				Util.e(this, TAG, "Failed to write completion record!");
@@ -611,11 +548,8 @@ public class SurveyService extends Service
 			stopSelf();
 		else
 		{
-			int id  = surveys.peek();
-			if (id == DUMMY_SURVEY_ID)
-				survey = new Survey(this);
-			else
-				survey = new Survey(id, this);
+			currentInfo = surveys.poll();
+			refresh();
 		}
 	}
 	
@@ -626,39 +560,108 @@ public class SurveyService extends Service
 			RuntimeException("Cannot quit a survey before starting one");
 		submit();
 		inSurvey = false;
-		int type = surveyTypes.poll();
-		if (currentID == DUMMY_SURVEY_ID) return;
+		if (currentInfo.id != DUMMY_SURVEY_ID)
+		{
+			TakenDBHandler tdbh = new TakenDBHandler(this);
+			tdbh.openWrite();
+			int status;
+			switch (currentInfo.type)
+			{
+			case SURVEY_TYPE_TIMED:
+				status = SurveyDroidDB.TakenTable.SCHEDULED_UNFINISHED;
+				break;
+			case SURVEY_TYPE_RANDOM:
+				status = SurveyDroidDB.TakenTable.RANDOM_UNFINISHED;
+				break;
+			case SURVEY_TYPE_USER_INIT:
+				status = SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED;
+				break;
+			case SURVEY_TYPE_CALL_INIT:
+				status = SurveyDroidDB.TakenTable.CALL_INITIATED_UNFINISHED;
+				break;
+			case SURVEY_TYPE_LOC_INIT:
+				status = SurveyDroidDB.TakenTable.LOCATION_BASED_UNFINISHED;
+				break;
+			default:
+				throw new IllegalArgumentException(
+						"Invalid survey type: " + currentInfo.type);
+			}
+			if (tdbh.writeSurvey(currentInfo.id, status,
+					System.currentTimeMillis() / 1000) == false)
+			{
+				Util.e(this, TAG, "Failed to write completion record!");
+			}
+			tdbh.close();
+			uploadNow();
+		}
+		if (!surveys.isEmpty())
+		{
+			currentInfo = surveys.poll();
+			refresh();
+		}
+		else
+		{
+			removeNotification();
+		}
+	}
+	
+	//remove surveys that have expired
+	//if all is true, instead removes all surveys
+	private void removeSurveys(boolean all)
+	{
+		Util.d(null, TAG, "Removing expired surveys");
+		surveys.add(currentInfo);
 		TakenDBHandler tdbh = new TakenDBHandler(this);
 		tdbh.openWrite();
-		int status;
-		switch (type)
+		Iterator<SurveyInfo> i = surveys.iterator();
+		while (i.hasNext())
 		{
-		case SURVEY_TYPE_TIMED:
-			status = SurveyDroidDB.TakenTable.SCHEDULED_UNFINISHED;
-			break;
-		case SURVEY_TYPE_RANDOM:
-			status = SurveyDroidDB.TakenTable.RANDOM_UNFINISHED;
-			break;
-		case SURVEY_TYPE_USER_INIT:
-			status = SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED;
-			break;
-		case SURVEY_TYPE_CALL_INIT:
-			status = SurveyDroidDB.TakenTable.CALL_INITIATED_UNFINISHED;
-			break;
-		case SURVEY_TYPE_LOC_INIT:
-			status = SurveyDroidDB.TakenTable.LOCATION_BASED_UNFINISHED;
-			break;
-		default:
-			throw new IllegalArgumentException(
-					"Invalid survey type: " + type);
-		}
-		if (tdbh.writeSurvey(currentID, status,
-				System.currentTimeMillis() / 1000) == false)
-		{
-			Util.e(this, TAG, "Failed to write completion record!");
+			SurveyInfo sInfo = i.next();
+			if ((sInfo.endTime != Config.SURVEY_TIMEOUT_NEVER &&
+					sInfo.endTime <= System.currentTimeMillis()) || all)
+			{
+				i.remove();
+				if (sInfo.id != DUMMY_SURVEY_ID &&
+						sInfo.type != SURVEY_TYPE_USER_INIT)
+				{
+					int status;
+					switch (sInfo.type)
+					{
+					case SURVEY_TYPE_TIMED:
+						status = SurveyDroidDB.TakenTable.SCHEDULED_IGNORED;
+						break;
+					case SURVEY_TYPE_RANDOM:
+						status = SurveyDroidDB.TakenTable.RANDOM_IGNORED;
+						break;
+					case SURVEY_TYPE_CALL_INIT:
+						status = SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED;
+						break;
+					case SURVEY_TYPE_LOC_INIT:
+						status = SurveyDroidDB.TakenTable.LOCATION_BASED_IGNORED;
+						break;
+					default:
+						throw new IllegalArgumentException(
+								"Invalid survey type: " + sInfo.type);
+					}
+					if (tdbh.writeSurvey(sInfo.id, status,
+							System.currentTimeMillis() / 1000) == false)
+					{
+						Util.e(this, TAG, "Failed to write completion record!");
+					}
+				}
+			}
 		}
 		tdbh.close();
 		uploadNow();
+		if (surveys.size() != 0)
+		{
+			currentInfo = surveys.poll();
+			refresh();
+		}
+		else
+		{
+			removeNotification();
+		}
 	}
 	
 	@Override
@@ -670,7 +673,7 @@ public class SurveyService extends Service
 		//in the case that this service is killed (likely because the phone
 		//is being shut down)
 		if (inSurvey) quitSurvey();
-		cancel();
+		removeSurveys(true);
 	}
 
 	/**
@@ -680,14 +683,38 @@ public class SurveyService extends Service
 	 */
 	public class SurveyBinder extends Binder
 	{
+		private Handler binderHandler = new Handler();
+		private Runnable timeout = new Runnable() {
+			@Override
+			public void run()
+			{
+				Util.d(null, TAG, "question timed out; quiting survey");
+				quitSurvey();
+			}
+		};
+		
 		/**
-		 * Called to get the survey currently running.
+		 * Called to get the survey currently running.  Also stops the timeout
+		 * if it has previously been started with {@link #startTimeout}.
 		 * 
 		 * @return the {@link Survey}
 		 */
 		public Survey getSurvey()
 		{
+			binderHandler.removeCallbacks(timeout);
 			return survey;
+		}
+		
+		/**
+		 * Tells the service to start the timeout for the current survey.
+		 */
+		public void startTimeout()
+		{
+			Util.d(null, TAG, "starting question timeout");
+			long delay = Config.getSetting(SurveyService.this,
+					Config.QUESTION_TIMEOUT,
+					Config.QUESTION_TIMEOUT_DEFAULT) * 60 * 1000;
+			binderHandler.postDelayed(timeout, delay);
 		}
 	}
 	
