@@ -10,7 +10,7 @@ Version 0.6.1-beta:
 Version 0.6.0-beta:
 	-Started keeping a changelog.
 	-Surveys work much better:
-	    -User-initiated surveys that are dismissed or time out are not reported at all.
+	    -User-initiated surveys that are dismissed or time out are not reported at all (it's assumed they were started by mistake).
 	    -Notifications only show one survey at a time (the one that will time out soonest).
 	    -Clearing the notification only cancels one survey.
 	    -While a survey is active, the notification changes to reflect this.
