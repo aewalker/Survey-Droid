@@ -31,7 +31,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import org.surveydroid.android.coms.ComsService;
-import org.surveydroid.android.survey.SurveyScheduler;
+//import org.surveydroid.android.survey.SurveyScheduler;
 
 /**
  * Starts the background Survey Droid services after at boot time.
@@ -150,14 +150,14 @@ public class BootIntentReceiver extends BroadcastReceiver
 		        context.startService(comsPushIntent);
 		        
 		    	//start the survey scheduler
-		    	Util.d(null, TAG, "Starting survey scheduler");
-		    	Intent schedulerIntent = new Intent(context,
-		    			SurveyScheduler.class);
-		    	schedulerIntent.setAction(
-		    			SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
-		    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUNNING_TIME,
-		    			System.currentTimeMillis());
-		        context.startService(schedulerIntent);
+//		    	Util.d(null, TAG, "Starting survey scheduler");
+//		    	Intent schedulerIntent = new Intent(context,
+//		    			SurveyScheduler.class);
+//		    	schedulerIntent.setAction(
+//		    			SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
+//		    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUNNING_TIME,
+//		    			System.currentTimeMillis());
+//		        context.startService(schedulerIntent);
 	        }
     	};
     	Handler h = new Handler();

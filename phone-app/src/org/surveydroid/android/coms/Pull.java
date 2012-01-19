@@ -47,6 +47,7 @@ import org.surveydroid.android.Util;
 import org.surveydroid.android.coms.WebClient;
 import org.surveydroid.android.coms.WebClient.ApiException;
 import org.surveydroid.android.database.SurveyDroidDB;
+import org.surveydroid.android.survey.SurveyScheduler;
 
 /* Note that this class doesn't use the ComsDBHandler like it seems that is
  * should.  The reason for this is that the database operations that are
@@ -137,6 +138,16 @@ public class Pull
 	            syncConditions(sdb, json.getJSONArray("conditions"));
 	            sdb.close();
 	            pdb.close();
+	            
+	            //run the scheduler
+		    	Util.d(null, TAG, "Starting survey scheduler");
+		    	Intent schedulerIntent = new Intent(ctxt.getApplicationContext(),
+		    			SurveyScheduler.class);
+		    	schedulerIntent.setAction(
+		    			SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
+		    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUNNING_TIME,
+		    			System.currentTimeMillis());
+		        ctxt.startService(schedulerIntent);
         	}
         	else
         	{

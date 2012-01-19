@@ -222,7 +222,7 @@ public class SurveyService extends Service
 				if (!(Config.getSetting(this, Config.SURVEYS_LOCAL, true)
 						&& Config.getSetting(this, Config.SURVEYS_SERVER,
 								Config.SURVEYS_SERVER_DEFAULT)
-						&& sInfo.type == SURVEY_TYPE_USER_INIT))
+						&& sInfo.type != SURVEY_TYPE_USER_INIT))
 				{
 					int status;
 					switch (sInfo.type)

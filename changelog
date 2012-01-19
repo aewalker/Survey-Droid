@@ -1,5 +1,12 @@
 Survey Droid Changelog
 ----------------------
+Version 0.6.1-beta:
+	-Scheduling seems to be working better now.
+	-Technical:
+		-Switched SurveyScheduler to use id + time as the data uri.  Used 0 for the request code on all alarms.
+		-Fixed a bug that caused the SurveyService to ignore timed surveys.
+		-The BootIntentReciever does not run the scheduler; instead, it is run after a pull.
+
 Version 0.6.0-beta:
 	-Started keeping a changelog.
 	-Surveys work much better:

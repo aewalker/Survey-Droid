@@ -151,9 +151,9 @@ public class SurveyScheduler extends IntentService
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(time);
 		Util.d(this, TAG, "Scheduling survey "
-				+ id + " for " + c.getTime().toGMTString());
+				+ id + " for " + c.getTime().toLocaleString());
 		
-		Intent surveyIntent = new Intent(this, SurveyService.class);
+		Intent surveyIntent = new Intent(getApplicationContext(), SurveyService.class);
 		surveyIntent.setAction(SurveyService.ACTION_SURVEY_READY);
 		if (random)
 		{
@@ -170,30 +170,16 @@ public class SurveyScheduler extends IntentService
 		 * be the survey id.  This way, if two different surveys would go off
 		 * at the same time, they will, as opposed to one wiping out the other
 		 * if this was not done.
+		 * 
+		 * 01/18/2012 - I have verified that this will cause filterEquals to
+		 * return false by examining the source code. - Austin
 		 */
-		Uri uri = Uri.parse(Integer.toString(id));
+		Uri uri = Uri.parse(Integer.toString(id) + "+" + Long.toString(time));
 		surveyIntent.setData(uri);
 		surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID, id);
 		surveyIntent.putExtra(EXTRA_RUNNING_TIME, time);
-		/*
-		 * We have a tricky situation here.  Each survey "instance" (that is,
-		 * a survey at a particular date/time) must be uniquely identified by
-		 * request code.  However, that code must be the same each time it is
-		 * generated in order to prevent one survey instance from being
-		 * scheduled multiple times, which would occur if this service is run
-		 * again before that instance is set to be delivered.  Thus, we
-		 * essentially need a hash function that takes a time and an id and
-		 * produces a unique int in a deterministic way.
-		 * 
-		 * Since we set the data in the intent above to be the id, we can do
-		 * away with having to differentiate between ids; now we only need to
-		 * know the time.  Since surveys can only be scheduled at minute
-		 * intervals, we can divide the time by 60 * 1000 to get the number of
-		 * minutes.  Since the number of minutes that can be put into 32 bits
-		 * is much longer than a week, we are good.
-		 */
 		PendingIntent pendingSurvey = PendingIntent.getService(
-				this, (int) (time / 60000l), surveyIntent, 0);
+				getApplicationContext(), 0, surveyIntent, 0);
 		AlarmManager alarm =
 			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarm.set(AlarmManager.RTC_WAKEUP, time, pendingSurvey);
