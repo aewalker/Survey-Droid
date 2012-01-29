@@ -25,22 +25,6 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal|center_vertical">
-    <TextView
-	    android:text="@string/question_loading_text"
-	    android:textAppearance="?android:attr/textAppearanceLarge"
-	    android:layout_height="wrap_content"
-	    android:id="@+id/free_response_question"
-	    android:layout_width="wrap_content"
-	    android:layout_marginBottom="10dip"
-	    android:layout_gravity="center"></TextView>
-    <EditText
-    	android:id="@+id/free_response_textEntry"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:gravity="top|left"
-    	android:layout_weight="1">
-        <requestFocus></requestFocus>
-    </EditText>
     <LinearLayout
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
@@ -61,4 +45,20 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
         	android:layout_weight="1"
         	android:layout_gravity="center"></Button>
     </LinearLayout>
+    <TextView
+	    android:text="@string/question_loading_text"
+	    android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/free_response_question"
+	    android:layout_width="wrap_content"
+	    android:layout_marginBottom="10dip"
+	    android:layout_gravity="center"></TextView>
+    <EditText
+    	android:id="@+id/free_response_textEntry"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="top|left"
+    	android:layout_weight="1">
+        <requestFocus></requestFocus>
+    </EditText>
 </LinearLayout>

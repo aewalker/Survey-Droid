@@ -1,5 +1,11 @@
 Survey Droid Changelog
 ----------------------
+Version 0.6.2-beta:
+	-Moved survey next/back buttons to the top of the screen.
+	-Technical:
+		-Fixed bugs in SurveyService that were causing weird things to happen.
+		-Fixed a potential race condition in ConfirmSubmitActivity.
+
 Version 0.6.1-beta:
 	-Scheduling seems to be working better now.
 	-Technical:

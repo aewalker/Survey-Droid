@@ -101,12 +101,7 @@ public class ConfirmSubmitActivity extends Activity
 			@Override
 			public void onClick(View view)
 			{
-				survey.prevQuestion();
-				Intent backIntent = new Intent(ConfirmSubmitActivity.this,
-						QuestionActivity.getNextQusetionClass(
-								survey.getQuestionType()));
-    			startActivity(backIntent);
-				finish();
+				onBackPressed();
 			}
 		});
 		
@@ -133,6 +128,20 @@ public class ConfirmSubmitActivity extends Activity
 			}
 		});
 	}
+    
+    @Override
+	public void onBackPressed()
+    {
+    	if (survey != null)
+    	{
+    		survey.prevQuestion();
+			Intent backIntent = new Intent(ConfirmSubmitActivity.this,
+					QuestionActivity.getNextQusetionClass(
+							survey.getQuestionType()));
+			startActivity(backIntent);
+			finish();
+    	}
+    }
 	
 	@Override
 	protected void onDestroy()
