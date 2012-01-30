@@ -241,6 +241,7 @@ public class SurveyService extends Service
 	//adds a new survey to the list (or not if surveys are off)
 	private void addSurvey(Intent intent)
 	{
+		Util.d(null, TAG, "adding survey");
 		SurveyInfo sInfo = new SurveyInfo();
 		sInfo.id = intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID);
 		sInfo.type = intent.getIntExtra(EXTRA_SURVEY_TYPE,
@@ -376,7 +377,7 @@ public class SurveyService extends Service
 	private void refresh()
 	{
 		if (inSurvey) return;
-		Util.d(null, TAG, "refreshing active surveys");
+		Util.d(null, TAG, "refresh");
 		refreshHandler.removeCallbacks(runRefresh);
 		refreshHandler.removeCallbacks(runRemove);
 		
@@ -420,13 +421,16 @@ public class SurveyService extends Service
 		//now reschedule the refresh if needed
 		long refreshInterval = Config.getSetting(this, Config.REFRESH_INTERVAL,
 				Config.REFRESH_INTERVAL_DEFAULT) * 60 * 1000;
+		Util.v(null, TAG, "time left on current survey: " + (currentInfo.endTime - System.currentTimeMillis()));
 		if (currentInfo.endTime >= System.currentTimeMillis() +
 				refreshInterval || currentInfo.endTime == Config.SURVEY_TIMEOUT_NEVER)
 		{
+			Util.v(null, TAG, "go for refresh again");
 			refreshHandler.postDelayed(runRefresh, refreshInterval);
 		}
 		else
 		{
+			Util.v(null, TAG, "go for remove");
 			refreshHandler.postDelayed(runRemove, currentInfo.endTime - System.currentTimeMillis());
 		}
 		
@@ -472,13 +476,16 @@ public class SurveyService extends Service
 		}
 		tdbh.close();
 		
-		if (surveys.size() != 0)
+		if (!surveys.isEmpty())
 		{
+			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			refresh();
 		}
 		else
 		{
+			Util.v(null, TAG, "no more surveys; removing notification");
+			currentInfo = null;
 			removeNotification();
 		}
 	}
@@ -487,6 +494,8 @@ public class SurveyService extends Service
 	private void removeNotification()
 	{
 		Util.d(null, TAG, "Removing notification and stopping");
+		refreshHandler.removeCallbacks(runRefresh);
+		refreshHandler.removeCallbacks(runRemove);
 		
 		NotificationManager nm = (NotificationManager)
 			getSystemService(Context.NOTIFICATION_SERVICE);
@@ -497,6 +506,7 @@ public class SurveyService extends Service
 	//submit answers for the current survey and finish up
 	private void submit()
 	{
+		Util.v(null, TAG, "submitting answers");
 		if (!survey.submit())
 			Util.e(this, TAG, "Survey reports error in submission!");
 		
@@ -511,6 +521,7 @@ public class SurveyService extends Service
 	{
 		if (!inSurvey) throw new
 			RuntimeException("Cannot end a survey before starting one");
+		Util.v(null, TAG, "ending survey");
 		refreshHandler.removeCallbacks(runRefresh);
 		refreshHandler.removeCallbacks(runRemove);
 		submit();
@@ -556,9 +567,13 @@ public class SurveyService extends Service
 			Config.putSetting(this, Config.SAMPLE_SURVEY_TAKEN, true);
 		}
 		if (surveys.isEmpty())
+		{
+			Util.v(null, TAG, "no more surveys, removing notification");
 			removeNotification();
+		}
 		else
 		{
+			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			refresh();
 		}
@@ -569,6 +584,7 @@ public class SurveyService extends Service
 	{
 		if (!inSurvey) throw new
 			RuntimeException("Cannot quit a survey before starting one");
+		Util.d(null, TAG, "quiting survey");
 		refreshHandler.removeCallbacks(runRefresh);
 		refreshHandler.removeCallbacks(runRemove);
 		submit();
@@ -609,11 +625,14 @@ public class SurveyService extends Service
 		}
 		if (!surveys.isEmpty())
 		{
+			Util.v(null, TAG, surveys.size() + "more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			refresh();
 		}
 		else
 		{
+			Util.v(null, TAG, "no more surveys, removing notification");
+			currentInfo = null;
 			removeNotification();
 		}
 	}
@@ -622,19 +641,23 @@ public class SurveyService extends Service
 	//if all is true, instead removes all surveys
 	private void removeSurveys(boolean all)
 	{
-		Util.d(null, TAG, "Removing expired surveys");
+		Util.d(null, TAG, "Removing " + (all ? "all " : "") + "expired surveys");
+		Util.v(null, TAG, "current time: " + System.currentTimeMillis());
 		refreshHandler.removeCallbacks(runRefresh);
 		refreshHandler.removeCallbacks(runRemove);
-		surveys.add(currentInfo);
+		if (currentInfo != null)
+			surveys.add(currentInfo);
 		TakenDBHandler tdbh = new TakenDBHandler(this);
 		tdbh.openWrite();
 		Iterator<SurveyInfo> i = surveys.iterator();
 		while (i.hasNext())
 		{
 			SurveyInfo sInfo = i.next();
+			Util.v(null, TAG, "Current survey: " + sInfo.id + " at " + sInfo.startTime);
 			if ((sInfo.endTime != Config.SURVEY_TIMEOUT_NEVER &&
 					sInfo.endTime < System.currentTimeMillis()) || all)
 			{
+				Util.v(null, TAG, "removing survey");
 				i.remove();
 				if (sInfo.id != DUMMY_SURVEY_ID &&
 						sInfo.type != SURVEY_TYPE_USER_INIT)
@@ -670,11 +693,13 @@ public class SurveyService extends Service
 		uploadNow();
 		if (!surveys.isEmpty())
 		{
+			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			refresh();
 		}
 		else
 		{
+			Util.v(null, TAG, "no more surveys, removing notification");
 			removeNotification();
 		}
 	}

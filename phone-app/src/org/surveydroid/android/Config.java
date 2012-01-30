@@ -157,7 +157,7 @@ public class Config
 	 * (in minutes)?
 	 */
 	public static final String QUESTION_TIMEOUT = "question_timeout";
-	public static final int QUESTION_TIMEOUT_DEFAULT = 30; 
+	public static final int QUESTION_TIMEOUT_DEFAULT = 30;
 	
 	/**
 	 * The number of different locations in which locations should be logged.
