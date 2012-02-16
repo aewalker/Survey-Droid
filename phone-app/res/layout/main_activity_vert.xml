@@ -53,15 +53,6 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 	                android:layout_weight="1"></Button>
                 <Button
 	        		android:textAppearance="?android:attr/textAppearanceLarge"
-	                android:text="@string/main_photoButton"
-	                android:layout_width="fill_parent"
-	                android:id="@+id/main_photoButton"
-	                android:layout_height="wrap_content"
-	                android:drawableLeft="@drawable/photo"
-	                android:layout_gravity="center_vertical"
-	                android:layout_weight="1"></Button>
-                <Button
-	        		android:textAppearance="?android:attr/textAppearanceLarge"
 	                android:text="@string/main_callButton"
 	                android:layout_width="fill_parent"
 	                android:id="@+id/main_callButton"

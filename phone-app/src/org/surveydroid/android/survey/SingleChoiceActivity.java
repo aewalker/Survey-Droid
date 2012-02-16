@@ -116,7 +116,7 @@ public class SingleChoiceActivity extends QuestionActivity
 		Choice[] choices = survey.getChoices();
 		answer.add(choices[listView.getCheckedItemPosition()]);
 		survey.answer(answer);
-		Util.d(this, TAG, "answered with: " + answer.toArray()[0].toString());
+		Util.d(null, TAG, "answered with: " + answer.toArray()[0].toString());
 	}
 
 	@Override

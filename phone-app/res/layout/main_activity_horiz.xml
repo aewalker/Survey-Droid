@@ -84,39 +84,13 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 		                android:layout_weight="1"></Button>
 	                <Button
 	                	android:textAppearance="?android:attr/textAppearanceLarge"
-		                android:text="@string/main_photoButton"
-		                android:id="@+id/main_photoButton"
-		                android:layout_height="wrap_content"
-		                android:drawableLeft="@drawable/photo"
-		                android:layout_gravity="center_vertical"
-		                android:layout_weight="1"
-		                android:layout_width="fill_parent"></Button>
-		    	</LinearLayout>
-		    	<LinearLayout
-	            	android:layout_height="fill_parent"
-	            	android:orientation="horizontal"
-	            	android:id="@+id/main_bottomButtonsLayout"
-	            	android:layout_width="fill_parent"
-	            	android:layout_weight="1">
-				    <!-- Dummy item just to balance the space -->
-				    <FrameLayout
-				    	android:layout_width="wrap_content"
-				    	android:layout_height="wrap_content"
-				    	android:layout_weight="1"></FrameLayout>
-	                <Button
-	                	android:textAppearance="?android:attr/textAppearanceLarge"
 		                android:text="@string/main_exitButton"
 		                android:id="@+id/main_exitButton"
 		                android:layout_height="wrap_content"
 		                android:drawableLeft="@drawable/exit"
 		                android:layout_gravity="center_vertical"
 		                android:layout_weight="1"
-		                android:layout_width="wrap_content"></Button>
-				    <!-- Dummy item just to balance the space -->
-				    <FrameLayout
-				    	android:layout_width="wrap_content"
-				    	android:layout_height="wrap_content"
-				    	android:layout_weight="1"></FrameLayout>
+		                android:layout_width="fill_parent"></Button>
 		    	</LinearLayout>
             </LinearLayout>
             <LinearLayout

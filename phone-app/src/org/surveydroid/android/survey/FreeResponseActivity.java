@@ -62,7 +62,7 @@ public class FreeResponseActivity extends QuestionActivity
 	protected void answer()
 	{
 		survey.answer(input.getText().toString());
-		Util.d(this, TAG, "answered with \""
+		Util.d(null, TAG, "answered with \""
 				+ input.getText().toString() + "\"");
 	}
 

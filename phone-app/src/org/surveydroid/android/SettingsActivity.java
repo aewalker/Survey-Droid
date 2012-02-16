@@ -174,30 +174,37 @@ public class SettingsActivity extends Activity
         {
             public void onClick(View view)
             {
-            	//show the user a summary of the current settings
-            	StringBuilder info = new StringBuilder();
-            	
-            	info.append("Location tracking is " +
-            			(Config.getSetting(SettingsActivity.this,
-            					Config.TRACKING_LOCAL, true) ?
-            					"enabled\n" : "disabled\n"));
-            	
-            	info.append("Call logging is " +
-            			(Config.getSetting(SettingsActivity.this,
-            					Config.CALL_LOG_LOCAL, true) ?
-            					"enabled\n" : "disabled\n"));
-            	
-            	info.append("Surveys are " +
-            			(Config.getSetting(SettingsActivity.this,
-            					Config.SURVEYS_LOCAL, true) ?
-            					"enabled" : "disabled"));
-
-            	Toast.makeText(getApplicationContext(), info.toString(),
-                        Toast.LENGTH_SHORT).show();
-            	
-            	finish();
+            	onBackPressed();
             }
         });
+    }
+    
+    
+    @Override
+    public void onBackPressed()
+    {
+    	//show the user a summary of the current settings
+    	StringBuilder info = new StringBuilder();
+    	
+    	info.append("Location tracking is " +
+    			(Config.getSetting(SettingsActivity.this,
+    					Config.TRACKING_LOCAL, true) ?
+    					"enabled\n" : "disabled\n"));
+    	
+    	info.append("Call logging is " +
+    			(Config.getSetting(SettingsActivity.this,
+    					Config.CALL_LOG_LOCAL, true) ?
+    					"enabled\n" : "disabled\n"));
+    	
+    	info.append("Surveys are " +
+    			(Config.getSetting(SettingsActivity.this,
+    					Config.SURVEYS_LOCAL, true) ?
+    					"enabled" : "disabled"));
+
+    	Toast.makeText(getApplicationContext(), info.toString(),
+                Toast.LENGTH_SHORT).show();
+    	
+    	finish();
     }
     
     @Override
@@ -214,7 +221,7 @@ public class SettingsActivity extends Activity
             if (surveyChanged)
         	{
             	boolean enabled =
-            		Config.getSetting(this, Config.SURVEYS_LOCAL, false);
+            		Config.getSetting(this, Config.SURVEYS_LOCAL, true);
         		sdbh.statusChanged(SurveyDroidDB.StatusTable.SURVEYS,
         				enabled, System.currentTimeMillis() / 1000);
         		surveyChanged = false;
@@ -223,7 +230,7 @@ public class SettingsActivity extends Activity
         	if (locationChanged)
         	{
         		boolean enabled =
-            		Config.getSetting(this, Config.TRACKING_LOCAL, false);
+            		Config.getSetting(this, Config.TRACKING_LOCAL, true);
         		sdbh.statusChanged(SurveyDroidDB.StatusTable.LOCATION_TRACKING,
         				enabled, System.currentTimeMillis() / 1000);
         		locationChanged = false;
@@ -232,7 +239,7 @@ public class SettingsActivity extends Activity
         	if (calllogChanged)
         	{
         		boolean enabled =
-            		Config.getSetting(this, Config.CALL_LOG_LOCAL, false);
+            		Config.getSetting(this, Config.CALL_LOG_LOCAL, true);
         		sdbh.statusChanged(SurveyDroidDB.StatusTable.CALL_LOGGING,
         				enabled, System.currentTimeMillis() / 1000);
         		calllogChanged = false;

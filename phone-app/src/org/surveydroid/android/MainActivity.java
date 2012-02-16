@@ -117,6 +117,7 @@ public class MainActivity extends Activity
         });
         
         //take photo button
+        /*
         Button photo = (Button) findViewById(R.id.main_photoButton);
         photo.setOnClickListener(new View.OnClickListener()
         {
@@ -151,6 +152,7 @@ public class MainActivity extends Activity
 				startActivityForResult(photoIntent, PHOTO_REQUEST_CODE);
 			}
 		});
+		*/
         
         //call survey admin button
         Button call = (Button) findViewById(R.id.main_callButton);

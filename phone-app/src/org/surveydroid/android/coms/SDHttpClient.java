@@ -92,7 +92,7 @@ public class SDHttpClient extends DefaultHttpClient
 			}
 			catch (CertificateException e)
 			{
-				Util.e(ctxt, TAG, "Cert Exception: " + Util.fmt(e));
+				Util.e(null, TAG, "Cert Exception: " + Util.fmt(e));
 				throw new AssertionError(e);
 			}
 			finally

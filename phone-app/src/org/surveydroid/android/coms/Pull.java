@@ -112,7 +112,7 @@ public class Pull
 	    		}
 	    		catch (Exception e)
 	    		{
-	    			Util.e(ctxt, TAG,
+	    			Util.e(null, TAG,
 	    					"Unable to communicate with remote server");
 	    			try
 	    			{
@@ -151,7 +151,7 @@ public class Pull
         	}
         	else
         	{
-        		Util.w(ctxt, TAG, "Device ID not available");
+        		Util.w(null, TAG, "Device ID not available");
         		Util.w(null, TAG, "Will reschedule and try again later");
         	}
         }
@@ -271,7 +271,7 @@ public class Pull
     	Util.i(null, TAG, "Syncing surveys table");
     	try
     	{
-    		Util.d(c, TAG, "Fetched " + surveys.length() + " surveys");
+    		Util.d(null, TAG, "Fetched " + surveys.length() + " surveys");
 	    	for (int i = 0 ; i < surveys.length(); i++)
 	    	{
 	    		JSONObject survey = surveys.getJSONObject(i);
@@ -346,7 +346,7 @@ public class Pull
     	}
     	catch (JSONException e)
     	{
-			Util.e(c, TAG, Util.fmt(e));
+			Util.e(null, TAG, Util.fmt(e));
 		}
     }
 	
@@ -439,7 +439,7 @@ public class Pull
     //this doesn't use the syncTable method because all it's fields are so strange
     private static void syncConfig(SQLiteDatabase db, JSONObject config, Context ctxt)
     {
-    	Util.i(ctxt, TAG, "Updating configuration values");
+    	Util.i(null, TAG, "Updating configuration values");
     	try
     	{
     		//do the special keys first
@@ -464,7 +464,7 @@ public class Pull
 			}
 			catch (JSONException e)
 			{
-				Util.w(ctxt, TAG, "No features_enabled");
+				Util.w(null, TAG, "No features_enabled");
 			}
     		
 			try
@@ -601,7 +601,7 @@ public class Pull
     	}
     	catch (JSONException e)
     	{
-    		Util.e(ctxt, TAG, Util.fmt(e));
+    		Util.e(null, TAG, Util.fmt(e));
     	}
     }
 }

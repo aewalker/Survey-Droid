@@ -329,7 +329,7 @@ public class SurveyDBHandler extends SurveyDroidDBHandler
 			}
 		}
 		
-		Util.d(contx, TAG, "writing answer for question " + q_id
+		Util.d(null, TAG, "writing answer for question " + q_id
 				+ ": " + ids.toString());
 		ContentValues values = new ContentValues();
 		
@@ -357,7 +357,7 @@ public class SurveyDBHandler extends SurveyDroidDBHandler
 	 */
 	public boolean writeAnswer(int q_id, String text, long created)
 	{
-		Util.d(contx, TAG, "writing answer for question " + q_id + ": \""
+		Util.d(null, TAG, "writing answer for question " + q_id + ": \""
 				+ text + "\"");
 		ContentValues values = new ContentValues();
 		
@@ -386,7 +386,7 @@ public class SurveyDBHandler extends SurveyDroidDBHandler
 	 */
 	public boolean writeAnswer(int q_id, int value, long created)
 	{
-		Util.d(contx, TAG, "writing answer for question " + q_id + ": "
+		Util.d(null, TAG, "writing answer for question " + q_id + ": "
 				+ value);
 		ContentValues values = new ContentValues();
 		

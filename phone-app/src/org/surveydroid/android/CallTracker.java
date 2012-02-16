@@ -74,7 +74,7 @@ public class CallTracker extends PhoneStateListener
 			int state, String incomingNumber)
 	{
 		super.onCallStateChanged(state, incomingNumber);
-		Util.d(ctxt, TAG, "Call state changed: " + state);
+		Util.d(null, TAG, "Call state changed: " + state);
 		if (state == TelephonyManager.CALL_STATE_RINGING
 				|| state == TelephonyManager.CALL_STATE_OFFHOOK)
 		{ //call just started or is still going
@@ -90,7 +90,7 @@ public class CallTracker extends PhoneStateListener
 				@Override
 		        public void run()
 		        {
-					Util.d(ctxt, TAG, "Searching log");
+					Util.d(null, TAG, "Searching log");
 					//go look up the most recent calls in the CallLog
 					String[] cols = {CallLog.Calls.TYPE,
 									 CallLog.Calls.DATE,
@@ -226,7 +226,7 @@ public class CallTracker extends PhoneStateListener
 		{
 			if (Config.D)
 				throw new RuntimeException("Unkown phone state: " + state);
-			else Util.w(ctxt, TAG, "Unknown phone state: " + state);
+			else Util.w(null, TAG, "Unknown phone state: " + state);
 		}
 	}
 }

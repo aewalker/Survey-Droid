@@ -109,7 +109,7 @@ public class MultiChoiceActivity extends QuestionActivity
 			{
 				answer = "no answers given";
 			}
-			Util.d(this, TAG, answer);
+			Util.d(null, TAG, answer);
 		}
 	}
 

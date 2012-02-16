@@ -26,6 +26,9 @@ package org.surveydroid.android;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Handler;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -50,16 +53,8 @@ public class BootIntentReceiver extends BroadcastReceiver
     {
     	if (!intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
     	{
-    		if (Config.D)
-    		{
-    			throw new RuntimeException("Wrong action: "
-    				+ intent.getAction());
-    		}
-    		else
-    		{
-    			Util.w(null, TAG, "Wrong action: " + intent.getAction());
-    			return;
-    		}
+			Util.w(null, TAG, "Wrong action: " + intent.getAction());
+			return;
     	}
     	/*
     	 * Here, we delay the startup of the application for a while.  The
@@ -88,6 +83,7 @@ public class BootIntentReceiver extends BroadcastReceiver
      */
     public static synchronized void startup(final Context context)
     {
+		
     	if (Config.getSetting(context, STARTED_KEY, false))
     	{
     		Util.i(null, TAG, "Already started; aborting");
@@ -95,6 +91,28 @@ public class BootIntentReceiver extends BroadcastReceiver
     	}
     	Util.i(null, TAG, "+++Starting Survey Droid+++");
     	Config.putSetting(context, STARTED_KEY, true);
+    	
+    	//set debugging based on the package information
+    	PackageManager pm = context.getPackageManager();
+		ApplicationInfo ai = new ApplicationInfo();
+		try
+		{
+			ai = pm.getApplicationInfo(context.getPackageName(), 0);
+		}
+		catch (NameNotFoundException e)
+		{
+			Util.e(null, TAG, "Invalid package name?!?");
+		}
+		if ((ai.flags & ApplicationInfo.FLAG_DEBUGGABLE) ==
+		        ApplicationInfo.FLAG_DEBUGGABLE )
+		{
+			Config.D = true;
+		}
+		else
+		{
+			Config.D = false;
+		}
+		Util.d(null, "Config", "Application is debuggable");
         
         //start the coms service pulling
         Util.d(null, TAG, "Starting pull service");

@@ -119,7 +119,7 @@ public class LocationTrackerService extends Service
 		}
 		else
 		{
-			Util.w(this, TAG, "Unknown intent action: " + action);
+			Util.w(null, TAG, "Unknown intent action: " + action);
 			if (Config.D) throw new
 				RuntimeException("Unknown intent action: " + action);
 		}
@@ -432,7 +432,7 @@ public class LocationTrackerService extends Service
 						Config.TRACKING_SERVER,
 							Config.TRACKING_SERVER_DEFAULT)*/)
 			{
-				Util.d(LocationTrackerService.this, TAG, "tracking is enabled; logging");
+				Util.d(null, TAG, "tracking is enabled; logging");
 				double lat = loc.getLatitude();
 				double lon = loc.getLongitude();
 				Util.v(null, TAG, "Lat: " + lat + ", long: " + lon);

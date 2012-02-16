@@ -80,7 +80,7 @@ public class ExtrasDBHandler extends SurveyDroidDBHandler
 		}
 		catch (Exception e)
 		{
-			Util.e(contx, TAG, Util.fmt(e));
+			Util.e(null, TAG, Util.fmt(e));
 			return false;
 		}
 		

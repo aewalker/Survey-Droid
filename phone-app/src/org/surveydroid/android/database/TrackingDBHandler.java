@@ -58,7 +58,7 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 	 */
 	public void writeCall(String number, int type, int duration, long time)
 	{
-		Util.d(contx, TAG, "Writing call (type: "
+		Util.d(null, TAG, "Writing call (type: "
 				+ CallLogTable.getCallTypeString(type) + ")");
 
 		ContentValues values = new ContentValues();
@@ -72,7 +72,7 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 
 		if (db.insert(SurveyDroidDB.CALLLOG_TABLE_NAME, null, values) == -1)
 		{
-			Util.e(contx, TAG, "insert error!");
+			Util.e(null, TAG, "insert error!");
 		}
 	}
 
@@ -86,7 +86,7 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 	public void writeLocation(
 			double lat, double lon, double accuracy, long time)
 	{
-		Util.d(contx, TAG, "Writing location: " + lat + ", " + lon);
+		Util.d(null, TAG, "Writing location: " + lat + ", " + lon);
 
 		ContentValues values = new ContentValues();
 
@@ -109,7 +109,7 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 	 */
 	public boolean isNewNumber(String number, boolean texts)
 	{
-		Util.d(contx, TAG, "Looking for " + number);
+		Util.d(null, TAG, "Looking for " + number);
 		
 		String    table    = SurveyDroidDB.CALLLOG_TABLE_NAME;
 		String[]  cols     = {SurveyDroidDB.CallLogTable.PHONE_NUMBER};

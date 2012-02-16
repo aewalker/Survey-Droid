@@ -43,10 +43,10 @@ public class Config
 	//name of the file to write the config to
 	private static final String CONFIG_FILE = "sd.conf";
 	
-	//manual settings; can't be changed programatically
 	/** Is debugging enabled? */
-	public static final boolean D = true;
-
+	public static boolean D = false; 
+	
+	//manual settings; can't be changed programatically
 	/** Format of survey times. */
 	public static final String TIME_FORMAT = "HHmm";
 

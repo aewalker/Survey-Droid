@@ -152,7 +152,7 @@ public class ComsService extends IntentService
 		
 		if (action.equals(ACTION_UPLOAD_DATA))
 		{
-			Util.d(this, TAG, "Uploading data");
+			Util.d(null, TAG, "Uploading data");
 			switch (intent.getIntExtra(EXTRA_DATA_TYPE, -1))
 			{
 			case SURVEY_DATA:

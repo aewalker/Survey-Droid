@@ -115,7 +115,7 @@ public abstract class WebClient
 			}
 			catch (SSLException e)
 			{
-				Util.w(ctxt, TAG, Util.fmt(e));
+				Util.w(null, TAG, Util.fmt(e));
 				//make sure this isn't the recursive call
 				if (!firstCall)
 					throw new ApiException("Untrusted certificate!");
@@ -191,7 +191,7 @@ public abstract class WebClient
 				return postJsonToUrl(ctxt, url, value, false);
 			}
 
-            Util.d(ctxt, TAG, "Content: " + getInputStreamAsString(ctxt,
+            Util.d(null, TAG, "Content: " + getInputStreamAsString(ctxt,
             		response.getEntity().getContent()));
 
             StatusLine status = response.getStatusLine();
@@ -200,7 +200,7 @@ public abstract class WebClient
     	}
     	catch (Exception e)
     	{
-    		Util.e(ctxt, TAG, Util.fmt(e));
+    		Util.e(null, TAG, Util.fmt(e));
     	}
         return false;
     }
@@ -239,7 +239,7 @@ public abstract class WebClient
         }
         catch (IOException e)
         {
-            Util.e(ctxt, TAG, Util.fmt(e));
+            Util.e(null, TAG, Util.fmt(e));
         }
         return new String(content.toByteArray());
     }

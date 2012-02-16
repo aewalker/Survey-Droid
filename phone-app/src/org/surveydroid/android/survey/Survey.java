@@ -191,7 +191,7 @@ public class Survey
                 toDo.add(q_id);
             }
 			Branch newBranch = new Branch(q_id,
-					getConditions(b_id, cMap, seen, toDo, cList)); 
+					getConditions(b_id, cMap, seen, toDo, cList));
 			branches.add(newBranch);
 			bList.add(newBranch);
 			b.moveToNext();

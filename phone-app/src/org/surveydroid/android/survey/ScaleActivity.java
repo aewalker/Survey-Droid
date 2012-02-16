@@ -113,7 +113,7 @@ public abstract class ScaleActivity extends QuestionActivity
 		ans *= (100.0 / (max + 1)); //have to scale the answer
 		
 		survey.answer(ans);
-		Util.d(this, TAG, "answering with " + ans);
+		Util.d(null, TAG, "answering with " + ans);
 	}
 	
 	@Override

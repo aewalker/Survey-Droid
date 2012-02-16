@@ -75,7 +75,7 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 	 */
 	public boolean writeSurvey(int survey_id, int code, long created)
 	{
-		Util.d(contx, TAG, "Writing survey code: survey "
+		Util.d(null, TAG, "Writing survey code: survey "
 				+ survey_id + " marked " + code);
 		
 		//first update the completion percentage if needed

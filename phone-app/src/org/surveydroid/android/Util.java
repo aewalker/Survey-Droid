@@ -33,6 +33,7 @@ import java.util.TimeZone;
 import android.content.Context;
 import android.util.Log;
 //import android.widget.Toast;
+import android.widget.Toast;
 
 /**
  * Contains static, general use functions.
@@ -368,7 +369,6 @@ public final class Util
 	//tries to show a toast message
 	private static void toast(Context c, final String msg)
 	{
-		//this doesn't always work, and there's no way to fix it -Austin
-		//Toast.makeText(c, msg, Toast.LENGTH_SHORT).show();
+		Toast.makeText(c, msg, Toast.LENGTH_LONG).show();
 	}
 }

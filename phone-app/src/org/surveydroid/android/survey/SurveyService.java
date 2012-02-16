@@ -232,7 +232,7 @@ public class SurveyService extends Service
 		}
 		else
 		{
-			Util.w(this, TAG, "Unknown intent action: " + action);
+			Util.w(null, TAG, "Unknown intent action: " + action);
 			if (Config.D) throw new RuntimeException(
 					"Unknown intent action: " + action);
 		}
@@ -246,9 +246,7 @@ public class SurveyService extends Service
 		sInfo.id = intent.getIntExtra(EXTRA_SURVEY_ID, DUMMY_SURVEY_ID);
 		sInfo.type = intent.getIntExtra(EXTRA_SURVEY_TYPE,
 				SURVEY_TYPE_TIMED);
-		sInfo.startTime = intent.getLongExtra(
-				SurveyScheduler.EXTRA_RUNNING_TIME,
-				System.currentTimeMillis());
+		sInfo.startTime = System.currentTimeMillis();
 		if ((!Config.getSetting(this, Config.SURVEYS_LOCAL, true)
 				|| !Config.getSetting(this, Config.SURVEYS_SERVER,
 						Config.SURVEYS_SERVER_DEFAULT))
@@ -280,7 +278,7 @@ public class SurveyService extends Service
 			if (tdbh.writeSurvey(sInfo.id, status,
 					System.currentTimeMillis() / 1000) == false)
 			{
-				Util.e(this, TAG,
+				Util.e(null, TAG,
 						"Failed to write completion record!");
 			}
 			tdbh.close();
@@ -295,8 +293,12 @@ public class SurveyService extends Service
 		}
 		else
 		{
-			sInfo.endTime = sInfo.startTime + intent.getLongExtra(
-					EXTRA_SURVEY_TIMEOUT, timeout * 60 * 1000);
+			//TODO This isn't working now.  In the future, if we want to add
+			//the ability to set timeouts on a per-survey basis, this can be
+			//fixed.
+//			sInfo.endTime = sInfo.startTime + intent.getLongExtra(
+//					EXTRA_SURVEY_TIMEOUT, timeout * 60 * 1000);
+			sInfo.endTime = sInfo.startTime + timeout * 60 * 1000;
 		}
 		if ((currentInfo == null || sInfo.compareTo(currentInfo) > 0)
 				&& !inSurvey)
@@ -329,15 +331,26 @@ public class SurveyService extends Service
 			refreshHandler.removeCallbacks(runRefresh);
 			refreshHandler.removeCallbacks(runRemove);
 			if (currentInfo == null) return;
+			try
+			{
+				if (currentInfo.id == DUMMY_SURVEY_ID)
+				{
+					survey = new Survey(this);
+				}
+				else
+				{
+					survey = new Survey(currentInfo.id, this);
+				}
+			}
+			catch (Exception e)
+			{
+				Util.e(this, TAG, "Error starting survey. "
+						+ "Please give this message to the study "
+						+ "administrator: \"" + e.getMessage() + "\"");
+				currentInfo = null;
+				return;
+			}
 			inSurvey = true;
-			if (currentInfo.id == DUMMY_SURVEY_ID)
-			{
-				survey = new Survey(this);
-			}
-			else
-			{
-				survey = new Survey(currentInfo.id, this);
-			}
 			
 			//update the notification
 			int icon = R.drawable.survey_small;
@@ -471,7 +484,7 @@ public class SurveyService extends Service
 			if (tdbh.writeSurvey(id, status,
 					System.currentTimeMillis() / 1000) == false)
 			{
-				Util.e(this, TAG, "Failed to write completion record!");
+				Util.e(null, TAG, "Failed to write completion record!");
 			}
 		}
 		tdbh.close();
@@ -508,7 +521,7 @@ public class SurveyService extends Service
 	{
 		Util.v(null, TAG, "submitting answers");
 		if (!survey.submit())
-			Util.e(this, TAG, "Survey reports error in submission!");
+			Util.e(null, TAG, "Survey reports error in submission!");
 		
 		//schedule surveys again (just to be safe; it can't hurt)
 		Intent scheduleIntent = new Intent(getApplicationContext(), SurveyScheduler.class);
@@ -555,7 +568,7 @@ public class SurveyService extends Service
 			if (tdbh.writeSurvey(currentInfo.id, status,
 					System.currentTimeMillis() / 1000) == false)
 			{
-				Util.e(this, TAG, "Failed to write completion record!");
+				Util.e(null, TAG, "Failed to write completion record!");
 			}
 			tdbh.close();
 			
@@ -618,7 +631,7 @@ public class SurveyService extends Service
 			if (tdbh.writeSurvey(currentInfo.id, status,
 					System.currentTimeMillis() / 1000) == false)
 			{
-				Util.e(this, TAG, "Failed to write completion record!");
+				Util.e(null, TAG, "Failed to write completion record!");
 			}
 			tdbh.close();
 			uploadNow();
@@ -684,7 +697,7 @@ public class SurveyService extends Service
 					if (tdbh.writeSurvey(sInfo.id, status,
 							System.currentTimeMillis() / 1000) == false)
 					{
-						Util.e(this, TAG, "Failed to write completion record!");
+						Util.e(null, TAG, "Failed to write completion record!");
 					}
 				}
 			}

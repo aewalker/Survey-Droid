@@ -60,7 +60,7 @@ public class StatusDBHandler extends SurveyDroidDBHandler
 	 */
 	public boolean statusChanged(int feature, boolean enabled, long created)
 	{
-		Util.d(contx, TAG, "Writing status change: "
+		Util.d(null, TAG, "Writing status change: "
 				+ feature + " is " + enabled);
 		ContentValues values = new ContentValues();
 		

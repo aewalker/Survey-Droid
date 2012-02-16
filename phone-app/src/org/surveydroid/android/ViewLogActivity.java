@@ -51,7 +51,7 @@ public class ViewLogActivity extends Activity
         }
         catch (Exception e)
         {
-        	Util.e(this, "ViewLogActivty", Util.fmt(e));
+        	Util.e(null, "ViewLogActivty", Util.fmt(e));
         	finish();
         	return;
         }

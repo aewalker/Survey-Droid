@@ -150,7 +150,7 @@ public class SurveyScheduler extends IntentService
 	{
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(time);
-		Util.d(this, TAG, "Scheduling survey "
+		Util.d(null, TAG, "Scheduling survey "
 				+ id + " for " + c.getTime().toLocaleString());
 		
 		Intent surveyIntent = new Intent(getApplicationContext(), SurveyService.class);
@@ -203,7 +203,7 @@ public class SurveyScheduler extends IntentService
 			+ runningTime + ", next run time: " + nextRun);
 		Util.v(null, TAG, "Time difference: "
 				+ ((nextRun - runningTime) / 1000) + "s");
-		Util.d(this, TAG, "Number of surveys found: " + surveys.getCount());
+		Util.d(null, TAG, "Number of surveys found: " + surveys.getCount());
 		while (!surveys.isAfterLast())
 		{
 			int id = surveys.getInt(surveys.getColumnIndexOrThrow(

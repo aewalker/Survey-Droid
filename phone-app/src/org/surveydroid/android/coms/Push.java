@@ -59,7 +59,7 @@ public class Push
      */
     public static boolean pushAnswers(Context ctxt)
     {
-        Util.i(ctxt, TAG, "Pushing answers to server");
+        Util.i(null, TAG, "Pushing answers to server");
         
         TelephonyManager tManager =
         	(TelephonyManager) ctxt.getSystemService(
@@ -68,7 +68,7 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Util.w(ctxt, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Device ID not available");
     		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
@@ -81,7 +81,7 @@ public class Push
 
             JSONArray answersJSON = new JSONArray();
 
-            Util.d(ctxt, TAG, "# of answer to push : "
+            Util.d(null, TAG, "# of answer to push : "
             		+ answers.getCount());
             answers.moveToFirst();
 
@@ -166,7 +166,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Util.e(ctxt, TAG, Util.fmt(e));
+            Util.e(null, TAG, Util.fmt(e));
             if (Config.D)
             	throw new RuntimeException("FATAL ERROR", e);
         }
@@ -184,7 +184,7 @@ public class Push
      */
     public static boolean pushCompletionData(Context ctx)
     {
-    	Util.i(ctx, TAG, "Pushing survey completion data to server");
+    	Util.i(null, TAG, "Pushing survey completion data to server");
     	
     	TelephonyManager tManager =
         	(TelephonyManager) ctx.getSystemService(
@@ -193,7 +193,7 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Device ID not available");
     		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
@@ -206,7 +206,7 @@ public class Push
 
             JSONArray recordsJSON = new JSONArray();
 
-            Util.d(ctx, "Push", "# of results to push : "
+            Util.d(null, "Push", "# of results to push : "
             		+ compData.getCount());
 
             if (compData.getCount() == 0)
@@ -263,7 +263,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Util.e(ctx, TAG, Util.fmt(e));
+            Util.e(null, TAG, Util.fmt(e));
         }
         return false;
     }
@@ -278,7 +278,7 @@ public class Push
      */
     public static boolean pushLocations(Context ctx)
     {
-        Util.i(ctx, TAG, "Pushing locations to server");
+        Util.i(null, TAG, "Pushing locations to server");
         
         TelephonyManager tManager =
         	(TelephonyManager) ctx.getSystemService(
@@ -287,7 +287,7 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Device ID not available");
     		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
@@ -300,7 +300,7 @@ public class Push
 
             JSONArray locationsJSON = new JSONArray();
 
-            Util.d(ctx, "Push", "# of locations to push : "
+            Util.d(null, "Push", "# of locations to push : "
             		+ locations.getCount());
 
             if (locations.getCount() == 0)
@@ -361,7 +361,7 @@ public class Push
         }
         catch (Exception e)
         {
-           Util.e(ctx, TAG, Util.fmt(e));
+           Util.e(null, TAG, Util.fmt(e));
         }
         return false;
     }
@@ -377,7 +377,7 @@ public class Push
      */
     public static boolean pushCallLog(Context ctx)
     {
-        Util.i(ctx, TAG, "Pushing calllog to server");
+        Util.i(null, TAG, "Pushing calllog to server");
         
         TelephonyManager tManager =
         	(TelephonyManager) ctx.getSystemService(
@@ -386,7 +386,7 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Device ID not available");
     		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
@@ -398,7 +398,7 @@ public class Push
             Cursor calls = cdbh.getCalls(true);
             JSONArray callsJSON = new JSONArray();
 
-           Util.d(ctx, TAG, "# of call logs to push : " + calls.getCount());
+           Util.d(null, TAG, "# of call logs to push : " + calls.getCount());
 
             if (calls.getCount() == 0)
             {
@@ -451,7 +451,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Util.e(ctx, TAG, Util.fmt(e));
+            Util.e(null, TAG, Util.fmt(e));
         }
         return false;
     }
@@ -466,7 +466,7 @@ public class Push
      */
     public static boolean pushStatusData(Context ctx)
     {
-    	Util.i(ctx, TAG, "Pushing status data to server");
+    	Util.i(null, TAG, "Pushing status data to server");
     	
     	TelephonyManager tManager =
         	(TelephonyManager) ctx.getSystemService(
@@ -475,7 +475,7 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Device ID not available");
     		Util.w(null, TAG, "Will reschedule and try again later");
     		return false;
     	}
@@ -487,7 +487,7 @@ public class Push
             Cursor records = cdbh.getStatusChanges();
             JSONArray recordsJSON = new JSONArray();
 
-            Util.d(ctx, TAG, "# of status records to push : "
+            Util.d(null, TAG, "# of status records to push : "
             			+ records.getCount());
 
             if (records.getCount() == 0)
@@ -545,7 +545,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Util.e(ctx, TAG, Util.fmt(e));
+            Util.e(null, TAG, Util.fmt(e));
         }
         return false;
     }
@@ -560,7 +560,7 @@ public class Push
      */
     public static boolean pushExtrasData(Context ctx)
     {
-    	Util.i(ctx, TAG, "Pushing extras data to server");
+    	Util.i(null, TAG, "Pushing extras data to server");
     	
     	TelephonyManager tManager =
         	(TelephonyManager) ctx.getSystemService(
@@ -569,7 +569,7 @@ public class Push
     	
     	if (uid == null)
     	{
-    		Util.w(ctx, TAG, "Device ID not available");
+    		Util.w(null, TAG, "Device ID not available");
     		Util.w(null, TAG, "Try again later");
     		return false;
     	}
@@ -591,7 +591,7 @@ public class Push
             {
 	            JSONArray recordsJSON = new JSONArray();
 	
-	            Util.d(ctx, TAG, "pushing extras, round " + i);
+	            Util.d(null, TAG, "pushing extras, round " + i);
 	            
 	            int uploadedID;
 	
@@ -634,7 +634,7 @@ public class Push
         }
         catch (Exception e)
         {
-            Util.e(ctx, TAG, Util.fmt(e));
+            Util.e(null, TAG, Util.fmt(e));
         }
         return false;
     }
