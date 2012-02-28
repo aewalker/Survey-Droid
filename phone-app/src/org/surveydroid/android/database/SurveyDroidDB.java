@@ -603,18 +603,4 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     	super(context, DATABASE_NAME, null, DATABASE_VERSION);
         Util.d(null, TAG, "in constructor");
     }
-
-    //for debugging; want to be able to print out when database is accessed
-    @Override
-    public synchronized SQLiteDatabase getReadableDatabase() {
-    	Util.d(null, TAG, "getReadable");
-    	return super.getReadableDatabase();
-    }
-
-    @Override
-    public synchronized SQLiteDatabase getWritableDatabase() {
-    	Util.d(null, TAG, "getWriteable");
-    	return super.getWritableDatabase();
-    }
-
 }

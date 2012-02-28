@@ -23,6 +23,8 @@
  *****************************************************************************/
 package org.surveydroid.android;
 
+import java.util.TimeZone;
+
 import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.TrackingDBHandler;
@@ -129,13 +131,16 @@ public class CallTracker extends PhoneStateListener
 					    			Config.CALL_LOG_LOCAL, true);
 					    	if (local && server)
 					    	{
-									tdbh.writeCall(number,type,
-										(int) newCalls.getLong(
+					    		long time = newCalls.getLong(
 												newCalls.getColumnIndexOrThrow(
-												CallLog.Calls.DURATION)),
-										newCalls.getLong(
-												newCalls.getColumnIndexOrThrow(
-												CallLog.Calls.DATE)) / 1000);
+												CallLog.Calls.DATE));
+					    		TimeZone tz = TimeZone.getDefault();
+					    		time += tz.getOffset(time);
+								tdbh.writeCall(number,type,
+									(int) newCalls.getLong(
+											newCalls.getColumnIndexOrThrow(
+											CallLog.Calls.DURATION)),
+									  time / 1000);
 					    	}
 							/*
 							 * In the rare case that multiple calls are found
@@ -224,9 +229,7 @@ public class CallTracker extends PhoneStateListener
 		}
 		else if (state != TelephonyManager.CALL_STATE_IDLE)
 		{
-			if (Config.D)
-				throw new RuntimeException("Unkown phone state: " + state);
-			else Util.w(null, TAG, "Unknown phone state: " + state);
+			Util.w(null, TAG, "Unknown phone state: " + state);
 		}
 	}
 }

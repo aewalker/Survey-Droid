@@ -48,6 +48,7 @@ public class IDActivity extends Activity
 	public void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
+		Util.reg(this);
 		
 		//setting the layout of the activity
 		Display display = ((WindowManager)

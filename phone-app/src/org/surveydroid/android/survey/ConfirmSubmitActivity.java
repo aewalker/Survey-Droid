@@ -73,6 +73,7 @@ public class ConfirmSubmitActivity extends Activity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
+		Util.reg(this);
 		Util.d(null, TAG, "Creating ConfirmSubmitActivity");
 		
 		//get the survey

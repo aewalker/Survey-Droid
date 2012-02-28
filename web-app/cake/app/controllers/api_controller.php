@@ -34,8 +34,18 @@ class APIController extends AppController
 	var $components = array('Auth' => array
 	(
 		'authorize' => 'controller',
-		'allowedActions' => array('push', 'pull')
+		'allowedActions' => array('push', 'pull', 'error')
 	));
+    
+	/**
+	 * Override the app_controller beforeFilter() so we can expose error() via HTTP
+	 */
+	function beforeFilter()
+	{
+		//if the user has set the site to use ssl, force https connections
+		if (SSL === true && substr($this->params['url']['url'], -5) != 'error')
+			$this->Ssl->force();
+	}
 	
 	/**
 	 * Returns the subject id if one can be found for the given device id. Sets
@@ -219,6 +229,25 @@ class APIController extends AppController
 		//finally, set the results and possibly the error message for the view
 		$this->set('result', $result);
 		if ($result == false) $this->set('message', $message);
+	}
+	
+	/**
+	 * Used to send information about app crashes to the admin.
+	 */
+	function error()
+	{
+		//code from http://code.google.com/p/android-remote-stacktrace/
+		if (empty($_POST)) return;
+        if ( $_POST['stacktrace'] == "" || $_POST['package_version'] == "" || $_POST['package_name'] == "" ) {
+        	return;
+        }
+//        $random = rand(1000,9999);
+        $version = $_POST['package_version'];
+        $package = $_POST['package_name'];
+//        $handle = fopen($package."-trace-".$version."-".time()."-".$random, "w+");
+//        fwrite($handle, $_POST['stacktrace']);
+//        fclose($handle);
+        mail(ADMIN_EMAIL,"Survey Droid exception received ($version)",$_POST['stacktrace'], "from:no-reply@survey-droid.org");
 	}
 	/* some notes:
 	 * 

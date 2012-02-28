@@ -44,7 +44,10 @@ public class Config
 	private static final String CONFIG_FILE = "sd.conf";
 	
 	/** Is debugging enabled? */
-	public static boolean D = false; 
+	public static boolean D = false;
+	
+	/** Should errors be sent to the admin? */
+	public static boolean REPORT = true;
 	
 	//manual settings; can't be changed programatically
 	/** Format of survey times. */
@@ -407,5 +410,20 @@ public class Config
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat(key, val);
         return editor.commit();
+	}
+	
+	/**
+	 * Deletes the given setting if it exists.
+	 * 
+	 * @param ctxt - the current context
+	 * @param key - the setting to delete
+	 */
+	public static void delSetting(Context ctxt, String key)
+	{
+		SharedPreferences settings = ctxt.getSharedPreferences(
+        		CONFIG_FILE, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.remove(key);
+        editor.commit();
 	}
 }

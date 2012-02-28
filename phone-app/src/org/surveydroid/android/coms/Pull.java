@@ -127,17 +127,26 @@ public class Pull
 	    			}
 	    			return;
 	    		}
-	            SurveyDroidDB pdb = new SurveyDroidDB(ctxt);
-	            SQLiteDatabase sdb = pdb.getWritableDatabase();
-	            //it's important that config be the first thing
-	            syncConfig(sdb, json.getJSONObject("config"), ctxt);
-	            syncSurveys(sdb, json.getJSONArray("surveys"));
-	            syncQuestions(sdb, json.getJSONArray("questions"));
-	            syncChocies(sdb, json.getJSONArray("choices"));
-	            syncBranches(sdb, json.getJSONArray("branches"));
-	            syncConditions(sdb, json.getJSONArray("conditions"));
-	            sdb.close();
-	            pdb.close();
+	    		try
+	    		{
+		            SurveyDroidDB pdb = new SurveyDroidDB(ctxt);
+		            SQLiteDatabase sdb = pdb.getWritableDatabase();
+		            //it's important that config be the first thing
+		            syncConfig(sdb, json.getJSONObject("config"), ctxt);
+		            syncSurveys(sdb, json.getJSONArray("surveys"));
+		            syncQuestions(sdb, json.getJSONArray("questions"));
+		            syncChocies(sdb, json.getJSONArray("choices"));
+		            syncBranches(sdb, json.getJSONArray("branches"));
+		            syncConditions(sdb, json.getJSONArray("conditions"));
+		            sdb.close();
+		            pdb.close();
+	    		}
+	    		catch (Exception e)
+	    		{
+	    			Util.e(null, TAG, "database error during pull:");
+	    			Util.d(ctxt, TAG, "Database error: " + Util.fmt(e, Integer.MAX_VALUE));
+	    			Util.e(null, TAG, Util.fmt(e));
+	    		}
 	            
 	            //run the scheduler
 		    	Util.d(null, TAG, "Starting survey scheduler");
@@ -162,7 +171,7 @@ public class Pull
     	}
     	finally
     	{
-        	c = null;
+        	c = null; //avoids a memory leak
     	}
     }
     

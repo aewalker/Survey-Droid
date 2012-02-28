@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.nullwire.trace.ExceptionHandler;
+
 import android.content.Context;
 import android.util.Log;
 //import android.widget.Toast;
@@ -325,14 +327,14 @@ public final class Util
 		}
 		StackTraceElement[] items = e.getStackTrace();
 		String trace = "";
-		for (int i = 0; i < numLines; i++)
+		for (int i = 0; i < numLines && i < items.length; i++)
 			trace = trace + " :: " + items[i].toString();
 		Throwable c = e.getCause();
 		if (c != null)
 		{
 			trace = trace + " CAUSED BY " + c.toString();
 			StackTraceElement[] cItems = c.getStackTrace();
-			for (int i = 0; i < numLines; i++)
+			for (int i = 0; i < numLines && i < cItems.length; i++)
 			{
 				trace = trace + " :: " + cItems[i].toString();
 			}
@@ -370,5 +372,36 @@ public final class Util
 	private static void toast(Context c, final String msg)
 	{
 		Toast.makeText(c, msg, Toast.LENGTH_LONG).show();
+	}
+	
+	/**
+	 * Register the proper unhandled exception handler for the current thread.
+	 * 
+	 * @param c the current context
+	 */
+	public static void reg(Context c)
+	{
+		try
+		{
+			if (Config.REPORT)
+				ExceptionHandler.register(c, "http://survey-droid.org/api/error");
+			else
+				ExceptionHandler.register(c);
+		}
+		catch (Exception e)
+		{
+			w(null, TAG, "Error registering exception handler");
+			w(null, TAG, "Make sure context is fully created?");
+		}
+	}
+	
+	/**
+	 * @return the current time in millis adjusted for the current timezone
+	 */
+	public static long currentTimeAdjusted()
+	{
+		long time = System.currentTimeMillis();
+		TimeZone tz = TimeZone.getDefault();
+		return time + tz.getOffset(time);
 	}
 }

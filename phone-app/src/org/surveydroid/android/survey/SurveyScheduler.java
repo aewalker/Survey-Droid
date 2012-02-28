@@ -102,6 +102,12 @@ public class SurveyScheduler extends IntentService
 		"org.surveydroid.android.survey.EXTRA_RUNNING_TIME";
 	
 	/**
+	 * Tells the service to reschedule itself.
+	 */
+	public static final String EXTRA_RUN_AGAIN =
+		"org.surveydroid.android.survey.EXTRA_RUN_AGAIN";
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @param name
@@ -114,6 +120,7 @@ public class SurveyScheduler extends IntentService
 	@Override
 	protected void onHandleIntent(Intent intent)
 	{
+		Util.reg(this);
 		String action = intent.getAction();
 		if (action.equals(ACTION_ADD_SURVEY))
 		{
@@ -133,8 +140,7 @@ public class SurveyScheduler extends IntentService
 		}
 		else if (action.equals(ACTION_SCHEDULE_SURVEYS))
 		{
-			long time = intent.getLongExtra(EXTRA_RUNNING_TIME, -1);
-			scheduleSurveys(time);
+			scheduleSurveys(intent.getBooleanExtra(EXTRA_RUN_AGAIN, false));
 		}
 		else
 		{
@@ -186,7 +192,7 @@ public class SurveyScheduler extends IntentService
 	}
 	
 	//look for surveys that need to be scheduled and do so
-	private void scheduleSurveys(long runningTime)
+	private void scheduleSurveys(boolean reschedule)
 	{
 		Util.i(null, TAG, "Scheduling surveys");
 		
@@ -196,13 +202,9 @@ public class SurveyScheduler extends IntentService
 		
 		surveys.moveToFirst();
 		String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-		long nextRun = runningTime + (Config.getSetting(this,
+		long nextRun = System.currentTimeMillis() + (Config.getSetting(this,
 				Config.SCHEDULER_INTERVAL, Config.SCHEDULER_INTERVAL_DEFAULT)
 				* 60 * 1000);
-		Util.v(null, TAG, "Current run time: "
-			+ runningTime + ", next run time: " + nextRun);
-		Util.v(null, TAG, "Time difference: "
-				+ ((nextRun - runningTime) / 1000) + "s");
 		Util.d(null, TAG, "Number of surveys found: " + surveys.getCount());
 		while (!surveys.isAfterLast())
 		{
@@ -302,7 +304,7 @@ public class SurveyScheduler extends IntentService
 		sdbh.close();
 		
 		//make sure to run this again later
-		if (runningTime == -1) return;
+		if (!reschedule) return;
 		Util.d(null, TAG, "rescheduling survey scheduler run");
 		Intent schedulerIntent = new Intent(this, SurveyScheduler.class);
 		schedulerIntent.setAction(ACTION_SCHEDULE_SURVEYS);

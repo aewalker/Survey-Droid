@@ -34,6 +34,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import org.surveydroid.android.coms.ComsService;
+import org.surveydroid.android.survey.SurveyScheduler;
 //import org.surveydroid.android.survey.SurveyScheduler;
 
 /**
@@ -51,6 +52,7 @@ public class BootIntentReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
+    	Util.reg(context);
     	if (!intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
     	{
 			Util.w(null, TAG, "Wrong action: " + intent.getAction());
@@ -168,14 +170,13 @@ public class BootIntentReceiver extends BroadcastReceiver
 		        context.startService(comsPushIntent);
 		        
 		    	//start the survey scheduler
-//		    	Util.d(null, TAG, "Starting survey scheduler");
-//		    	Intent schedulerIntent = new Intent(context,
-//		    			SurveyScheduler.class);
-//		    	schedulerIntent.setAction(
-//		    			SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
-//		    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUNNING_TIME,
-//		    			System.currentTimeMillis());
-//		        context.startService(schedulerIntent);
+		    	Util.d(null, TAG, "Starting survey scheduler");
+		    	Intent schedulerIntent = new Intent(context,
+		    			SurveyScheduler.class);
+		    	schedulerIntent.setAction(
+		    			SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
+		    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUN_AGAIN, true);
+		        context.startService(schedulerIntent);
 	        }
     	};
     	Handler h = new Handler();

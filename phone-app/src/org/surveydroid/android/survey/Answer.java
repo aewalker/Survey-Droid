@@ -28,6 +28,7 @@ import java.util.Collection;
 
 import android.content.Context;
 
+import org.surveydroid.android.Util;
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.SurveyDBHandler;
 
@@ -81,7 +82,7 @@ public class Answer
 		text = t;
 		type = SurveyDroidDB.AnswerTable.TEXT;
 		this.ctxt = ctxt;
-		created = System.currentTimeMillis() / 1000;
+		created = Util.currentTimeAdjusted() / 1000;
 		
 		//unneeded fields
 		value = -1;
@@ -104,7 +105,7 @@ public class Answer
 		value = v;
 		type = SurveyDroidDB.AnswerTable.VALUE;
 		this.ctxt = ctxt;
-		created = System.currentTimeMillis() / 1000;
+		created = Util.currentTimeAdjusted() / 1000;
 		
 		//unneeded fields
 		text = null;
@@ -130,7 +131,7 @@ public class Answer
 		this.choices = choices;
 		choiceIDs = choice_ids;
 		this.ctxt = ctxt;
-		created = System.currentTimeMillis() / 1000;
+		created = Util.currentTimeAdjusted() / 1000;
 		
 		//unneeded fields
 		text = null;

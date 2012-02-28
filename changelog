@@ -1,11 +1,17 @@
 Survey Droid Changelog
 ----------------------
+Version 0.4.3-beta:
+	-Created new mechanism for reporting information about fatal errors. Messages from errors that crashed the app will now be emailed to Austin.
+	-More work on the Survey Service
+	-Technical:
+		-Added trace.jar, which contains the error reporting code under an MIT liscense.
+
 Version 0.6.3-beta:
 	-Badly written surveys should provide a more descriptive error message when they crash.
 	-Hopefully fixed SurveyService issues
 	-Removed send photo option for now
 	-Technical:
-		-Re-enabled log toasts; sent most calls to logging functions to pass in null for the context
+		-Re-enabled log toasts; set most calls to logging functions to pass in null for the context
 		-Config.D is now set at startup by inspecting the manifest file's debuggable key
 
 Version 0.6.2-beta:

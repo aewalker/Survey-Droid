@@ -51,7 +51,7 @@ public abstract class QuestionActivity extends Activity
 	protected static final String TAG = "QuestionActivity";
 	
 	/**
-	 * The survey being ran.  Note that this should not be used until
+	 * The survey being run.  Note that this should not be used until
 	 * {@link #onSurveyLoaded()}.
 	 */
 	protected Survey survey;
@@ -112,10 +112,10 @@ public abstract class QuestionActivity extends Activity
         	else
         	{ //start the next activity
         		survey.prevQuestion();
+        		isDone = true;
         		Intent prevIntent = new Intent(QuestionActivity.this,
         				getNextQusetionClass(survey.getQuestionType()));
         		startActivity(prevIntent);
-        		isDone = true;
         	}
         }
     };
@@ -133,6 +133,7 @@ public abstract class QuestionActivity extends Activity
         	{ //question has been answered properly
         		answer();
         		survey.nextQuestion();
+        		isDone = true;
         		if (!survey.done())
         		{ //still have more questions
         			Intent nextIntent = new Intent(QuestionActivity.this,
@@ -145,7 +146,6 @@ public abstract class QuestionActivity extends Activity
         					ConfirmSubmitActivity.class);
         			startActivity(submitIntent);
         		}
-        		isDone = true;
         	}
         	else
         	{ //no answer has been given
@@ -169,6 +169,7 @@ public abstract class QuestionActivity extends Activity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
+		Util.reg(this);
 		Util.d(null, TAG, "Creating QuestionActivity");
 		
 		//get the survey

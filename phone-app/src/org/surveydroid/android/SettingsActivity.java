@@ -25,7 +25,6 @@
 package org.surveydroid.android;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -64,6 +63,7 @@ public class SettingsActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Util.reg(this);
 
         Util.d(null, TAG, "Starting settings activity");
 
@@ -144,22 +144,18 @@ public class SettingsActivity extends Activity
 			}
 		});
         
-        // Immediately sync data with server
+        // sync now
         if (Config.D)
         {
-	        Button syncNow = (Button) findViewById(R.id.settings_syncButton);
-	        final Context context = this;
-	        syncNow.setOnClickListener(new View.OnClickListener()
+	        Button syncButton = (Button) findViewById(R.id.settings_syncButton);
+	        syncButton.setOnClickListener(new View.OnClickListener()
 	        {
 				@Override
 				public void onClick(View v)
 				{
-					Util.d(null, SettingsActivity.TAG,
-							"Start downloading data intent");
-					final Intent comsPullIntent =
-						new Intent(context, ComsService.class);
-					comsPullIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
-					context.startService(comsPullIntent);
+					Intent syncIntent = new Intent(SettingsActivity.this, ComsService.class);
+					syncIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
+					startService(syncIntent);
 				}
 			});
         }
@@ -211,6 +207,7 @@ public class SettingsActivity extends Activity
     protected void onStop()
     {
     	super.onStop();
+    	
     	//check to see if any of the settings have been changed
     	//if they have, update the database
     	if (surveyChanged || locationChanged || calllogChanged)
@@ -223,7 +220,7 @@ public class SettingsActivity extends Activity
             	boolean enabled =
             		Config.getSetting(this, Config.SURVEYS_LOCAL, true);
         		sdbh.statusChanged(SurveyDroidDB.StatusTable.SURVEYS,
-        				enabled, System.currentTimeMillis() / 1000);
+        				enabled, Util.currentTimeAdjusted() / 1000);
         		surveyChanged = false;
         	}
         	
@@ -232,7 +229,7 @@ public class SettingsActivity extends Activity
         		boolean enabled =
             		Config.getSetting(this, Config.TRACKING_LOCAL, true);
         		sdbh.statusChanged(SurveyDroidDB.StatusTable.LOCATION_TRACKING,
-        				enabled, System.currentTimeMillis() / 1000);
+        				enabled, Util.currentTimeAdjusted() / 1000);
         		locationChanged = false;
         	}
         	
@@ -241,7 +238,7 @@ public class SettingsActivity extends Activity
         		boolean enabled =
             		Config.getSetting(this, Config.CALL_LOG_LOCAL, true);
         		sdbh.statusChanged(SurveyDroidDB.StatusTable.CALL_LOGGING,
-        				enabled, System.currentTimeMillis() / 1000);
+        				enabled, Util.currentTimeAdjusted() / 1000);
         		calllogChanged = false;
         	}
         	

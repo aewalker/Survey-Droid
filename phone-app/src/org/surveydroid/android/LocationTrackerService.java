@@ -88,6 +88,7 @@ public class LocationTrackerService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
+		Util.reg(this);
 		if (intent == null)
 		{
 			Intent restartIntent =
@@ -120,8 +121,6 @@ public class LocationTrackerService extends Service
 		else
 		{
 			Util.w(null, TAG, "Unknown intent action: " + action);
-			if (Config.D) throw new
-				RuntimeException("Unknown intent action: " + action);
 		}
 	}
 	
@@ -153,30 +152,6 @@ public class LocationTrackerService extends Service
 			return (this.start - that.start);
 		}
 	}
-	
-//	//returns day as string by converting using the Calendar constants
-//	private static String getDay(int day)
-//	{
-//		switch (day)
-//		{
-//		case Calendar.SUNDAY:
-//			return "Sun";
-//		case Calendar.MONDAY:
-//			return "Mon";
-//		case Calendar.TUESDAY:
-//			return "Tue";
-//		case Calendar.WEDNESDAY:
-//			return "Wed";
-//		case Calendar.THURSDAY:
-//			return "Thu";
-//		case Calendar.FRIDAY:
-//			return "Fri";
-//		case Calendar.SATURDAY:
-//			return "Sat";
-//		default:
-//			throw new IllegalArgumentException("Invalid day: " + day);
-//		}
-//	}
 	
 	//fix the times so that they don't overlap
 	private void coalesceTimes()
@@ -298,8 +273,7 @@ public class LocationTrackerService extends Service
 				}
 				catch (NumberFormatException e)
 				{
-					throw new RuntimeException(
-							"No time tracked for time " + i);
+					throw new RuntimeException("No time tracked for time " + i);
 				}
 				times[i * 2] = start;
 				times[(i * 2) + 1] = end;
@@ -307,9 +281,7 @@ public class LocationTrackerService extends Service
 			
 			//now we have the final collection of times that don't overlap
 			//figure out what the current time is and act accordingly
-			Calendar now = Calendar.getInstance(
-					TimeZone.getDefault(), Locale.US);
-			now.setTimeInMillis(System.currentTimeMillis());
+			Calendar now = Calendar.getInstance();
 			int hour = now.get(Calendar.HOUR_OF_DAY);
 			int mins = now.get(Calendar.MINUTE);
 			
@@ -460,8 +432,9 @@ public class LocationTrackerService extends Service
 							thisLat == -1.0 ||
 							thisRad == -1.0)
 						{
-							throw new RuntimeException("cannot find location "
-									+ "tracking value for location index" + i);
+							throw new RuntimeException(
+									"cannot find location tracking value "
+									+ "for location index" + i);
 						}
 						
 						//now see if the incoming location

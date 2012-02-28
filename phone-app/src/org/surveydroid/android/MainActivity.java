@@ -69,6 +69,7 @@ public class MainActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Util.reg(this);
 
         Util.d(null, TAG, "starting mainActivity");
         if (!Config.getSetting(this, BootIntentReceiver.STARTED_KEY, false))
@@ -219,7 +220,8 @@ public class MainActivity extends Activity
 	
 	//getPhotoUri gets a Uri where a photo can be stored
 	//if one can't be found, then it returns null
-    private Uri getPhotoUri()
+    @SuppressWarnings("unused")
+	private Uri getPhotoUri()
     {
     	File tempDir = Environment.getExternalStorageDirectory();
         tempDir = new File(tempDir.getAbsolutePath()
@@ -308,7 +310,7 @@ public class MainActivity extends Activity
             ExtrasDBHandler edbh = new ExtrasDBHandler(this);
             edbh.openWrite();
             if (!edbh.writePhoto(bitmap,
-            		System.currentTimeMillis() / 1000, highRes))
+            		Util.currentTimeAdjusted() / 1000, highRes))
             {
             	Util.e(null, TAG, "Error writing photo to database");
             	errorToast("save");

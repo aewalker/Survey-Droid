@@ -23,19 +23,14 @@
  *****************************************************************************/
 package org.surveydroid.android.coms;
 
-import java.io.File;
-//import java.util.Calendar;
-
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import org.surveydroid.android.Config;
 import org.surveydroid.android.Util;
-import org.surveydroid.android.ViewLogActivity;
 
 /**
  * Communication service that is responsible for communicating with the
@@ -116,36 +111,37 @@ public class ComsService extends IntentService
 	//atempts to send Austin the logs
 	private void sendLog()
 	{
-		File log = new File(Util.LOGFILE);
-		if (log.length() > 10000) //don't let the file get over 10K
-		{
-			Intent emailIntent =
-				new Intent(android.content.Intent.ACTION_SEND);
-			emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			emailIntent.setType("plain/text");
-			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-					new String[] {"awalkerenator@gmail.com"});
-			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-					"Survey Droid Log");
-			try
-			{
-				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-						ViewLogActivity.readLogFile());
-			}
-			catch (Exception e)
-			{
-				Log.w(TAG, "Can't read log file");
-				return;
-			}
-			this.startActivity(Intent.createChooser(emailIntent,
-					"Send Survey Droid Log"));
-			log.delete();
-		}
+//		File log = new File(Util.LOGFILE);
+//		if (log.length() > 10000) //don't let the file get over 10K
+//		{
+//			Intent emailIntent =
+//				new Intent(android.content.Intent.ACTION_SEND);
+//			emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			emailIntent.setType("plain/text");
+//			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+//					new String[] {"awalkerenator@gmail.com"});
+//			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+//					"Survey Droid Log");
+//			try
+//			{
+//				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+//						ViewLogActivity.readLogFile());
+//			}
+//			catch (Exception e)
+//			{
+//				Log.w(TAG, "Can't read log file");
+//				return;
+//			}
+//			this.startActivity(Intent.createChooser(emailIntent,
+//					"Send Survey Droid Log"));
+//			log.delete();
+//		}
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent)
 	{
+		Util.reg(this);
 		if (Config.D) sendLog();
 		
 		String action = intent.getAction();
