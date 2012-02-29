@@ -193,7 +193,7 @@ public class Answer
     	if (questionID == 0) return true;
     	
     	SurveyDBHandler db = new SurveyDBHandler(ctxt);
-    	db.openWrite();
+    	db.open();
     	boolean worked = false;
     	switch (type)
     	{

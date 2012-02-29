@@ -114,7 +114,7 @@ public class CallTracker extends PhoneStateListener
 						//this code should only log calls other than the last
 						//one if they are from old numbers
 						TrackingDBHandler tdbh = new TrackingDBHandler(ctxt);
-						tdbh.openWrite();
+						tdbh.open();
 						newCalls.moveToFirst();
 						while (!newCalls.isAfterLast())
 						{

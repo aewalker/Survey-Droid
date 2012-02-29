@@ -199,7 +199,7 @@ public class MainActivity extends Activity
     	//do this here so the bar updates after a survey is
     	//finished without having to restart the activity
         TakenDBHandler tdbh = new TakenDBHandler(this);
-        tdbh.openRead();
+        tdbh.open();
         int p = tdbh.getCompletionRate();
         tdbh.close();
         VerticalProgressBar progress = (VerticalProgressBar)
@@ -308,7 +308,7 @@ public class MainActivity extends Activity
             
             //we have a picture at this point!
             ExtrasDBHandler edbh = new ExtrasDBHandler(this);
-            edbh.openWrite();
+            edbh.open();
             if (!edbh.writePhoto(bitmap,
             		Util.currentTimeAdjusted() / 1000, highRes))
             {

@@ -213,7 +213,7 @@ public class SettingsActivity extends Activity
     	if (surveyChanged || locationChanged || calllogChanged)
     	{
     		StatusDBHandler sdbh = new StatusDBHandler(this);
-            sdbh.openWrite();
+            sdbh.open();
             
             if (surveyChanged)
         	{

@@ -168,7 +168,7 @@ public class Choice
 	public boolean hasEverBeen(int id)
 	{
 		SurveyDBHandler db = new SurveyDBHandler(ctxt);
-		db.openRead();
+		db.open();
 		Cursor c = db.getQuestionHistory(id);;
 		c.moveToFirst();
 		while (!c.isAfterLast())

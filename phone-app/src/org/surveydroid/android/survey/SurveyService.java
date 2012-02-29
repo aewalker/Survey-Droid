@@ -307,7 +307,7 @@ public class SurveyService extends Service
 				return;
 			}
 			TakenDBHandler tdbh = new TakenDBHandler(this);
-			tdbh.openWrite();
+			tdbh.open();
 			if (tdbh.writeSurvey(sInfo.id, status,
 					Util.currentTimeAdjusted() / 1000) == false)
 			{
@@ -505,7 +505,7 @@ public class SurveyService extends Service
 		refreshHandler.removeCallbacks(runRefresh);
 		refreshHandler.removeCallbacks(runRemove);
 		TakenDBHandler tdbh = new TakenDBHandler(this);
-		tdbh.openWrite();
+		tdbh.open();
 		int id = currentInfo.id;
 		int type = currentInfo.type;
 		if (id != DUMMY_SURVEY_ID && type != SURVEY_TYPE_USER_INIT)
@@ -598,7 +598,7 @@ public class SurveyService extends Service
 		if (currentInfo.id != DUMMY_SURVEY_ID)
 		{
 			TakenDBHandler tdbh = new TakenDBHandler(this);
-			tdbh.openWrite();
+			tdbh.open();
 			int status;
 			switch (currentInfo.type)
 			{
@@ -665,7 +665,7 @@ public class SurveyService extends Service
 		if (currentInfo.id != DUMMY_SURVEY_ID)
 		{
 			TakenDBHandler tdbh = new TakenDBHandler(this);
-			tdbh.openWrite();
+			tdbh.open();
 			int status;
 			switch (currentInfo.type)
 			{
@@ -724,7 +724,7 @@ public class SurveyService extends Service
 			currentInfo = null;
 		}
 		TakenDBHandler tdbh = new TakenDBHandler(this);
-		tdbh.openWrite();
+		tdbh.open();
 		while (true)
 		{
 			SurveyInfo sInfo = surveys.poll();
@@ -774,7 +774,7 @@ public class SurveyService extends Service
 		tdbh.close();
 		uploadNow();
 		if (!surveys.isEmpty())
-		{
+		{ 
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			refresh();

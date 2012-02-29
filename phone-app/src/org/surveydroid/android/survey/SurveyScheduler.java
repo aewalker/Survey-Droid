@@ -197,7 +197,7 @@ public class SurveyScheduler extends IntentService
 		Util.i(null, TAG, "Scheduling surveys");
 		
 		SurveyDBHandler sdbh = new SurveyDBHandler(this);
-		sdbh.openRead();
+		sdbh.open();
 		Cursor surveys = sdbh.getSurveys();
 		
 		surveys.moveToFirst();

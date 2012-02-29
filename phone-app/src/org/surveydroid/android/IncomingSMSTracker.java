@@ -88,7 +88,7 @@ public class IncomingSMSTracker extends BroadcastReceiver
 
 		// write the message record to database
 		TrackingDBHandler tdbh = new TrackingDBHandler(ctxt);
-		tdbh.openWrite();
+		tdbh.open();
 		for (int i = 0; i < messages.length; i++)
 		{
 			tdbh.writeCall(smsMessage[i].getOriginatingAddress(),

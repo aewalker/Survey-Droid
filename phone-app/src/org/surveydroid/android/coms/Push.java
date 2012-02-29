@@ -76,7 +76,7 @@ public class Push
         try
         {
         	ComsDBHandler cdbh = new ComsDBHandler(ctxt);
-            cdbh.openRead();
+            cdbh.open();
             Cursor answers = cdbh.getNewAnswers();
 
             JSONArray answersJSON = new JSONArray();
@@ -155,7 +155,7 @@ public class Push
             // mark answers as uploaded if appropriate
             if (success)
             {
-            	cdbh.openWrite();
+            	cdbh.open();
                 for (int i = 0; i < uploadedIDs.length; i++)
                 {
                     cdbh.updateAnswer(uploadedIDs[i]);
@@ -201,7 +201,7 @@ public class Push
         try
         {
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
-            cdbh.openRead();
+            cdbh.open();
             Cursor compData = cdbh.getNewCompletionData();
 
             JSONArray recordsJSON = new JSONArray();
@@ -252,7 +252,7 @@ public class Push
             // delete records if appropriate
             if (success)
             {
-            	cdbh.openWrite();
+            	cdbh.open();
                 for (int i = uploadedIDs.length - 1; i >= 0; i--)
                 {
                 	cdbh.delCompletionRecord(uploadedIDs[i]);
@@ -295,7 +295,7 @@ public class Push
         try
         {
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
-            cdbh.openRead();
+            cdbh.open();
             Cursor locations = cdbh.getLocations();
 
             JSONArray locationsJSON = new JSONArray();
@@ -350,7 +350,7 @@ public class Push
             // delete locations if appropriate
             if (success)
             {
-            	cdbh.openWrite();
+            	cdbh.open();
                 for (int i = 0; i < uploadedIDs.length; i++)
                 {
                     cdbh.delLocation(uploadedIDs[i]);
@@ -394,7 +394,7 @@ public class Push
         try
         {
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
-            cdbh.openRead();
+            cdbh.open();
             Cursor calls = cdbh.getCalls(true);
             JSONArray callsJSON = new JSONArray();
 
@@ -443,7 +443,7 @@ public class Push
             // delete calls if appropriate
             if (success)
             {
-            	cdbh.openWrite();
+            	cdbh.open();
                 cdbh.delDuplicateCalls();
                 cdbh.close();
             }
@@ -483,7 +483,7 @@ public class Push
         try
         {
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
-            cdbh.openRead();
+            cdbh.open();
             Cursor records = cdbh.getStatusChanges();
             JSONArray recordsJSON = new JSONArray();
 
@@ -534,7 +534,7 @@ public class Push
             // delete records if appropriate
             if (success)
             {
-            	cdbh.openWrite();
+            	cdbh.open();
                 for (int i = 0; i < uploadedIDs.length; i++)
                 {
                     cdbh.delStatusChange(uploadedIDs[i]);
@@ -579,7 +579,7 @@ public class Push
     		//we have to be very careful here because extras could
     		//be very large items, and we don't want to run out of memory
             ComsDBHandler cdbh = new ComsDBHandler(ctx);
-            cdbh.openRead();
+            cdbh.open();
             Cursor records = cdbh.getNextExtra();
             if (records == null)
             {
@@ -624,7 +624,7 @@ public class Push
 	
 	            // delete records if appropriate
 	            if (!success) return false;
-            	cdbh.openWrite();
+            	cdbh.open();
                 cdbh.delExtra(uploadedID);
                 records = cdbh.getNextExtra();
                 cdbh.close();

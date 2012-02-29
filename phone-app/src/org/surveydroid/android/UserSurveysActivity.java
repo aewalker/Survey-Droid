@@ -76,7 +76,7 @@ public class UserSurveysActivity extends ListActivity
         
         //set the list data
         SurveyDBHandler sdbh = new SurveyDBHandler(this);
-        sdbh.openRead();
+        sdbh.open();
         Cursor surveys = sdbh.getSubjectInitSurveys();
         //remember to add one so we can insert the sample survey
         int count = surveys.getCount();

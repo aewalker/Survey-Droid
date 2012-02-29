@@ -469,7 +469,7 @@ public class LocationTrackerService extends Service
 					Util.d(null, TAG, "Storing location");
 					TrackingDBHandler tdbh =
 						new TrackingDBHandler(LocationTrackerService.this);
-					tdbh.openWrite();
+					tdbh.open();
 					tdbh.writeLocation(lat, lon, loc.getAccuracy(),
 							loc.getTime() / 1000);
 					tdbh.close();

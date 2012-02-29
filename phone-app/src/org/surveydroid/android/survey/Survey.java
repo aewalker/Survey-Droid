@@ -117,7 +117,7 @@ public class Survey
 		//open up a database helper
 		this.ctxt = ctxt;
 		db = new SurveyDBHandler(ctxt);
-		db.openRead();
+		db.open();
 
 		//start out by getting the survey level stuff done
 		Cursor s = db.getSurvey(id);

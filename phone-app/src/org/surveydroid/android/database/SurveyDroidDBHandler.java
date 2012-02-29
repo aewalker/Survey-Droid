@@ -45,7 +45,9 @@ public class SurveyDroidDBHandler
 	//logging tag
 	private static final String TAG = "SurveyDroidDBHandler";
 	
-	private SurveyDroidDB pdb;
+	private static SurveyDroidDB pdb;
+	
+	private static Integer openCount = 0;
 	
 	/**
 	 * The {@link Context} this handler was created with; used for database
@@ -54,7 +56,7 @@ public class SurveyDroidDBHandler
 	protected Context contx;
 	
 	/** The {@link SQLiteDatabase} used to make database calls. */
-	protected SQLiteDatabase db;
+	protected static SQLiteDatabase db;
 	
 	/**
 	 * Simple constructor.
@@ -67,23 +69,20 @@ public class SurveyDroidDBHandler
 	}
 	
 	/**
-	 * Open a read/write connection to the database.
+	 * Open a database connection
 	 */
-	public void openWrite()
+	public void open()
 	{
 		Util.d(null, TAG, "opening read/write database connection");
-		pdb = new SurveyDroidDB(contx);
-		db  = pdb.getWritableDatabase();
-	}
-	
-	/**
-	 * Open a read-only connection to the database.
-	 */
-	public void openRead()
-	{
-		Util.d(null, TAG, "opening read-only database connection");
-		pdb = new SurveyDroidDB(contx);
-		db  = pdb.getReadableDatabase();
+		synchronized(openCount)
+		{
+			if (openCount == 0)
+			{
+				pdb = new SurveyDroidDB(contx.getApplicationContext());
+				db  = pdb.getWritableDatabase();
+			}
+			openCount++;
+		}
 	}
 
 	/**
@@ -93,7 +92,14 @@ public class SurveyDroidDBHandler
 	public void close()
 	{
 		Util.d(null, TAG, "closing database connection");
-		db.close();
-		pdb.close();
+		synchronized(openCount)
+		{
+			openCount--;
+			if (openCount == 0)
+			{
+				db.close();
+				pdb.close();
+			}
+		}
 	}
 }
