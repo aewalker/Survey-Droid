@@ -2,7 +2,7 @@ Ext.define("SD.view.data.LocationsTab", {
     alias: 'widget.dataLocationsTab',
     extend: "Ext.panel.Panel",
     requires: ['Ext.selection.CheckboxModel', 'Ext.grid.column.Date', 'Ext.grid.column.Template'],
-    title: 'Location (Only )',
+    title: 'Location (Only the last 300 are displayed)',
     layout: 'border',
     items: [{
         region: 'west',
