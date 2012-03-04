@@ -32,10 +32,6 @@
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
-// Aliasing Api to answers for backwork compatibility
-
-    Router::connect('/answers/:action/*', array('controller' => 'api', 'action' => 'index'));
-
 // RESTful routes
     // Index
     Router::connect("/rest/:controller",
