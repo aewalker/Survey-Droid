@@ -21,6 +21,15 @@ Ext.define('SD.controller.Data', {
             '#locationsTab #subjectFilter': {
                 selectionchange: me.filterLocations
             },
+            '#callsTab #subjectFilter': {
+                selectionchange: me.filterCalls
+            },
+            '#statuschangesTab #subjectFilter': {
+                selectionchange: me.filterStatusChanges
+            },
+            '#surveystakenTab #subjectFilter': {
+                selectionchange: me.filterSurveysTaken
+            },
             '#callsTab': {
                 activate: function() { me.loadIfEmpty('Calls'); }
             },
@@ -75,5 +84,15 @@ Ext.define('SD.controller.Data', {
     },
     filterLocations: function() {
         console.log("filtering locations");
+    },
+    filterCalls: function() {
+        console.log("filtering calls");
+    },
+    filterStatusChanges: function() {
+        console.log("filtering status changes");
+    },
+    filterSurveysTaken: function() {
+        console.log("filtering surveys taken");
     }
+
 });
