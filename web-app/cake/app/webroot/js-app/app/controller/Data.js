@@ -12,11 +12,14 @@ Ext.define('SD.controller.Data', {
     init: function() {
         var me = this;
         me.control({
-            '#subjectFilter': {
+            '#answersTab #subjectFilter': {
                 selectionchange: me.filterAnswers
             },
-            '#surveyFilter': {
+            '#answersTab #surveyFilter': {
                 selectionchange: me.filterAnswers
+            },
+            '#locationsTab #subjectFilter': {
+                selectionchange: me.filterLocations
             },
             '#callsTab': {
                 activate: function() { me.loadIfEmpty('Calls'); }
@@ -50,7 +53,7 @@ Ext.define('SD.controller.Data', {
     },
     onLaunch: function() {
         this.getMainTabs().setActiveTab('dataTab');
-        // this.getDataTab().setActiveTab('callsTab');
+        this.getDataTab().setActiveTab('locationsTab');
     },
     loadIfEmpty: function(storeName) {
         var store = Ext.getStore(storeName);
@@ -69,5 +72,8 @@ Ext.define('SD.controller.Data', {
             filters.push({ property: 'subject_id', value: subject.getId(), exactMatch: true });
         if (!Ext.isEmpty(filters))
             answers.filter(filters)
+    },
+    filterLocations: function() {
+        console.log("filtering locations");
     }
 });
