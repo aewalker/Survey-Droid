@@ -67,7 +67,7 @@ class APIController extends AppController
 			//now, make sure the given deviceId is registered to a subject
 			$subjectid = $this->Subject->find('first', array
 			(
-				'conditions' => array('device_id' => $deviceid),
+				'conditions' => array('device_id' => $deviceid, 'is_inactive' => false),
 				'fields' => array('id')
 			));
 			$subjectid = $subjectid['Subject']['id'];

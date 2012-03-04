@@ -38,6 +38,13 @@ Ext.define("SD.view.subject.Tab", {
             text: 'Device Id',
             dataIndex: 'device_id',
             editor: {}
+        }, {
+            text: 'Inactive?',
+            dataIndex: 'isInactive',
+            xtype: 'booleancolumn',
+            trueText: 'Yes',
+            falseText: 'No',
+            editor: {}
         }
     ],
     plugins: [
