@@ -1,0 +1,1 @@
+alter table subjects add column `is_inactive` tinyint(1) NOT NULL;

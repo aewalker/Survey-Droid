@@ -45,6 +45,63 @@ class CallsController extends AppController
         }
         e(json_encode($arr));
     }
+
+    /** csv dump */
+    function dump() {
+        $this->autoRender = false;
+        ini_set('max_execution_time', 600); //increase max_execution_time to 10 min if data set is very large
+
+        $modelClass = $this->modelClass;
+        $filename = $modelClass . "_dump_".date("Y.m.d").".csv";
+        
+        header('Content-type: application/csv');
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+
+
+        $models = $this->$modelClass->find('all', array(
+            'recursive' => 0,
+            'order' => 'Call.created DESC'
+        ));
+
+        // custom stuff
+        $csv_file = fopen('php://output', 'w');
+        $headers = array('Time', 'Subject Id', 'Subject', 'Contact ID', 'Call Type', 'Call Duration (in seconds)');
+        fputcsv($csv_file, $headers, ',', '"');
+
+        foreach($models as $item) {
+            $row = array();
+            $row[] = $item['Call']['created']; // Time
+
+            $row[] = $item['Call']['subject_id']; // Subject Id
+            $row[] = $item['Subject']['first_name'] ." ". $item['Subject']['last_name']; // Subject
+            $row[] = $item['Call']['contact_id']; // Contact Id
+
+            switch ($item['Call']['type']) { // Call type
+                case 1:
+                    $row[] = 'Incoming Call';
+                    break;
+                case 2:
+                    $row[] = 'Outgoing Call';
+                    break;
+                case 3:
+                    $row[] = 'Missed Call';
+                    break;
+                case 4:
+                    $row[] = 'Incoming Text';
+                    break;
+                case 5:
+                    $row[] = 'Outoing Text';
+                    break;
+                default:
+                    $row[] = 'Undefined Type';
+            }
+
+            $row[] = $item['Call']['duration']; // Call duration
+            
+            fputcsv($csv_file,$row,',','"');
+        }
+        fclose($csv_file);
+    }
 }
 
 ?>
