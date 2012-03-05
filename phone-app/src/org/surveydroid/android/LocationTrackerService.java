@@ -23,8 +23,8 @@
  *****************************************************************************/
 package org.surveydroid.android;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.ArrayList;
+//import java.util.Arrays;
 import java.util.Calendar;
 
 import org.surveydroid.android.coms.ComsService;
@@ -189,7 +189,7 @@ public class LocationTrackerService extends Service
 			PendingIntent.getService(this, 0, sendIntent, 0);
 		
 		long offset = Config.getSetting(this, Config.LOCATION_INTERVAL,
-				Config.LOCATION_INTERVAL_DEFAULT);
+				Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000;
 		
 		as.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + offset,
 				pendingSend);
@@ -390,6 +390,8 @@ public class LocationTrackerService extends Service
 	 */
 	private void coalesceTimes()
 	{
+		//FIXME
+		/*
 		//get the number of times we're looking at
 		int numTimes = Config.getSetting(this,
 				Config.NUM_TIMES_TRACKED, 0);
@@ -449,7 +451,7 @@ public class LocationTrackerService extends Service
 			Util.v(null, TAG, "Time period: " + time.start
 					+ " to " + time.end);
 			i++;
-		}
+		}*/
 		Config.putSetting(this, TIMES_COALESCED, true);
 	}
 	

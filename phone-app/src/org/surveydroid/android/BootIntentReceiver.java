@@ -192,7 +192,7 @@ public class BootIntentReceiver extends BroadcastReceiver
 	        }
     	};
     	Handler h = new Handler();
-    	h.postDelayed(level2, 10 * 1000);
+    	h.postDelayed(level2, 30 * 1000);
     	h.postDelayed(level3, 2 * 60 * 1000);
     }
 }
