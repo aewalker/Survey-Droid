@@ -1,6 +1,15 @@
 Survey Droid Changelog
 ----------------------
-Version 0.4.3-beta:
+Version 0.7.0-beta:
+	-Fixed SurveySurvice
+	-Technical:
+		-Converted SurveyService to use Alarms instead of Handlers; this seems to solve all the timing bugs.
+
+Version 0.6.5-beta:
+    -Technical:
+        -Fixed race condition during database access.
+
+Version 0.6.4-beta:
 	-Created new mechanism for reporting information about fatal errors. Messages from errors that crashed the app will now be emailed to Austin.
 	-More work on the Survey Service
 	-Technical:

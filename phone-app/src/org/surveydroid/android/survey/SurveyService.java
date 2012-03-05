@@ -35,6 +35,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 
 import org.surveydroid.android.R;
@@ -141,7 +142,8 @@ public class SurveyService extends Service
 	private SurveyInfo currentInfo;
 	
 	//used for refreshing the notification bar
-	private Handler refreshHandler = new Handler();
+	private HandlerThread ht = new HandlerThread("SurveyService Refresh Thread");
+	private Handler refreshHandler;
 	private Runnable runRefresh = new Runnable()
 	{
 		@Override
@@ -168,20 +170,22 @@ public class SurveyService extends Service
 		}
 	};
 	
-	//the binder to send to clients
+	/** The binder to send to clients ({@link QuestionActivity} extensions). */
 	private final SurveyBinder surveyBinder = new SurveyBinder();
 	
-	//logging tag
+	/** logging tag */
 	private static final String TAG = "SurveyService";
 	
-	//surveys that are ready or running
+	/** Surveys that are ready but not running */
 	private final PriorityBlockingQueue<SurveyInfo> surveys =
 		new PriorityBlockingQueue<SurveyInfo>();
 	
-	//the notification id (only need one)
+	/** The notification id to use */
 	private static final int N_ID = 0;
 	
-	//holds info about a survey instance
+	/**
+	 * Data class that holds info about a survey instance.
+	 */
 	private class SurveyInfo implements Comparable<SurveyInfo>
 	{
 		int id;             //survey id
@@ -196,11 +200,11 @@ public class SurveyService extends Service
 			{
 				if (that.endTime == Config.SURVEY_TIMEOUT_NEVER)
 				{
-					return (int) (that.startTime - this.startTime);
+					return (int) (this.startTime - that.startTime);
 				}
-				return -1;
+				return 1;
 			}
-			return (int) (that.endTime - this.endTime);
+			return (int) (this.endTime - that.endTime);
 		}
 		
 		public boolean equals(Object that)
@@ -228,15 +232,24 @@ public class SurveyService extends Service
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
 		Util.reg(this);
+		if(!ht.isAlive())
+		{
+			ht.start();
+			refreshHandler = new Handler(ht.getLooper());
+		}
 		handleIntent(intent);
 		//TODO because this service is so complex, just let it die if it
 		//gets killed.  In the future, it would be better to deal with it.
 		return START_NOT_STICKY;
 	}
 	
-	//handle the incoming intents one by one
-	//this is basically a cheap way of turning this into an IntentService
-	//but keeping the ability to use binding
+	/**
+	 * Handle the incoming intents one by one; this is basically a cheap way of
+	 * turning this into an {@link IntentService}, but keeping the ability to
+	 * use binding.
+	 * 
+	 * @param intent the received intent
+	 */
 	private synchronized void handleIntent(Intent intent)
 	{
 		String action = intent.getAction();
@@ -267,7 +280,11 @@ public class SurveyService extends Service
 		}
 	}
 	
-	//adds a new survey to the list (or not if surveys are off)
+	/**
+	 * Adds a new survey to the list (or not if surveys are off)
+	 * 
+	 * @param intent the intent holding the survey info
+	 */
 	private void addSurvey(Intent intent)
 	{
 		Util.d(null, TAG, "adding survey");
@@ -339,6 +356,11 @@ public class SurveyService extends Service
 		}
 		Util.v(null, TAG, "current time is " + System.currentTimeMillis());
 		Util.v(null, TAG, "new survey: " + sInfo);
+		if (inSurvey)
+		{
+			surveys.add(sInfo);
+			return;
+		}
 		if (currentInfo == null)
 		{
 			currentInfo = sInfo;
@@ -357,8 +379,9 @@ public class SurveyService extends Service
 		}
 	}
 	
-	//starts the survey
-	//removes the survey that will time out soonest from the queue
+	/**
+	 * Starts the current survey.
+	 */
 	private void startSurvey()
 	{
 		if (currentInfo == null)
@@ -429,7 +452,9 @@ public class SurveyService extends Service
 		startActivity(surveyIntent);
 	}
 	
-	//refresh the notification bar
+	/**
+	 * Refresh the notification for the current survey
+	 */
 	private void refresh()
 	{
 		if (inSurvey)
@@ -478,23 +503,27 @@ public class SurveyService extends Service
 		nm.notify(N_ID, notification);
 		
 		//now reschedule the refresh if needed
-		long refreshInterval = Config.getSetting(this, Config.REFRESH_INTERVAL,
-				Config.REFRESH_INTERVAL_DEFAULT) * 60 * 1000;
-		Util.v(null, TAG, "time left on current survey: " + (currentInfo.endTime - System.currentTimeMillis()));
-		if (currentInfo.endTime > System.currentTimeMillis() +
-				refreshInterval || currentInfo.endTime == Config.SURVEY_TIMEOUT_NEVER)
+		long refreshInterval = /*Config.getSetting(this, Config.REFRESH_INTERVAL,
+				Config.REFRESH_INTERVAL_DEFAULT)*/ 10 * 60 * 1000;
+		Util.v(null, TAG, "time left on current survey: " + (currentInfo.endTime - when));
+		if (currentInfo.endTime > when + refreshInterval ||
+				currentInfo.endTime == Config.SURVEY_TIMEOUT_NEVER)
 		{
 			Util.v(null, TAG, "go for refresh again");
-			refreshHandler.postDelayed(runRefresh, refreshInterval);
+			if (refreshHandler.postDelayed(runRefresh, refreshInterval) == false)
+				throw new RuntimeException("Failed to post to handler!");
 		}
 		else
 		{
 			Util.v(null, TAG, "go for remove");
-			refreshHandler.postDelayed(runRemove, currentInfo.endTime - System.currentTimeMillis());
+			if (refreshHandler.postDelayed(runRemove, currentInfo.endTime - when) == false)
+				throw new RuntimeException("Failed to post to handler!");
 		}
 	}
 	
-	//marks the current survey as dismissed 
+	/**
+	 * Marks the current survey as dismissed. 
+	 */
 	private void cancel()
 	{
 		if (inSurvey)
@@ -552,7 +581,9 @@ public class SurveyService extends Service
 		}
 	}
 	
-	//removes the notification and stops the service
+	/**
+	 * Removes any notification and stops the service.
+	 */
 	private void removeNotification()
 	{
 		Util.d(null, TAG, "Removing notification and stopping");
@@ -583,7 +614,9 @@ public class SurveyService extends Service
 		startService(scheduleIntent);
 	}
 	
-	//a user has finished a survey
+	/**
+	 * Called when a user has finished a survey normally
+	 */
 	private void endSurvey()
 	{
 		if (!inSurvey)
@@ -650,7 +683,9 @@ public class SurveyService extends Service
 		}
 	}
 	
-	//a user has exited a survey before it was finished
+	/**
+	 * Called when a user has exited a survey before it was finished
+	 */
 	private void quitSurvey()
 	{
 		if (!inSurvey)
@@ -710,8 +745,11 @@ public class SurveyService extends Service
 		}
 	}
 	
-	//remove surveys that have expired
-	//if all is true, instead removes all surveys
+	/**
+	 * Remove surveys that have expired
+	 * 
+	 * @param all if true, removes all surveys (even if they are not expired)
+	 */
 	private void removeSurveys(boolean all)
 	{
 		Util.d(null, TAG, "Removing " + (all ? "all" : "expired") + " surveys");
@@ -796,6 +834,7 @@ public class SurveyService extends Service
 		//is being shut down)
 		if (inSurvey) quitSurvey();
 		removeSurveys(true);
+		ht.quit();
 	}
 
 	/**
