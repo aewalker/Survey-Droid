@@ -23,6 +23,8 @@
  *****************************************************************************/
 package org.surveydroid.android;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.TimeZone;
 
 import org.surveydroid.android.coms.ComsService;

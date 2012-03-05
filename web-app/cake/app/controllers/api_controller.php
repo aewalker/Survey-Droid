@@ -4,12 +4,6 @@
  *                                                                           *
  * Contains functions that are used by the phone: push and pull to send a    *
  * subjects survey answers and pull new survey data, respectively.           *
- *---------------------------------------------------------------------------*
- * Note: status chages are not yet implemented on the phone, but will be at  *
- * some point, so the code to handle them is left in this file.  Similarly,  *
- * if at some future point, additional types of data are to be collected by  *
- * the phones, one can set the website to accept that kind of data by adding *
- * the controllers for that kind of data to the uses and models arrays.      *
  *---------------------------------------------------------------------------*/
 /**
  * Controls communication between phones and the database.  Access to the push
@@ -34,7 +28,7 @@ class APIController extends AppController
 	var $components = array('Auth' => array
 	(
 		'authorize' => 'controller',
-		'allowedActions' => array('push', 'pull', 'error')
+		'allowedActions' => array('push', 'pull', 'error', 'salt')
 	));
     
 	/**
@@ -234,8 +228,16 @@ class APIController extends AppController
 	/**
 	 * Used to send information about app crashes to the admin.
 	 */
-	function error()
+	function error($deviceid = NULL)
 	{
+		$subjectid = $this->getSubjectID($deviceid, $message, $worked);
+		if ($worked == false)
+		{
+			$this->set('result', $worked);
+			$this->set('message', $message);
+			return;
+		}
+		$this->set('result', true);
 		//code from http://code.google.com/p/android-remote-stacktrace/
 		if (empty($_POST)) return;
         if ( $_POST['stacktrace'] == "" || $_POST['package_version'] == "" || $_POST['package_name'] == "" ) {
@@ -248,6 +250,21 @@ class APIController extends AppController
 //        fwrite($handle, $_POST['stacktrace']);
 //        fclose($handle);
         mail(ADMIN_EMAIL,"Survey Droid exception received ($version)",$_POST['stacktrace'], "from:no-reply@survey-droid.org");
+	}
+	
+	/**
+	 * Allows phones to get the salt string for phone number encryption.
+	 */
+	function salt($deviceid = NULL)
+	{
+		$subjectid = $this->getSubjectID($deviceid, $message, $worked);
+		if ($worked == false)
+		{
+			$this->set('result', $worked);
+			$this->set('message', $message);
+			return;
+		}
+		$this->set('result', Security::hash($subjectid));
 	}
 	/* some notes:
 	 * 

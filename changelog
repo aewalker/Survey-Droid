@@ -2,6 +2,7 @@ Survey Droid Changelog
 ----------------------
 Version 0.7.0-beta:
 	-Fixed SurveySurvice
+	-Phone numbers are now encrypted with a salt value that is generated on the server and is based on the subject id instead of the device id
 	-Technical:
 		-Converted SurveyService to use Alarms instead of Handlers; this seems to solve all the timing bugs.
 
