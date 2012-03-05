@@ -198,10 +198,7 @@ public class MainActivity extends Activity
         //add the survey progress bar
     	//do this here so the bar updates after a survey is
     	//finished without having to restart the activity
-        TakenDBHandler tdbh = new TakenDBHandler(this);
-        tdbh.open();
-        int p = tdbh.getCompletionRate();
-        tdbh.close();
+        int p = TakenDBHandler.getCompletionRate(this);
         VerticalProgressBar progress = (VerticalProgressBar)
         	findViewById(R.id.main_progressBar);
         progress.setMax(100);

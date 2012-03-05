@@ -25,6 +25,8 @@
  *****************************************************************************/
 package org.surveydroid.android.database;
 
+import java.util.Calendar;
+
 import android.content.ContentValues;
 import android.content.Context;
 
@@ -42,11 +44,13 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 	//logging tag
 	private static final String TAG = "SurveysTakenDBHandler";
 	
-	//the current completion percentage
+	/** The current number of surveys completed */
 	private static final String NUM_COMPLETED = "num_completed";
 	
-	//the number of surveys used to create the percentage
-	private static final String NUM_SAMPLED = "num_sampled";
+	/**
+	 * Whether or not the number of completed surveys has been reset this week.
+	 */
+	private static final String RESET = "completion_reset";
 	
 	/**
 	 * Returned from {@link #getCompletionRate} if there have not been any
@@ -79,25 +83,11 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 				+ survey_id + " marked " + code);
 		
 		//first update the completion percentage if needed
-		int counts = countsAsCompleted(code);
-		int numUsed = Config.getSetting(contx, NUM_SAMPLED, 0);
-		int maxUsed = Config.getSetting(contx, Config.COMPLETION_SAMPLE,
-				Config.COMPLETION_SAMPLE_DEFAULT);
-		int numComp = Config.getSetting(contx, NUM_COMPLETED, 0);
-		if (counts == 1 || counts == -1)
+		boolean counts = countsAsCompleted(code);
+		if (counts)
 		{
-			if (numUsed >= maxUsed)
-			{ //reset the thermometer
-				numUsed = 1;
-				numComp = 0;
-			}
-			else
-			{
-				numUsed++;
-			}
-			if (counts == 1) numComp++;
-			Config.putSetting(contx, NUM_SAMPLED, numUsed);
-			Config.putSetting(contx, NUM_COMPLETED, numComp);
+			Config.putSetting(contx, NUM_COMPLETED,
+					Config.getSetting(contx, NUM_COMPLETED, 0) + 1);
 		}
 		
 		ContentValues values = new ContentValues();
@@ -114,80 +104,45 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 	}
 	
 	/**
-	 * Get the current completion rate for surveys.  Looks at the last few
-	 * entries (the exact number is controlled by
-	 * {@link Config#COMPLETION_SAMPLE}) to determine this.
+	 * Get the current completion rate for surveys.
 	 * 
+	 * @param c the context to use.  This is to avoid having to open a database
+	 * connection in order to use this function.
 	 * @return the percentage completed between 0 and 100, or
 	 * {@link #NO_PERCENTAGE} if there are no surveys to go by 
 	 */
-	public int getCompletionRate()
+	public static int getCompletionRate(Context c)
 	{
 		Util.d(null, TAG, "Getting survey completion rate");
 		
-		int numUsed = Config.getSetting(contx, NUM_SAMPLED, 0);
-		if (numUsed == 0) return NO_PERCENTAGE;
+		//try to update if we are on one of the correct days
+		Calendar cal = Calendar.getInstance();
+		int day = cal.get(Calendar.DAY_OF_WEEK);
+		if (day == Calendar.SUNDAY)
+		{
+			if (Config.getSetting(c, RESET, false) == false)
+			{
+				Util.i(null, TAG, "Reseting completion count");
+				Config.putSetting(c, NUM_COMPLETED, 0);
+				Config.putSetting(c, RESET, true);
+			}
+		}
+		else
+		{
+			/*
+			 * There is one possible problem here: if the user doesn't turn the
+			 * phone on at all between one Sunday and the next, this doesn't
+			 * work.  Because this is an extremely unlikely event and would be
+			 * annoying to detect, we apply the ostrich algorithm.
+			 */
+			Config.putSetting(c, RESET, false);
+		}
 		
-		int numComp = Config.getSetting(contx, NUM_COMPLETED, 0);
-		int maxUsed = Config.getSetting(contx, Config.COMPLETION_SAMPLE,
-				Config.COMPLETION_SAMPLE_DEFAULT);
-		
-		double amount = 100.0 / maxUsed;
-		return (int) (amount * numComp);
-		
-		//set up the query
-//		String    table    = SurveyDroidDB.TAKEN_TABLE_NAME;
-//		String[]  cols     = {SurveyDroidDB.TakenTable.STATUS};
-//		String    selc     = null;
-//		String[]  selcArgs = null;
-//		String    group    = null;
-//		String    having   = null;
-//		String    orderBy  = SurveyDroidDB.TakenTable.CREATED + " DESC";
-//		
-//		//run it
-//		Cursor result =
-//			db.query(table, cols, selc, selcArgs, group, having, orderBy);
-//		if (result.getCount() == 0) 
-//		{
-//			result.close();
-//			return NO_PERCENTAGE;
-//		}
-//		result.moveToFirst();
-//		
-//		int size = Config.getSetting(contx, Config.COMPLETION_SAMPLE,
-//				Config.COMPLETION_SAMPLE_DEFAULT);
-//		int numCompleted = 0;
-//		int sampleSize = 0;
-//		int i = 0;
-//		while (i < size)
-//		{
-//			if (result.isAfterLast()) break;
-//			int code = result.getInt(
-//					result.getColumnIndexOrThrow(SurveyDroidDB.TakenTable.STATUS));
-//			result.moveToNext();
-//			if (code == SurveyDroidDB.TakenTable.SURVEYS_DISABLED_SERVER) continue;
-//			
-//			int counts = countsAsCompleted(code);
-//			sampleSize++;
-//			i++;
-//			switch (counts)
-//			{
-//			case -1:
-//				break;
-//			case 0:
-//				sampleSize--;
-//				break;
-//			case 1:
-//				numCompleted++;
-//				break;
-//			default:
-//				Util.w(null, TAG, "Bad count code");
-//			}
-//		}
-//		result.close();
-//		Util.v(null, TAG, "numCompleted: " + numCompleted);
-//		Util.v(null, TAG, "sampleSize: " + sampleSize);
-//		return (int) (numCompleted * (100.0 / (double) sampleSize));
+		//get the rate
+		float done = Config.getSetting(c, NUM_COMPLETED, 0);
+		float target = Config.getSetting(c, Config.SURVEYS_PER_WEEK, 1);
+		Util.d(null, TAG, "Completed " + done + " out of " + target);
+		return (int) Math.round(done * 100 / target);
 	}
 	
 	/**
@@ -195,10 +150,9 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 	 * 
 	 * @param code - the survey completion code, as in
 	 * {@link SurveyDroidDB#TakenTable}
-	 * @return -1 if the survey should count as uncompleted, 0 if it should
-	 * not be counted at all, and 1 if it should be counted as completed
+	 * @return true if a survey should be counted, false if not
 	 */
-	private static int countsAsCompleted(int code)
+	private static boolean countsAsCompleted(int code)
 	{
 		switch (code)
 		{
@@ -208,16 +162,7 @@ public class TakenDBHandler extends SurveyDroidDBHandler
     	case SurveyDroidDB.TakenTable.RANDOM_UNFINISHED:
     	case SurveyDroidDB.TakenTable.RANDOM_DISMISSED:
     	case SurveyDroidDB.TakenTable.RANDOM_IGNORED:
-			return -1;
-
     	case SurveyDroidDB.TakenTable.USER_INITIATED_UNFINISHED:
-    		if (Config.D) return -1;
-    		return 0;
-    	
-    	case SurveyDroidDB.TakenTable.USER_INITIATED_FINISHED:
-    		if (Config.D) return 1;
-    		return 0;
-			
     	case SurveyDroidDB.TakenTable.SURVEYS_DISABLED_SERVER:
     	case SurveyDroidDB.TakenTable.LOCATION_BASED_DISMISSED:
     	case SurveyDroidDB.TakenTable.LOCATION_BASED_FINISHED:
@@ -228,17 +173,16 @@ public class TakenDBHandler extends SurveyDroidDBHandler
     	case SurveyDroidDB.TakenTable.CALL_INITIATED_IGNORED:
     	case SurveyDroidDB.TakenTable.CALL_INITIATED_FINISHED:
 		case SurveyDroidDB.TakenTable.SURVEYS_DISABLED_LOCALLY:
-			return 0;
+    	case SurveyDroidDB.TakenTable.USER_INITIATED_FINISHED:
+			return false;
 
     	case SurveyDroidDB.TakenTable.SCHEDULED_FINISHED:
     	case SurveyDroidDB.TakenTable.RANDOM_FINISHED:
-			return 1;
+			return true;
 			
     	default:
     		Util.w(null, TAG, "Unknown survey completion code: " + code);
-    		if (Config.D) throw new
-    			RuntimeException("Unknown survey completion code: " + code);
-    		return 0;
+    		return false;
 		}
 	}
 }

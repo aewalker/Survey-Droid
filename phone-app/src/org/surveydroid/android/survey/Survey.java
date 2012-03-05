@@ -341,10 +341,11 @@ public class Survey
 			{
 			case 0:
 				LinkedList<Choice> choicesList0 = new LinkedList<Choice>();
-				choicesList0.add(new Choice("Keira Knightley", 0, ctxt));
-				choicesList0.add(new Choice("Natalie Portman", 0, ctxt));
-				choicesList0.add(new Choice("Emmanuelle Chiriqui", 0, ctxt));
-				prevQ = new ChoiceQuestion("Who is your favorite actress?", i,
+				choicesList0.add(new Choice("Winter", 0, ctxt));
+				choicesList0.add(new Choice("Spring", 0, ctxt));
+				choicesList0.add(new Choice("Summer", 0, ctxt));
+				choicesList0.add(new Choice("Fall", 0, ctxt));
+				prevQ = new ChoiceQuestion("What is your favorite season?", i,
 						branches, choicesList0, false, ctxt);
 				break;
 			case 1:
@@ -399,7 +400,7 @@ public class Survey
 				choicesList1.add(new Choice(Base64Coder.encode(
 						baosRed.toByteArray()), ctxt, 0));
 				
-				prevQ = new ChoiceQuestion("What are your favorite colors", i,
+				prevQ = new ChoiceQuestion("What are your favorite colors?", i,
 						branches, choicesList1, true, ctxt);
 				break;
 			case 2:
@@ -416,7 +417,7 @@ public class Survey
 						Base64Coder.encode(baosHigh.toByteArray()), ctxt);
 				break;
 			case 3:
-				prevQ = new FreeResponseQuestion("What country are you from?",
+				prevQ = new FreeResponseQuestion("What is your favorite food?",
 						i, branches, ctxt);
 				break;
 			}

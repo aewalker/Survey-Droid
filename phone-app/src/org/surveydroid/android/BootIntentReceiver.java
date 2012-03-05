@@ -100,21 +100,30 @@ public class BootIntentReceiver extends BroadcastReceiver
 		try
 		{
 			ai = pm.getApplicationInfo(context.getPackageName(), 0);
+			if ((ai.flags & ApplicationInfo.FLAG_DEBUGGABLE) ==
+			        ApplicationInfo.FLAG_DEBUGGABLE )
+			{
+				Config.D = true;
+			}
+			else
+			{
+				Config.D = false;
+			}
+			Util.d(null, "Config", "Application is debuggable");
 		}
 		catch (NameNotFoundException e)
 		{
 			Util.e(null, TAG, "Invalid package name?!?");
 		}
-		if ((ai.flags & ApplicationInfo.FLAG_DEBUGGABLE) ==
-		        ApplicationInfo.FLAG_DEBUGGABLE )
+		
+		//make sure we have the salt
+		if (Config.getSetting(context, Config.SALT, null) == null)
 		{
-			Config.D = true;
+			Util.d(null, TAG, "Getting salt");
+			Intent saltIntent = new Intent(context, ComsService.class);
+			saltIntent.setAction(ComsService.ACTION_GET_SALT);
+			context.startService(saltIntent);
 		}
-		else
-		{
-			Config.D = false;
-		}
-		Util.d(null, "Config", "Application is debuggable");
         
         //start the coms service pulling
         Util.d(null, TAG, "Starting pull service");
@@ -177,6 +186,9 @@ public class BootIntentReceiver extends BroadcastReceiver
 		    			SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
 		    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUN_AGAIN, true);
 		        context.startService(schedulerIntent);
+		        
+		        //get the salt value now instead of waiting until later
+		        Config.getSetting(context, Config.SALT, ""); //ignore result
 	        }
     	};
     	Handler h = new Handler();

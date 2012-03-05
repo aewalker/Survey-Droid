@@ -27,9 +27,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaRecorder;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 /**
  * Holds static information about the current configuration, such as whether or
  * not debugging is enabled, etc.
@@ -208,13 +205,6 @@ public class Config
 	public static final String TRACKED_END = "tt_end";
 	
 	/**
-	 * The number of recent surveys to look at to determine the current survey
-	 * completion rate.
-	 */
-	public static final String COMPLETION_SAMPLE = "completion_sample";
-	public static final int COMPLETION_SAMPLE_DEFAULT = 14;
-	
-	/**
 	 * How long (in minutes) to wait between re-notifying the user that a
 	 * survey or surveys is awaiting.
 	 */
@@ -246,6 +236,9 @@ public class Config
 	/**  key to denote whether or not a the sample survey has been taken */
 	public static final String SAMPLE_SURVEY_TAKEN = "sample_survey_taken";
 	
+	/** the number of surveys that should be sent per week */
+	public static final String SURVEYS_PER_WEEK = "surveys_per_week";
+	
 	//settings by type
 	/** List of settings which are strings */
 	public static final String[] STRINGS =
@@ -262,7 +255,7 @@ public class Config
 	public static final String[] INTS =
 		{SCHEDULER_INTERVAL, PUSH_INTERVAL, PULL_INTERVAL, LOCATION_INTERVAL,
 		SURVEY_DELAY, VOICE_FORMAT, NUM_LOCATIONS_TRACKED, NUM_TIMES_TRACKED,
-		COMPLETION_SAMPLE, COMPLETION_GOAL, QUESTION_TIMEOUT};
+		COMPLETION_GOAL, QUESTION_TIMEOUT, SURVEYS_PER_WEEK};
 	
 	/** List of settings which are floats */
 	public static final String[] FLOATS =
@@ -281,18 +274,6 @@ public class Config
 	{
 		SharedPreferences settings = ctxt.getSharedPreferences(
         		CONFIG_FILE, 0);
-		if (!settings.contains(key) && key.equals(SALT))
-		{
-			//generate a salt value automatically
-			//this is pretty much as secure as we're going to get
-			SecureRandom rand = new SecureRandom();
-			SharedPreferences.Editor editor = ctxt.getSharedPreferences(
-	        		CONFIG_FILE, 0).edit();
-			String salt = new BigInteger(130, rand).toString(32);
-	        editor.putString(SALT, salt);
-	        editor.commit();
-	        return salt;
-		}
         return settings.getString(key, ifNotFound);
 	}
 	

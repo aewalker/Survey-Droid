@@ -3,8 +3,12 @@ Survey Droid Changelog
 Version 0.7.0-beta:
 	-Fixed SurveySurvice
 	-Phone numbers are now encrypted with a salt value that is generated on the server and is based on the subject id instead of the device id
+	-The thermometer on the main activity now works by counting the number of surveys that are expected per week and the number that have been taken that week.  It resets on Sunday.
+	-Set the sample survey to have better questions.
+	-Major update to the location tracking service.  Locations are now reported no matter what if the phone is on, but if for some reason the location shouldn't be tracked, a dummy location is sent with a code indicating what is going on.
 	-Technical:
 		-Converted SurveyService to use Alarms instead of Handlers; this seems to solve all the timing bugs.
+		-Simplified TakenDBHandler quite a bit due to the new system for the main page thermometer.
 
 Version 0.6.5-beta:
     -Technical:

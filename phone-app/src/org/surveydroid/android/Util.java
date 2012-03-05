@@ -33,6 +33,7 @@ import java.util.TimeZone;
 import com.nullwire.trace.ExceptionHandler;
 
 import android.content.Context;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 //import android.widget.Toast;
 import android.widget.Toast;
@@ -384,14 +385,45 @@ public final class Util
 		try
 		{
 			if (Config.REPORT)
-				ExceptionHandler.register(c, "http://survey-droid.org/api/error");
+			{
+				TelephonyManager tm = (TelephonyManager)
+					c.getSystemService(Context.TELEPHONY_SERVICE);
+				String id = tm.getDeviceId();
+				if (id == null)
+				{
+					throw new RuntimeException("device id unavailable");
+				}
+				/*
+				 * NOTE:
+				 * 
+				 * This is a possible security hole.  By sending the device ID
+				 * as part of the url over a normal (not encrypted) HTTP
+				 * connection, we create a situation in which it is potentially
+				 * possible for others to learn the phone id.  I (Austin) do
+				 * not consider this to be a serious problem for three reasons:
+				 *  1.) The software will rarely (if ever) throw an unhandled
+				 *      exception.  Additionally, reporting can be turned off
+				 *      if this is truley a big concern.
+				 *  2.) Cell pohones do not operate on static wired networks.
+				 *      Therefore, it is quite hard for someone to actually
+				 *      intercept the url.
+				 *  3.) If we did not send the phone id, we would leave the
+				 *      server open to an attack in which an attacker sends
+				 *      a barrage of /api/error calls to the server, which
+				 *      would result in a ton of mail spam or worse.
+				 *      
+				 * TODO: The best way to deal with this is to rewrite the
+				 * reporting software to support secure connections.
+				 */
+				ExceptionHandler.register(c,
+						"http://survey-droid.org/api/error/" + id);
+			}
 			else
 				ExceptionHandler.register(c);
 		}
 		catch (Exception e)
 		{
-			w(null, TAG, "Error registering exception handler");
-			w(null, TAG, "Make sure context is fully created?");
+			w(null, TAG, "Error registering exception handler: " + Util.fmt(e));
 		}
 	}
 	

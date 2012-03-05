@@ -117,13 +117,13 @@ public class Pull
 	    			try
 	    			{
 	    				ApiException apiE = (ApiException) e;
-	    				Util.e(ctxt, TAG, "Reason: " + apiE.getMessage());
+	    				Util.e(null, TAG, "Reason: " + apiE.getMessage());
 	    				Util.e(null, TAG, "Make sure this device is registered"
 	    						+ " and the server is working");
 	    			}
 	    			catch (Exception unknownE)
 	    			{
-	    				Util.e(ctxt, TAG, "Unkown Reason: " + Util.fmt(e));
+	    				Util.e(null, TAG, "Unkown Reason: " + Util.fmt(e));
 	    			}
 	    			return;
 	    		}
@@ -275,12 +275,14 @@ public class Pull
 	@SuppressWarnings("unchecked")
 	//this doesn't use syncTable because it has strange fields and will
 	//only have a few rows
+	//additionally, we need to track the number of surveys per week
 	private static void syncSurveys(SQLiteDatabase db, JSONArray surveys)
     {
     	Util.i(null, TAG, "Syncing surveys table");
     	try
     	{
     		Util.d(null, TAG, "Fetched " + surveys.length() + " surveys");
+    		int numSurveys = 0;
 	    	for (int i = 0 ; i < surveys.length(); i++)
 	    	{
 	    		JSONObject survey = surveys.getJSONObject(i);
@@ -297,11 +299,7 @@ public class Pull
 	    							   SurveyTable.NEW_CALLS,
 	    							   SurveyTable.OLD_CALLS,
 	    							   SurveyTable.NEW_TEXTS,
-	    							   SurveyTable.OLD_TEXTS,
-	    							   SurveyTable.MO, SurveyTable.TU,
-	    							   SurveyTable.WE, SurveyTable.TH,
-	    							   SurveyTable.FR, SurveyTable.SA,
-	    							   SurveyTable.SU};
+	    							   SurveyTable.OLD_TEXTS};
 	    		for (String field : opt_fields)
 	    		{
 	    			try
@@ -312,6 +310,32 @@ public class Pull
 	    			{
 	    				Util.v(null, TAG,
 	    						"survey " + i + ": no \"" + field + "\"");
+	    			}
+	    		}
+	    		
+	    		//count up how many surveys per week should go off
+	    		String[] days = {SurveyTable.MO, SurveyTable.TU,
+							     SurveyTable.WE, SurveyTable.TH,
+							     SurveyTable.FR, SurveyTable.SA,
+							     SurveyTable.SU};
+	    		for (String day : days)
+	    		{
+	    			try
+	    			{
+	    				String times = survey.getString(day);
+	    				values.put(day, times);
+	    				for (String time : times.split(","))
+	    				{
+	    					if (time.matches("\\s") || time.equals(""))
+	    						continue;
+	    					numSurveys++;
+	    				}
+	    				
+	    			}
+	    			catch (Exception e)
+	    			{
+	    				Util.v(null, TAG,
+	    						"survey " + i + ": no \"" + day + "\"");
 	    			}
 	    		}
 
@@ -352,6 +376,7 @@ public class Pull
 				db.setTransactionSuccessful();
 				db.endTransaction();
 	    	}
+    		Config.putSetting(c, Config.SURVEYS_PER_WEEK, numSurveys);
     	}
     	catch (JSONException e)
     	{

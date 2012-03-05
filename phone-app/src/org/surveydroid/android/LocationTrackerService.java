@@ -26,8 +26,6 @@ package org.surveydroid.android;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.database.TrackingDBHandler;
@@ -67,9 +65,9 @@ public class LocationTrackerService extends Service
 	public static final String ACTION_START_TRACKING =
 		"org.surveydroid.android.ACTION_START_TRACKING";
 	
-	//switch tracking on or off, depending on its current state
-	private static final String ACTION_TOGGLE_TRACKING =
-		"org.surveydroid.android.ACTION_TOGGLE_TRACKING";
+	/** Send information to the server */
+	private static final String ACTION_SEND_LOCATION =
+		"org.surveydroid.android.ACTION_SEND_LOCATION";
 	
 	/** Config key: have the location tracking times been coalesced? */
 	public static final String TIMES_COALESCED = "times_coalesced";
@@ -77,13 +75,24 @@ public class LocationTrackerService extends Service
 	//logging tag
 	private static final String TAG = "LocationTrackerService";
 	
-	//is tracking currently running?
-	private boolean isTracking = false;
-	
-	//has this service already gone through its first run?
-	private boolean alreadyStarted = false;
-	
 	private LocationTracker lt = new LocationTracker();
+	
+	private Location latest = null;
+	
+	private int timesSent = 0;
+	
+	/** Put this as the accuracy to indicate that times aren't being tracked now */
+	private static final int BAD_TIME = -1;
+	
+	/** Put this as the accuracy to indicate that tracking is off */
+	private static final int TRACKING_OFF = -2;
+	
+	/** Put this as the accuracy to indicate that we don't have a valid time now */
+	private static final int NO_LOCATION = -3;
+	
+	/** Put this as the accuracy to indicate that the location is out of range */
+	@SuppressWarnings("unused") //we'll use this later
+	private static final int OUT_OF_RANGE = -4;
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid)
@@ -103,20 +112,21 @@ public class LocationTrackerService extends Service
 		return START_STICKY;
 	}
 
-	//handles each intent
+	/**
+	 * Handles each intent
+	 * 
+	 * @param intent the intent that started this service
+	 */
 	private synchronized void handleIntent(Intent intent)
 	{
 		String action = intent.getAction();
-		if (action.equals(ACTION_TOGGLE_TRACKING))
+		if (action.equals(ACTION_START_TRACKING))
 		{
-			if (isTracking) lt.stop();
-			else lt.start();
-			isTracking = !isTracking;
 			schedule();
 		}
-		else if (action.equals(ACTION_START_TRACKING))
+		else if (action.equals(ACTION_SEND_LOCATION))
 		{
-			schedule();
+			sendLocation();
 		}
 		else
 		{
@@ -152,8 +162,232 @@ public class LocationTrackerService extends Service
 			return (this.start - that.start);
 		}
 	}
+
+	/**
+	 * Provides a quick way to upload data.
+	 */
+	private void uploadNow()
+	{
+		Intent comsIntent = new Intent(this, ComsService.class);
+		comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+		comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
+				ComsService.LOCATION_DATA);
+		startService(comsIntent);
+	}
 	
-	//fix the times so that they don't overlap
+	/**
+	 * Reschedule the service to send a location again later.
+	 */
+	private void reschedule()
+	{
+		AlarmManager as = (AlarmManager)
+		this.getSystemService(ALARM_SERVICE);
+		
+		Intent sendIntent = new Intent(this, LocationTrackerService.class);
+		sendIntent.setAction(ACTION_SEND_LOCATION);
+		PendingIntent pendingSend =
+			PendingIntent.getService(this, 0, sendIntent, 0);
+		
+		long offset = Config.getSetting(this, Config.LOCATION_INTERVAL,
+				Config.LOCATION_INTERVAL_DEFAULT);
+		
+		as.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + offset,
+				pendingSend);
+	}
+	
+	/**
+	 * Log the latest location information in the database.
+	 */
+	private void sendLocation()
+	{
+		//check that tracking is on
+		if (!Config.getSetting(this, Config.TRACKING_LOCAL, true) ||
+			!Config.getSetting(this, Config.TRACKING_SERVER,
+						Config.TRACKING_SERVER_DEFAULT))
+		{
+			Util.d(null, TAG, "Tracking is disabled; sending null location");
+			TrackingDBHandler tdbh = new TrackingDBHandler(this);
+			tdbh.open();
+			tdbh.writeLocation(0, 0, TRACKING_OFF, Util.currentTimeAdjusted() / 1000);
+			tdbh.close();
+			reschedule();
+			uploadNow();
+			return;
+		}
+		
+		//check to ensure that we're in a valid time
+		boolean log = false;
+		int numTimes = Config.getSetting(this, Config.NUM_TIMES_TRACKED, 0);
+		if (numTimes == 0)
+		{
+			Util.d(null, TAG, "Tracking always on; sending location");
+			log = true;
+		}
+		else
+		{
+			Util.v(null, TAG, numTimes + " times tracked");
+			//fetch all the times
+			TimePeriod[] times = new TimePeriod[numTimes];
+			for (int i = 0; i < numTimes; i ++)
+			{
+				int start;
+				int end;
+				try
+				{
+					start = Integer.parseInt(Config.getSetting(
+							this, Config.TRACKED_START + i, null));
+					end = Integer.parseInt(Config.getSetting(
+							this, Config.TRACKED_END + i, null));
+				}
+				catch (NumberFormatException e)
+				{
+					throw new RuntimeException("No time tracked for time " + i);
+				}
+				times[i] = new TimePeriod(start, end);
+			}
+			
+			//now we have the final collection of times that don't overlap
+			//figure out what the current time is and act accordingly
+			Calendar now = Calendar.getInstance();
+			int hour = now.get(Calendar.HOUR_OF_DAY);
+			int mins = now.get(Calendar.MINUTE);
+			
+			int currentTime = (hour * 100) + mins;
+			
+			for (TimePeriod t : times)
+			{
+				if (t.contains(currentTime))
+				{
+					log = true;
+					Util.d(null, TAG, "Inside a valid time range; sending location");
+					break;
+				}
+			}
+		}
+		if (log == false)
+		{
+			Util.d(null, TAG, "Not in valid time; sending null location");
+			TrackingDBHandler tdbh = new TrackingDBHandler(this);
+			tdbh.open();
+			tdbh.writeLocation(0, 0, BAD_TIME, Util.currentTimeAdjusted() / 1000);
+			tdbh.close();
+			reschedule();
+			uploadNow();
+			return;
+		}
+		
+		//make sure we have a valid time
+		if (timesSent > 1)
+		{
+			Util.d(null, TAG, "No valid location to send; sending null location");
+			TrackingDBHandler tdbh = new TrackingDBHandler(this);
+			tdbh.open();
+			tdbh.writeLocation(0, 0, NO_LOCATION, Util.currentTimeAdjusted() / 1000);
+			tdbh.close();
+			reschedule();
+			uploadNow();
+			return;
+		}
+		
+		//TODO check for location accuracy here
+		
+		Util.d(null, TAG, "Tracking is enabled, time is valid, and we have a location that is in range; logging");
+		double lat = latest.getLatitude();
+		double lon = latest.getLongitude();
+		Util.v(null, TAG, "Lat: " + lat + ", long: " + lon);
+		TrackingDBHandler tdbh = new TrackingDBHandler(this);
+		tdbh.open();
+		tdbh.writeLocation(lat, lon, latest.getAccuracy(), Util.currentTimeAdjusted() / 1000);
+		tdbh.close();
+		reschedule();
+		uploadNow();
+		return;
+		
+		/*
+		int numLocs = Config.getSetting(LocationTrackerService.this,
+				Config.NUM_LOCATIONS_TRACKED, 0);
+		boolean log = false;
+		//TODO fix up the location sensitivity code
+		if (false)
+//			if (numLocs >= 1)
+		{
+			for (int i = 0; i < numLocs; i++)
+			{
+				//for each location tracked, get the information
+				//for that location and validate it
+				double thisLon = (double) Config.getSetting(
+						LocationTrackerService.this,
+						Config.TRACKED_LONG + i, (float) -1.0);
+				double thisLat = (double) Config.getSetting(
+						LocationTrackerService.this,
+						Config.TRACKED_LAT + i, (float) -1.0);
+				double thisRad = (double) Config.getSetting(
+						LocationTrackerService.this,
+						Config.TRACKED_RADIUS + i, (float) -1.0);
+				if (thisLon == -1.0 ||
+					thisLat == -1.0 ||
+					thisRad == -1.0)
+				{
+					throw new RuntimeException(
+							"cannot find location tracking value "
+							+ "for location index" + i);
+				}
+				
+				//now see if the incoming location
+				//is within a valid location
+				float[] results = new float[1];
+				Location.distanceBetween(lat, lon,
+						thisLat, thisLon, results);
+				Util.v(null, TAG, "Distance: "
+						+ (results[0] / 1000) + "km");
+				if (results[0] < (thisRad * 1000))
+				{
+					log = true;
+					break;
+				}
+			}
+		}
+		else
+		{ //assume that if there are no locations, then everything
+		  //should be tracked (to track nowhere just turn off tracking)
+			log = true;
+		}
+		
+		//TODO generalize this
+		//right now it's just a crutch to get by
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(latest.getTime());
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		if (hour < 8 || hour >= 1900) log = false;
+		
+		if (log)
+		{
+			Util.d(null, TAG, "Storing location");
+			TrackingDBHandler tdbh =
+				new TrackingDBHandler(LocationTrackerService.this);
+			tdbh.open();
+			tdbh.writeLocation(lat, lon, latest.getAccuracy(),
+					latest.getTime() / 1000);
+			tdbh.close();
+			
+			//tell the coms service to upload this data
+			Intent uploadIntent = new Intent(LocationTrackerService.this,
+					ComsService.class);
+			uploadIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
+			uploadIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
+					ComsService.LOCATION_DATA);
+			startService(uploadIntent);
+		}
+		else
+		{
+			Util.d(null, TAG, "Not storing: loction out of range");
+		}
+		*/
+	}
+	
+	/**
+	 * Fix the times so that they don't overlap
+	 */
 	private void coalesceTimes()
 	{
 		//get the number of times we're looking at
@@ -219,7 +453,9 @@ public class LocationTrackerService extends Service
 		Config.putSetting(this, TIMES_COALESCED, true);
 	}
 	
-	//schedules alarms to turn tracking on and off
+	/**
+	 * Schedules alarms to turn tracking on and off
+	 */
 	private void schedule()
 	{
 		//some setup stuff
@@ -228,121 +464,25 @@ public class LocationTrackerService extends Service
 		
 		if (!Config.getSetting(this, TIMES_COALESCED, false))
 		{
-			Util.d(null, TAG, "Reseting service and coalescing times");
-			
-			//reset the whole service
-			if (isTracking)
-			{
-				lt.stop();
-				isTracking = false;
-			}
-			alreadyStarted = false;
+			Util.d(null, TAG, "Coalescing times");
 			coalesceTimes();
 		}
 		else
 		{
 			Util.d(null, TAG, "Times already coalesced");
 		}
+		if (!lt.started) lt.start();
 		
-		int numTimes = Config.getSetting(this, Config.NUM_TIMES_TRACKED, 0);
-		//TODO fix this; remove all the old code
-		if (true)
-//		if (numTimes == 0)
-		{
-			Util.d(null, TAG, "No times tracked; tracking all the time");
-			if (!isTracking)
-				lt.start();
-			isTracking = true;
-			alreadyStarted = true;
-		}
-		else
-		{
-			Util.d(null, TAG, numTimes + " times tracked");
-			//fetch all the times
-			int[] times = new int[numTimes * 2];
-			for (int i = 0; i < numTimes; i ++)
-			{
-				int start;
-				int end;
-				try
-				{
-					start = Integer.parseInt(Config.getSetting(
-							this, Config.TRACKED_START + i, null));
-					end = Integer.parseInt(Config.getSetting(
-							this, Config.TRACKED_END + i, null));
-				}
-				catch (NumberFormatException e)
-				{
-					throw new RuntimeException("No time tracked for time " + i);
-				}
-				times[i * 2] = start;
-				times[(i * 2) + 1] = end;
-			}
-			
-			//now we have the final collection of times that don't overlap
-			//figure out what the current time is and act accordingly
-			Calendar now = Calendar.getInstance();
-			int hour = now.get(Calendar.HOUR_OF_DAY);
-			int mins = now.get(Calendar.MINUTE);
-			
-			int currentTime = (hour * 100) + mins;
-			
-			boolean onNow = false; //should tracking be on now?
-			int nextTime = 0; //the next time after now
-			while (nextTime < times.length &&
-					times[nextTime] < currentTime)
-			{
-				onNow = !onNow;
-				nextTime++;
-			}
-			
-			if (onNow && !alreadyStarted)
-			{
-				Util.d(null, TAG, "should be tracking now; turning on");
-				if (isTracking)
-				{
-					throw new RuntimeException("Already tracking!");
-				}
-				lt.start();
-				isTracking = true;
-				alreadyStarted = true;
-			}
-			
-			//now schedule the alarm for the next time to toggle
-			long nextRun = System.currentTimeMillis();
-			int time;
-			if (nextTime >= times.length)
-			{
-				//roll over to the next day
-				time = times[0];
-				nextRun += (24 - (hour + 1)) * 60 * 60 * 1000;
-				nextRun += (60 - mins) * 60 * 1000;
-				hour = 0;
-				mins = 0;
-			}
-			else
-			{
-				time = times[nextTime];
-			}
-			int thenHour = time / 100;
-			int thenMins = time - (thenHour * 100);
-			nextRun += (thenHour - (hour + 1)) * 60 * 60 * 1000;
-			nextRun += (60 - mins) * 60 * 1000;
-			nextRun += thenMins * 60 * 1000;
-			
-			Calendar c = Calendar.getInstance(
-					TimeZone.getDefault(), Locale.US);
-			c.setTimeInMillis(nextRun);
-			Util.d(null, TAG, "Next toggle at: " +
-					c.getTime().toLocaleString());
-			
-			Intent toggleIntent =
-				new Intent(this, LocationTrackerService.class);
-			toggleIntent.setAction(ACTION_TOGGLE_TRACKING);
-			PendingIntent pendingToggle = PendingIntent.getService(
-					this, 0, toggleIntent, 0);
-			as.set(AlarmManager.RTC_WAKEUP, nextRun, pendingToggle);
-		}
+		Intent sendIntent = new Intent(this, LocationTrackerService.class);
+		sendIntent.setAction(ACTION_SEND_LOCATION);
+		PendingIntent pendingSend =
+			PendingIntent.getService(this, 0, sendIntent, 0);
+		
+		//cancel any previous instances (in case this service was restarted)
+		as.cancel(pendingSend);
+		
+		//give the tracker a moment to get the first location
+		as.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, pendingSend);
 	}
 
 	@Override
@@ -350,6 +490,17 @@ public class LocationTrackerService extends Service
 	{
 		return null;
 	}
+	
+	@Override
+	public void onDestroy()
+	{
+		Util.d(null, TAG, "Location service killed!");
+		lt.stop();
+	}
+	
+	/* ------------------------------------------------ */
+	/* -- The actual location recording goes on here -- */
+	/* ------------------------------------------------ */
 
 	private class LocationTracker implements LocationListener
 	{
@@ -358,6 +509,8 @@ public class LocationTrackerService extends Service
 	
 		//logging tag
 		private static final String TAG = "LocationTracker";
+		
+		private static final int INTERNAL_LOGGING_RATE = 5; //minutes
 		
 		/** Starts the location tracker. */
 		public void start()
@@ -370,15 +523,33 @@ public class LocationTrackerService extends Service
 			LocationManager lm = (LocationManager)
 				LocationTrackerService.this.getSystemService(
 						Context.LOCATION_SERVICE);
-			
-			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				Config.getSetting(LocationTrackerService.this,
-						Config.LOCATION_INTERVAL,
-				Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0, this);
-			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-					Config.getSetting(LocationTrackerService.this,
-							Config.LOCATION_INTERVAL,
-					Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000, 0, this);
+			int numStarted = 0;
+			try
+			{
+				lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+					INTERNAL_LOGGING_RATE * 60 * 1000, 0, this);
+				numStarted++;
+			}
+			catch (IllegalArgumentException e)
+			{
+				Util.w(null, TAG, "Could not request updates from the GPS provider");
+			}
+			try
+			{
+				lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+					INTERNAL_LOGGING_RATE * 60 * 1000, 0, this);
+				numStarted++;
+			}
+			catch (IllegalArgumentException e)
+			{
+				Util.w(null, TAG, "Could not request updates from the network provider");
+			}
+			if (numStarted == 0)
+			{
+				Util.e(null, TAG, "Could not start tracking location because no providers were accepted");
+				started = false;
+				throw new RuntimeException("Could not start tracking");
+			}
 		}
 		
 		/** Stops the location tracker. */
@@ -396,98 +567,9 @@ public class LocationTrackerService extends Service
 		@Override
 		public void onLocationChanged(Location loc)
 		{
-			//XXX fix this quickly
 			Util.i(null, TAG, "Got a new location");
-			if (Config.getSetting(LocationTrackerService.this,
-						Config.TRACKING_LOCAL, true) /*&&
-				Config.getSetting(LocationTrackerService.this,
-						Config.TRACKING_SERVER,
-							Config.TRACKING_SERVER_DEFAULT)*/)
-			{
-				Util.d(null, TAG, "tracking is enabled; logging");
-				double lat = loc.getLatitude();
-				double lon = loc.getLongitude();
-				Util.v(null, TAG, "Lat: " + lat + ", long: " + lon);
-				int numLocs = Config.getSetting(LocationTrackerService.this,
-						Config.NUM_LOCATIONS_TRACKED, 0);
-				boolean log = false;
-				//TODO fix up the location sensitivity code
-				if (false)
-//				if (numLocs >= 1)
-				{
-					for (int i = 0; i < numLocs; i++)
-					{
-						//for each location tracked, get the information
-						//for that location and validate it
-						double thisLon = (double) Config.getSetting(
-								LocationTrackerService.this,
-								Config.TRACKED_LONG + i, (float) -1.0);
-						double thisLat = (double) Config.getSetting(
-								LocationTrackerService.this,
-								Config.TRACKED_LAT + i, (float) -1.0);
-						double thisRad = (double) Config.getSetting(
-								LocationTrackerService.this,
-								Config.TRACKED_RADIUS + i, (float) -1.0);
-						if (thisLon == -1.0 ||
-							thisLat == -1.0 ||
-							thisRad == -1.0)
-						{
-							throw new RuntimeException(
-									"cannot find location tracking value "
-									+ "for location index" + i);
-						}
-						
-						//now see if the incoming location
-						//is within a valid location
-						float[] results = new float[1];
-						Location.distanceBetween(lat, lon,
-								thisLat, thisLon, results);
-						Util.v(null, TAG, "Distance: "
-								+ (results[0] / 1000) + "km");
-						if (results[0] < (thisRad * 1000))
-						{
-							log = true;
-							break;
-						}
-					}
-				}
-				else
-				{ //assume that if there are no locations, then everything
-				  //should be tracked (to track nowhere just turn off tracking)
-					log = true;
-				}
-				
-				//TODO generalize this
-				//right now it's just a crutch to get by
-				Calendar c = Calendar.getInstance();
-				c.setTimeInMillis(loc.getTime());
-				int hour = c.get(Calendar.HOUR_OF_DAY);
-				if (hour < 8 || hour >= 1900) log = false;
-				
-				if (log)
-				{
-					Util.d(null, TAG, "Storing location");
-					TrackingDBHandler tdbh =
-						new TrackingDBHandler(LocationTrackerService.this);
-					tdbh.open();
-					tdbh.writeLocation(lat, lon, loc.getAccuracy(),
-							loc.getTime() / 1000);
-					tdbh.close();
-					
-					//tell the coms service to upload this data
-					Intent uploadIntent = new Intent(LocationTrackerService.this,
-							ComsService.class);
-					uploadIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
-					uploadIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
-							ComsService.LOCATION_DATA);
-					startService(uploadIntent);
-				}
-				else
-				{
-					Util.d(null, TAG, "Not storing: loction out of range");
-				}
-				
-			}
+			latest = loc;
+			timesSent = 0;
 		}
 	
 		@Override

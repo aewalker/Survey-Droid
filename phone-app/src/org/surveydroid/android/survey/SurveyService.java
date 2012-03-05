@@ -27,6 +27,7 @@ package org.surveydroid.android.survey;
 
 import java.util.concurrent.PriorityBlockingQueue;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -34,8 +35,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
 
 import org.surveydroid.android.R;
@@ -84,6 +83,14 @@ public class SurveyService extends Service
 	//clear all button
 	private static final String ACTION_CANCEL_SURVEY =
 		"org.surveydroid.android.survey.ACTION_CANCEL_SURVEY";
+	
+	/** Tells the service to run refresh */
+	private static final String ACTION_REFRESH =
+		"org.surveydroid.android.survey.ACTION_REFRESH";
+	
+	/** Tells the service to run remove */
+	private static final String ACTION_REMOVE_SURVEYS =
+		"org.surveydroid.android.survey.ACTION_REMOVE_SURVEYS";
 	
 	//key values for extras
 	/** The id of the survey this service is starting for. */
@@ -141,35 +148,6 @@ public class SurveyService extends Service
 	/** the current survey's information */
 	private SurveyInfo currentInfo;
 	
-	//used for refreshing the notification bar
-	private HandlerThread ht = new HandlerThread("SurveyService Refresh Thread");
-	private Handler refreshHandler;
-	private Runnable runRefresh = new Runnable()
-	{
-		@Override
-		public void run()
-		{
-			refresh();
-		}
-	};
-	private Runnable runRemove = new Runnable()
-	{
-		@Override
-		public void run()
-		{
-			removeSurveys(false);
-		}
-	};
-	private Runnable timeout = new Runnable()
-	{
-		@Override
-		public void run()
-		{
-			Util.d(null, TAG, "question timed out; quiting survey");
-			quitSurvey();
-		}
-	};
-	
 	/** The binder to send to clients ({@link QuestionActivity} extensions). */
 	private final SurveyBinder surveyBinder = new SurveyBinder();
 	
@@ -182,6 +160,12 @@ public class SurveyService extends Service
 	
 	/** The notification id to use */
 	private static final int N_ID = 0;
+	
+	PendingIntent runRefresh;
+	PendingIntent runRemove;
+	PendingIntent runTimeout;
+	
+	AlarmManager am;
 	
 	/**
 	 * Data class that holds info about a survey instance.
@@ -232,10 +216,27 @@ public class SurveyService extends Service
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
 		Util.reg(this);
-		if(!ht.isAlive())
+		if (runRefresh == null)
 		{
-			ht.start();
-			refreshHandler = new Handler(ht.getLooper());
+			Intent refreshIntent = new Intent(this, SurveyService.class);
+			refreshIntent.setAction(ACTION_REFRESH);
+			runRefresh = PendingIntent.getService(this, 0, refreshIntent, 0);
+		}
+		if (runRemove == null)
+		{
+			Intent removeIntent = new Intent(this, SurveyService.class);
+			removeIntent.setAction(ACTION_REMOVE_SURVEYS);
+			runRemove = PendingIntent.getService(this, 1, removeIntent, 0);
+		}
+		if (runTimeout == null)
+		{
+			Intent timeoutIntent = new Intent(this, SurveyService.class);
+			timeoutIntent.setAction(ACTION_QUIT_SURVEY);
+			runTimeout = PendingIntent.getService(this, 2, timeoutIntent, 0);
+		}
+		if (am == null)
+		{
+			am = (AlarmManager) getSystemService(ALARM_SERVICE);
 		}
 		handleIntent(intent);
 		//TODO because this service is so complex, just let it die if it
@@ -273,6 +274,14 @@ public class SurveyService extends Service
 		else if (action.equals(ACTION_CANCEL_SURVEY))
 		{
 			cancel();
+		}
+		else if (action.equals(ACTION_REFRESH))
+		{
+			refresh();
+		}
+		else if (action.equals(ACTION_REMOVE_SURVEYS))
+		{
+			removeSurveys(false);
 		}
 		else
 		{
@@ -364,7 +373,7 @@ public class SurveyService extends Service
 		if (currentInfo == null)
 		{
 			currentInfo = sInfo;
-			refresh();
+			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 		else
 		{
@@ -374,7 +383,7 @@ public class SurveyService extends Service
 			if (!sInfo.equals(currentInfo))
 			{
 				currentInfo = sInfo;
-				refresh();
+				am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 			}
 		}
 	}
@@ -389,12 +398,12 @@ public class SurveyService extends Service
 		Util.d(null, TAG, "starting survey");
 		if (!inSurvey)
 		{
-			refreshHandler.removeCallbacks(runRefresh);
-			refreshHandler.removeCallbacks(runRemove);
 			if (currentInfo == null)
 			{
 				throw new RuntimeException("attempted to start null survey");
 			}
+			am.cancel(runRefresh);
+			am.cancel(runRemove);
 			try
 			{
 				if (currentInfo.id == DUMMY_SURVEY_ID)
@@ -413,7 +422,7 @@ public class SurveyService extends Service
 						+ "administrator: \"" + e.getMessage() + "\"");
 				currentInfo = surveys.poll();
 				if (currentInfo == null) stopSelf();
-				else refresh();
+				else am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 				return;
 			}
 			inSurvey = true;
@@ -462,8 +471,8 @@ public class SurveyService extends Service
 		if (currentInfo == null)
 			throw new RuntimeException("Tried to run refresh() with null survey");
 		Util.d(null, TAG, "refresh");
-		refreshHandler.removeCallbacks(runRefresh);
-		refreshHandler.removeCallbacks(runRemove);
+		
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 		
 		//things we're going to need for the notification
 		int icon = R.drawable.survey_small;
@@ -510,14 +519,12 @@ public class SurveyService extends Service
 				currentInfo.endTime == Config.SURVEY_TIMEOUT_NEVER)
 		{
 			Util.v(null, TAG, "go for refresh again");
-			if (refreshHandler.postDelayed(runRefresh, refreshInterval) == false)
-				throw new RuntimeException("Failed to post to handler!");
+			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval, runRefresh);
 		}
 		else
 		{
 			Util.v(null, TAG, "go for remove");
-			if (refreshHandler.postDelayed(runRemove, currentInfo.endTime - when) == false)
-				throw new RuntimeException("Failed to post to handler!");
+			am.set(AlarmManager.RTC_WAKEUP, currentInfo.endTime, runRemove);
 		}
 	}
 	
@@ -531,8 +538,6 @@ public class SurveyService extends Service
 		if (currentInfo == null)
 			throw new RuntimeException("Tried to run cancel() with null survey");
 		Util.i(null, TAG, "Canceling survey");
-		refreshHandler.removeCallbacks(runRefresh);
-		refreshHandler.removeCallbacks(runRemove);
 		TakenDBHandler tdbh = new TakenDBHandler(this);
 		tdbh.open();
 		int id = currentInfo.id;
@@ -571,7 +576,7 @@ public class SurveyService extends Service
 		{
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
-			refresh();
+			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 		else
 		{
@@ -587,9 +592,6 @@ public class SurveyService extends Service
 	private void removeNotification()
 	{
 		Util.d(null, TAG, "Removing notification and stopping");
-		refreshHandler.removeCallbacks(runRefresh);
-		refreshHandler.removeCallbacks(runRemove);
-		refreshHandler.removeCallbacks(timeout);
 		
 		if (currentInfo != null || surveys.size() != 0)
 			throw new RuntimeException("Attempted to stop survey "
@@ -598,6 +600,9 @@ public class SurveyService extends Service
 		NotificationManager nm = (NotificationManager)
 			getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancel(N_ID);
+		am.cancel(runRefresh);
+		am.cancel(runRemove);
+		am.cancel(runTimeout);
 		stopSelf();
 	}
 	
@@ -624,8 +629,6 @@ public class SurveyService extends Service
 		if (currentInfo == null)
 			throw new RuntimeException("Tried to run endSurvey() with null survey");
 		Util.v(null, TAG, "ending survey");
-		refreshHandler.removeCallbacks(runRefresh);
-		refreshHandler.removeCallbacks(runRemove);
 		submit();
 		inSurvey = false;
 		if (currentInfo.id != DUMMY_SURVEY_ID)
@@ -679,7 +682,7 @@ public class SurveyService extends Service
 		{
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
-			refresh();
+			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 	}
 	
@@ -693,8 +696,6 @@ public class SurveyService extends Service
 		if (currentInfo == null)
 			throw new RuntimeException("Tried to run quitSurvey() with null survey");
 		Util.d(null, TAG, "quiting survey");
-		refreshHandler.removeCallbacks(runRefresh);
-		refreshHandler.removeCallbacks(runRemove);
 		submit();
 		inSurvey = false;
 		if (currentInfo.id != DUMMY_SURVEY_ID)
@@ -735,7 +736,7 @@ public class SurveyService extends Service
 		{
 			Util.v(null, TAG, surveys.size() + "more surveys left; go for refresh");
 			currentInfo = surveys.poll();
-			refresh();
+			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 		else
 		{
@@ -754,8 +755,6 @@ public class SurveyService extends Service
 	{
 		Util.d(null, TAG, "Removing " + (all ? "all" : "expired") + " surveys");
 		Util.v(null, TAG, "current time: " + System.currentTimeMillis());
-		refreshHandler.removeCallbacks(runRefresh);
-		refreshHandler.removeCallbacks(runRemove);
 		if (currentInfo != null)
 		{
 			surveys.add(currentInfo);
@@ -815,7 +814,7 @@ public class SurveyService extends Service
 		{ 
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
-			refresh();
+			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 		else
 		{
@@ -834,7 +833,6 @@ public class SurveyService extends Service
 		//is being shut down)
 		if (inSurvey) quitSurvey();
 		removeSurveys(true);
-		ht.quit();
 	}
 
 	/**
@@ -852,7 +850,7 @@ public class SurveyService extends Service
 		 */
 		public Survey getSurvey()
 		{
-			refreshHandler.removeCallbacks(timeout);
+			am.cancel(runTimeout);
 			return survey;
 		}
 		
@@ -865,7 +863,7 @@ public class SurveyService extends Service
 			long delay = Config.getSetting(SurveyService.this,
 					Config.QUESTION_TIMEOUT,
 					Config.QUESTION_TIMEOUT_DEFAULT) * 60 * 1000;
-			refreshHandler.postDelayed(timeout, delay);
+			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + delay, runTimeout);
 		}
 	}
 	

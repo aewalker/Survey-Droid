@@ -28,9 +28,11 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.telephony.TelephonyManager;
 
 import org.surveydroid.android.Config;
 import org.surveydroid.android.Util;
+import org.surveydroid.android.coms.WebClient.ApiException;
 
 /**
  * Communication service that is responsible for communicating with the
@@ -56,6 +58,10 @@ public class ComsService extends IntentService
 	/** Tells the service to download data from the server. */
 	public static final String ACTION_DOWNLOAD_DATA =
 		"org.surveydroid.android.coms.ACTION_DOWNLOAD_DATA";
+	
+	/** Tells the service to get the salt string for hashing phone numbers */
+	public static final String ACTION_GET_SALT =
+		"org.surveydroid.android.coms.ACTION_GET_SALT";
 	
 	//intent extras
 	/**
@@ -185,6 +191,11 @@ public class ComsService extends IntentService
 			
 			reschedule(intent);
 		}
+		else if (action.equals(ACTION_GET_SALT))
+		{
+			Util.i(null, TAG, "Geting salt value");
+			getSalt();
+		}
 		else
 		{
 			Util.w(null, TAG, "Unknown action: " + action);
@@ -225,5 +236,57 @@ public class ComsService extends IntentService
 			alarm.set(AlarmManager.RTC_WAKEUP,
 				time + (comsIntent.getLongExtra(EXTRA_RUNNING_TIME, -1)), pendingComs);
 		}
+	}
+	
+	/**
+	 * Fetch the salt value from the server.
+	 */
+	private void getSalt()
+	{
+		TelephonyManager tManager =
+        	(TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		StringBuilder url = new StringBuilder();
+		if (Config.getSetting(this, Config.HTTPS, Config.HTTPS_DEFAULT))
+			url.append("https://");
+		else
+			url.append("http://");
+		url.append(Config.getSetting(this,
+				Config.SERVER, Config.SERVER_DEFAULT));
+		url.append("/api/salt/");
+		String uid = tManager.getDeviceId();
+		if (uid != null)
+		{
+    		url.append(uid);
+    		String finalURL = url.toString();
+    		Util.v(null, TAG, "Pull url: " + finalURL);
+    		String salt;
+    		try
+    		{
+    			salt = WebClient.getUrlContent(this, finalURL);
+    		}
+    		catch (Exception e)
+    		{
+    			Util.e(null, TAG,
+    					"Unable to communicate with remote server");
+    			try
+    			{
+    				ApiException apiE = (ApiException) e;
+    				Util.e(null, TAG, "Reason: " + apiE.getMessage());
+    				Util.e(null, TAG, "Make sure this device is registered"
+    						+ " and the server is working");
+    			}
+    			catch (Exception unknownE)
+    			{
+    				Util.e(null, TAG, "Unkown Reason: " + Util.fmt(e));
+    			}
+    			return;
+    		}
+    		Util.d(null, TAG, "Salt is \"" + salt + "\"");
+    		Config.putSetting(this, Config.SALT, salt);
+    	}
+    	else
+    	{
+    		Util.w(null, TAG, "Device ID not available, please try again later");
+    	}
 	}
 }

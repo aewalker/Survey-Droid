@@ -40,7 +40,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.StatusDBHandler;
-import org.surveydroid.android.survey.SurveyService;
 
 /**
  * The Activity that triggers toggling the different settings on and off.
