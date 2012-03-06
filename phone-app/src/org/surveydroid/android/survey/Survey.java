@@ -181,8 +181,15 @@ public class Survey
 		ArrayList<Branch> branches = new ArrayList<Branch>();
 		while (!b.isAfterLast())
 		{
-			int b_id = b.getInt(
-					b.getColumnIndexOrThrow(SurveyDroidDB.BranchTable._ID));
+			try
+			{
+				int b_id = b.getInt(
+						b.getColumnIndexOrThrow(SurveyDroidDB.BranchTable._ID));
+			}
+			catch (IllegalArgumentException e)
+			{
+				
+			}
 			int q_id = b.getInt(
 					b.getColumnIndexOrThrow(SurveyDroidDB.BranchTable.NEXT_Q));
 			if (!seen.containsKey(q_id))

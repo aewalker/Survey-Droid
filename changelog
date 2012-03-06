@@ -1,5 +1,10 @@
 Survey Droid Changelog
 ----------------------
+Version 0.7.1-beta:
+	-Fixed database bug that caused problems when survey data was removed from the database.
+	-Technical:
+		-After a pull request, all data in each updated table is removed before the new data is entered.
+
 Version 0.7.0-beta:
 	-Fixed SurveySurvice
 	-Phone numbers are now encrypted with a salt value that is generated on the server and is based on the subject id instead of the device id
