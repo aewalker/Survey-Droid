@@ -6,7 +6,7 @@ Ext.define('SD.model.Subject', {
         {name: 'first_name', type: 'string'},
         {name: 'last_name',  type: 'string'},
         {name: 'device_id',  type: 'string'},
-        {name: 'isInactive', type: 'boolean'}
+        {name: 'is_inactive', type: 'boolean'}
     ],
     validations: [
         {type: 'presence',  field: 'first_name'},

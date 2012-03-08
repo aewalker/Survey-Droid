@@ -40,7 +40,7 @@ Ext.define("SD.view.subject.Tab", {
             editor: {}
         }, {
             text: 'Inactive?',
-            dataIndex: 'isInactive',
+            dataIndex: 'is_inactive',
             xtype: 'booleancolumn',
             trueText: 'Yes',
             falseText: 'No',
