@@ -1,5 +1,15 @@
 Survey Droid Changelog
 ----------------------
+Version 0.8.0-beta:
+	-The thermometer reading is now sent to the server with each survey completion record
+	-Increased the font size on multiple choice questions
+	-Fixed an issue where question activities would exit when the phone was turned sideways
+	-Surveys launch faster.
+	-Technical:
+		-Survey completion records that are sent to the server now contain a "rate" field.
+		-Fixed more database bugs.
+		-Surveys are now build before the notification is shown.
+
 Version 0.7.1-beta:
 	-Fixed database bug that caused problems when survey data was removed from the database.
 	-Technical:

@@ -231,6 +231,9 @@ public class Push
                 item.put(SurveyDroidDB.TakenTable.CREATED, compData.getDouble(
                 		compData.getColumnIndexOrThrow(
                 				SurveyDroidDB.TakenTable.CREATED)));
+                item.put(SurveyDroidDB.TakenTable.RATE, compData.getDouble(
+                		compData.getColumnIndexOrThrow(
+                				SurveyDroidDB.TakenTable.RATE)));
                 recordsJSON.put(item);
                 uploadedIDs[numRecords] = compData.getInt(
                 		compData.getColumnIndexOrThrow(

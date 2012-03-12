@@ -161,6 +161,12 @@ public class LocationTrackerService extends Service
 			//seconds in a day, which is less than 2^32 - 1
 			return (this.start - that.start);
 		}
+		
+		@Override
+		public String toString()
+		{
+			return "(" + start + ", " + end + ")";
+		}
 	}
 
 	/**
@@ -254,8 +260,10 @@ public class LocationTrackerService extends Service
 			
 			int currentTime = (hour * 100) + mins;
 			
+			Util.v(null, TAG, "Current time: " + currentTime);
 			for (TimePeriod t : times)
 			{
+				Util.v(null, TAG, "Next time period: " + t);
 				if (t.contains(currentTime))
 				{
 					log = true;

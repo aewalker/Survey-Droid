@@ -95,6 +95,7 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 		//set up the query
 		values.put(SurveyDroidDB.TakenTable.SURVEY_ID, survey_id);
 		values.put(SurveyDroidDB.TakenTable.STATUS, code);
+		values.put(SurveyDroidDB.TakenTable.RATE, getCompletionRate(contx));
 		values.put(SurveyDroidDB.TakenTable.CREATED, created);
 		
 		//run it

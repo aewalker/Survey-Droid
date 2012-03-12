@@ -109,7 +109,7 @@ public class BootIntentReceiver extends BroadcastReceiver
 			{
 				Config.D = false;
 			}
-			Util.d(null, "Config", "Application is debuggable");
+			Util.i(null, "Config", "Application " + (Config.D ? "is" : "isn't") + " debuggable");
 		}
 		catch (NameNotFoundException e)
 		{
