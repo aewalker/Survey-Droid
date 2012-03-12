@@ -185,15 +185,21 @@ public abstract class QuestionActivity extends Activity
 		 * done (ie the user hasn't answered yet), tell the service about it.
 		 */
 		super.onStop();
-		connection.onServiceDisconnected(null); //TODO this is kind of a hack...
-		unbindService(connection);
-		finish();
+		if (isDone)
+		{
+			finish();
+		}
+		else
+		{
+			connection.onServiceDisconnected(null); //TODO this is kind of a hack...
+		}
 	}
 	
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
+		unbindService(connection);
 	}
 	
 	/**

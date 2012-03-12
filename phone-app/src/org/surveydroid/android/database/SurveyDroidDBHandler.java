@@ -71,35 +71,29 @@ public class SurveyDroidDBHandler
 	/**
 	 * Open a database connection
 	 */
-	public void open()
+	public synchronized void open()
 	{
 		Util.d(null, TAG, "opening read/write database connection");
-		synchronized(openCount)
+		if (openCount == 0)
 		{
-			if (openCount == 0)
-			{
+			if (pdb == null)
 				pdb = new SurveyDroidDB(contx.getApplicationContext());
-				db  = pdb.getWritableDatabase();
-			}
-			openCount++;
+			db  = pdb.getWritableDatabase();
 		}
+		openCount++;
 	}
 
 	/**
 	 * Close the database; should be called after ever getReadable or
 	 * getWritable.
 	 */
-	public void close()
+	public synchronized void close()
 	{
 		Util.d(null, TAG, "closing database connection");
-		synchronized(openCount)
+		openCount--;
+		if (openCount == 0)
 		{
-			openCount--;
-			if (openCount == 0)
-			{
-				db.close();
-				pdb.close();
-			}
+			db.close();
 		}
 	}
 }

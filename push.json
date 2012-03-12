@@ -75,6 +75,7 @@
 	    	//RANDOM_UNFINISHED = 9;
 	    	//RANDOM_DISMISSED = 10;
 	    	//RANDOM_IGNORED = 11;
+	    "rate": 85, //completion rate between 0 and 100
 	    "created" : 0 //unix timestamp
 	}, {
 	    ...

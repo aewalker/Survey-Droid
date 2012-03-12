@@ -208,6 +208,10 @@ public class Pull
     	db.beginTransaction();
     	try
     	{
+    		//first, we need to remove all the old data
+    		db.execSQL("DELETE FROM " + table);
+    		
+    		//now put in the new data
     		StringBuilder sqlBuilder = new StringBuilder("INSERT INTO ");
     		sqlBuilder.append(table);
     		sqlBuilder.append(" (");
@@ -364,7 +368,6 @@ public class Pull
 		    		}
 	    		}
 
-	    		//TODO change this so that it uses replace()?
 	    		db.beginTransaction();
 	    		db.delete(SURVEY_TABLE_NAME, SurveyTable._ID + " = ?",
 	    				new String[] {Integer.toString(survey.getInt("id"))});

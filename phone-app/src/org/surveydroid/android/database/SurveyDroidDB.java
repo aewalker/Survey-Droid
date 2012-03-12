@@ -62,7 +62,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     //Change the version number here to force the database to
     //update itself.  This throws out all data.
     private static final String DATABASE_NAME = "sd.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 10;
 
     //table names
     public static final String TAKEN_TABLE_NAME = "surveysTaken";
@@ -122,6 +122,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     	public static final String SURVEY_ID = "survey_id";
     	public static final String STATUS = "status";
     	public static final String NUMBER = "number";
+    	public static final String RATE = "rate";
     	public static final String UPLOADED = "uploaded";
     	
     	//status types
@@ -152,6 +153,7 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     		+ SURVEY_ID + " INTEGER,"
     		+ STATUS + " INTEGER,"
     		+ NUMBER + " TEXT,"
+    		+ RATE + " INTEGER DEFAULT 0,"
     		+ UPLOADED + " INTEGER DEFAULT 0,"
     		+ CREATED + " INTEGER);";
     	}
@@ -556,7 +558,6 @@ public class SurveyDroidDB extends SQLiteOpenHelper
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-    	AnswerTable.createSql();
     	Util.d(null, TAG, "onCreate");
 
         db.beginTransaction();
@@ -583,8 +584,8 @@ public class SurveyDroidDB extends SQLiteOpenHelper
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
         Util.i(null, TAG, "Upgrading database from version " + oldVersion +
         		" to " + newVersion + ", which will destroy all old data");
         for (String table : TABLE_NAMES)
@@ -599,7 +600,8 @@ public class SurveyDroidDB extends SQLiteOpenHelper
      *
      * @param context - {@link Context} needed for super
      */
-    public SurveyDroidDB(Context context) {
+    public SurveyDroidDB(Context context)
+    {
     	super(context, DATABASE_NAME, null, DATABASE_VERSION);
         Util.d(null, TAG, "in constructor");
     }

@@ -142,6 +142,9 @@ public class SurveyService extends Service
 	/** the survey instance that each instance of this service uses */
 	private Survey survey;
 	
+	/** set to true in order to tell the refresh function to build the survey */
+	private boolean build = false;
+	
 	/** is a survey currently running? */
 	private boolean inSurvey = false;
 	
@@ -373,6 +376,7 @@ public class SurveyService extends Service
 		if (currentInfo == null)
 		{
 			currentInfo = sInfo;
+			build = true;
 			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 		else
@@ -383,9 +387,44 @@ public class SurveyService extends Service
 			if (!sInfo.equals(currentInfo))
 			{
 				currentInfo = sInfo;
+				build = true;
 				am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 			}
 		}
+	}
+	
+	/**
+	 * Builds the survey from the current info
+	 * 
+	 * @return true if it worked
+	 */
+	private boolean buildSurvey()
+	{
+		if (currentInfo == null)
+		{
+			throw new RuntimeException("attempted to start null survey");
+		}
+		am.cancel(runRefresh);
+		am.cancel(runRemove);
+		try
+		{
+			if (currentInfo.id == DUMMY_SURVEY_ID)
+			{
+				survey = new Survey(this);
+			}
+			else
+			{
+				survey = new Survey(currentInfo.id, this);
+			}
+		}
+		catch (Exception e)
+		{
+			Util.e(this, TAG, "Error starting survey. "
+					+ "Please give this message to the study "
+					+ "administrator: \"" + e.getMessage() + "\"");
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -398,33 +437,6 @@ public class SurveyService extends Service
 		Util.d(null, TAG, "starting survey");
 		if (!inSurvey)
 		{
-			if (currentInfo == null)
-			{
-				throw new RuntimeException("attempted to start null survey");
-			}
-			am.cancel(runRefresh);
-			am.cancel(runRemove);
-			try
-			{
-				if (currentInfo.id == DUMMY_SURVEY_ID)
-				{
-					survey = new Survey(this);
-				}
-				else
-				{
-					survey = new Survey(currentInfo.id, this);
-				}
-			}
-			catch (Exception e)
-			{
-				Util.e(this, TAG, "Error starting survey. "
-						+ "Please give this message to the study "
-						+ "administrator: \"" + e.getMessage() + "\"");
-				currentInfo = surveys.poll();
-				if (currentInfo == null) stopSelf();
-				else am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
-				return;
-			}
 			inSurvey = true;
 			
 			//update the notification
@@ -471,6 +483,20 @@ public class SurveyService extends Service
 		if (currentInfo == null)
 			throw new RuntimeException("Tried to run refresh() with null survey");
 		Util.d(null, TAG, "refresh");
+		
+		if (build)
+		{
+			build = false;
+			while (!buildSurvey())
+			{
+				currentInfo = surveys.poll();
+				if (currentInfo == null)
+				{
+					stopSelf();
+					return;
+				}
+			}
+		}
 		
 		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 		
@@ -576,6 +602,7 @@ public class SurveyService extends Service
 		{
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
+			build = true;
 			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 		else
@@ -603,6 +630,7 @@ public class SurveyService extends Service
 		am.cancel(runRefresh);
 		am.cancel(runRemove);
 		am.cancel(runTimeout);
+		survey = null; //probably not needed, but just to make sure
 		stopSelf();
 	}
 	
@@ -682,6 +710,7 @@ public class SurveyService extends Service
 		{
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
+			build = true;
 			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 	}
@@ -736,6 +765,7 @@ public class SurveyService extends Service
 		{
 			Util.v(null, TAG, surveys.size() + "more surveys left; go for refresh");
 			currentInfo = surveys.poll();
+			build = true;
 			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 		else
@@ -814,6 +844,7 @@ public class SurveyService extends Service
 		{ 
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
+			build = true;
 			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
 		}
 		else
