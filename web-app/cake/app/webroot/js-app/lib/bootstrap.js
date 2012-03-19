@@ -1,7 +1,7 @@
 Ext.override(Ext.data.reader.Json, {
     extractValues: function(data) {
-        if (data.created)
-            data.created += "+0000";
+        // if (data.created)
+        //     data.created += "+0000";
         var fields = this.getFields(),
             i      = 0,
             length = fields.length,
