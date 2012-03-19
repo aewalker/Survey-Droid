@@ -42,8 +42,10 @@ Ext.define("SD.view.subject.Tab", {
             text: 'Inactive?',
             dataIndex: 'is_inactive',
             xtype: 'booleancolumn',
-            trueText: 'Yes',
-            falseText: 'No',
+            editor: {}
+        }, {
+            text: 'Mutable Subject Id',
+            dataIndex: 'mutable_id',
             editor: {}
         }
     ],
