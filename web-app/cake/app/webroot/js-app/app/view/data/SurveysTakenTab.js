@@ -2,7 +2,7 @@ Ext.define("SD.view.data.SurveysTakenTab", {
     alias: 'widget.dataSurveysTakenTab',
     extend: "Ext.panel.Panel",
     requires: ['Ext.selection.CheckboxModel', 'Ext.grid.column.Date', 'Ext.grid.column.Template'],
-    title: 'Surveys Taken',
+    title: 'Surveys Taken (Only last 300 are displayed)',
     layout: 'border',
     items: [{
         region: 'west',
@@ -59,6 +59,19 @@ Ext.define("SD.view.data.SurveysTakenTab", {
                 text: 'Survey Id',
                 dataIndex: 'survey_id',
                 width: 80
+            }, {
+                text: 'Themometer %',
+                xtype: 'templatecolumn',
+                width: 100,
+                dataIndex: 'rate',
+                tpl: new Ext.XTemplate(
+                    '{[this.getPercentage(values.rate)]}', {
+                    getPercentage: function(rate) {
+                        if (rate)
+                            return rate + '%';
+                        return '';
+                    }
+                })
             }, {
                 text: 'Status',
                 xtype: 'templatecolumn',

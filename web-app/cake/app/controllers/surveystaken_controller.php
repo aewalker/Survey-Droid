@@ -17,24 +17,26 @@ class SurveysTakenController extends RestController
 	var $name = 'SurveysTaken';
 	var $components = array('Auth');
 
-    
-    function rest_create() {
+    function rest_index() {
         $this->autoRender = false;
-        $this->header('HTTP/1.1 501 Not Implemented');
-    }
-    function rest_read($id) {
-        $this->autoRender = false;
-        $this->header('HTTP/1.1 501 Not Implemented');
-    }
-    function rest_update($id) {
-        $this->autoRender = false;
-        $this->header('HTTP/1.1 501 Not Implemented');
-    }
-    function rest_delete($id) {
-        $this->autoRender = false;
-        $this->header('HTTP/1.1 501 Not Implemented');
-    }
+        $this->header('Content-Type: application/json');
+        $modelClass = $this->modelClass;
+        // add any applicable filters
+        $conditions = array();
+        if (array_key_exists('filter', $this->params['url'])) {
+            $filters = json_decode($this->params['url']['filter'], true);
+            foreach ($filters as $filter)
+                if (array_key_exists($filter['property'], $this->$modelClass->_schema))
+                    $conditions[$modelClass.'.'.$filter['property']] = $filter['value'];
+        }
 
+        $models = $this->$modelClass->find('all', array(
+            'recursive' => -1,
+            'conditions' => $conditions,
+            'limit' => 300
+        ));
+        e(json_encode(standardize($models, $modelClass)));
+    }
 
     /** csv dump */
     function dump() {
