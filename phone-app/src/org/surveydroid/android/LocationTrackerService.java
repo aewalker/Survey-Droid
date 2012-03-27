@@ -81,6 +81,8 @@ public class LocationTrackerService extends Service
 	
 	private int timesSent = 0;
 	
+	//TODO move these to the database class
+	
 	/** Put this as the accuracy to indicate that times aren't being tracked now */
 	private static final int BAD_TIME = -1;
 	
@@ -285,7 +287,7 @@ public class LocationTrackerService extends Service
 		}
 		
 		//make sure we have a valid time
-		if (timesSent > 1)
+		if (timesSent > 1 || latest == null)
 		{
 			Util.d(null, TAG, "No valid location to send; sending null location");
 			TrackingDBHandler tdbh = new TrackingDBHandler(this);
