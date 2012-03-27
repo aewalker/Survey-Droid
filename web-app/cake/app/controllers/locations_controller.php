@@ -20,7 +20,7 @@ class LocationsController extends RestController
 
     function rest_index() {
         $this->autoRender = false;
-//        $this->header('Content-Type: application/json');
+       $this->header('Content-Type: application/json');
         $modelClass = $this->modelClass;
         // add any applicable filters
         $conditions = array();
@@ -34,7 +34,7 @@ class LocationsController extends RestController
         $models = $this->$modelClass->find('all', array(
             'recursive' => 0,
             'conditions' => $conditions,
-            'limit' => $limit,
+            'limit' => 300,
             'order' => 'Location.created DESC'
         ));
 
