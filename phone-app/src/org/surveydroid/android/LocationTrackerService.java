@@ -311,6 +311,7 @@ public class LocationTrackerService extends Service
 		tdbh.close();
 		reschedule();
 		uploadNow();
+		timesSent++;
 		return;
 		
 		/*
