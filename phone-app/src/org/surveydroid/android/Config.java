@@ -35,7 +35,7 @@ import android.media.MediaRecorder;
  * @author Tony Xaio
  * @author Henry Liu
  */
-public class Config
+public final class Config
 {
 	//name of the file to write the config to
 	private static final String CONFIG_FILE = "sd.conf";
@@ -260,6 +260,12 @@ public class Config
 	/** List of settings which are floats */
 	public static final String[] FLOATS =
 		{TRACKED_LONG, TRACKED_LAT, TRACKED_RADIUS};
+	
+	/** Prevent instantiation */
+	private Config()
+	{
+		throw new AssertionError("Tried to instantiate Config");
+	}
 	
 	/**
 	 * Get the setting associated with a certain key.

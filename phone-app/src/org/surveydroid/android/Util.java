@@ -57,6 +57,12 @@ public final class Util
 	
 	private static final boolean USE_APP_TAG = true;
 	
+	/** Prevent all subclassing and instantiation */
+	private Util()
+	{
+		throw new AssertionError("Tried to instantiate Util");
+	}
+	
 	/**
 	 * Get the day of the week from {@link Calendar} that corresponds to the
 	 * day given as a string.

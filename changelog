@@ -1,5 +1,12 @@
 Survey Droid Changelog
 ----------------------
+Version 0.8.1-beta:
+	-Changed the free response layout so that the on-screen keyboard doesn't obscure the text being entered.
+	-Added tracking radius check back into the location service; it was removed during the last overhaul to help with debugging.
+	-Technical:
+		-Fixed crash that would occur during start up if the location tracker tried to send a location before the location manager gave it one.
+		-Further work on database threading issue
+
 Version 0.8.0-beta:
 	-The thermometer reading is now sent to the server with each survey completion record
 	-Increased the font size on multiple choice questions

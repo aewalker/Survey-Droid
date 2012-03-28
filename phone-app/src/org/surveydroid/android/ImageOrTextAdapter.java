@@ -52,7 +52,7 @@ public class ImageOrTextAdapter<T> extends ArrayAdapter<T>
 	private float size = 0;
 	
 	//how much to scale the size of the choices by
-	private static final float SCALE_FACTOR = 1.5f;
+	private static final float SCALE_FACTOR = 1.2f;
 	
 	/**
 	 * Constructor
