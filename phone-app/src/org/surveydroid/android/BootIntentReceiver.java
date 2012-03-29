@@ -52,7 +52,6 @@ public class BootIntentReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
-    	Util.reg(context);
     	if (!intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
     	{
 			Util.w(null, TAG, "Wrong action: " + intent.getAction());

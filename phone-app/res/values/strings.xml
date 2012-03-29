@@ -26,6 +26,17 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 	<!-- Name of the whole application. -->
 	<string name="app_name">Survey Droid</string>
 	
+	<string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
+	<string name="crash_notif_title">SurveyDroid has crashed...</string>
+	<string name="crash_notif_text">Please click here to help fix the issue.</string>
+    
+	<string name="crash_dialog_title">SurveyDroid has crashed</string>
+	<string name="crash_dialog_text">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us error data,
+    all you have to do is click \'OK\'.</string>
+	<string name="crash_dialog_comment_prompt">Please tell us what you were doing when the application crashed:</string>
+	<string name="crash_dialog_ok_toast">Thank you!</string>
+	
 	<!-- ============= -->
     <!-- Main Activity -->
     <!-- ============= -->

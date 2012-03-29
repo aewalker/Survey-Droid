@@ -147,7 +147,6 @@ public class ComsService extends IntentService
 	@Override
 	protected void onHandleIntent(Intent intent)
 	{
-		Util.reg(this);
 		if (Config.D) sendLog();
 		
 		String action = intent.getAction();

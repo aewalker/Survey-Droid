@@ -63,7 +63,6 @@ public class SettingsActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        Util.reg(this);
 
         Util.d(null, TAG, "Starting settings activity");
 

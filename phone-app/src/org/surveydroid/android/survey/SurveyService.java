@@ -218,7 +218,6 @@ public class SurveyService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
-		Util.reg(this);
 		if (runRefresh == null)
 		{
 			Intent refreshIntent = new Intent(this, SurveyService.class);

@@ -48,7 +48,6 @@ public class SurveyDoneActivity extends Activity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		Util.reg(this);
 		Util.d(null, TAG, "Creating SurveyDoneActivity");
 		
 		//setting the layout of the activity

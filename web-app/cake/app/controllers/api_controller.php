@@ -37,8 +37,7 @@ class APIController extends AppController
 	function beforeFilter()
 	{
 		//if the user has set the site to use ssl, force https connections
-		if (SSL === true && substr($this->params['url']['url'], -5) != 'error')
-			$this->Ssl->force();
+		if (SSL === true) $this->Ssl->force();
 	}
 	
 	/**
@@ -228,9 +227,12 @@ class APIController extends AppController
 	/**
 	 * Used to send information about app crashes to the admin.
 	 */
-	function error($deviceid = NULL)
+	function error()
 	{
-		$subjectid = $this->getSubjectID($deviceid, $message, $worked);
+		$worked = false;
+		$message = 'No POST data';
+		if (array_key_exists('DEVICE_ID', $_POST) && !empty($_POST['DEVICE_ID']))
+			$_POST['SUBJECT_ID'] = $this->getSubjectID($_POST['DEVICE_ID'], $message, $worked);
 		if ($worked == false)
 		{
 			$this->set('result', $worked);
@@ -238,18 +240,19 @@ class APIController extends AppController
 			return;
 		}
 		$this->set('result', true);
-		//code from http://code.google.com/p/android-remote-stacktrace/
-		if (empty($_POST)) return;
-        if ( $_POST['stacktrace'] == "" || $_POST['package_version'] == "" || $_POST['package_name'] == "" ) {
-        	return;
-        }
-//        $random = rand(1000,9999);
-        $version = $_POST['package_version'];
-        $package = $_POST['package_name'];
-//        $handle = fopen($package."-trace-".$version."-".time()."-".$random, "w+");
-//        fwrite($handle, $_POST['stacktrace']);
-//        fclose($handle);
-        mail(ADMIN_EMAIL,"Survey Droid exception received ($version)",$_POST['stacktrace'], "from:no-reply@survey-droid.org");
+		$s = ' style="border:1px solid black;"';
+		$body = "<html><body><table$s><tr$s><th$s colspan=\"2\">Survey Droid crash Report</th></tr>";
+		foreach ($_POST as $key => $val)
+		{
+			$val = str_replace("\n", '<br />', $val);
+			$body .= "<tr$s><td$s><strong>$key</strong></td><td$s>$val</td></tr>";
+		}
+		$body .= '</table></body></html>';
+		$to = ADMIN_EMAIL;
+		$subject = 'Survey Droid exception received';
+		$headers = "From: no-reply@survey-droid.org\r\n";
+		$headers .= "Content-type: text/html\r\n"; 
+		mail($to, $subject, $body, $headers);
 	}
 	
 	/**
