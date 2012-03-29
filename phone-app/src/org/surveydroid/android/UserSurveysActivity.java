@@ -55,7 +55,6 @@ public class UserSurveysActivity extends ListActivity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		Util.reg(this);
 
         Util.d(null, TAG, "starting user surveys activity");
         

@@ -18,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>. 
  -->
+ <!-- Button height at 33dip is the minimum, in case this is needed. -->
 <LinearLayout
    	xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/free_response_topLayout"
@@ -33,14 +34,14 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
         <Button
         	android:id="@+id/free_response_backButton"
         	android:text="@string/question_backButton"
-        	android:layout_height="33dip"
+        	android:layout_height="wrap_content"
         	android:layout_width="100dip"
         	android:layout_weight="1"
         	android:layout_gravity="center"></Button>
         <Button
         	android:id="@+id/free_response_nextButton"
         	android:text="@string/question_nextButton"
-        	android:layout_height="33dip"
+        	android:layout_height="wrap_content"
         	android:layout_width="100dip"
         	android:layout_weight="1"
         	android:layout_gravity="center"></Button>

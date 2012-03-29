@@ -96,7 +96,6 @@ public class LocationTrackerService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
-		Util.reg(this);
 		if (intent == null)
 		{
 			Intent restartIntent =

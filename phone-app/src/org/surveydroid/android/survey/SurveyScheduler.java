@@ -120,7 +120,6 @@ public class SurveyScheduler extends IntentService
 	@Override
 	protected void onHandleIntent(Intent intent)
 	{
-		Util.reg(this);
 		String action = intent.getAction();
 		if (action.equals(ACTION_ADD_SURVEY))
 		{

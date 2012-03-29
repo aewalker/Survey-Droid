@@ -69,7 +69,6 @@ public class MainActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        Util.reg(this);
 
         Util.d(null, TAG, "starting mainActivity");
         if (!Config.getSetting(this, BootIntentReceiver.STARTED_KEY, false))

@@ -169,7 +169,6 @@ public abstract class QuestionActivity extends Activity
 	protected void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		Util.reg(this);
 		Util.d(null, TAG, "Creating QuestionActivity");
 		
 		//get the survey

@@ -1,5 +1,11 @@
 Survey Droid Changelog
 ----------------------
+Version 0.8.2-beta:
+	-Removed the title bar from all activites.
+	-Restored original free response layout.
+	-Technical:
+		-Added ACRA.
+
 Version 0.8.1-beta:
 	-Changed the free response layout so that the on-screen keyboard doesn't obscure the text being entered.
 	-Added tracking radius check back into the location service; it was removed during the last overhaul to help with debugging.
