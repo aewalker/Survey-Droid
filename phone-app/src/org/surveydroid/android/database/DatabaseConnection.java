@@ -1,12 +1,9 @@
 /*---------------------------------------------------------------------------*
- * SurveyDroidDBHandler.java                                                 *
+ * DatabaseConnection.java                                                   *
  *                                                                           *
- * Base class that other DB helpers inherit from.  Just contains generic     *
- * database open/close calls.  Any kind of database task that needs to be    *
- * performed by many different parts of the application can go here, but     *
- * more specific functions should be in their own class that extends this.   *
+ * Manages the singleton database connection.                                *
  *---------------------------------------------------------------------------*
- * Copyright 2011 Sema Berkiten, Vladimir Costescu, Henry Liu, Diego Vargas, *
+ * Copyright 2012 Sema Berkiten, Vladimir Costescu, Henry Liu, Diego Vargas, *
  * Austin Walker, and Tony Xiao                                              *
  *                                                                           *
  * This file is part of Survey Droid.                                        *
@@ -26,56 +23,74 @@
  *****************************************************************************/
 package org.surveydroid.android.database;
 
+import org.surveydroid.android.Util;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
+ * Manages the single database connection in order to prevent threading
+ * problems.
  * 
- * Interact with our database using this class, {@link SurveyDroidDB} will
- * keep track of the version of the DB, creating the DB, updating
- * the DB, and other versioning manipulations.
- * 
- * @author Diego Vargas
  * @author Austin Walker
  */
-public class SurveyDroidDBHandler
+public class DatabaseConnection
 {
-	private DatabaseConnection conn;
+	private static final String TAG = "DatabaseConnection";
+	
+	private Context c;
+	
+	private static DatabaseConnection conn;
+	
+	private SurveyDroidDB sddb;
+	
+	private SQLiteDatabase db;
+	
+	private int openCount = 0;
 	
 	/**
-	 * The {@link Context} this handler was created with; used for database
-	 * calls.
+	 * Make sure there can only be one of this class
 	 */
-	protected static Context contx;
-	
-	/** The {@link SQLiteDatabase} used to make database calls. */
-	protected static SQLiteDatabase db;
-	
-	/**
-	 * Simple constructor.
-	 * 
-	 * @param context - the current {@link Context}
-	 */
-	public SurveyDroidDBHandler(Context context)
+	private DatabaseConnection(Context c)
 	{
-		contx = context;
-		conn = DatabaseConnection.getConnection(context);
+		this.c = c;
+	}
+	
+	public static DatabaseConnection getConnection(Context c)
+	{
+		if (conn == null) conn =
+			new DatabaseConnection(c.getApplicationContext());
+		return conn;
 	}
 	
 	/**
 	 * Open a database connection
 	 */
-	public void open()
+	public synchronized SQLiteDatabase open()
 	{
-		db = conn.open();
+		Util.d(null, TAG, "opening read/write database connection");
+		if (openCount == 0)
+		{
+			if (sddb == null)
+				sddb = new SurveyDroidDB(c);
+			db = sddb.getWritableDatabase();
+		}
+		openCount++;
+		return db;
 	}
-	
+
 	/**
 	 * Close the database.
 	 */
-	public void close()
+	public synchronized void close()
 	{
-		conn.close();
-		db = null;
+		Util.d(null, TAG, "closing database connection");
+		openCount--;
+		if (openCount == 0)
+		{
+			db.close();
+			sddb.close();
+			db = null;
+		}
 	}
 }

@@ -23,8 +23,6 @@
  *****************************************************************************/
 package org.surveydroid.android;
 
-//import java.util.ArrayList;
-//import java.util.Arrays;
 import java.util.Calendar;
 
 import org.surveydroid.android.coms.ComsService;
@@ -81,6 +79,8 @@ public class LocationTrackerService extends Service
 	
 	private int timesSent = 0;
 	
+	//TODO move these to the database class?
+	
 	/** Put this as the accuracy to indicate that times aren't being tracked now */
 	private static final int BAD_TIME = -1;
 	
@@ -91,7 +91,6 @@ public class LocationTrackerService extends Service
 	private static final int NO_LOCATION = -3;
 	
 	/** Put this as the accuracy to indicate that the location is out of range */
-	@SuppressWarnings("unused") //we'll use this later
 	private static final int OUT_OF_RANGE = -4;
 	
 	@Override
@@ -285,7 +284,7 @@ public class LocationTrackerService extends Service
 		}
 		
 		//make sure we have a valid time
-		if (timesSent > 1)
+		if (timesSent > 1 || latest == null)
 		{
 			Util.d(null, TAG, "No valid location to send; sending null location");
 			TrackingDBHandler tdbh = new TrackingDBHandler(this);
@@ -297,7 +296,55 @@ public class LocationTrackerService extends Service
 			return;
 		}
 		
-		//TODO check for location accuracy here
+		//make sure we are in range
+		int numLocs = Config.getSetting(this, Config.NUM_LOCATIONS_TRACKED, 0);
+		if (numLocs != 0)
+		{
+			log = false;
+			for (int i = 0; i < numLocs; i++)
+			{
+				//get the location information
+				double thisLon = (double) Config.getSetting(
+						LocationTrackerService.this,
+						Config.TRACKED_LONG + i, (float) -1.0);
+				double thisLat = (double) Config.getSetting(
+						LocationTrackerService.this,
+						Config.TRACKED_LAT + i, (float) -1.0);
+				double thisRad = (double) Config.getSetting(
+						LocationTrackerService.this,
+						Config.TRACKED_RADIUS + i, (float) -1.0);
+				if (thisLon == -1.0 || thisLat == -1.0 || thisRad == -1.0)
+				{
+					throw new RuntimeException(
+							"cannot find location tracking value "
+							+ "for location index" + i);
+				}
+				
+				//now see if the incoming location
+				//is within a valid location
+				float[] results = new float[1];
+				Location.distanceBetween(latest.getLatitude(), latest.getLongitude(),
+						thisLat, thisLon, results);
+				Util.v(null, TAG, "Distance: "
+						+ (results[0] / 1000) + "km");
+				if (results[0] < (thisRad * 1000))
+				{
+					log = true;
+					break;
+				}
+			}
+			if (log == false)
+			{
+				Util.d(null, TAG, "Location is out of range");
+				TrackingDBHandler tdbh = new TrackingDBHandler(this);
+				tdbh.open();
+				tdbh.writeLocation(0, 0, OUT_OF_RANGE, Util.currentTimeAdjusted() / 1000);
+				tdbh.close();
+				reschedule();
+				uploadNow();
+				return;
+			}
+		}
 		
 		Util.d(null, TAG, "Tracking is enabled, time is valid, and we have a location that is in range; logging");
 		double lat = latest.getLatitude();
@@ -309,88 +356,7 @@ public class LocationTrackerService extends Service
 		tdbh.close();
 		reschedule();
 		uploadNow();
-		return;
-		
-		/*
-		int numLocs = Config.getSetting(LocationTrackerService.this,
-				Config.NUM_LOCATIONS_TRACKED, 0);
-		boolean log = false;
-		//TODO fix up the location sensitivity code
-		if (false)
-//			if (numLocs >= 1)
-		{
-			for (int i = 0; i < numLocs; i++)
-			{
-				//for each location tracked, get the information
-				//for that location and validate it
-				double thisLon = (double) Config.getSetting(
-						LocationTrackerService.this,
-						Config.TRACKED_LONG + i, (float) -1.0);
-				double thisLat = (double) Config.getSetting(
-						LocationTrackerService.this,
-						Config.TRACKED_LAT + i, (float) -1.0);
-				double thisRad = (double) Config.getSetting(
-						LocationTrackerService.this,
-						Config.TRACKED_RADIUS + i, (float) -1.0);
-				if (thisLon == -1.0 ||
-					thisLat == -1.0 ||
-					thisRad == -1.0)
-				{
-					throw new RuntimeException(
-							"cannot find location tracking value "
-							+ "for location index" + i);
-				}
-				
-				//now see if the incoming location
-				//is within a valid location
-				float[] results = new float[1];
-				Location.distanceBetween(lat, lon,
-						thisLat, thisLon, results);
-				Util.v(null, TAG, "Distance: "
-						+ (results[0] / 1000) + "km");
-				if (results[0] < (thisRad * 1000))
-				{
-					log = true;
-					break;
-				}
-			}
-		}
-		else
-		{ //assume that if there are no locations, then everything
-		  //should be tracked (to track nowhere just turn off tracking)
-			log = true;
-		}
-		
-		//TODO generalize this
-		//right now it's just a crutch to get by
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(latest.getTime());
-		int hour = c.get(Calendar.HOUR_OF_DAY);
-		if (hour < 8 || hour >= 1900) log = false;
-		
-		if (log)
-		{
-			Util.d(null, TAG, "Storing location");
-			TrackingDBHandler tdbh =
-				new TrackingDBHandler(LocationTrackerService.this);
-			tdbh.open();
-			tdbh.writeLocation(lat, lon, latest.getAccuracy(),
-					latest.getTime() / 1000);
-			tdbh.close();
-			
-			//tell the coms service to upload this data
-			Intent uploadIntent = new Intent(LocationTrackerService.this,
-					ComsService.class);
-			uploadIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
-			uploadIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
-					ComsService.LOCATION_DATA);
-			startService(uploadIntent);
-		}
-		else
-		{
-			Util.d(null, TAG, "Not storing: loction out of range");
-		}
-		*/
+		timesSent++;
 	}
 	
 	/**

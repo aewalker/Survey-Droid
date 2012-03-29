@@ -57,6 +57,12 @@ public final class Util
 	
 	private static final boolean USE_APP_TAG = true;
 	
+	/** Prevent all subclassing and instantiation */
+	private Util()
+	{
+		throw new AssertionError("Tried to instantiate Util");
+	}
+	
 	/**
 	 * Get the day of the week from {@link Calendar} that corresponds to the
 	 * day given as a string.
@@ -231,14 +237,14 @@ public final class Util
 		{
 			if (c != null) toast(c, tag + " :: " + msg);
 			if (USE_APP_TAG)
-				Log.i(APP_TAG, tag + " :: " + msg);
+				Log.w(APP_TAG, tag + " :: " + msg);
 			else
-				Log.i(tag, msg);
+				Log.w(tag, msg);
 			log(msg);
 		}
 		else
 		{
-			Log.i(APP_TAG, msg);
+			Log.w(APP_TAG, msg);
 		}
 	}
 	
@@ -255,9 +261,9 @@ public final class Util
 		{
 			if (c != null) toast(c, tag + " :: " + msg);
 			if (USE_APP_TAG)
-				Log.d(APP_TAG, tag + " :: " + msg);
+				Log.w(APP_TAG, tag + " :: " + msg);
 			else
-				Log.d(tag, msg);
+				Log.w(tag, msg);
 			log(msg);
 		}
 	}
@@ -275,9 +281,9 @@ public final class Util
 		{
 			if (c != null) toast(c, tag + " :: " + msg);
 			if (USE_APP_TAG)
-				Log.v(APP_TAG, tag + " :: " + msg);
+				Log.w(APP_TAG, tag + " :: " + msg);
 			else
-				Log.v(tag, msg);
+				Log.w(tag, msg);
 			log(msg);
 		}
 	}
