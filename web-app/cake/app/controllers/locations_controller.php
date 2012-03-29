@@ -63,6 +63,43 @@ class LocationsController extends RestController
         $this->autoRender = false;
         $this->header('HTTP/1.1 501 Not Implemented');
     }
+
+    function dump() {
+        $this->autoRender = false;
+        ini_set('max_execution_time', 600); //increase max_execution_time to 10 min if data set is very large
+        
+        $modelClass = $this->modelClass;
+        $filename = $modelClass . "_dump_".date("Y.m.d").".csv";
+
+        header('Content-type: application/csv');
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+
+        // custom stuff
+        $csv_file = fopen('php://output', 'w');
+        $headers = array_keys($this->$modelClass->_schema);
+        fputcsv($csv_file, $headers, ',', '"');
+
+        $total = $this->$modelClass->find('count');
+        $increment = 100;
+
+        for ($offset = 0; $offset<$total; $offset+=$increment) {
+            $models = $this->$modelClass->find('all', array(
+                'recursive' => -1,
+                'order' => 'created DESC',
+                'offset' => $offset,
+                'limit' => $increment
+            ));
+            foreach($models as $item) {
+                $row = array();
+                foreach ($headers as $header) {
+                    array_push($row, $item[$modelClass][$header]);
+                }
+                fputcsv($csv_file,$row,',','"');
+            }
+        }
+    
+        fclose($csv_file);
+    }
 }
 
 ?>
