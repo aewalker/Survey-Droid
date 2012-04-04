@@ -1,3 +1,26 @@
+/*---------------------------------------------------------------------------*
+ * SurveyDroid.java                                                          *
+ *                                                                           *
+ * The main appication class.                                                *
+ *---------------------------------------------------------------------------*
+ * Copyright 2012 Sema Berkiten, Vladimir Costescu, Henry Liu, Diego Vargas, *
+ * Austin Walker, and Tony Xiao                                              *
+ *                                                                           *
+ * This file is part of Survey Droid.                                        *
+ *                                                                           *
+ * Survey Droid is free software: you can redistribute it and/or modify      *
+ * it under the terms of the GNU General Public License as published by      *
+ * the Free Software Foundation, either version 3 of the License, or         *
+ * (at your option) any later version.                                       *
+ *                                                                           *
+ * Survey Droid is distributed in the hope that it will be useful,           *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ * GNU General Public License for more details.                              *
+ *                                                                           *
+ * You should have received a copy of the GNU General Public License         *
+ * along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.     *
+ *****************************************************************************/
 package org.surveydroid.android;
 
 import org.acra.*;
@@ -5,6 +28,12 @@ import org.acra.annotation.*;
 
 import android.app.Application;
 
+/**
+ * The main applicaiton class
+ * 
+ * @author Austin Walker
+ */
+//TODO move all the singleton things like the DatabaseConnection into this class
 @ReportsCrashes(formKey = "",
         formUri = "https://survey-droid.org/api/error",
         mode = ReportingInteractionMode.NOTIFICATION,
@@ -22,7 +51,7 @@ public class SurveyDroid extends Application
     @Override
     public void onCreate()
     {
-        // The following line triggers the initialization of ACRA
+        //start ACRA
     	Util.i(null, TAG, "onCreate");
         ACRA.init(this);
         super.onCreate();

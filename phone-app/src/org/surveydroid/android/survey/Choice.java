@@ -150,7 +150,7 @@ public class Choice
 			c_ids[i] = choice.id;
 			i++;
 		}
-		return new Answer(q, q_id, c, c_ids, ctxt);
+		return new Answer(q, q_id, c, c_ids);
 	}
 	
 	/*-----------------------------------------------------------------------*/

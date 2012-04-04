@@ -85,7 +85,7 @@ public class SlidingScaleTextQuestion extends Question
 		if (val < 0 || val > 100)
 			throw new IllegalArgumentException(
 					"Scale value " + val + " is not between 0 and 100");
-		Answer newAnswer = new Answer(this, id, val, ctxt);
+		Answer newAnswer = new Answer(this, id, val);
 		super.answer(newAnswer);
 		return newAnswer;
 	}

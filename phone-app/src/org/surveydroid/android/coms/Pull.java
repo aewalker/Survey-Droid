@@ -42,12 +42,14 @@ import android.telephony.TelephonyManager;
 import static org.surveydroid.android.database.SurveyDroidDB.*;
 
 import org.surveydroid.android.Config;
-import org.surveydroid.android.LocationTrackerService;
+import org.surveydroid.android.LocationTracker;
 import org.surveydroid.android.Util;
 import org.surveydroid.android.coms.WebClient;
 import org.surveydroid.android.coms.WebClient.ApiException;
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.survey.SurveyScheduler;
+
+import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 /* Note that this class doesn't use the ComsDBHandler like it seems that is
  * should.  The reason for this is that the database operations that are
@@ -156,7 +158,7 @@ public class Pull
 		    			SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
 		    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUNNING_TIME,
 		    			System.currentTimeMillis());
-		        ctxt.startService(schedulerIntent);
+		    	WakefulIntentService.sendWakefulWork(ctxt, schedulerIntent);
         	}
         	else
         	{
@@ -532,7 +534,7 @@ public class Pull
 			{
 	    		//times tracked
 	    		JSONArray times = config.getJSONArray("time_tracked");
-	    		Config.putSetting(ctxt, LocationTrackerService.TIMES_COALESCED,
+	    		Config.putSetting(ctxt, LocationTracker.TIMES_COALESCED,
 	    				false);
 	    		Config.putSetting(ctxt, Config.NUM_TIMES_TRACKED,
 	    				times.length());
@@ -546,11 +548,7 @@ public class Pull
 	    		}
 	    		config.remove("time_tracked");
 	    		//tell the location tracking service to recalculate
-	    		Intent trackingIntent = new Intent(ctxt,
-	    				LocationTrackerService.class);
-	    		trackingIntent.setAction(
-	    				LocationTrackerService.ACTION_START_TRACKING);
-	    		ctxt.startService(trackingIntent);
+	    		Config.putSetting(ctxt, LocationTracker.TIMES_COALESCED, false);
 			}
 			catch (JSONException e)
 			{

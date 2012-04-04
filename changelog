@@ -1,7 +1,20 @@
 Survey Droid Changelog
 ----------------------
+Version 0.9.0-beta:
+	-Fixed survey thermometer off-by-1 bug.
+	-Major work on power management issues (such as phones sleeping through surveys or using too much energy)
+	-Improved error reporting for surveys that fail to build properly.
+	-Users may need to re-enter a survey when they rotate the phone (this reverts the change in 0.8.0-beta).  This is the result of a fix for a bug that caused survey questions to remain open after the survey was over.
+	-Technical: 
+		-Added the CWAC WakefulIntentService library
+		-Added the Dispatcher class, which allows for wakeful services and better use of WakefulIntentServices via alarms
+		-Added wakelock functionality to the SurveyService
+		-Converted the intent services to be wakeful
+		-Added the CWAC LocationPoller library to replace the LocationTracker
+		-Removed some very old stuff that was once used to try and write a log
+
 Version 0.8.2-beta:
-	-Removed the title bar from all activites.
+	-Removed the title bar from all activities.
 	-Restored original free response layout.
 	-Technical:
 		-Added ACRA.

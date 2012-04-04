@@ -72,6 +72,7 @@ public class Condition
 	/**
 	 * Create a new Condition.
 	 * 
+	 * @param q_id the id of the question this condition checks
 	 * @param c - {@link Choice} to look at
 	 * @param t - type of relation required
 	 * @param ans - {@link Answer}s from the survey (required to  check current
@@ -103,16 +104,21 @@ public class Condition
 	 * Should only be called once.
 	 * 
 	 * @param q_map - a {@link Map} of built Questions
-	 * 
 	 * @throws RuntimeException if called multiple times
-	 * @throws RuntimeException if the given map doesn't have the need Question
+	 * @throws SurveyConstructionException if the given map doesn't
+	 * have the need Question
 	 */
 	public void setQuestion(Map<Integer, Question> qMap)
+		throws SurveyConstructionException
 	{
 		if (question != null) throw new RuntimeException(
 				"attempt to set condition question multiple times");
-		if (!qMap.containsKey(q_id)) throw new RuntimeException(
-				"bad question map: atempting to set question " + q_id);
+		if (!qMap.containsKey(q_id))
+		{
+			SurveyConstructionException e = new SurveyConstructionException();
+			e.setRefQuestion(q_id);
+			throw e;
+		}
 		question = qMap.get(q_id);
 	}
 	

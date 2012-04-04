@@ -30,18 +30,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
-import android.app.AlarmManager;
-import android.app.IntentService;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
 import org.surveydroid.android.Config;
+import org.surveydroid.android.Dispatcher;
 import org.surveydroid.android.Util;
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.SurveyDBHandler;
+
+import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 /**
  * Schedules surveys based on the database information about them.  Reschedules
@@ -51,9 +50,9 @@ import org.surveydroid.android.database.SurveyDBHandler;
  * @author Austin Walker
  * @author Diego Vargas
  */
-public class SurveyScheduler extends IntentService
+public class SurveyScheduler extends WakefulIntentService
 {
-	//logging tag
+	/** logging tag */
 	private static final String TAG = "SurveyScheduler";
 	
 	//intent actions
@@ -73,12 +72,10 @@ public class SurveyScheduler extends IntentService
 		"org.surveydroid.android.survey.ACTION_SCHEDULE_SURVEYS";
 	
 	//intent extras
-	//TODO use the EXTRA_SURVEY_ID from the survey service (?)
 	/**
 	 * The id of the survey to be added.  Used with {@link #ACTION_ADD_SURVEY}.
 	 */
-	public static final String EXTRA_SURVEY_ID =
-		"org.surveydroid.android.survey.EXTRA_SURVEY_ID";
+	public static final String EXTRA_SURVEY_ID = SurveyService.EXTRA_SURVEY_ID;
 	
 	/**
 	 * The time the survey is to be scheduled for.  Used with
@@ -107,18 +104,13 @@ public class SurveyScheduler extends IntentService
 	public static final String EXTRA_RUN_AGAIN =
 		"org.surveydroid.android.survey.EXTRA_RUN_AGAIN";
 	
-	/**
-	 * Constructor.
-	 * 
-	 * @param name
-	 */
 	public SurveyScheduler()
 	{
 		super(null);
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent)
+	public void doWakefulWork(Intent intent)
 	{
 		String action = intent.getAction();
 		if (action.equals(ACTION_ADD_SURVEY))
@@ -150,7 +142,14 @@ public class SurveyScheduler extends IntentService
 		}
 	}
 	
-	//schedule survey id for the given time
+	/**
+	 * Schedule survey id for the given time.
+	 * 
+	 * @param context
+	 * @param id
+	 * @param time
+	 * @param random set to true if the survey is a random one
+	 */
 	private void addSurvey(int id, long time, boolean random)
 	{
 		Calendar c = Calendar.getInstance();
@@ -179,18 +178,20 @@ public class SurveyScheduler extends IntentService
 		 * 01/18/2012 - I have verified that this will cause filterEquals to
 		 * return false by examining the source code. - Austin
 		 */
-		Uri uri = Uri.parse(Integer.toString(id) + "+" + Long.toString(time));
+		Uri uri = Uri.parse("survey:" + Integer.toString(id) + "@" + Long.toString(time));
 		surveyIntent.setData(uri);
 		surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID, id);
 		surveyIntent.putExtra(EXTRA_RUNNING_TIME, time);
-		PendingIntent pendingSurvey = PendingIntent.getService(
-				getApplicationContext(), 0, surveyIntent, 0);
-		AlarmManager alarm =
-			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		alarm.set(AlarmManager.RTC_WAKEUP, time, pendingSurvey);
+		Dispatcher.dispatch(this.getApplicationContext(),
+			surveyIntent, time, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 	}
 	
-	//look for surveys that need to be scheduled and do so
+	/**
+	 * Look for surveys that need to be scheduled and does so.
+	 * 
+	 * @param context
+	 * @param reschedule if true, set up an alarm to reschedule
+	 */
 	private void scheduleSurveys(boolean reschedule)
 	{
 		Util.i(null, TAG, "Scheduling surveys");
@@ -308,10 +309,8 @@ public class SurveyScheduler extends IntentService
 		Intent schedulerIntent = new Intent(this, SurveyScheduler.class);
 		schedulerIntent.setAction(ACTION_SCHEDULE_SURVEYS);
 		schedulerIntent.putExtra(EXTRA_RUNNING_TIME, nextRun);
-		PendingIntent pendingScheduler = PendingIntent.getService(
-				this, 0, schedulerIntent, 0);
-		AlarmManager alarm =
-			(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		alarm.set(AlarmManager.RTC_WAKEUP, nextRun, pendingScheduler);
+		Uri uri = Uri.parse("survey scheduler reschedule");
+		Dispatcher.dispatch(this, schedulerIntent,
+			nextRun, Dispatcher.TYPE_WAKEFUL_AUTO, uri);
 	}
 }

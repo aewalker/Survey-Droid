@@ -23,19 +23,32 @@
  *****************************************************************************/
 package org.surveydroid.android;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.location.LocationManager;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.survey.SurveyScheduler;
-//import org.surveydroid.android.survey.SurveyScheduler;
+
+import com.commonsware.cwac.locpoll.LocationPoller;
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
+/*
+ * TODO
+ * This whole things should be rebuilt.  In particular, the use of handlers
+ * needs to be removed and replaced with a series of callbacks from the
+ * relevant services via broadcasts.
+ */
 
 /**
  * Starts the background Survey Droid services after at boot time.
@@ -87,7 +100,7 @@ public class BootIntentReceiver extends BroadcastReceiver
 		
     	if (Config.getSetting(context, STARTED_KEY, false))
     	{
-    		Util.i(null, TAG, "Already started; aborting");
+    		Util.w(null, TAG, "Already started; aborting");
     		return;
     	}
     	Util.i(null, TAG, "+++Starting Survey Droid+++");
@@ -121,7 +134,7 @@ public class BootIntentReceiver extends BroadcastReceiver
 			Util.d(null, TAG, "Getting salt");
 			Intent saltIntent = new Intent(context, ComsService.class);
 			saltIntent.setAction(ComsService.ACTION_GET_SALT);
-			context.startService(saltIntent);
+			WakefulIntentService.sendWakefulWork(context, saltIntent);
 		}
         
         //start the coms service pulling
@@ -131,7 +144,7 @@ public class BootIntentReceiver extends BroadcastReceiver
         comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
         		System.currentTimeMillis());
         comsPullIntent.putExtra(ComsService.EXTRA_REPEATING, true);
-        context.startService(comsPullIntent);
+        WakefulIntentService.sendWakefulWork(context, comsPullIntent);
         
         /*
          * We only need the configuration values to be loaded in order to
@@ -152,11 +165,23 @@ public class BootIntentReceiver extends BroadcastReceiver
 		        
 		        //start location tracking
 		        Util.d(null, TAG, "Starting location tracking");
-		        Intent trackingIntent =
-		        	new Intent(context, LocationTrackerService.class);
-		        trackingIntent.setAction(
-		        		LocationTrackerService.ACTION_START_TRACKING);
-		        context.startService(trackingIntent);
+		        //make sure to invalidate any old location entry
+		        Config.putSetting(context, LocationTracker.TIMES_SENT, Integer.MAX_VALUE);
+		        //code adapted from https://github.com/commonsguy/cwac-locpoll
+		        AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+		        Intent i = new Intent(context, LocationPoller.class);
+
+		        i.putExtra(LocationPoller.EXTRA_INTENT,
+		                             new Intent(context, LocationTracker.class));
+		        i.putExtra(LocationPoller.EXTRA_PROVIDER,
+		                             LocationManager.GPS_PROVIDER);
+
+		        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+		        long period = Config.getSetting(context, Config.LOCATION_INTERVAL,
+		        		Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000;
+		        mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+		        		SystemClock.elapsedRealtime(), period, pi);
 	        }
     	};
         
@@ -175,7 +200,7 @@ public class BootIntentReceiver extends BroadcastReceiver
 		        comsPullIntent.putExtra(ComsService.EXTRA_RUNNING_TIME,
 		        		System.currentTimeMillis());
 		        comsPushIntent.putExtra(ComsService.EXTRA_REPEATING, true);
-		        context.startService(comsPushIntent);
+		        WakefulIntentService.sendWakefulWork(context, comsPushIntent);
 		        
 		    	//start the survey scheduler
 		    	Util.d(null, TAG, "Starting survey scheduler");
@@ -184,10 +209,7 @@ public class BootIntentReceiver extends BroadcastReceiver
 		    	schedulerIntent.setAction(
 		    			SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
 		    	schedulerIntent.putExtra(SurveyScheduler.EXTRA_RUN_AGAIN, true);
-		        context.startService(schedulerIntent);
-		        
-		        //get the salt value now instead of waiting until later
-		        Config.getSetting(context, Config.SALT, ""); //ignore result
+		    	WakefulIntentService.sendWakefulWork(context, schedulerIntent);
 	        }
     	};
     	Handler h = new Handler();

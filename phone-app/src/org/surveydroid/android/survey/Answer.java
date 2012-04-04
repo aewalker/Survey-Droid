@@ -26,8 +26,6 @@ package org.surveydroid.android.survey;
 
 import java.util.Collection;
 
-import android.content.Context;
-
 import org.surveydroid.android.Util;
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.SurveyDBHandler;
@@ -60,9 +58,6 @@ public class Answer
 
     //time when this Answer was given/created
     private final long created;
-    
-    //Android Context for database call
-    private final Context ctxt;
 
 	
     /*-----------------------------------------------------------------------*/
@@ -73,15 +68,13 @@ public class Answer
      * @param q - the {@link Question} being answered
      * @param q_id - that question's id
      * @param t - the answer text
-     * @param ctxt - the current {@link Context}
      */
-	public Answer(Question q, int q_id, String t, Context ctxt)
+	public Answer(Question q, int q_id, String t)
 	{
 		question = q;
 		questionID = q_id;
 		text = t;
 		type = SurveyDroidDB.AnswerTable.TEXT;
-		this.ctxt = ctxt;
 		created = Util.currentTimeAdjusted() / 1000;
 		
 		//unneeded fields
@@ -96,15 +89,13 @@ public class Answer
 	 * @param q - the {@link Question} being answered
 	 * @param q_id - that question's id
 	 * @param v - the value the question was answered with
-	 * @param ctxt - the current {@link Context}
 	 */
-	public Answer(Question q, int q_id, int v, Context ctxt)
+	public Answer(Question q, int q_id, int v)
 	{
 		question = q;
 		questionID = q_id;
 		value = v;
 		type = SurveyDroidDB.AnswerTable.VALUE;
-		this.ctxt = ctxt;
 		created = Util.currentTimeAdjusted() / 1000;
 		
 		//unneeded fields
@@ -120,17 +111,15 @@ public class Answer
 	 * @param q_id - that question's id
 	 * @param choices - the {@link Choice}s that were picked
 	 * @param choice_ids - the ids of the choices that were picked
-	 * @param ctxt - the current {@link Context}
 	 */
 	public Answer(Question q, int q_id, Collection<Choice> choices,
-			int[] choice_ids, Context ctxt)
+			int[] choice_ids)
 	{
 		question = q;
 		questionID = q_id;
 		type = SurveyDroidDB.AnswerTable.CHOICE;
 		this.choices = choices;
 		choiceIDs = choice_ids;
-		this.ctxt = ctxt;
 		created = Util.currentTimeAdjusted() / 1000;
 		
 		//unneeded fields
@@ -185,15 +174,13 @@ public class Answer
     /**
      * Write this Answer to the database.
      * 
+     * @param db an <strong>OPEN</strong> {@link SurveyDBHandler}
      * @return true on success
      */
-    public boolean write()
+    public boolean write(SurveyDBHandler db)
     {
     	//don't write dummy answers
     	if (questionID == 0) return true;
-    	
-    	SurveyDBHandler db = new SurveyDBHandler(ctxt);
-    	db.open();
     	boolean worked = false;
     	switch (type)
     	{
@@ -207,9 +194,9 @@ public class Answer
     		worked = db.writeAnswer(questionID, text, created);
     		break;
     	default:
+    		db.close();
     		throw new RuntimeException("Invalid answer type: " + type);
     	}
-    	db.close();
     	return worked;
     }
 }

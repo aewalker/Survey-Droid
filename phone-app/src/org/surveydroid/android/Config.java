@@ -23,7 +23,12 @@
  *****************************************************************************/
 package org.surveydroid.android;
 
+import org.surveydroid.android.coms.ComsService;
+
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaRecorder;
 
@@ -280,6 +285,13 @@ public final class Config
 	{
 		SharedPreferences settings = ctxt.getSharedPreferences(
         		CONFIG_FILE, 0);
+		if (key.equals(SALT) && !settings.contains(key))
+		{
+			Intent i = new Intent(ctxt, ComsService.class);
+			i.setAction(ComsService.ACTION_GET_SALT);
+			WakefulIntentService.sendWakefulWork(ctxt, i);
+			return ifNotFound;
+		}
         return settings.getString(key, ifNotFound);
 	}
 	

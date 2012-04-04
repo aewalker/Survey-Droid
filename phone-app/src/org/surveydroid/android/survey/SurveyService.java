@@ -27,22 +27,27 @@ package org.surveydroid.android.survey;
 
 import java.util.concurrent.PriorityBlockingQueue;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 
+import org.surveydroid.android.Dispatcher;
 import org.surveydroid.android.R;
 import org.surveydroid.android.Config;
 import org.surveydroid.android.Util;
 import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.TakenDBHandler;
+
+import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 /**
  * Runs while a survey is being administered to the user.  "Spawns" instances
@@ -164,11 +169,11 @@ public class SurveyService extends Service
 	/** The notification id to use */
 	private static final int N_ID = 0;
 	
-	PendingIntent runRefresh;
-	PendingIntent runRemove;
-	PendingIntent runTimeout;
+	private Intent runRefresh;
+	private Intent runRemove;
+	private Intent runTimeout;
 	
-	AlarmManager am;
+	private WakeLock wl;
 	
 	/**
 	 * Data class that holds info about a survey instance.
@@ -218,31 +223,34 @@ public class SurveyService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid)
 	{
+		if (wl == null)
+		{
+			PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+			wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+		}
+		if (!wl.isHeld()) wl.acquire();
 		if (runRefresh == null)
 		{
-			Intent refreshIntent = new Intent(this, SurveyService.class);
-			refreshIntent.setAction(ACTION_REFRESH);
-			runRefresh = PendingIntent.getService(this, 0, refreshIntent, 0);
+			runRefresh = new Intent(this, SurveyService.class);
+			runRefresh.setAction(ACTION_REFRESH);
+			runRefresh.setData(Uri.parse(TAG + " runRefresh"));
 		}
 		if (runRemove == null)
 		{
-			Intent removeIntent = new Intent(this, SurveyService.class);
-			removeIntent.setAction(ACTION_REMOVE_SURVEYS);
-			runRemove = PendingIntent.getService(this, 1, removeIntent, 0);
+			runRemove = new Intent(this, SurveyService.class);
+			runRemove.setAction(ACTION_REMOVE_SURVEYS);
+			runRemove.setData(Uri.parse(TAG + " runRemove"));
 		}
 		if (runTimeout == null)
 		{
-			Intent timeoutIntent = new Intent(this, SurveyService.class);
-			timeoutIntent.setAction(ACTION_QUIT_SURVEY);
-			runTimeout = PendingIntent.getService(this, 2, timeoutIntent, 0);
-		}
-		if (am == null)
-		{
-			am = (AlarmManager) getSystemService(ALARM_SERVICE);
+			runTimeout = new Intent(this, SurveyService.class);
+			runTimeout.setAction(ACTION_QUIT_SURVEY);
+			runTimeout.setData(Uri.parse(TAG + " runTimeout"));
 		}
 		handleIntent(intent);
 		//TODO because this service is so complex, just let it die if it
 		//gets killed.  In the future, it would be better to deal with it.
+		if (wl.isHeld()) wl.release();
 		return START_NOT_STICKY;
 	}
 	
@@ -376,7 +384,8 @@ public class SurveyService extends Service
 		{
 			currentInfo = sInfo;
 			build = true;
-			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
+			Dispatcher.dispatch(this, runRefresh,
+				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 		else
 		{
@@ -387,7 +396,8 @@ public class SurveyService extends Service
 			{
 				currentInfo = sInfo;
 				build = true;
-				am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
+				Dispatcher.dispatch(this, runRefresh,
+					0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 			}
 		}
 	}
@@ -403,8 +413,8 @@ public class SurveyService extends Service
 		{
 			throw new RuntimeException("attempted to start null survey");
 		}
-		am.cancel(runRefresh);
-		am.cancel(runRemove);
+		Dispatcher.cancel(this, runRefresh, null);
+		Dispatcher.cancel(this, runRemove, null);
 		try
 		{
 			if (currentInfo.id == DUMMY_SURVEY_ID)
@@ -416,11 +426,29 @@ public class SurveyService extends Service
 				survey = new Survey(currentInfo.id, this);
 			}
 		}
-		catch (Exception e)
+		catch (SurveyConstructionException e)
 		{
-			Util.e(this, TAG, "Error starting survey. "
-					+ "Please give this message to the study "
-					+ "administrator: \"" + e.getMessage() + "\"");
+			final String message = e.toString();
+			Util.e(null, TAG, "Survey construction error:");
+			Util.e(null, TAG, message);
+			
+			//FIXME this is such a hack
+			//we need to get information about the crash somehow, so do this
+			if (Config.D)
+			{
+				//this is supposed to crash immediately
+				final SurveyConstructionException e2 = e;
+				new Thread(new Runnable()
+				{
+					public void run()
+					{
+						throw new RuntimeException(message, e2);
+					}
+				}).run();
+			}
+			
+			Util.e(this, TAG, "Error starting survey; please" +
+					" tell the study administrator.");
 			return false;
 		}
 		return true;
@@ -497,8 +525,6 @@ public class SurveyService extends Service
 			}
 		}
 		
-		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-		
 		//things we're going to need for the notification
 		int icon = R.drawable.survey_small;
 		String tickerText;
@@ -531,10 +557,17 @@ public class SurveyService extends Service
 		notification.defaults |= Notification.DEFAULT_SOUND;
 		notification.defaults |= Notification.DEFAULT_VIBRATE;
 		
-		//send it
+		//send it - make sure the screen turns on properly
+		PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+		WakeLock wakeup = pm.newWakeLock(
+			  PowerManager.SCREEN_DIM_WAKE_LOCK
+			| PowerManager.ACQUIRE_CAUSES_WAKEUP
+			| PowerManager.ON_AFTER_RELEASE, TAG);
+		wakeup.acquire();
 		NotificationManager nm = (NotificationManager)
 			getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.notify(N_ID, notification);
+		wakeup.release();
 		
 		//now reschedule the refresh if needed
 		long refreshInterval = /*Config.getSetting(this, Config.REFRESH_INTERVAL,
@@ -544,12 +577,15 @@ public class SurveyService extends Service
 				currentInfo.endTime == Config.SURVEY_TIMEOUT_NEVER)
 		{
 			Util.v(null, TAG, "go for refresh again");
-			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval, runRefresh);
+			Dispatcher.dispatch(this, runRefresh,
+				System.currentTimeMillis() + refreshInterval,
+				Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 		else
 		{
 			Util.v(null, TAG, "go for remove");
-			am.set(AlarmManager.RTC_WAKEUP, currentInfo.endTime, runRemove);
+			Dispatcher.dispatch(this, runRemove, currentInfo.endTime,
+				Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 	}
 	
@@ -602,7 +638,8 @@ public class SurveyService extends Service
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			build = true;
-			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
+			Dispatcher.dispatch(this, runRefresh,
+				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 		else
 		{
@@ -626,9 +663,9 @@ public class SurveyService extends Service
 		NotificationManager nm = (NotificationManager)
 			getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancel(N_ID);
-		am.cancel(runRefresh);
-		am.cancel(runRemove);
-		am.cancel(runTimeout);
+		Dispatcher.cancel(this, runRefresh, null);
+		Dispatcher.cancel(this, runRemove, null);
+		Dispatcher.cancel(this, runTimeout, null);
 		survey = null; //probably not needed, but just to make sure
 		stopSelf();
 	}
@@ -643,7 +680,7 @@ public class SurveyService extends Service
 		//schedule surveys again (just to be safe; it can't hurt)
 		Intent scheduleIntent = new Intent(getApplicationContext(), SurveyScheduler.class);
 		scheduleIntent.setAction(SurveyScheduler.ACTION_SCHEDULE_SURVEYS);
-		startService(scheduleIntent);
+		WakefulIntentService.sendWakefulWork(this, scheduleIntent);
 	}
 	
 	/**
@@ -710,7 +747,8 @@ public class SurveyService extends Service
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			build = true;
-			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
+			Dispatcher.dispatch(this, runRefresh,
+				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 	}
 	
@@ -765,7 +803,8 @@ public class SurveyService extends Service
 			Util.v(null, TAG, surveys.size() + "more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			build = true;
-			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
+			Dispatcher.dispatch(this, runRefresh,
+				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 		else
 		{
@@ -844,7 +883,8 @@ public class SurveyService extends Service
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			build = true;
-			am.set(AlarmManager.RTC_WAKEUP, 0, runRefresh);
+			Dispatcher.dispatch(this, runRefresh,
+				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 		else
 		{
@@ -863,6 +903,7 @@ public class SurveyService extends Service
 		//is being shut down)
 		if (inSurvey) quitSurvey();
 		removeSurveys(true);
+		if (wl.isHeld()) wl.release();
 	}
 
 	/**
@@ -880,7 +921,7 @@ public class SurveyService extends Service
 		 */
 		public Survey getSurvey()
 		{
-			am.cancel(runTimeout);
+			Dispatcher.cancel(SurveyService.this, runTimeout, null);
 			return survey;
 		}
 		
@@ -893,7 +934,9 @@ public class SurveyService extends Service
 			long delay = Config.getSetting(SurveyService.this,
 					Config.QUESTION_TIMEOUT,
 					Config.QUESTION_TIMEOUT_DEFAULT) * 60 * 1000;
-			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + delay, runTimeout);
+			Dispatcher.dispatch(SurveyService.this, runTimeout,
+				System.currentTimeMillis() + delay,
+				Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 	}
 	
@@ -913,6 +956,6 @@ public class SurveyService extends Service
 		comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
 		comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
 				ComsService.SURVEY_DATA);
-		startService(comsIntent);
+		WakefulIntentService.sendWakefulWork(this, comsIntent);
 	}
 }

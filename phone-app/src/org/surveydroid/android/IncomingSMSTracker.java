@@ -28,10 +28,13 @@ import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.TrackingDBHandler;
 import org.surveydroid.android.survey.SurveyService;
 
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 
@@ -44,10 +47,8 @@ import android.telephony.SmsMessage;
  */
 public class IncomingSMSTracker extends BroadcastReceiver
 {
-    // logging tag
+    /** logging tag */
     private static final String TAG = "IncomingSMS";
-//	private static final String ACTION_SMS_RECEIVED =
-//		"android.provider.Telephony.SMS_RECEIVED";
 
     @Override
     public void onReceive(Context ctxt, Intent intent)
@@ -125,7 +126,9 @@ public class IncomingSMSTracker extends BroadcastReceiver
 						surveyIntent.putExtra(
 							SurveyService.EXTRA_SURVEY_TYPE,
 							SurveyService.SURVEY_TYPE_CALL_INIT);
-						ctxt.startService(surveyIntent);
+						Uri uri = Uri.parse("sms tracker survey");
+						Dispatcher.dispatch(ctxt, surveyIntent,
+							0, Dispatcher.TYPE_WAKEFUL_MANUAL, uri);
 					}
 				}
 			}
@@ -138,7 +141,7 @@ public class IncomingSMSTracker extends BroadcastReceiver
 		uploadIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
 		uploadIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
 				ComsService.CALL_DATA);
-		ctxt.startService(uploadIntent);
+		WakefulIntentService.sendWakefulWork(ctxt, uploadIntent);
     }
 
 }

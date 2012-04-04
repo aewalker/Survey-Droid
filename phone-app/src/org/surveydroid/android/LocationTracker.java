@@ -28,19 +28,16 @@ import java.util.Calendar;
 import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.database.TrackingDBHandler;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.Service;
+import com.commonsware.cwac.locpoll.LocationPoller;
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.IBinder;
 
-//TODO
 /*
+ * TODO
  * It's possible that this class could benefit by using proximity alarms,
  * which are a function of the LocationManager.  Battery life could be extended
  * quite a bit if they are somehow more efficient that the current system.
@@ -49,35 +46,26 @@ import android.os.IBinder;
  * This will be great for location-based surveys actually.
  */
 
-//TODO this class CANNOT deal with time periods that stretch through midnight
-
 /**
  * Tracks the subject's location and writes location data points to the
  * database.
  *
  * @author Austin Walker
  */
-public class LocationTrackerService extends Service
-{
-	/** Start location tracking */
-	public static final String ACTION_START_TRACKING =
-		"org.surveydroid.android.ACTION_START_TRACKING";
-	
-	/** Send information to the server */
-	private static final String ACTION_SEND_LOCATION =
-		"org.surveydroid.android.ACTION_SEND_LOCATION";
-	
+public class LocationTracker extends BroadcastReceiver
+{	
 	/** Config key: have the location tracking times been coalesced? */
 	public static final String TIMES_COALESCED = "times_coalesced";
 	
-	//logging tag
-	private static final String TAG = "LocationTrackerService";
+	/** logging tag */
+	private static final String TAG = "LocationTracker";
 	
-	private LocationTracker lt = new LocationTracker();
-	
-	private Location latest = null;
-	
-	private int timesSent = 0;
+	//prefs keys
+	private static final String LATEST = TAG + "_latest_";
+	private static final String LAT = "lat";
+	private static final String LONG = "long";
+	private static final String ACC = "accuracy";
+	public static final String TIMES_SENT = TAG +"_times_sent";
 	
 	//TODO move these to the database class?
 	
@@ -92,44 +80,36 @@ public class LocationTrackerService extends Service
 	
 	/** Put this as the accuracy to indicate that the location is out of range */
 	private static final int OUT_OF_RANGE = -4;
-	
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startid)
-	{
-		if (intent == null)
-		{
-			Intent restartIntent =
-				new Intent(this, LocationTrackerService.class);
-			restartIntent.setAction(ACTION_START_TRACKING);
-			handleIntent(restartIntent);
-		}
-		else
-		{
-			handleIntent(intent);
-		}
-		return START_STICKY;
-	}
 
-	/**
-	 * Handles each intent
-	 * 
-	 * @param intent the intent that started this service
-	 */
-	private synchronized void handleIntent(Intent intent)
+	@Override
+	public void onReceive(Context ctxt, Intent intent)
 	{
-		String action = intent.getAction();
-		if (action.equals(ACTION_START_TRACKING))
-		{
-			schedule();
-		}
-		else if (action.equals(ACTION_SEND_LOCATION))
-		{
-			sendLocation();
-		}
-		else
-		{
-			Util.w(null, TAG, "Unknown intent action: " + action);
-		}
+		//code adapted from https://github.com/commonsguy/cwac-locpoll
+		Location loc = (Location) intent.getExtras().get(LocationPoller.EXTRA_LOCATION);
+        String msg;
+
+        if (loc == null)
+        {
+            msg = intent.getStringExtra(LocationPoller.EXTRA_ERROR);
+        }
+        else
+        {
+            msg = loc.toString();
+            Config.putSetting(ctxt, TIMES_SENT, 0);
+            Config.putSetting(ctxt, LATEST + LAT, (float) loc.getLatitude());
+            Config.putSetting(ctxt, LATEST + LONG, (float) loc.getLongitude());
+            Config.putSetting(ctxt, LATEST + ACC, (float) loc.getAccuracy());
+        }
+
+        if (msg == null)
+        {
+            Util.e(null, TAG, "Invalid broadcast received!");
+            return;
+        }
+        
+        Util.i(null, TAG, msg);
+        if (!Config.getSetting(ctxt, TIMES_COALESCED, false)) coalesceTimes(ctxt);
+        sendLocation(ctxt);
 	}
 	
 	private class TimePeriod implements Comparable<TimePeriod>
@@ -170,58 +150,37 @@ public class LocationTrackerService extends Service
 	/**
 	 * Provides a quick way to upload data.
 	 */
-	private void uploadNow()
+	private void uploadNow(Context c)
 	{
-		Intent comsIntent = new Intent(this, ComsService.class);
+		Intent comsIntent = new Intent(c, ComsService.class);
 		comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
 		comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
 				ComsService.LOCATION_DATA);
-		startService(comsIntent);
-	}
-	
-	/**
-	 * Reschedule the service to send a location again later.
-	 */
-	private void reschedule()
-	{
-		AlarmManager as = (AlarmManager)
-		this.getSystemService(ALARM_SERVICE);
-		
-		Intent sendIntent = new Intent(this, LocationTrackerService.class);
-		sendIntent.setAction(ACTION_SEND_LOCATION);
-		PendingIntent pendingSend =
-			PendingIntent.getService(this, 0, sendIntent, 0);
-		
-		long offset = Config.getSetting(this, Config.LOCATION_INTERVAL,
-				Config.LOCATION_INTERVAL_DEFAULT) * 60 * 1000;
-		
-		as.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + offset,
-				pendingSend);
+		WakefulIntentService.sendWakefulWork(c, comsIntent);
 	}
 	
 	/**
 	 * Log the latest location information in the database.
 	 */
-	private void sendLocation()
+	private void sendLocation(Context c)
 	{
 		//check that tracking is on
-		if (!Config.getSetting(this, Config.TRACKING_LOCAL, true) ||
-			!Config.getSetting(this, Config.TRACKING_SERVER,
+		if (!Config.getSetting(c, Config.TRACKING_LOCAL, true) ||
+			!Config.getSetting(c, Config.TRACKING_SERVER,
 						Config.TRACKING_SERVER_DEFAULT))
 		{
 			Util.d(null, TAG, "Tracking is disabled; sending null location");
-			TrackingDBHandler tdbh = new TrackingDBHandler(this);
+			TrackingDBHandler tdbh = new TrackingDBHandler(c);
 			tdbh.open();
 			tdbh.writeLocation(0, 0, TRACKING_OFF, Util.currentTimeAdjusted() / 1000);
 			tdbh.close();
-			reschedule();
-			uploadNow();
+			uploadNow(c);
 			return;
 		}
 		
 		//check to ensure that we're in a valid time
 		boolean log = false;
-		int numTimes = Config.getSetting(this, Config.NUM_TIMES_TRACKED, 0);
+		int numTimes = Config.getSetting(c, Config.NUM_TIMES_TRACKED, 0);
 		if (numTimes == 0)
 		{
 			Util.d(null, TAG, "Tracking always on; sending location");
@@ -239,9 +198,9 @@ public class LocationTrackerService extends Service
 				try
 				{
 					start = Integer.parseInt(Config.getSetting(
-							this, Config.TRACKED_START + i, null));
+							c, Config.TRACKED_START + i, null));
 					end = Integer.parseInt(Config.getSetting(
-							this, Config.TRACKED_END + i, null));
+							c, Config.TRACKED_END + i, null));
 				}
 				catch (NumberFormatException e)
 				{
@@ -273,30 +232,36 @@ public class LocationTrackerService extends Service
 		if (log == false)
 		{
 			Util.d(null, TAG, "Not in valid time; sending null location");
-			TrackingDBHandler tdbh = new TrackingDBHandler(this);
+			TrackingDBHandler tdbh = new TrackingDBHandler(c);
 			tdbh.open();
 			tdbh.writeLocation(0, 0, BAD_TIME, Util.currentTimeAdjusted() / 1000);
 			tdbh.close();
-			reschedule();
-			uploadNow();
+			uploadNow(c);
 			return;
 		}
 		
+		//get the times sent
+		int timesSent = Config.getSetting(c, TIMES_SENT, Integer.MAX_VALUE);
+		
 		//make sure we have a valid time
-		if (timesSent > 1 || latest == null)
+		if (timesSent > 1)
 		{
 			Util.d(null, TAG, "No valid location to send; sending null location");
-			TrackingDBHandler tdbh = new TrackingDBHandler(this);
+			TrackingDBHandler tdbh = new TrackingDBHandler(c);
 			tdbh.open();
 			tdbh.writeLocation(0, 0, NO_LOCATION, Util.currentTimeAdjusted() / 1000);
 			tdbh.close();
-			reschedule();
-			uploadNow();
+			uploadNow(c);
 			return;
 		}
 		
+		//get the actual location
+		double latestLat = Config.getSetting(c, LATEST + LAT, NO_LOCATION);
+        double latestLong = Config.getSetting(c, LATEST + LONG,  NO_LOCATION);
+        double latestAcc = Config.getSetting(c, LATEST + ACC, NO_LOCATION);
+		
 		//make sure we are in range
-		int numLocs = Config.getSetting(this, Config.NUM_LOCATIONS_TRACKED, 0);
+		int numLocs = Config.getSetting(c, Config.NUM_LOCATIONS_TRACKED, 0);
 		if (numLocs != 0)
 		{
 			log = false;
@@ -304,14 +269,11 @@ public class LocationTrackerService extends Service
 			{
 				//get the location information
 				double thisLon = (double) Config.getSetting(
-						LocationTrackerService.this,
-						Config.TRACKED_LONG + i, (float) -1.0);
+						c, Config.TRACKED_LONG + i, (float) -1.0);
 				double thisLat = (double) Config.getSetting(
-						LocationTrackerService.this,
-						Config.TRACKED_LAT + i, (float) -1.0);
+						c, Config.TRACKED_LAT + i, (float) -1.0);
 				double thisRad = (double) Config.getSetting(
-						LocationTrackerService.this,
-						Config.TRACKED_RADIUS + i, (float) -1.0);
+						c, Config.TRACKED_RADIUS + i, (float) -1.0);
 				if (thisLon == -1.0 || thisLat == -1.0 || thisRad == -1.0)
 				{
 					throw new RuntimeException(
@@ -322,7 +284,7 @@ public class LocationTrackerService extends Service
 				//now see if the incoming location
 				//is within a valid location
 				float[] results = new float[1];
-				Location.distanceBetween(latest.getLatitude(), latest.getLongitude(),
+				Location.distanceBetween(latestLat, latestLong,
 						thisLat, thisLon, results);
 				Util.v(null, TAG, "Distance: "
 						+ (results[0] / 1000) + "km");
@@ -335,33 +297,29 @@ public class LocationTrackerService extends Service
 			if (log == false)
 			{
 				Util.d(null, TAG, "Location is out of range");
-				TrackingDBHandler tdbh = new TrackingDBHandler(this);
+				TrackingDBHandler tdbh = new TrackingDBHandler(c);
 				tdbh.open();
 				tdbh.writeLocation(0, 0, OUT_OF_RANGE, Util.currentTimeAdjusted() / 1000);
 				tdbh.close();
-				reschedule();
-				uploadNow();
+				uploadNow(c);
 				return;
 			}
 		}
 		
 		Util.d(null, TAG, "Tracking is enabled, time is valid, and we have a location that is in range; logging");
-		double lat = latest.getLatitude();
-		double lon = latest.getLongitude();
-		Util.v(null, TAG, "Lat: " + lat + ", long: " + lon);
-		TrackingDBHandler tdbh = new TrackingDBHandler(this);
+		Util.v(null, TAG, "Lat: " + latestLat + ", long: " + latestLong);
+		TrackingDBHandler tdbh = new TrackingDBHandler(c);
 		tdbh.open();
-		tdbh.writeLocation(lat, lon, latest.getAccuracy(), Util.currentTimeAdjusted() / 1000);
+		tdbh.writeLocation(latestLat, latestLong, latestAcc, Util.currentTimeAdjusted() / 1000);
 		tdbh.close();
-		reschedule();
-		uploadNow();
+		uploadNow(c);
 		timesSent++;
 	}
 	
 	/**
 	 * Fix the times so that they don't overlap
 	 */
-	private void coalesceTimes()
+	private void coalesceTimes(Context c)
 	{
 		//FIXME
 		/*
@@ -425,153 +383,6 @@ public class LocationTrackerService extends Service
 					+ " to " + time.end);
 			i++;
 		}*/
-		Config.putSetting(this, TIMES_COALESCED, true);
-	}
-	
-	/**
-	 * Schedules alarms to turn tracking on and off
-	 */
-	private void schedule()
-	{
-		//some setup stuff
-		AlarmManager as = (AlarmManager)
-			this.getSystemService(ALARM_SERVICE);
-		
-		if (!Config.getSetting(this, TIMES_COALESCED, false))
-		{
-			Util.d(null, TAG, "Coalescing times");
-			coalesceTimes();
-		}
-		else
-		{
-			Util.d(null, TAG, "Times already coalesced");
-		}
-		if (!lt.started) lt.start();
-		
-		Intent sendIntent = new Intent(this, LocationTrackerService.class);
-		sendIntent.setAction(ACTION_SEND_LOCATION);
-		PendingIntent pendingSend =
-			PendingIntent.getService(this, 0, sendIntent, 0);
-		
-		//cancel any previous instances (in case this service was restarted)
-		as.cancel(pendingSend);
-		
-		//give the tracker a moment to get the first location
-		as.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, pendingSend);
-	}
-
-	@Override
-	public IBinder onBind(Intent intent)
-	{
-		return null;
-	}
-	
-	@Override
-	public void onDestroy()
-	{
-		Util.d(null, TAG, "Location service killed!");
-		lt.stop();
-	}
-	
-	/* ------------------------------------------------ */
-	/* -- The actual location recording goes on here -- */
-	/* ------------------------------------------------ */
-
-	private class LocationTracker implements LocationListener
-	{
-		//has the location tracker been started?
-		private boolean started = false;
-	
-		//logging tag
-		private static final String TAG = "LocationTracker";
-		
-		private static final int INTERNAL_LOGGING_RATE = 5; //minutes
-		
-		/** Starts the location tracker. */
-		public void start()
-		{
-			if (started) 
-			{
-				throw new RuntimeException("already started!");
-			}
-			started = true;
-			LocationManager lm = (LocationManager)
-				LocationTrackerService.this.getSystemService(
-						Context.LOCATION_SERVICE);
-			int numStarted = 0;
-			try
-			{
-				lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-					INTERNAL_LOGGING_RATE * 60 * 1000, 0, this);
-				numStarted++;
-			}
-			catch (IllegalArgumentException e)
-			{
-				Util.w(null, TAG, "Could not request updates from the GPS provider");
-			}
-			try
-			{
-				lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-					INTERNAL_LOGGING_RATE * 60 * 1000, 0, this);
-				numStarted++;
-			}
-			catch (IllegalArgumentException e)
-			{
-				Util.w(null, TAG, "Could not request updates from the network provider");
-			}
-			if (numStarted == 0)
-			{
-				Util.e(null, TAG, "Could not start tracking location because no providers were accepted");
-				started = false;
-				throw new RuntimeException("Could not start tracking");
-			}
-		}
-		
-		/** Stops the location tracker. */
-		public void stop()
-		{
-			if (!started)
-				throw new RuntimeException("can't stop; not started!");
-			started = false;
-			LocationManager lm = (LocationManager)
-				LocationTrackerService.this.getSystemService(
-						Context.LOCATION_SERVICE);
-			lm.removeUpdates(this);
-		}
-	
-		@Override
-		public void onLocationChanged(Location loc)
-		{
-			Util.i(null, TAG, "Got a new location");
-			latest = loc;
-			timesSent = 0;
-		}
-	
-		@Override
-		public void onProviderDisabled(String provider)
-		{
-			/*
-			 * Turns out, it's actually not possible to turn on the GPS
-			 * programatically without exploiting some pretty serious security
-			 * flaws in the Android system.  Since it's probably not good
-			 * to write stuff that relies on bugs that are likely to get fixed,
-			 * all we can do here is to fall back to a different provider.
-			 */
-			Util.i(null, TAG, "Location provider " + provider +
-					" disabled!");
-		}
-	
-		@Override
-		public void onProviderEnabled(String provider)
-		{
-			Util.i(null, TAG, "Location provider " + provider +
-			" enabled!");
-		}
-	
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras)
-		{
-			//nothing to do
-		}
+		Config.putSetting(c, TIMES_COALESCED, true);
 	}
 }

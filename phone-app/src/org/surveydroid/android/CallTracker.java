@@ -30,9 +30,12 @@ import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.TrackingDBHandler;
 import org.surveydroid.android.survey.SurveyService;
 
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Handler;
 import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
@@ -46,16 +49,16 @@ import android.telephony.TelephonyManager;
  */
 public class CallTracker extends PhoneStateListener
 {
-	//logging tag
+	/** logging tag */
 	private static final String TAG = "CallTracker";
 	
-	//is the phone in a call?
+	/** is the phone in a call? */
 	private boolean inCall = false;
 	
-	//application context
+	/** application context */
 	private final Context ctxt;
 	
-	//the most recent CallLog lookup
+	/** the most recent CallLog lookup */
 	private long lastLookup;
 	
 	/**
@@ -198,7 +201,9 @@ public class CallTracker extends PhoneStateListener
 									surveyIntent.putExtra(
 										SurveyService.EXTRA_SURVEY_TYPE,
 										SurveyService.SURVEY_TYPE_CALL_INIT);
-									ctxt.startService(surveyIntent);
+									Uri uri = Uri.parse("call tracker survey");
+									Dispatcher.dispatch(ctxt, surveyIntent,
+										0, Dispatcher.TYPE_WAKEFUL_MANUAL, uri);
 								}
 							}
 							//this avoids a potential race condition
@@ -215,7 +220,7 @@ public class CallTracker extends PhoneStateListener
 						uploadIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
 						uploadIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
 								ComsService.CALL_DATA);
-						ctxt.startService(uploadIntent);
+						WakefulIntentService.sendWakefulWork(ctxt, uploadIntent);
 					}
 					newCalls.close();
 		        }

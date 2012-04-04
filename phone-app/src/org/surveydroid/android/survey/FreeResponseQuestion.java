@@ -52,7 +52,7 @@ public class FreeResponseQuestion extends Question
 	
 	public Answer answer(String text)
 	{
-		Answer newAnswer = new Answer(this, id, text, ctxt);
+		Answer newAnswer = new Answer(this, id, text);
 		super.answer(newAnswer);
 		return newAnswer;
 	}

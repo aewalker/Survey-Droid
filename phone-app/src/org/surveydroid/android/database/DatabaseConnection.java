@@ -69,12 +69,9 @@ public class DatabaseConnection
 	public synchronized SQLiteDatabase open()
 	{
 		Util.d(null, TAG, "opening read/write database connection");
-		if (openCount == 0)
-		{
-			if (sddb == null)
-				sddb = new SurveyDroidDB(c);
-			db = sddb.getWritableDatabase();
-		}
+		if (sddb == null)
+			sddb = new SurveyDroidDB(c);
+		db = sddb.getWritableDatabase();
 		openCount++;
 		return db;
 	}
@@ -92,5 +89,7 @@ public class DatabaseConnection
 			sddb.close();
 			db = null;
 		}
+		if (openCount < 0)
+			throw new IllegalStateException("database over-closed");
 	}
 }
