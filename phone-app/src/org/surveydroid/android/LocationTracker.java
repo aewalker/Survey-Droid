@@ -256,9 +256,9 @@ public class LocationTracker extends BroadcastReceiver
 		}
 		
 		//get the actual location
-		double latestLat = Config.getSetting(c, LATEST + LAT, NO_LOCATION);
-        double latestLong = Config.getSetting(c, LATEST + LONG,  NO_LOCATION);
-        double latestAcc = Config.getSetting(c, LATEST + ACC, NO_LOCATION);
+		double latestLat = (double) Config.getSetting(c, LATEST + LAT, (float) NO_LOCATION);
+        double latestLong = (double) Config.getSetting(c, LATEST + LONG, (float) NO_LOCATION);
+        double latestAcc = (double) Config.getSetting(c, LATEST + ACC, (float) NO_LOCATION);
 		
 		//make sure we are in range
 		int numLocs = Config.getSetting(c, Config.NUM_LOCATIONS_TRACKED, 0);

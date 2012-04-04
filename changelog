@@ -1,5 +1,11 @@
 Survey Droid Changelog
 ----------------------
+Version 0.9.1-beta:
+	-Fixed bug in location tracking
+	-Fixed bug in wakeful service dispatching
+	-Technical:
+		-The dispatcher now acquires a screen dim wakelock with the acquire causes wakeup option
+
 Version 0.9.0-beta:
 	-Fixed survey thermometer off-by-1 bug.
 	-Major work on power management issues (such as phones sleeping through surveys or using too much energy)

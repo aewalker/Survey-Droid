@@ -95,7 +95,8 @@ public class Dispatcher extends BroadcastReceiver
 		case TYPE_WAKEFUL_MANUAL:
 			Util.i(null, TAG, "aquiring timed lock and starting service");
 			PowerManager pm = (PowerManager) ctxt.getSystemService(Context.POWER_SERVICE);
-			WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+			//FIXME need to have this coordinated with the service
+			WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
 			wl.acquire(5000); //service has 5 seconds to get its own lock
 			ctxt.startService(i);
 			break;
