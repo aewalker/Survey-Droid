@@ -123,11 +123,13 @@ public class Dispatcher extends BroadcastReceiver
 	 * Android documentation, an alarm that is set for an intent that is the
 	 * same as a previous intent as defined by
 	 * {@link Intent#filterEquals(Intent)} will override the older alarm.  This
-	 * parameter.  tl;dr if you call this function twice with the same data, only
+	 * parameter is only used if it is non-null; the data from the intent will be used
+	 * if it is.<br /><em>tl;dr</em>: if you call this function twice with the same data, only
 	 * one alarm is set.  If data is null, i.getData() is used.
 	 */
 	public static void dispatch(Context ctxt, Intent i, long time, int type, Uri data)
-	{		
+	{
+		Util.d(null, TAG, "dispatch");
 		//wrap the given intent inside of a new intent bound for this class
 		Intent wrapIntent = new Intent(ctxt, Dispatcher.class);
 		wrapIntent.putExtra(EXTRA_INTENT, i);
@@ -153,11 +155,12 @@ public class Dispatcher extends BroadcastReceiver
 	 */
 	public static void cancel(Context ctxt, Intent i, Uri data)
 	{
-		AlarmManager am = (AlarmManager)
-			ctxt.getSystemService(Context.ALARM_SERVICE);
+		Util.d(null, TAG, "cancel dispatch");
 		Intent wrapIntent = new Intent(ctxt, Dispatcher.class);
 		wrapIntent.setData(data == null ? i.getData() : data);
 		PendingIntent pi = PendingIntent.getBroadcast(ctxt, 0, wrapIntent, 0);
+		AlarmManager am = (AlarmManager)
+			ctxt.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(pi);
 	}
 }

@@ -45,7 +45,7 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 /*
  * TODO
- * This whole things should be rebuilt.  In particular, the use of handlers
+ * This whole thing should be rebuilt.  In particular, the use of handlers
  * needs to be removed and replaced with a series of callbacks from the
  * relevant services via broadcasts.
  */

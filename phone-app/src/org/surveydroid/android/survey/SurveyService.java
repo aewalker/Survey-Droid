@@ -462,6 +462,8 @@ public class SurveyService extends Service
 		if (currentInfo == null)
 			throw new RuntimeException("Tried to run startSurvey() with null survey");
 		Util.d(null, TAG, "starting survey");
+		Dispatcher.cancel(this, runRefresh, null);
+		Dispatcher.cancel(this, runRemove, null);
 		if (!inSurvey)
 		{
 			inSurvey = true;
@@ -479,7 +481,7 @@ public class SurveyService extends Service
 			Intent notificationIntent = new Intent(this, SurveyService.class);
 			notificationIntent.setAction(ACTION_SHOW_SURVEY);
 			PendingIntent contentIntent =
-				PendingIntent.getService(this, 0, notificationIntent, 0);
+				PendingIntent.getService(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 			Notification notification =
 				new Notification(icon, tickerText, when);
 			notification.setLatestEventInfo(
@@ -538,7 +540,7 @@ public class SurveyService extends Service
 		Intent notificationIntent = new Intent(this, SurveyService.class);
 		notificationIntent.setAction(ACTION_SHOW_SURVEY);
 		PendingIntent contentIntent =
-			PendingIntent.getService(this, 0, notificationIntent, 0);
+			PendingIntent.getService(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		Notification notification =
 			new Notification(icon, tickerText, when);
 		notification.setLatestEventInfo(
@@ -548,7 +550,7 @@ public class SurveyService extends Service
 		Intent deleteIntent = new Intent(this, SurveyService.class);
 		deleteIntent.setAction(ACTION_CANCEL_SURVEY);
 		PendingIntent pendingDelIntent =
-			PendingIntent.getService(this, 1, deleteIntent, 0);
+			PendingIntent.getService(this, 1, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		notification.deleteIntent = pendingDelIntent;
 		
 		//add sound and vibration
@@ -570,8 +572,8 @@ public class SurveyService extends Service
 		wakeup.release();
 		
 		//now reschedule the refresh if needed
-		long refreshInterval = /*Config.getSetting(this, Config.REFRESH_INTERVAL,
-				Config.REFRESH_INTERVAL_DEFAULT)*/ 10 * 60 * 1000;
+		long refreshInterval = Config.getSetting(this, Config.REFRESH_INTERVAL,
+				Config.REFRESH_INTERVAL_DEFAULT) * 60 * 1000;
 		Util.v(null, TAG, "time left on current survey: " + (currentInfo.endTime - when));
 		if (currentInfo.endTime > when + refreshInterval ||
 				currentInfo.endTime == Config.SURVEY_TIMEOUT_NEVER)
