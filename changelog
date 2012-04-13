@@ -2,6 +2,7 @@ Survey Droid Changelog
 ----------------------
 Version 1.0.0:
 	-Fixed bug in dispatch canceling
+	-Fixed bug in survey service
 
 Version 0.9.1-beta:
 	-Fixed bug in location tracking
