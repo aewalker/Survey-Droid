@@ -41,6 +41,8 @@ import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.database.SurveyDroidDB;
 import org.surveydroid.android.database.StatusDBHandler;
 
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
 /**
  * The Activity that triggers toggling the different settings on and off.
  * 
@@ -154,7 +156,7 @@ public class SettingsActivity extends Activity
 				{
 					Intent syncIntent = new Intent(SettingsActivity.this, ComsService.class);
 					syncIntent.setAction(ComsService.ACTION_DOWNLOAD_DATA);
-					startService(syncIntent);
+					WakefulIntentService.sendWakefulWork(SettingsActivity.this, syncIntent);
 				}
 			});
         }
@@ -247,7 +249,7 @@ public class SettingsActivity extends Activity
         	comsIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
         	comsIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
         			ComsService.STATUS_DATA);
-        	startService(comsIntent);
+        	WakefulIntentService.sendWakefulWork(this, comsIntent);
     	}
     }
 }

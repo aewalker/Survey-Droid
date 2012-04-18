@@ -99,7 +99,7 @@ public class Survey
 	 * @see SurveyDBHandler
 	 * @see SurveyDroidDB
 	 */
-	public Survey(int id, Context ctxt)
+	public Survey(int id, Context ctxt) throws SurveyConstructionException
 	{
 		/*
 		 * Just a friendly warning: this constructor and it's helpers are
@@ -138,14 +138,32 @@ public class Survey
 		Collection<Condition> cList = new LinkedList<Condition>();
 
 		//set up the first question, then iterate until done
-		firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
 		Util.d(null, TAG, "First question Setup");
+		try
+		{
+			firstQ = setUpQuestion(firstQID, qMap, cMap, seen, bList, cList, toDo);
+		}
+		catch (SurveyConstructionException e)
+		{
+			e.setBuildQustion(firstQID);
+			db.close();
+			throw e;
+		}
 		currentQ = firstQ;
 		while (!toDo.isEmpty())
 		{
 			Util.v(null, TAG, "next question");
-			setUpQuestion(toDo.remove(),
-					qMap, cMap, seen, bList, cList, toDo);
+			int qid = toDo.remove();
+			try
+			{
+				setUpQuestion(qid, qMap, cMap, seen, bList, cList, toDo);
+			}
+			catch (SurveyConstructionException e)
+			{
+				e.setBuildQustion(qid);
+				db.close();
+				throw e;
+			}
 		}
 		db.close();
 
@@ -153,12 +171,28 @@ public class Survey
 		//all the Branches and Conditions
 		for (Branch branch : bList)
 		{
-			branch.setQuestion(qMap);
+			try
+			{
+				branch.setQuestion(qMap);
+			}
+			catch (SurveyConstructionException e)
+			{
+				e.setSurvey(id);
+				throw e;
+			}
 		}
 		Util.v(null, TAG, "branch Setup");
 		for (Condition condition : cList)
 		{
-			condition.setQuestion(qMap);
+			try
+			{
+				condition.setQuestion(qMap);
+			}
+			catch (SurveyConstructionException e)
+			{
+				e.setSurvey(id);
+				throw e;
+			}
 		}
 		Util.v(null, TAG, "condition Setup");
 
@@ -172,7 +206,7 @@ public class Survey
 			Map<Integer, Boolean> seen,
 			Collection<Branch> bList,
 			Collection<Condition> cList,
-			Queue<Integer> toDo)
+			Queue<Integer> toDo) throws SurveyConstructionException
 	{
 		//set up Branches
 		Cursor b = db.getBranches(id);
@@ -190,8 +224,17 @@ public class Survey
                 seen.put(q_id, true);
                 toDo.add(q_id);
             }
-			Branch newBranch = new Branch(q_id,
+			Branch newBranch;
+			try
+			{
+				newBranch = new Branch(q_id,
 					getConditions(b_id, cMap, seen, toDo, cList));
+			}
+			catch (SurveyConstructionException e)
+			{
+				e.setBuildBranch(b_id);
+				throw e;
+			}
 			branches.add(newBranch);
 			bList.add(newBranch);
 			b.moveToNext();
@@ -205,16 +248,29 @@ public class Survey
 		LinkedList<Choice> choices = new LinkedList<Choice>();
 		while (!ch.isAfterLast())
 		{
-			choices.add(getChoice(ch.getInt(ch.getColumnIndexOrThrow(
-							SurveyDroidDB.ChoiceTable._ID)),
-							cMap));
+			int c_id = ch.getInt(ch.getColumnIndexOrThrow(
+					SurveyDroidDB.ChoiceTable._ID)); 
+			try
+			{
+				choices.add(getChoice(c_id, cMap));
+			}
+			catch (SurveyConstructionException e)
+			{
+				e.setBuildChoice(c_id);
+				throw e;
+			}
 			ch.moveToNext();
 		}
 		ch.close();
 		Util.v(null, TAG, "Building new question");
 		//finally, create the new Question
 		Cursor q = db.getQuestion(id);
-		q.moveToFirst();
+		if (!q.moveToFirst())
+		{
+			SurveyConstructionException e = new SurveyConstructionException(this.id);
+			e.setRefQuestion(id);
+			throw e;
+		}
 		String text = q.getString(
 				q.getColumnIndexOrThrow(SurveyDroidDB.QuestionTable.Q_TEXT));
 		int q_type = q.getInt(
@@ -262,7 +318,7 @@ public class Survey
 			Map<Integer, Choice> cMap,
 			Map<Integer, Boolean> seen,
 			Queue<Integer> toDo,
-			Collection<Condition> cList)
+			Collection<Condition> cList) throws SurveyConstructionException
 	{
 		Collection<Condition> conditions = new LinkedList<Condition>();
 		Cursor c = db.getConditions(id);
@@ -275,7 +331,17 @@ public class Survey
 					SurveyDroidDB.ConditionTable.TYPE));
 			int c_id = c.getInt(c.getColumnIndexOrThrow(
 					SurveyDroidDB.ConditionTable.CHOICE_ID));
-			Condition newC = new Condition(q_id, getChoice(c_id, cMap), t, registry);
+			Condition newC;
+			try
+			{
+				newC = new Condition(q_id, getChoice(c_id, cMap), t, registry);
+			}
+			catch (SurveyConstructionException e)
+			{
+				e.setBuildCondition(c.getInt(c.getColumnIndexOrThrow(
+						SurveyDroidDB.ConditionTable._ID)));
+				throw e;
+			}
 			conditions.add(newC);
 			cList.add(newC);
 			c.moveToNext();
@@ -286,13 +352,19 @@ public class Survey
 
 	//get the Choice corresponding to id
 	private Choice getChoice(int id, Map<Integer, Choice> cMap)
+		throws SurveyConstructionException
 	{
 		if (cMap.containsKey(id))
 		{
 			return cMap.get(id);
 		}
 		Cursor c = db.getChoice(id);
-		c.moveToFirst();
+		if (!c.moveToFirst())
+		{
+			SurveyConstructionException e = new SurveyConstructionException(this.id);
+			e.setRefChoice(id);
+			throw e;
+		}
 		Choice newC;
 		switch (c.getInt(c.getColumnIndexOrThrow(
 				SurveyDroidDB.ChoiceTable.CHOICE_TYPE)))
@@ -318,8 +390,10 @@ public class Survey
 	 * A simple constructor to put together a sample survey.
 	 * 
 	 * @param ctxt - the current {@link Context}
+	 * @throws SurveyConstructionException should never happen, declared to
+	 * maintain compatibility with the other constructor
 	 */
-	public Survey(Context ctxt)
+	public Survey(Context ctxt) throws SurveyConstructionException
 	{
 		this.ctxt = ctxt;
 		db = null;
@@ -769,15 +843,18 @@ public class Survey
 	public boolean submit()
 	{
 		boolean worked = true;
+		SurveyDBHandler db = new SurveyDBHandler(ctxt);
+		db.open();
 
 		//save all the live Answers
 		while (!registry.empty())
 		{
-			if (registry.pop().write() == false)
+			if (registry.pop().write(db) == false)
 			{
 				worked = false;
 			}
 		}
+		db.close();
 
 		//wipe the Question history
 		while (!history.empty())

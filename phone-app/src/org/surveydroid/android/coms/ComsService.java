@@ -23,16 +23,17 @@
  *****************************************************************************/
 package org.surveydroid.android.coms;
 
-import android.app.AlarmManager;
-import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.telephony.TelephonyManager;
 
 import org.surveydroid.android.Config;
+import org.surveydroid.android.Dispatcher;
 import org.surveydroid.android.Util;
 import org.surveydroid.android.coms.WebClient.ApiException;
+
+import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 /**
  * Communication service that is responsible for communicating with the
@@ -41,9 +42,9 @@ import org.surveydroid.android.coms.WebClient.ApiException;
  * 
  * @author Austin Walker
  */
-public class ComsService extends IntentService
+public class ComsService extends WakefulIntentService
 {
-	//logging tag
+	/** logging tag */
 	private static final String TAG = "ComsService";
 	
 	//intent actions
@@ -113,42 +114,10 @@ public class ComsService extends IntentService
 	{
 		super(null);
 	}
-	
-	//atempts to send Austin the logs
-	private void sendLog()
-	{
-//		File log = new File(Util.LOGFILE);
-//		if (log.length() > 10000) //don't let the file get over 10K
-//		{
-//			Intent emailIntent =
-//				new Intent(android.content.Intent.ACTION_SEND);
-//			emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			emailIntent.setType("plain/text");
-//			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-//					new String[] {"awalkerenator@gmail.com"});
-//			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-//					"Survey Droid Log");
-//			try
-//			{
-//				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-//						ViewLogActivity.readLogFile());
-//			}
-//			catch (Exception e)
-//			{
-//				Log.w(TAG, "Can't read log file");
-//				return;
-//			}
-//			this.startActivity(Intent.createChooser(emailIntent,
-//					"Send Survey Droid Log"));
-//			log.delete();
-//		}
-	}
 
 	@Override
-	protected void onHandleIntent(Intent intent)
+	protected void doWakefulWork(Intent intent)
 	{
-		if (Config.D) sendLog();
-		
 		String action = intent.getAction();
 		
 		if (action.equals(ACTION_UPLOAD_DATA))
@@ -228,12 +197,10 @@ public class ComsService extends IntentService
 						time + (Config.getSetting(this, Config.PULL_INTERVAL,
 								Config.PULL_INTERVAL_DEFAULT) * 60 * 1000));
 			}
-			PendingIntent pendingComs = PendingIntent.getService(
-					this, 0, comsIntent, 0);
-			AlarmManager alarm =
-				(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-			alarm.set(AlarmManager.RTC_WAKEUP,
-				time + (comsIntent.getLongExtra(EXTRA_RUNNING_TIME, -1)), pendingComs);
+			Uri uri = Uri.parse(TAG + " reschedule");
+			Dispatcher.dispatch(this, comsIntent,
+				time + (comsIntent.getLongExtra(EXTRA_RUNNING_TIME, -1)),
+				Dispatcher.TYPE_WAKEFUL_AUTO, uri);
 		}
 	}
 	

@@ -31,6 +31,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
@@ -122,7 +123,9 @@ public class UserSurveysActivity extends ListActivity
 						SurveyService.SURVEY_TYPE_USER_INIT);
 				surveyIntent.putExtra(SurveyService.EXTRA_SURVEY_ID,
 						ids[pos]);
-				startService(surveyIntent);
+				Uri uri = Uri.parse("user surveys survey");
+				Dispatcher.dispatch(UserSurveysActivity.this, surveyIntent,
+					0, Dispatcher.TYPE_WAKEFUL_MANUAL, uri);
 				
 				finish();
 			}

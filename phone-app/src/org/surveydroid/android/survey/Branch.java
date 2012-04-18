@@ -67,14 +67,19 @@ public class Branch
 	 * @param qMap - a mapping of Question objects to their ids
 	 * 
 	 * @throws RuntimeException if called multiple times
-	 * @throws RuntimeException if the qMap doesn't have the needed Question
+	 * @throws SurveyConstructionException if the needed question doesn't exist
 	 */
 	public void setQuestion(Map<Integer, Question> qMap)
+		throws SurveyConstructionException
 	{
 		if (next_q != null) throw new RuntimeException(
 					"attempt to set condition question multiple times");
-		if (!qMap.containsKey(q_id)) throw new RuntimeException(
-				"bad question map");
+		if (!qMap.containsKey(q_id))
+		{
+			SurveyConstructionException e = new SurveyConstructionException();
+			e.setRefQuestion(q_id);
+			throw e;
+		}
 		next_q = qMap.get(q_id);
 	}
 	

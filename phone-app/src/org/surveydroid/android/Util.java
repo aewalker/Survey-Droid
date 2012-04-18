@@ -23,17 +23,13 @@
  *****************************************************************************/
 package org.surveydroid.android;
 
-//import java.io.FileNotFoundException;
-//import java.io.FileOutputStream;
-//import java.io.IOException;
+
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import android.content.Context;
-import android.telephony.TelephonyManager;
 import android.util.Log;
-//import android.widget.Toast;
 import android.widget.Toast;
 
 /**
@@ -43,16 +39,13 @@ import android.widget.Toast;
  */
 public final class Util
 {
-	//tag name for the whole app
+	/** tag name for the whole app */
 	private static final String APP_TAG = "SurveyDroid";
 	
-	//tag name for this class
+	/** tag name for this class */
 	private static final String TAG = "Util";
 	
-	/** Location of the application log */
-	public static final String LOGFILE =
-		"/data/data/org.surveydroid.android/sd_log";
-	
+	/** if true, logs all messages using the application tag */
 	private static final boolean USE_APP_TAG = true;
 	
 	/** Prevent all subclassing and instantiation */
@@ -347,33 +340,27 @@ public final class Util
 		return e.toString() + trace;
 	}
 	
-	//tries to log the message to the internal log
-	private static void log(final String msg)
+	/**
+	 * Logs the given message
+	 * 
+	 * @param msg
+	 */
+	private static void log(String msg)
 	{
-//		SimpleDateFormat sdf = new SimpleDateFormat("MM.dd HH:mm:ss z");
-//		String time = sdf.format(Calendar.getInstance().getTime()); 
-//		try
-//		{
-//			FileOutputStream fos = new FileOutputStream(LOGFILE, true);
-//			fos.write(time.getBytes());
-//			fos.write(" | ".getBytes());
-//			fos.write(msg.getBytes());
-//			fos.write("\n".getBytes());
-//			fos.close();
-//		}
-//		catch (FileNotFoundException e)
-//		{
-//			Log.w(TAG, "Can't write to log; file not found");
-//			return;
-//		}
-//		catch (IOException e)
-//		{
-//			Log.w(TAG, "IO exception when trying to write to log");
-//			return;
-//		}
+		/*
+		 * TODO
+		 * This method is part of an old scheme to write our own log.  Although
+		 * that effort turned out badly, it might be useful to have a function
+		 * through which all log messages are sent, so we'll keep this around. 
+		 */
 	}
 	
-	//tries to show a toast message
+	/**
+	 * Tries to show a toast message
+	 * 
+	 * @param c
+	 * @param msg
+	 */
 	private static void toast(Context c, final String msg)
 	{
 		Toast.makeText(c, msg, Toast.LENGTH_LONG).show();

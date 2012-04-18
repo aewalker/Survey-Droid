@@ -83,6 +83,7 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 				+ survey_id + " marked " + code);
 		
 		//first update the completion percentage if needed
+		getCompletionRate(contx); //make sure the rate is properly updated
 		boolean counts = countsAsCompleted(code);
 		if (counts)
 		{
@@ -134,7 +135,7 @@ public class TakenDBHandler extends SurveyDroidDBHandler
 			 * There is one possible problem here: if the user doesn't turn the
 			 * phone on at all between one Sunday and the next, this doesn't
 			 * work.  Because this is an extremely unlikely event and would be
-			 * annoying to detect, we apply the ostrich algorithm.
+			 * annoying to detect, we employ the ostrich algorithm.
 			 */
 			Config.putSetting(c, RESET, false);
 		}

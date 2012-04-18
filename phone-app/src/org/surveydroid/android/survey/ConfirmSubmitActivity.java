@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Display;
@@ -36,6 +37,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import org.surveydroid.android.Dispatcher;
 import org.surveydroid.android.R;
 import org.surveydroid.android.Util;
 import org.surveydroid.android.survey.SurveyService.SurveyBinder;
@@ -116,7 +118,9 @@ public class ConfirmSubmitActivity extends Activity
 				Intent finishIntent =
 					new Intent(ConfirmSubmitActivity.this, SurveyService.class);
 				finishIntent.setAction(SurveyService.ACTION_END_SURVEY);
-				startService(finishIntent);
+				Uri uri = Uri.parse("confirm submit");
+				Dispatcher.dispatch(ConfirmSubmitActivity.this, finishIntent,
+					0, Dispatcher.TYPE_WAKEFUL_MANUAL, uri);
 				
 				//tell the user they're done
 				Intent doneIntent =

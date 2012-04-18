@@ -46,6 +46,8 @@ import org.surveydroid.android.coms.ComsService;
 import org.surveydroid.android.database.ExtrasDBHandler;
 import org.surveydroid.android.database.TakenDBHandler;
 
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
 /**
  * The Activity for the administration panel of the Survey Droid application.
  * 
@@ -320,7 +322,7 @@ public class MainActivity extends Activity
             	pushIntent.setAction(ComsService.ACTION_UPLOAD_DATA);
             	pushIntent.putExtra(ComsService.EXTRA_DATA_TYPE,
             			ComsService.EXTRAS_DATA);
-            	startService(pushIntent);
+            	WakefulIntentService.sendWakefulWork(this, pushIntent);
             }
             edbh.close();
             File tmp = new File(photoUri.getPath());

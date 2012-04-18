@@ -40,7 +40,7 @@ import static org.surveydroid.android.database.SurveyDroidDB.LocationTable;
  */
 public class TrackingDBHandler extends SurveyDroidDBHandler
 {
-	//logging tag
+	/** logging tag */
 	private static final String TAG = "CallsDBHandler";
 
 	public TrackingDBHandler(Context context)
@@ -182,8 +182,12 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 		return getSurveys(SurveyDroidDB.SurveyTable.OLD_TEXTS);
 	}
 	
-	//gets all surveys where field is one (field is
-	//either new_calls, old_calls, new_texts, or old_texts)
+	/**
+	 * Gets all surveys
+	 * 
+	 * @param field either new_calls, old_calls, new_texts, or old_texts
+	 * @return a cursor with all matching entries
+	 */
 	private Cursor getSurveys(String field)
 	{
 		Util.d(null, TAG, "getting " + field + " surveys");

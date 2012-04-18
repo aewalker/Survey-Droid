@@ -28,6 +28,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
@@ -56,10 +57,13 @@ public abstract class QuestionActivity extends Activity
 	 */
 	protected Survey survey;
 	
-	//has the next question activity been started?
+	/** has the next question activity been started? */
 	private boolean isDone = false;
 	
-	//connection to the SurveyService
+	/** should the activity restart? */
+	private boolean restart = false;
+	
+	/** connection to the SurveyService */
 	private ServiceConnection connection = new ServiceConnection()
 	{
 		private SurveyBinder sBinder;
@@ -184,20 +188,23 @@ public abstract class QuestionActivity extends Activity
 		 * done (ie the user hasn't answered yet), tell the service about it.
 		 */
 		super.onStop();
-		if (isDone)
-		{
-			finish();
-		}
-		else
+		if (!isDone)
 		{
 			connection.onServiceDisconnected(null); //TODO this is kind of a hack...
 		}
+		finish();
 	}
 	
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
+		if (restart)
+		{
+			Intent restartIntent = new Intent(QuestionActivity.this,
+					getNextQusetionClass(survey.getQuestionType()));
+			startActivity(restartIntent);
+		}
 		unbindService(connection);
 	}
 	
@@ -256,5 +263,14 @@ public abstract class QuestionActivity extends Activity
 		default:
 			throw new RuntimeException("Unknown question type: " + type);
 		}
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+		//TODO implement this to deal with screen rotations
+		super.onConfigurationChanged(newConfig);
+		restart = true;
+		finish();
 	}
 }
