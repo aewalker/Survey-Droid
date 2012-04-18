@@ -67,7 +67,7 @@ Ext.define("SD.view.data.SurveysTakenTab", {
                 tpl: new Ext.XTemplate(
                     '{[this.getPercentage(values.rate)]}', {
                     getPercentage: function(rate) {
-                        if (rate)
+                        if (rate != null)
                             return rate + '%';
                         return '';
                     }
