@@ -1,5 +1,10 @@
 Survey Droid Changelog
 ----------------------
+Version 1.0.1:
+	-Changed icons
+	-Technical:
+		-Removed some assertions in survey service when not in debug mode.
+
 Version 1.0.0:
 	-Fixed bug in dispatch canceling
 	-Fixed bug in survey service

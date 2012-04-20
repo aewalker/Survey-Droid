@@ -20,7 +20,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-	android:versionCode="40" android:versionName="1.0.0" package="org.surveydroid.android">
+	android:versionCode="41" android:versionName="1.0.1" package="org.surveydroid.android">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.INTERNET" />
@@ -46,7 +46,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 				android:name="SurveyDroid"
 				android:screenOrientation="portrait"
 				android:configChanges="keyboardHidden|orientation"
-				android:debuggable="false"
+				android:debuggable="true"
 				android:theme="@android:style/Theme.NoTitleBar">
 		
 		<!-- Receivers -->

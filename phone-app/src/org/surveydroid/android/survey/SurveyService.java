@@ -384,8 +384,9 @@ public class SurveyService extends Service
 		{
 			currentInfo = sInfo;
 			build = true;
-			Dispatcher.dispatch(this, runRefresh,
-				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
+			refresh();
+//			Dispatcher.dispatch(this, runRefresh,
+//				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 		else
 		{
@@ -396,8 +397,9 @@ public class SurveyService extends Service
 			{
 				currentInfo = sInfo;
 				build = true;
-				Dispatcher.dispatch(this, runRefresh,
-					0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
+				refresh();
+//				Dispatcher.dispatch(this, runRefresh,
+//					0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 			}
 		}
 	}
@@ -508,9 +510,21 @@ public class SurveyService extends Service
 	private void refresh()
 	{
 		if (inSurvey)
-			throw new RuntimeException("Ran refresh() while in a survey");
+		{
+			if (Config.D)
+				throw new RuntimeException("Ran refresh() while in a survey");
+			else
+				Util.w(null, TAG, "Ran refresh() while in a survey");
+			return;
+		}
 		if (currentInfo == null)
-			throw new RuntimeException("Tried to run refresh() with null survey");
+		{
+			if (Config.D)
+				throw new RuntimeException("Tried to run refresh() with null survey");
+			else
+				Util.w(null, TAG, "Tried to run refresh() with null survey");
+			return;
+		}
 		Util.d(null, TAG, "refresh");
 		
 		if (build)
@@ -640,8 +654,9 @@ public class SurveyService extends Service
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			build = true;
-			Dispatcher.dispatch(this, runRefresh,
-				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
+			refresh();
+//			Dispatcher.dispatch(this, runRefresh,
+//				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 		else
 		{
@@ -749,8 +764,9 @@ public class SurveyService extends Service
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			build = true;
-			Dispatcher.dispatch(this, runRefresh,
-				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
+			refresh();
+//			Dispatcher.dispatch(this, runRefresh,
+//				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 	}
 	
@@ -805,8 +821,9 @@ public class SurveyService extends Service
 			Util.v(null, TAG, surveys.size() + "more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			build = true;
-			Dispatcher.dispatch(this, runRefresh,
-				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
+			refresh();
+//			Dispatcher.dispatch(this, runRefresh,
+//				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 		else
 		{
@@ -885,8 +902,9 @@ public class SurveyService extends Service
 			Util.v(null, TAG, surveys.size() + " more surveys left; go for refresh");
 			currentInfo = surveys.poll();
 			build = true;
-			Dispatcher.dispatch(this, runRefresh,
-				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
+			refresh();
+//			Dispatcher.dispatch(this, runRefresh,
+//				0, Dispatcher.TYPE_WAKEFUL_MANUAL, null);
 		}
 		else
 		{
