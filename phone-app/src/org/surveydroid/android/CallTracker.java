@@ -157,6 +157,13 @@ public class CallTracker extends PhoneStateListener
 								continue;
 							}
 							
+							//make sure the number is not null (for some reason...)
+							if (number == null)
+							{
+								Util.e(null, TAG, "Got a null phone number!?!?");
+								break;
+							}
+							
 							//make sure the number is not study admin's number
 							if (Util.cleanPhoneNumber(Config.getSetting(ctxt,
 									Config.ADMIN_PHONE_NUMBER, null)).equals(

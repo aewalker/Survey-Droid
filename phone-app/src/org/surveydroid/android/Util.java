@@ -143,6 +143,7 @@ public final class Util
 	 */
 	public static String cleanPhoneNumber(String number)
 	{
+		if (number == null) return null;
 		StringBuilder sb = new StringBuilder();
 		for (char c : number.toCharArray())
 		{
