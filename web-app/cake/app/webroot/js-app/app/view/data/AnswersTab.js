@@ -22,7 +22,7 @@ Ext.define("SD.view.data.AnswersTab", {
                 columns: [
                 {
                     dataIndex: 'id',
-                    width: 20
+                    width: 50
                 }, {
                     dataIndex: 'id',
                     xtype: 'templatecolumn',

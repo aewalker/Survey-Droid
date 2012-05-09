@@ -62,7 +62,7 @@ class AnswersController extends AppController
 
         // custom stuff
         $csv_file = fopen('php://output', 'w');
-        $headers = array('Subject ID', 'Subject', 'Survey ID', 'Question', 'Answer', 'Answer Type', 'Time Answered');
+        $headers = array('Subject ID', 'Subject', 'Survey ID', 'Question ID', 'Question', 'Answer', 'Answer Type', 'Time Answered');
         fputcsv($csv_file, $headers, ',', '"');
 
         $total = $this->$modelClass->find('count');
@@ -89,6 +89,7 @@ function partial_dump($csv_file, $models) {
         $row[] = $item['Answer']['subject_id']; // Subject Id
         $row[] = $item['Subject']['first_name'] ." ". $item['Subject']['last_name']; // Subject
         $row[] = $item['Question']['survey_id']; // Survey Id
+        $row[] = $item['Question']['id']; // Question ID
         $row[] = $item['Question']['q_text']; // Question
 
         switch ($item['Answer']['ans_type']) { // Answer
