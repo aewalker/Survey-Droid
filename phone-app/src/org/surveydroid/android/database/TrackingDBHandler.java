@@ -104,30 +104,23 @@ public class TrackingDBHandler extends SurveyDroidDBHandler
 	 * 
 	 * @param number - the phone number to check
 	 * @param texts - if true, look at texts; if false, calls
-	 * 
-	 * @return true if the number has not been seen before
 	 */
-	public boolean isNewNumber(String number, boolean texts)
+	public boolean isNewNumber(String number)
 	{
 		Util.d(null, TAG, "Looking for " + number);
 		
 		String    table    = SurveyDroidDB.CALLLOG_TABLE_NAME;
 		String[]  cols     = {SurveyDroidDB.CallLogTable.PHONE_NUMBER};
 		//don't count missed calls...
-		String    selc = "(" + SurveyDroidDB.CallLogTable.CALL_TYPE + " = ?) AND (" +
+		String    selc = "(" + SurveyDroidDB.CallLogTable.CALL_TYPE + " = ? OR " +
+			SurveyDroidDB.CallLogTable.CALL_TYPE + " = ?) AND (" +
 			SurveyDroidDB.CallLogTable.PHONE_NUMBER + " = ?)";
-		String[]  selcArgs = new String[2];
-		selcArgs[1] = Util.cleanPhoneNumber(number);
-		if (!texts)
-		{
-			selcArgs[0] = Integer.toString(
-					SurveyDroidDB.CallLogTable.CallType.INCOMING);
-		}
-		else
-		{
-			selcArgs[0] = Integer.toString(
-					SurveyDroidDB.CallLogTable.CallType.INCOMING_TEXT);
-		}
+		String[]  selcArgs = new String[3];
+		selcArgs[2] = Util.cleanPhoneNumber(number);
+		selcArgs[0] = Integer.toString(
+				SurveyDroidDB.CallLogTable.CallType.INCOMING);
+		selcArgs[1] = Integer.toString(
+				SurveyDroidDB.CallLogTable.CallType.INCOMING_TEXT);
 		String    group    = null;
 		String    having   = null;
 		String    orderBy  = null;

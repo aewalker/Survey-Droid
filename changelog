@@ -1,5 +1,11 @@
 Survey Droid Changelog
 ----------------------
+Version 1.1.0:
+	-Fixed database race condition
+	-Fixed call logging bug
+	-Improved startup time
+	-Call surveys now influence the thermometer
+
 Version 1.0.2:
 	-Fixed call logging NullPointer bug
 

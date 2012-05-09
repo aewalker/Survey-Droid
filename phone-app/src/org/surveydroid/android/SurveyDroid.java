@@ -29,7 +29,7 @@ import org.acra.annotation.*;
 import android.app.Application;
 
 /**
- * The main applicaiton class
+ * The main application class
  * 
  * @author Austin Walker
  */

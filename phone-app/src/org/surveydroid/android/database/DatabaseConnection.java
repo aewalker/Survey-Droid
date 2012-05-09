@@ -78,18 +78,23 @@ public class DatabaseConnection
 
 	/**
 	 * Close the database.
+	 * 
+	 * @return true of this actually closes the database
 	 */
-	public synchronized void close()
+	public synchronized boolean close()
 	{
 		Util.d(null, TAG, "closing database connection");
 		openCount--;
+		boolean toReturn = false;
 		if (openCount == 0)
 		{
+			toReturn = true;
 			db.close();
 			sddb.close();
 			db = null;
 		}
 		if (openCount < 0)
 			throw new IllegalStateException("database over-closed");
+		return toReturn;
 	}
 }

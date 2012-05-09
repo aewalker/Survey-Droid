@@ -20,7 +20,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-	android:versionCode="42" android:versionName="1.0.2" package="org.surveydroid.android">
+	android:versionCode="43" android:versionName="1.1.0" package="org.surveydroid.android">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.INTERNET" />
@@ -71,6 +71,11 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 		<receiver
 		    android:name=".LocationTracker"
 		    android:label="LocationTrackerService" />
+		<receiver android:name=".CallReceiver">
+			<intent-filter>
+		    	<action android:name="android.intent.action.PHONE_STATE" />
+		    </intent-filter>
+		</receiver>
 		
 		<!-- Services -->
         <service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
@@ -99,6 +104,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 				<action android:name="org.surveydroid.android.coms.ACTION_DOWNLOAD_DATA" />
 			</intent-filter>
 		</service>
+		<service android:name=".CallTracker" android:label="CallTracker"></service>
 		
 		<!-- Activities -->
 		<activity
