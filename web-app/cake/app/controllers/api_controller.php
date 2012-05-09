@@ -248,11 +248,14 @@ class APIController extends AppController
 			$body .= "<tr$s><td$s><strong>$key</strong></td><td$s>$val</td></tr>";
 		}
 		$body .= '</table></body></html>';
-		$to = ADMIN_EMAIL;
 		$subject = 'Survey Droid exception received';
 		$headers = "From: no-reply@survey-droid.org\r\n";
 		$headers .= "Content-type: text/html\r\n"; 
-		mail($to, $subject, $body, $headers);
+		for ($i = 1; $i <= NUM_ADMIN_EMAILS; $i++)
+		{
+			$to = constant("ADMIN_EMAIL$i");
+			mail($to, $subject, $body, $headers);
+		}
 	}
 	
 	/**

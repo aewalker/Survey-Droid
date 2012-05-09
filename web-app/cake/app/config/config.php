@@ -24,12 +24,16 @@ define('SSL', true);
 //Configure::write('Routing.prefixes', array('rest'));
 
 /**
- * @var ADMIN_EMAIL - set the admin's email address
+ * @var NUM_ADMIN_EMAILS - set the admin's email address
  * 
  * If you are using a version of the Survey Droid phone app that has error
- * reporting on, you can set the email address that the reports are send to
- * here.
+ * reporting on, you can set the email address(es) that the reports are sent
+ * to.  Set NUM_ADMIN_EMAILS to be the number of addresses that are to be
+ * mailed to, and then set variables called 'ADMIN_EMAILX' where X is a
+ * number starting at 1 to be the addresses.
  */
-define('ADMIN_EMAIL', 'austinewalker@gmail.com');
+define('NUM_ADMIN_EMAILS', 2);
+define('ADMIN_EMAIL1', 'austinewalker@gmail.com');
+define('ADMIN_EMAIL2', 'nsugie@sbcglobal.net');
 
 ?>
