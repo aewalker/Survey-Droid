@@ -258,6 +258,10 @@ public final class Util
 				Log.w(tag, msg);
 			log(msg);
 		}
+		else
+		{
+			Log.d(APP_TAG, msg);
+		}
 	}
 	
 	/**
@@ -277,6 +281,10 @@ public final class Util
 			else
 				Log.w(tag, msg);
 			log(msg);
+		}
+		else
+		{
+			Log.v(TAG, msg);
 		}
 	}
 	
