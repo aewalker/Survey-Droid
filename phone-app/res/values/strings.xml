@@ -159,4 +159,10 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 	
 	<!-- Content text for a notification that the user is in a survey. -->
 	<string name="in_survey_content">Select to return to your survey</string>
+	
+	<!-- Ticker text for a missed survey notification. -->
+	<string name="survey_missed_ticker">Missed survey!</string>
+	
+	<!-- Content text for a missed survey notification. -->
+	<string name="survey_missed_content">You missed a Survey Droid survey</string>
 </resources>

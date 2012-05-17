@@ -372,6 +372,7 @@ public class SurveyService extends Service
 //			sInfo.endTime = sInfo.startTime + intent.getLongExtra(
 //					EXTRA_SURVEY_TIMEOUT, timeout * 60 * 1000);
 			sInfo.endTime = sInfo.startTime + timeout * 60 * 1000;
+			/////
 		}
 		Util.v(null, TAG, "current time is " + System.currentTimeMillis());
 		Util.v(null, TAG, "new survey: " + sInfo);
@@ -834,6 +835,42 @@ public class SurveyService extends Service
 	}
 	
 	/**
+	 * Shows the user a notification that they have missed a survey
+	 */
+	private void showMissedSurveyNotification()
+	{
+		//things we're going to need for the notification
+		int icon = R.drawable.missed_survey;
+		String tickerText = getString(R.string.app_name);
+		long when = System.currentTimeMillis();
+		String contentTitle = getString(R.string.survey_missed_ticker);
+		String contentText = getString(R.string.survey_missed_content);
+		
+		//now create the notification
+		Intent notificationIntent = new Intent();
+		PendingIntent contentIntent =
+			PendingIntent.getService(this, 0, notificationIntent, 0);
+		Notification notification =
+			new Notification(icon, tickerText, when);
+		notification.setLatestEventInfo(
+				this, contentTitle, contentText, contentIntent);
+		
+		//add sound and vibration
+		//the system policy will determine if either of these will actually
+		//happen, so don't need to worry about it
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.defaults |= Notification.DEFAULT_VIBRATE;
+		//auto cancel
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		
+		//don't use the power manager here; we don't need to alert the user
+		//immediately since they are already not paying attention
+		NotificationManager nm = (NotificationManager)
+			getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.notify(N_ID + 1, notification);
+	}
+	
+	/**
 	 * Remove surveys that have expired
 	 * 
 	 * @param all if true, removes all surveys (even if they are not expired)
@@ -885,6 +922,7 @@ public class SurveyService extends Service
 					{
 						Util.e(null, TAG, "Failed to write completion record!");
 					}
+					showMissedSurveyNotification();
 				}
 			}
 			else
