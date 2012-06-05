@@ -162,7 +162,8 @@ public class CallTracker extends WakefulIntentService
 				
 				//make sure the number is not study admin's number
 				if (Util.cleanPhoneNumber(Config.getSetting(this,
-						Config.ADMIN_PHONE_NUMBER, null)).equals(number))
+						Config.ADMIN_PHONE_NUMBER,
+						Config.ADMIN_PHONE_NUMBER_DEFAULT)).equals(number))
 				{
 					newCalls.moveToNext();
 					continue;

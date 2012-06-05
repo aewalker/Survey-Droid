@@ -187,6 +187,46 @@ public class SurveyScheduler extends WakefulIntentService
 	}
 	
 	/**
+	 * Use a hash function to determine when a random survey should be 
+	 * scheduled for based on the end times.
+	 * 
+	 * @param id the survey id
+	 * @param start the starting time
+	 * @param end the ending time
+	 * @return the time the survey should be scheduled for
+	 */
+	private long getRandomSurveyTime(int id, long start, long end)
+	{
+		Date d = new Date(start);
+		Util.v(null, TAG, "start "
+				+ d.toGMTString());
+		d = new Date(end);
+		Util.v(null, TAG, "end "
+				+ d.toGMTString());
+		/*
+		 * We want to ensure that, in case the scheduler
+		 * runs multiple times between when a random
+		 * survey is first scheduled and when it is
+		 * started, that we schedule it for the same
+		 * time in both cases.
+		 */
+		byte[] bytes = Config.getSetting(
+				this, Config.SALT, "").getBytes();
+		long seed = start;
+		seed ^= end;
+		seed ^= (long) id;
+		for (int j = 0; j < bytes.length; j++)
+		{
+			seed ^= ((long) bytes[j]) << j; //meh why not
+		}
+		Random r = new Random(seed);
+		//always safe because end - start < max int size
+		long offset =
+			(long) (r.nextDouble() * (end - start));
+		return start + offset;
+	}
+	
+	/**
 	 * Look for surveys that need to be scheduled and does so.
 	 * 
 	 * @param context
@@ -231,43 +271,15 @@ public class SurveyScheduler extends WakefulIntentService
 					catch (IllegalArgumentException e1)
 					{
 						//could be a random survey, so check that
+						String first;
+						String second;
 						try
 						{
 							
 							String[] both = time.split("-");
-							long start = Util.getUnixTime(days[i], both[0]);
-							long end = Util.getUnixTime(days[i],
-									both[1], start);
+							first = both[0];
+							second = both[1];
 
-							Date d = new Date(start);
-							Util.v(null, TAG, "start "
-									+ d.toGMTString());
-							d = new Date(end);
-							Util.v(null, TAG, "end "
-									+ d.toGMTString());
-							/*
-							 * We want to ensure that, in case the scheduler
-							 * runs multiple times between when a random
-							 * survey is first scheduled and when it is
-							 * started, that we schedule it for the same
-							 * time in both cases.
-							 */
-							long diff = end - start;
-							byte[] bytes = Config.getSetting(
-									this, Config.SALT, "").getBytes();
-							long seed = start;
-							seed ^= end;
-							seed ^= (long) id;
-							for (int j = 0; j < bytes.length; j++)
-							{
-								seed ^= ((long) bytes[j]) << j; //meh why not
-							}
-							Random r = new Random(seed);
-							//always safe because end - start < max int size
-							long offset =
-								(long) (r.nextDouble() * diff);
-							scheduledTime = start + offset;
-							random = true;
 						}
 						catch (Exception e2)
 						{
@@ -275,6 +287,29 @@ public class SurveyScheduler extends WakefulIntentService
 									+ time + "\"; skipping");
 							continue;
 						}
+						long start = Util.getUnixTime(days[i], first);
+						long end = Util.getUnixTime(days[i],
+							second, start);
+						long diff = end - start;
+						
+						//don't miss surveys if the scheduler runs inside the
+						//survey window
+						end = Util.getUnixTime(days[i], second);
+						//an (over) estimate of the maximum amount of "leap"
+						//time that can occur in a single week
+						long maxTimeDiff = 2 * 60 * 60 * 1000; //2 hours
+						start = Util.getUnixTime(days[i], first,
+							end - diff - maxTimeDiff);
+						
+						scheduledTime = getRandomSurveyTime(id, start, end);
+						if (scheduledTime < System.currentTimeMillis())
+						{
+							start = Util.getUnixTime(days[i], first);
+							end = Util.getUnixTime(days[i], second, start);
+							scheduledTime = getRandomSurveyTime(id, start, end);
+						}
+						
+						random = true;
 					}
 
 					if (Config.D)

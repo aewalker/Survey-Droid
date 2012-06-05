@@ -155,7 +155,11 @@ public final class Util
 			default:
 			}
 		}
-		if (sb.length() == 10) sb.insert(0, Config.COUNTRY_CODE);
+		if (sb.length() == 10)
+		{
+			sb.insert(0, Config.COUNTRY_CODE);
+			//sb.append(Config.COUNTRY_CODE);
+		}
 		return sb.toString();
 	}
 	

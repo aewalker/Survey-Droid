@@ -313,11 +313,13 @@ public class SurveyDBHandler extends SurveyDroidDBHandler
 		{
 			if (!Config.getSetting(contx, Config.ALLOW_NO_CHOICES,
 					Config.ALLOW_NO_CHOICES_DEFAULT))
-				throw new RuntimeException("No choices given in answer");
-			else
 			{
-				ids = new StringBuilder();
+				if (Config.D)
+					throw new RuntimeException("No choices given in answer");
+				else
+					Util.e(null, TAG, "No choices given in answer when ALLOW_NO_CHOICES is false");
 			}
+			ids = new StringBuilder();
 		}
 		else
 		{

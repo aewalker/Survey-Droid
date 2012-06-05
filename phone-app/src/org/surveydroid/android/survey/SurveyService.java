@@ -979,6 +979,13 @@ public class SurveyService extends Service
 		 */
 		public Survey getSurvey()
 		{
+			if (runTimeout == null)
+			{
+				Util.w(null, TAG, "runTimeout was null; service must have been restarted...");
+				runTimeout = new Intent(SurveyService.this, SurveyService.class);
+				runTimeout.setAction(ACTION_QUIT_SURVEY);
+				runTimeout.setData(Uri.parse(TAG + " runTimeout"));
+			}
 			Dispatcher.cancel(SurveyService.this, runTimeout, null);
 			return survey;
 		}
