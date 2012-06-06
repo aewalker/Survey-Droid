@@ -409,8 +409,6 @@ public class Push
                 cdbh.close();
             	return true;
             }
-            
-            int index = 0;
 
             calls.moveToFirst();
             while (!calls.isAfterLast())
@@ -429,7 +427,6 @@ public class Push
                 		calls.getColumnIndexOrThrow(
                 				SurveyDroidDB.CallLogTable.PHONE_NUMBER)), ctx));
                 callsJSON.put(log);
-                index++;
                 calls.moveToNext();
             }
             calls.close();
