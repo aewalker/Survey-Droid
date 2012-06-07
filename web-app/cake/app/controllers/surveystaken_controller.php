@@ -33,7 +33,8 @@ class SurveysTakenController extends RestController
         $models = $this->$modelClass->find('all', array(
             'recursive' => -1,
             'conditions' => $conditions,
-            'limit' => 300
+            'limit' => 300,
+            'order' => 'SurveysTaken.created DESC'
         ));
         e(json_encode(standardize($models, $modelClass)));
     }
