@@ -20,7 +20,7 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-	android:versionCode="42" android:versionName="1.0.2" package="org.surveydroid.android">
+	android:versionCode="45" android:versionName="1.1.2" package="org.surveydroid.android">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.INTERNET" />
@@ -46,7 +46,6 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 				android:name="SurveyDroid"
 				android:screenOrientation="portrait"
 				android:configChanges="keyboardHidden|orientation"
-				android:debuggable="true"
 				android:theme="@android:style/Theme.NoTitleBar">
 		
 		<!-- Receivers -->
@@ -71,12 +70,18 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 		<receiver
 		    android:name=".LocationTracker"
 		    android:label="LocationTrackerService" />
+		<receiver android:name=".CallReceiver">
+			<intent-filter>
+		    	<action android:name="android.intent.action.PHONE_STATE" />
+		    </intent-filter>
+		</receiver>
 		
 		<!-- Services -->
         <service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
 		<service
 		    android:label="SurveyScheduler"
-		    android:name=".survey.SurveyScheduler">
+		    android:name=".survey.SurveyScheduler"
+		    android:exported="false">
 			<intent-filter>
 				<action android:name="org.surveydroid.android.survey.ACTION_ADD_SURVEY" />
 				<action android:name="org.surveydroid.android.survey.ACTION_SCHEDULE_SURVEYS" />
@@ -84,7 +89,8 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 		</service>
 		<service
 		    android:name=".survey.SurveyService"
-		    android:label="SurveyService">
+		    android:label="SurveyService"
+		    android:exported="false">
 			<intent-filter>
 				<action android:name="org.surveydroid.android.survey.ACTION_SURVEY_READY" />
 				<action android:name="org.surveydroid.android.survey.ACTION_SHOW_SURVEY" />
@@ -93,12 +99,16 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 				<action android:name="org.surveydroid.android.survey.ACTION_SUBMIT_ANSWERS" />
 			</intent-filter>
 		</service>
-		<service android:name=".coms.ComsService" android:label="ComsService">
+		<service
+		    android:name=".coms.ComsService"
+		    android:label="ComsService"
+		    android:exported="false">
 			<intent-filter>
 				<action android:name="org.surveydroid.android.coms.ACTION_UPLOAD_DATA" />
 				<action android:name="org.surveydroid.android.coms.ACTION_DOWNLOAD_DATA" />
 			</intent-filter>
 		</service>
+		<service android:name=".CallTracker" android:label="CallTracker"></service>
 		
 		<!-- Activities -->
 		<activity

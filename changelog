@@ -1,5 +1,17 @@
 Survey Droid Changelog
 ----------------------
+Version 1.1.2:
+	-Fixed bug that could cause random surveys to be missed if the phone was turned off during the day.
+	-Fixed some pre-pull stability issues within the app.
+
+Version 1.1.1:
+
+Version 1.1.0:
+	-Fixed database race condition
+	-Fixed call logging bug
+	-Improved startup time
+	-Call surveys now influence the thermometer
+
 Version 1.0.2:
 	-Fixed call logging NullPointer bug
 

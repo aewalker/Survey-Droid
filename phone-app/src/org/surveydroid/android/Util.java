@@ -155,7 +155,11 @@ public final class Util
 			default:
 			}
 		}
-		if (sb.length() == 10) sb.append(Config.COUNTRY_CODE);
+		if (sb.length() == 10)
+		{
+			sb.insert(0, Config.COUNTRY_CODE);
+			//sb.append(Config.COUNTRY_CODE);
+		}
 		return sb.toString();
 	}
 	
@@ -236,7 +240,7 @@ public final class Util
 		}
 		else
 		{
-			Log.w(APP_TAG, msg);
+			Log.i(APP_TAG, msg);
 		}
 	}
 	
@@ -258,6 +262,10 @@ public final class Util
 				Log.w(tag, msg);
 			log(msg);
 		}
+		else
+		{
+			Log.d(APP_TAG, msg);
+		}
 	}
 	
 	/**
@@ -277,6 +285,10 @@ public final class Util
 			else
 				Log.w(tag, msg);
 			log(msg);
+		}
+		else
+		{
+			Log.v(TAG, msg);
 		}
 	}
 	

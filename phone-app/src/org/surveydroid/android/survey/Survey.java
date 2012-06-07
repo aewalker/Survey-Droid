@@ -122,7 +122,10 @@ public class Survey
 		//start out by getting the survey level stuff done
 		Cursor s = db.getSurvey(id);
 		if (!s.moveToFirst())
+		{
+			db.close();
 			throw new IllegalArgumentException("no such survey: " + id);
+		}
 		name = processText(s.getString(
 				s.getColumnIndexOrThrow(SurveyDroidDB.SurveyTable.NAME)));
 		int firstQID = s.getInt(
@@ -181,7 +184,7 @@ public class Survey
 				throw e;
 			}
 		}
-		Util.v(null, TAG, "branch Setup");
+		Util.v(null, TAG, "branch setup complete");
 		for (Condition condition : cList)
 		{
 			try
@@ -194,8 +197,7 @@ public class Survey
 				throw e;
 			}
 		}
-		Util.v(null, TAG, "condition Setup");
-
+		Util.v(null, TAG, "condition setup complete");
 	}
 
 	//set up the Question object with id
@@ -321,7 +323,7 @@ public class Survey
 			Collection<Condition> cList) throws SurveyConstructionException
 	{
 		Collection<Condition> conditions = new LinkedList<Condition>();
-		Cursor c = db.getConditions(id);
+		Cursor c = db.getConditions(id); //FIXME fails here sometimes
 		c.moveToFirst();
 		while (!c.isAfterLast())
 		{

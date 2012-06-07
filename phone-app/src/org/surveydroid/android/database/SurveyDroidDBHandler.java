@@ -75,7 +75,6 @@ public class SurveyDroidDBHandler
 	 */
 	public void close()
 	{
-		conn.close();
-		db = null;
+		if (conn.close()) db = null;
 	}
 }

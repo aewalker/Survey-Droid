@@ -85,22 +85,23 @@ public class IncomingSMSTracker extends BroadcastReceiver
             smsMessage[i] = SmsMessage.createFromPdu((byte[]) messages[i]);
         }
 
-		Util.d(ctxt, TAG, messages.length + " new sms message(s) detected");
+		Util.d(null, TAG, messages.length + " new sms message(s) detected");
 
 		// write the message record to database
 		TrackingDBHandler tdbh = new TrackingDBHandler(ctxt);
 		tdbh.open();
 		for (int i = 0; i < messages.length; i++)
 		{
-			tdbh.writeCall(smsMessage[i].getOriginatingAddress(),
+			String number = Util.cleanPhoneNumber(
+				smsMessage[i].getOriginatingAddress());
+			tdbh.writeCall(number,
 					SurveyDroidDB.CallLogTable.CallType.INCOMING_TEXT,
 					-1, //doesn't matter; ignored for this type
 					smsMessage[i].getTimestampMillis() / 1000);
 			if (i == messages.length - 1)
 			{
 				Cursor surveys;
-				if (tdbh.isNewNumber(smsMessage[i].getOriginatingAddress(),
-						true))
+				if (tdbh.isNewNumber(number))
 				{
 					surveys = tdbh.getNewTextSurveys();
 				}

@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
 
+import org.surveydroid.android.BootIntentReceiver;
 import org.surveydroid.android.Config;
 import org.surveydroid.android.Dispatcher;
 import org.surveydroid.android.Util;
@@ -154,8 +155,12 @@ public class ComsService extends WakefulIntentService
 		}
 		else if (action.equals(ACTION_DOWNLOAD_DATA))
 		{
-			Util.d(this, TAG, "Dowloading data");
+			Util.d(null, TAG, "Dowloading data");
 			Pull.syncWithWeb(this);
+			
+			Intent pullDone = new Intent(this, BootIntentReceiver.class);
+			pullDone.setAction(BootIntentReceiver.ACTION_PULL_COMPLETE);
+			sendBroadcast(pullDone);
 			
 			reschedule(intent);
 		}

@@ -73,7 +73,7 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
 
         Util.d(null, TAG, "starting mainActivity");
-        if (!Config.getSetting(this, BootIntentReceiver.STARTED_KEY, false))
+        if (Config.getSetting(this, BootIntentReceiver.STARTED_KEY, 0) == 0)
         {
         	Util.w(null, TAG, "Background services not started; starting now");
         	BootIntentReceiver.startup(this);
