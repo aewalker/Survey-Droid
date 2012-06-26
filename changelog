@@ -1,5 +1,10 @@
 Survey Droid Changelog
 ----------------------
+Version 1.1.3:
+	-Updated locpoll library to fix a Wakelock bug.
+	-Technical:
+		-Apparently the external libraries have not been committing; so they are included here
+
 Version 1.1.2:
 	-Fixed bug that could cause random surveys to be missed if the phone was turned off during the day.
 	-Fixed some pre-pull stability issues within the app.
