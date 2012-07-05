@@ -102,7 +102,7 @@
  * or in each action using $this->cacheAction = true.
  *
  */
-	//Configure::write('Cache.check', true);
+    Configure::write('Cache.check', true);
 
 /**
  * Defines the default error type when using the log() function. Used for

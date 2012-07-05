@@ -31,3 +31,52 @@
  * ...and connect the rest of 'Pages' controller's urls.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
+
+// RESTful routes
+    // Index
+    Router::connect("/rest/:controller",
+                    array(
+                        "[method]" => "GET",
+                        "action" => "rest_index"
+                    )
+    );
+    // Create
+    Router::connect("/rest/:controller",
+                    array(
+                        "[method]" => "POST",
+                        "action" => "rest_create"
+                    )
+    );
+    // Read
+    Router::connect("/rest/:controller/:id",
+                    array(
+                        "[method]" => "GET",
+                        "action" => "rest_read"
+                    ),
+                    array(
+                        "pass" => array("id"),
+                        "id" => "[0-9]+"
+                    )
+    );
+    // Update
+    Router::connect("/rest/:controller/:id",
+                    array(
+                        "[method]" => "PUT",
+                        "action" => "rest_update"
+                    ),
+                    array(
+                        "pass" => array("id"),
+                        "id" => "[0-9]+"
+                    )
+    );
+    // Delete
+    Router::connect("/rest/:controller/:id",
+                    array(
+                        "[method]" => "DELETE",
+                        "action" => "rest_delete"
+                    ),
+                    array(
+                        "pass" => array("id"),
+                        "id" => "[0-9]+"
+                    )
+    );

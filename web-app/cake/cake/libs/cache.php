@@ -25,6 +25,7 @@
  * @package       cake
  * @subpackage    cake.cake.libs
  */
+date_default_timezone_set("America/New_York");
 class Cache {
 
 /**

@@ -24,7 +24,8 @@ if (isset($result)) //if result is set, then the user has already submitted
 
 //main from
 echo $form->create('Branch', array('url' => "editbranch/$branchid", 'default' => false));
-echo $form->input('next_q', array('value' => $next_q));
+echo $form->input('next_q', array('label' => 'Next Question', 'type' => 'select',
+    'options' => $questions, 'value' => $next_q));
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
 echo $form->input('question_id', array('type' => 'hidden', 'value' => $questionid));
 echo $this->Js->submit('Edit', array('action' => "editbranch/$branchid", 'update' => "#branch_space_$branchid"));

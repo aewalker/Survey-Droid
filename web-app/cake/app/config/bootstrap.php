@@ -21,6 +21,8 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 include_once 'config.php'; //the main user config file
+require_once 'constants.php'; //defines all the needed constants
+include_once '301rewriting.php'; //do some 301 redirects
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
@@ -49,3 +51,4 @@ include_once 'config.php'; //the main user config file
  * Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
  *
  */
+ Inflector::rules('plural', array('irregular' => array('surveys_taken' => 'surveys_taken')));

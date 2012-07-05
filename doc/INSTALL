@@ -1,16 +1,16 @@
 ----------------------------------
-PEOPLES Project Installation Guide
+Survey Droid Installation Guide
 ----------------------------------
 
-PEOPLES has two parts: a web server and a set of Android smartphones.  Each
-side of the system requires some setup.
+The Survey Droid system has two parts: a web server and a set of Android
+smartphones.  Each side of the system requires some setup.
 
 To see the installation procedure for the web server software, see
-doc/website-guide/install-web.html.  In particular, note that PEOPLES uses the
-CakePHP framework.  If the web server on which you intend to install PEOPLES
-already has other CakePHP applications running, see the section in the
-installation guide about this for instructions on what parts of PEOPLES (which
-is distributed with CakePHP) you need to install.
+doc/website-guide/install-web.html.  In particular, note that Survey Droid uses
+the CakePHP framework.  If the web server on which you intend to install Survey
+Droid already has other CakePHP applications running, see the section in the
+installation guide about this for instructions on what parts of Survey Droid
+(which is distributed with CakePHP) you need to install.
 
 To see the installation procedure for the Android phones, see
 doc/phone-guide/install-phone.html. 

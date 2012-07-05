@@ -1,0 +1,91 @@
+$base-color: #ddd;
+
+$font-family: "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+
+@import 'compass';
+@import 'ext4/default/all';
+
+$highlight-background-color: #7b8b9d;
+
+$header-background-color: darken($highlight-background-color, 30);
+$sidebar-background-color: #eaeaea;
+
+.app-header {
+    padding: 10px;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0 1px 0 darken($header-background-color, 15);
+
+    @include background-gradient($header-background-color, 'matte');
+
+    border-bottom: 1px solid darken($header-background-color, 15) !important;
+}
+
+/**
+ * Sidebar
+ */
+.sidebar-list {
+    //border-right: 1px solid $panel-border-color !important;
+
+    background: $sidebar-background-color;
+
+    .x-item-selected {
+        color: #fff;
+        font-weight: bold;
+        text-shadow: 0 1px 0 darken($highlight-background-color, 20);
+
+        border-color: $highlight-background-color;
+
+        @include background-gradient($highlight-background-color, 'matte');
+    }
+}
+
+.sidebar-title {
+    color: #666;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 lighten(#e8ecf1, 10);
+
+    padding: 5px;
+}
+
+.question {
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: $sidebar-background-color;
+
+    padding: 3px 10px;
+
+    font-size: 12px;
+    cursor: pointer;
+}
+
+img.thumbnail {
+    max-height: 50px;
+
+}
+
+img.fullsize {
+    margin: 10px;
+    max-width: 97%;
+}
+
+/* Just some button icons */
+.icon-user {
+    background-image: url(../images/user.png) !important;
+}
+
+.icon-add {
+    background-image: url(../images/add.png) !important;
+}
+
+.icon-delete {
+    background-image: url(../images/delete.png) !important;
+}
+
+.x-action-col-icon {
+    cursor: pointer;
+}

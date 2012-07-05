@@ -1,5 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2011 Sema Berkiten, Vladimir Costescu, Henry Liu, Diego Vargas,
+Austin Walker, and Tony Xiao
+
+This file is part of Survey Droid.
+
+Survey Droid is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Survey Droid is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>. 
+ -->
 <resources>
-	<string name="hello">Hello World, main!</string>
-	<string name="app_name">PEOPLES</string>
+    <!-- ============== -->
+    <!-- Global Strings -->
+    <!-- ============== -->
+    
+	<!-- Name of the whole application. -->
+	<string name="app_name">Survey Droid</string>
+	
+	<string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
+	<string name="crash_notif_title">SurveyDroid has crashed...</string>
+	<string name="crash_notif_text">Please click here to help fix the issue.</string>
+    
+	<string name="crash_dialog_title">SurveyDroid has crashed</string>
+	<string name="crash_dialog_text">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us error data,
+    all you have to do is click \'OK\'.</string>
+	<string name="crash_dialog_comment_prompt">Please tell us what you were doing when the application crashed:</string>
+	<string name="crash_dialog_ok_toast">Thank you!</string>
+	
+	<!-- ============= -->
+    <!-- Main Activity -->
+    <!-- ============= -->
+	
+	<!-- Title for the main activity page. -->
+	<string name="main_title">Welcome to Survey Droid!</string>
+	
+	<!-- The text for the settings button on the main page. -->
+	<string name="main_settingsButton">Settings</string>
+	
+	<!-- The text for the user surveys button on the main page. -->
+	<string name="main_sampleButton">Start a\nsurvey</string>
+	
+	<!-- The text for the submit photo button on the main page. -->
+	<string name="main_photoButton">Submit a\nphoto</string>
+	
+	<!-- The text for the admin call button on the main page. -->
+	<string name="main_callButton">Call\n</string>
+	
+	<!-- The text for the exit button on the main page. -->
+	<string name="main_exitButton">Exit</string>
+	
+	<!-- The title for the survey progress bar. -->
+	<string name="main_progressTitle">Survey\nCompletion:</string>
+	
+	<!-- ================= -->
+    <!-- Settings Activity -->
+    <!-- ================= -->
+	
+	<!-- Title for the settings activity. -->
+	<string name="settings_title">Survey Droid Settings</string>
+	
+	<!-- Text for the button to show the phone id. -->
+	<string name="settings_idButton">Show Phone ID</string>
+	
+	<!-- Text for the server sync button. -->
+	<string name="settings_syncButton">Sync Now</string>
+	
+	<!-- Text for the back button on the settings screen. -->
+	<string name="settings_backButton">Back</string>
+	
+	<!-- Text above the survey settings switcher on the settings page. -->
+	<string name="settings_surveysSetting">Surveys</string>
+	
+	<!-- Text above the location tracking settings switcher on the settings page. -->
+	<string name="settings_locationSetting">Location Tracking</string>
+	
+	<!-- Text above the communications logging settings switcher on the settings page. -->
+	<string name="settings_loggingSetting">Call/Text Logging</string>
+	
+	<!-- ================= -->
+    <!-- Phone ID Activity -->
+    <!-- ================= -->
+	
+	<!-- Text for the phone id page. -->
+	<string name="id_title">This Phone has ID:</string>
+	
+	<!-- The default phone id in horizontal mode. -->
+	<string name="id_defaultHoriz">0000-0000-0000-0000</string>
+	
+	<!-- The default phone id in vertical mode. -->
+	<string name="id_defaultVert">0000\n0000\n0000\n0000</string>
+	
+	<!-- Text for the back button on the id screen. --> 
+	<string name="id_backButton">Back</string>
+	
+	<!-- ===================== -->
+    <!-- User Surveys Activity -->
+    <!-- ===================== -->
+	
+	<!-- Title text for the user-initiated surveys page -->
+	<string name="user_surveys_title">Start a survey</string>
+	
+	<!-- Text for the back button on the user-initiated surveys page -->
+	<string name="user_surveys_back">Back</string>
+	
+	<!-- ====================== -->
+    <!-- Survey Related Strings -->
+    <!-- ====================== -->
+	
+	<!-- Text for the back button on the survey questions. -->
+	<string name="question_backButton">Previous</string>
+	
+	<!-- Text for the next button on the survey questions. -->
+	<string name="question_nextButton">Next</string>
+	
+	<!-- The text to display while a question is loading -->
+	<string name="question_loading_text">Question Loading...</string>
+	
+	<!-- The main title for the survey confirmation page -->
+	<string name="survey_confirmation_title">Survey Completed</string>
+	
+	<!-- The subtitle for the survey confirmation page -->
+	<string name="survey_confirmation_subtitle">Are you sure you want to submit your responses?</string>
+	
+	<!-- Text for the confirm button on the survey confirmation page -->
+	<string name="survey_confirmation_confirm">Yes</string>
+	
+	<!-- Text for the go back button on the survey confirmation page -->
+	<string name="survey_confirmation_back">No, go back</string>
+	
+	<!-- Text for the exit button on the survey-completion (survey_done) page. -->
+	<string name="survey_done_exit">Exit</string>
+	
+	<!-- Main text on the survey-completion (survey_done) page. -->
+	<string name="survey_done_text">Thank you! Your survey has been submitted.</string>
+	
+	<!-- ==================== -->
+	<!-- Notification Strings -->
+	<!-- ==================== -->
+	
+	<!-- Ticker text for a waiting survey notification. -->
+	<string name="survey_waiting_ticker">New Survey!</string>
+	
+	<!-- Ticker text for a notification that the user is in a survey. -->
+	<string name="in_survey_ticker">Survey Running</string>
+	
+	<!-- Content text for a waiting survey notification. -->
+	<string name="survey_waiting_content">Select to start your survey</string>
+	
+	<!-- Content text for a notification that the user is in a survey. -->
+	<string name="in_survey_content">Select to return to your survey</string>
+	
+	<!-- Ticker text for a missed survey notification. -->
+	<string name="survey_missed_ticker">Missed survey!</string>
+	
+	<!-- Content text for a missed survey notification. -->
+	<string name="survey_missed_content">You missed a Survey Droid survey</string>
 </resources>

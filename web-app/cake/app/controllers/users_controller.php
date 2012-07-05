@@ -12,7 +12,8 @@
  * @author Sema Berkiten
  * @author Austin Walker
  */
-class UsersController extends AppController
+App::import('Controller', 'Rest');
+class UsersController extends RestController
 {
 	var $name = 'Users';
 	
@@ -53,15 +54,20 @@ class UsersController extends AppController
     {
     	//TODO there has got to be a more secure way to do this...
     	//chek to see if this is the first run.  If so, make the root user.
+    	//TODO need to check that at least one user is an admin; if not, make
+    	//the root user again
     	if (!$this->User->hasAny())
     	{
     		$this->User->create();
     		$this->User->save(array('User' => array(
 	    		'username' => 'peoplesroot',
-	    		'password' => 'peoplespass',
+	    		'password' => $this->Auth->password('peoplespass'),
     			'password_copy' => 'peoplespass',
     			'password_confirm' => 'peoplespass',
-    			'email' => 'noemail@nohost.com'
+    			'email' => 'noemail@nohost.com',
+    			'admin' => 1,
+    			'first_name' => 'PEOPLES',
+    			'last_name' => 'Administrator'
     		)));
     	}
     	
@@ -193,5 +199,4 @@ class UsersController extends AppController
     }
 
 }
-
-?> 
+?>

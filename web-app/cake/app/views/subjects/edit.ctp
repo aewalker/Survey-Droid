@@ -7,6 +7,7 @@
 
 //main form
 echo $form->create('Subject', array('url' => "/subjects/edit/$id"));
+echo $form->input('id', array('type' => 'hidden', 'value' => $id));
 echo $form->input('first_name', array('value' => $first_name));
 echo $form->input('last_name', array('value' => $last_name));
 echo $form->input('phone_num', array('value' => $phone_num));

@@ -10,16 +10,38 @@
  * site, it must be registered (it's device id added) to a subject.
  * 
  * @author Austin Walker
+ * @author Tony Xiao
  */
-class SubjectsController extends AppController
+App::import('Controller', 'Rest');
+class SubjectsController extends RestController
 {
 	//might as well support php4
 	var $name = 'Subjects';
-	
+
 	//load the Auth (ie authorization) component and the Table helper
     var $components = array('Auth');
     var $helpers = array('Table');
     
+    /** Create */
+    function rest_create() {
+        $this->autoRender = false;
+        $this->header('Content-Type: application/json');
+        $modelClass = $this->modelClass;
+        $this->data = json_decode(file_get_contents('php://input'), true);
+        if (!empty($this->data)) {
+            unset($this->data[$modelClass]['id']); // disallow client-assigned id
+            unset($this->data['id']);              // disallow client-assigned id
+            $this->data['id'] = $this->data['mutable_id'];
+            if ($this->$modelClass->save($this->data)) {;
+                $this->header('HTTP/1.1 201 Created');
+                // TODO: read() returns associated models, which is unintended
+                e(json_encode(standardize($this->$modelClass->read(), $modelClass)));
+                return;
+            }
+        }
+        $this->header('HTTP/1.1 400 Bad Request');
+    }
+
     /**
      * Shows an overview of all the subjects matching a search, or shows
      * everyone if no search terms were entered.
@@ -95,10 +117,11 @@ class SubjectsController extends AppController
 	 */
 	function edit($id = NULL)
 	{
+
 		if ($id == NULL) $this->redirect('/subjects/');
 		if ($this->data['Subject']['confirm'] == true)
 		{
-			$this->Subject->save();
+			$this->Subject->save($this->data);
 			$this->Session->setFlash('Subject edited!');
 			$this->redirect('/subjects');
 		}
@@ -147,6 +170,5 @@ class SubjectsController extends AppController
 		else
 			echo 'An error has occured!';
 	}
-	
 }
 ?>

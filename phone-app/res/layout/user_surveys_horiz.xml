@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2011 Sema Berkiten, Vladimir Costescu, Henry Liu, Diego Vargas,
+Austin Walker, and Tony Xiao
+
+This file is part of Survey Droid.
+
+Survey Droid is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Survey Droid is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>. 
+ -->
+<LinearLayout
+   	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/user_surveys_topLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+    <LinearLayout
+    	android:id="@+id/user_surveys_horizLayout"
+	    android:layout_width="fill_parent"
+	    android:orientation="horizontal"
+	    android:layout_weight="1"
+	    android:layout_height="wrap_content">
+	    <TextView
+		    android:text="@string/user_surveys_title"
+		    android:textAppearance="?android:attr/textAppearanceLarge"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/user_surveys_question"
+		    android:layout_width="wrap_content"
+		    android:layout_gravity="center"></TextView>
+		<ListView
+			android:layout_weight="1"
+			android:id="@android:id/list"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"></ListView>
+	</LinearLayout>
+    <Button
+	   	android:id="@+id/user_surveys_backButton"
+	   	android:text="@string/user_surveys_back"
+	   	android:layout_height="wrap_content"
+	   	android:layout_width="100dip"
+	   	android:drawableLeft="@drawable/exit_small"
+	   	android:layout_gravity="center"></Button>
+</LinearLayout>
+    
