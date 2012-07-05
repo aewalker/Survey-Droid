@@ -11,8 +11,10 @@
  * 
  * @author Austin Walker
  * @author Sema Berkiten
+ * @author Tony Xiao
  */
-class QuestionsController extends AppController
+App::import('Controller', 'Rest');
+class QuestionsController extends RestController
 {
 	//for php4
 	var $name = 'Questions';
@@ -41,7 +43,7 @@ class QuestionsController extends AppController
     /**
      * Add a new question to a survey.
      * 
-     * @param surveyid - if of the Question to which a branch should be added
+     * @param surveyid - id of the Question to which a branch should be added
      */
     function addquestion($surveyid)
     {
@@ -53,12 +55,37 @@ class QuestionsController extends AppController
     	}
     	if ($this->data['Question']['confirm'] == true)
 		{
+			//first do the base64 transform
+			if (!empty($this->data['Question']['q_img_low']['tmp_name']))
+			{
+                // var_dump($this->data);
+                // echo empty($this->data['Question']['q_img_low']);
+				$file = $this->data['Question']['q_img_low']['tmp_name'];
+				$this->data['Question']['q_img_low'] =
+					base64_encode(fread(fopen($file, 'r'), filesize($file)));
+			} else {
+			    $this->data['Question']['q_img_low'] = "";
+			}
+			if (!empty($this->data['Question']['q_img_high']['tmp_name']))
+			{
+				$file = $this->data['Question']['q_img_high']['tmp_name'];
+				$this->data['Question']['q_img_high'] =
+					base64_encode(fread(fopen($file, 'r'), filesize($file)));
+			} else {
+			    $this->data['Question']['q_img_high'] = "";
+        	}
+			
+			//then save
 	    	$this->Question->create();
 			if ($this->Question->save($this->data))
 	        {
 	         	$this->Session->setFlash('New question created!');
-	         	$this->set('result', true);
 	    	}
+	    	else
+	    	{
+	    		$this->Session->setFlash('There were errors');
+	    	}
+	        $this->redirect('/surveys/viewsurvey/'.$this->data['Question']['survey_id']);
 		}		
     }
     
@@ -82,22 +109,43 @@ class QuestionsController extends AppController
     	}
 		if ($this->data['Question']['confirm'] == true)
 		{
+			//first do the base64 transform
+			if (!empty($this->data['Question']['q_img_low']))
+			{
+				$file = $this->data['Question']['q_img_low']['tmp_name'];
+				$this->data['Question']['q_img_low'] =
+					base64_encode(fread(fopen($file, 'r'), filesize($file)));
+			}
+			if (!empty($this->data['Question']['q_img_high']))
+			{
+				$file = $this->data['Question']['q_img_high']['tmp_name'];
+				$this->data['Question']['q_img_high'] =
+					base64_encode(fread(fopen($file, 'r'), filesize($file)));
+			}
+			
 			if ($this->Question->save($this->data))
 			{
 				$this->Session->setFlash('Question edited!');
-				$this->set('result', true);
-				return;
 			}
-			$this->set('result', false);
+			else
+			{
+				$this->Session->setFlash('There were errors');
+			}
+			$this->redirect('/surveys/viewsurvey/'.$this->data['Question']['survey_id']);
+			return;
 		}
 		
 		$result = $this->Question->find('first', array
 		(
-			'conditions' => array('Question.id' => $questionid),
-			'fields' => array('q_text','survey_id')
+			'conditions' => array('Question.id' => $questionid)
 		));
 		if (isset($result['Question']))
 		{
+			$this->set('q_type', $result['Question']['q_type']);
+			$this->set('q_text_low', $result['Question']['q_text_low']);
+			$this->set('q_text_high', $result['Question']['q_text_high']);
+			$this->set('q_img_low', $result['Question']['q_img_low']);
+			$this->set('q_img_high', $result['Question']['q_img_high']);
 			$this->set('q_text', $result['Question']['q_text']);
 			$this->set('questionid', $questionid);
 			$this->set('surveyid', $result['Question']['survey_id']);

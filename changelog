@@ -1,0 +1,138 @@
+Survey Droid Changelog
+----------------------
+Version 1.1.3:
+	-Updated locpoll library to fix a Wakelock bug.
+	-Technical:
+		-Apparently the external libraries have not been committing; so they are included here
+
+Version 1.1.2:
+	-Fixed bug that could cause random surveys to be missed if the phone was turned off during the day.
+	-Fixed some pre-pull stability issues within the app.
+
+Version 1.1.1:
+
+Version 1.1.0:
+	-Fixed database race condition
+	-Fixed call logging bug
+	-Improved startup time
+	-Call surveys now influence the thermometer
+
+Version 1.0.2:
+	-Fixed call logging NullPointer bug
+
+Version 1.0.1:
+	-Changed icons
+	-Technical:
+		-Removed some assertions in survey service when not in debug mode.
+
+Version 1.0.0:
+	-Fixed bug in dispatch canceling
+	-Fixed bug in survey service
+
+Version 0.9.1-beta:
+	-Fixed bug in location tracking
+	-Fixed bug in wakeful service dispatching
+	-Technical:
+		-The dispatcher now acquires a screen dim wakelock with the acquire causes wakeup option
+
+Version 0.9.0-beta:
+	-Fixed survey thermometer off-by-1 bug.
+	-Major work on power management issues (such as phones sleeping through surveys or using too much energy)
+	-Improved error reporting for surveys that fail to build properly.
+	-Fixed a bug that caused survey questions to remain open after the survey was over.
+	-Technical: 
+		-Added the CWAC WakefulIntentService library
+		-Added the Dispatcher class, which allows for wakeful services and better use of WakefulIntentServices via alarms
+		-Added wakelock functionality to the SurveyService
+		-Converted the intent services to be wakeful
+		-Added the CWAC LocationPoller library to replace the LocationTracker
+		-Removed some very old stuff that was once used to try and write a log
+
+Version 0.8.2-beta:
+	-Removed the title bar from all activities.
+	-Restored original free response layout.
+	-Technical:
+		-Added ACRA.
+
+Version 0.8.1-beta:
+	-Changed the free response layout so that the on-screen keyboard doesn't obscure the text being entered.
+	-Added tracking radius check back into the location service; it was removed during the last overhaul to help with debugging.
+	-Technical:
+		-Fixed crash that would occur during start up if the location tracker tried to send a location before the location manager gave it one.
+		-Further work on database threading issue
+
+Version 0.8.0-beta:
+	-The thermometer reading is now sent to the server with each survey completion record
+	-Increased the font size on multiple choice questions
+	-Fixed an issue where question activities would exit when the phone was turned sideways
+	-Surveys launch faster.
+	-Technical:
+		-Survey completion records that are sent to the server now contain a "rate" field.
+		-Fixed more database bugs.
+		-Surveys are now build before the notification is shown.
+
+Version 0.7.1-beta:
+	-Fixed database bug that caused problems when survey data was removed from the database.
+	-Technical:
+		-After a pull request, all data in each updated table is removed before the new data is entered.
+
+Version 0.7.0-beta:
+	-Fixed SurveySurvice
+	-Phone numbers are now encrypted with a salt value that is generated on the server and is based on the subject id instead of the device id
+	-The thermometer on the main activity now works by counting the number of surveys that are expected per week and the number that have been taken that week.  It resets on Sunday.
+	-Set the sample survey to have better questions.
+	-Major update to the location tracking service.  Locations are now reported no matter what if the phone is on, but if for some reason the location shouldn't be tracked, a dummy location is sent with a code indicating what is going on.
+	-Technical:
+		-Converted SurveyService to use Alarms instead of Handlers; this seems to solve all the timing bugs.
+		-Simplified TakenDBHandler quite a bit due to the new system for the main page thermometer.
+
+Version 0.6.5-beta:
+    -Technical:
+        -Fixed race condition during database access.
+
+Version 0.6.4-beta:
+	-Created new mechanism for reporting information about fatal errors. Messages from errors that crashed the app will now be emailed to Austin.
+	-More work on the Survey Service
+	-Technical:
+		-Added trace.jar, which contains the error reporting code under an MIT liscense.
+
+Version 0.6.3-beta:
+	-Badly written surveys should provide a more descriptive error message when they crash.
+	-Hopefully fixed SurveyService issues
+	-Removed send photo option for now
+	-Technical:
+		-Re-enabled log toasts; set most calls to logging functions to pass in null for the context
+		-Config.D is now set at startup by inspecting the manifest file's debuggable key
+
+Version 0.6.2-beta:
+	-Moved survey next/back buttons to the top of the screen.
+	-Technical:
+		-Fixed bugs in SurveyService that were causing weird things to happen.
+		-Fixed a potential race condition in ConfirmSubmitActivity.
+
+Version 0.6.1-beta:
+	-Scheduling seems to be working better now.
+	-Technical:
+		-Switched SurveyScheduler to use id + time as the data uri.  Used 0 for the request code on all alarms.
+		-Fixed a bug that caused the SurveyService to ignore timed surveys.
+		-The BootIntentReciever does not run the scheduler; instead, it is run after a pull.
+
+Version 0.6.0-beta:
+	-Started keeping a changelog.
+	-Surveys work much better:
+	    -User-initiated surveys that are dismissed or time out are not reported at all (it's assumed they were started by mistake).
+	    -Notifications only show one survey at a time (the one that will time out soonest).
+	    -Clearing the notification only cancels one survey.
+	    -While a survey is active, the notification changes to reflect this.
+	    -Clicking on a notification while a survey is running will return you to the survey if you have left it.
+	    -Users are alerted multiple times when a survey is ready (default is every 10 minutes).
+	    -After a survey is dismissed or completed, the next survey's alarm will fire.
+	-Server communication is MUCH faster.
+	-When a user presses the phone's physical back button in a survey, it will act just like pressing the on-screen back button.
+	-Technical:
+		-Mass database insert is implemented (responsible for communication speed increase).
+		-Refresh rate and survey timeout in Config.java work a bit differently now
+		-SurveyService almost totally rewritten; doesn't break old code but allows for new things such as timeout speed that is set on a per-survey basis.
+		-The survey creation time is no longer shown in notifications while in debugging mode.
+		-Added better comments/organization to strings.xml.
+		-Deleted some deprecated files (stuff associated with the old notification system and the old end-of-survey sequence).

@@ -78,8 +78,8 @@ class DATABASE_CONFIG {
 		'persistent' => false,
 		'host' => 'localhost',
 		'login' => 'cake',
-		'password' => 'caketemppass',
-		'database' => 'socioapp',
+		'password' => 'peoplescake', //change this to caketemppass for production
+		'database' => 'peoples',
 		'prefix' => '',
 	);
 }

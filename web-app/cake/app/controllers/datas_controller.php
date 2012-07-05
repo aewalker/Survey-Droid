@@ -59,22 +59,38 @@ class DatasController extends AppController
     	$results = $this->Answer->find('all', array
 		(
 			'conditions' => array('Answer.question_id' => $questionid),
-			'fields' => array('Answer.choice_id', 'Choice.choice_text', 
-					'Answer.ans_text','Answer.created', 'Answer.subject_id'),
 			'order' => array('Answer.id')
 		));
 		
 		//check that the question is multiple choice in order to know what fields
 		//to display in the view
-		$multipleChoice = true; //assume multiple choice by default because it's more common
-		foreach ($results as $result)
+		$type = 'multipleChoice'; //assume multiple choice by default because it's more common
+		if (count($results) == 0)
 		{
-			if (!$result['Answer']['choice_id'])
+			$type = NULL;
+		}
+		else
+		{ //just look at the first answer since they are all for the same question
+			if ($results[0]['Answer']['ans_value'] == NULL)
 			{
-				$multipleChoice = false;
+				if ($results[0]['Answer']['ans_text'] != NULL)
+				{
+					$type = 'freeResponse';
+				}
+			}
+			else
+			{
+				if ($results[0]['Answer']['ans_text'] != NULL)
+				{
+					$type = 'freeResponse';
+				}
+				else
+				{
+					$type = 'scale';
+				}
 			}
 		}
-		$this->set('multipleChoice', $multipleChoice);
+		$this->set('type', $type);
 		$this->set('results', $results);
 		
 		$qs = $this->Question->find('all', array
@@ -195,4 +211,3 @@ class DatasController extends AppController
 
 }
 ?>
-     

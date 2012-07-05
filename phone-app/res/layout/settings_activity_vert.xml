@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2011 Sema Berkiten, Vladimir Costescu, Henry Liu, Diego Vargas,
+Austin Walker, and Tony Xiao
+
+This file is part of Survey Droid.
+
+Survey Droid is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Survey Droid is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>. 
+ -->
+<TableLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent"
+   	android:layout_width="fill_parent">
+   	<TableRow
+   		android:gravity="center_vertical|center_horizontal"
+   		android:layout_width="fill_parent">
+       	<TextView
+       		android:textAppearance="?android:attr/textAppearanceLarge"
+		    android:id="@+id/settings_title"
+		    android:layout_height="wrap_content"
+		    android:layout_width="wrap_content" 
+		    android:text="@string/settings_title"
+		    android:layout_margin="10dip"
+		    android:gravity="center"></TextView>
+    </TableRow>
+   	<TableRow
+   		android:gravity="center_vertical|center_horizontal"
+   		android:layout_width="fill_parent"
+   		android:layout_weight="1">
+   		<LinearLayout 
+   			android:orientation="horizontal" 
+   			android:layout_height="wrap_content" 
+   			android:layout_width="fill_parent" 
+   			android:id="@+id/settings_surveysRowLayout">
+   			<TextView 
+   				android:textAppearance="?android:attr/textAppearanceLarge"
+   				android:text="@string/settings_surveysSetting" 
+   				android:layout_height="wrap_content"
+   				android:layout_width="fill_parent"
+   				android:layout_weight="1" 
+   				android:id="@+id/settings_surveysSettingTitle"></TextView>
+   			<ToggleButton 
+   				android:id="@+id/settings_surveysSettingToggle" 
+   				android:layout_height="wrap_content"
+   				android:layout_width="fill_parent"
+   				android:layout_weight="1"></ToggleButton>
+   		</LinearLayout>
+	</TableRow>
+   	<TableRow
+   		android:gravity="center_vertical|center_horizontal"
+   		android:layout_width="fill_parent"
+   		android:layout_weight="1">
+   		<LinearLayout 
+   			android:orientation="horizontal" 
+   			android:layout_height="wrap_content" 
+   			android:layout_width="fill_parent" 
+   			android:id="@+id/settings_locationRowLayout">
+   			<TextView 
+   				android:text="@string/settings_locationSetting"
+   				android:textAppearance="?android:attr/textAppearanceLarge"
+   				android:layout_height="wrap_content"
+   				android:layout_width="fill_parent"
+   				android:id="@+id/settings_locationSettingTitle"
+   				android:layout_weight="1"></TextView>
+   			<ToggleButton 
+   				android:id="@+id/settings_locationSettingToggle"
+   				android:layout_height="wrap_content"
+   				android:layout_width="fill_parent"
+   				android:layout_weight="1"></ToggleButton>
+   		</LinearLayout>
+	</TableRow>
+   	<TableRow
+   		android:gravity="center_vertical|center_horizontal"
+   		android:layout_width="fill_parent"
+   		android:layout_weight="1">
+   		<LinearLayout 
+   			android:orientation="horizontal" 
+   			android:layout_height="wrap_content" 
+   			android:layout_width="fill_parent" 
+   			android:id="@+id/settings_loggingRowLayout">
+   			<TextView 
+   				android:text="@string/settings_loggingSetting"
+   				android:textAppearance="?android:attr/textAppearanceLarge"
+   				android:layout_height="wrap_content"
+   				android:layout_width="fill_parent" 
+   				android:layout_weight="1" 
+   				android:id="@+id/settings_loggingSettingsTitle"></TextView>
+   			<ToggleButton 
+   				android:id="@+id/settings_loggingSettingsToggle" 
+   				android:layout_height="wrap_content"
+   				android:layout_width="fill_parent"
+   				android:layout_weight="1"></ToggleButton>
+   		</LinearLayout>
+	</TableRow>
+	<TableRow
+   		android:gravity="center_vertical|center_horizontal"
+   		android:layout_width="fill_parent"
+   		android:layout_weight="1">
+   		<LinearLayout 
+   			android:orientation="horizontal" 
+   			android:layout_height="wrap_content" 
+   			android:layout_width="fill_parent" 
+   			android:id="@+id/settings_loggingRowLayout">
+   			<Button android:layout_height="wrap_content"
+   					android:layout_weight="1"
+   					android:id="@+id/settings_syncButton"
+   					android:text="@string/settings_syncButton"
+   					android:layout_width="wrap_content"></Button>
+   		</LinearLayout>
+	</TableRow>
+   	<TableRow
+   		android:gravity="center_vertical|center_horizontal"
+   		android:layout_width="fill_parent">
+		<LinearLayout 
+			android:orientation="horizontal" 
+			android:layout_height="wrap_content" 
+			android:layout_width="fill_parent"
+			android:id="@+id/settings_menuRowLayout">
+   			<Button
+				android:id="@+id/settings_backButton" 
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="@string/settings_backButton"
+				android:drawableLeft="@drawable/exit_small"
+				android:layout_weight="1"></Button>			    
+   			<Button
+				android:id="@+id/settings_idButton" 
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="@string/settings_idButton"
+				android:layout_weight="1"></Button>
+		</LinearLayout>
+		
+	</TableRow>
+</TableLayout>

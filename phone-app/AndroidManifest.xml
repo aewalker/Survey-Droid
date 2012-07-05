@@ -1,82 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2011 Sema Berkiten, Vladimir Costescu, Henry Liu, Diego Vargas,
+Austin Walker, and Tony Xiao
+
+This file is part of Survey Droid.
+
+Survey Droid is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Survey Droid is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>. 
+ -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-	android:versionCode="1" android:versionName="1.0" package="com.peoples.android">
-	<uses-sdk android:minSdkVersion="7" />
+	android:versionCode="46" android:versionName="1.1.3" package="org.surveydroid.android">
+	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.BATTERY_STATS" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-	<uses-permission android:name="android.permission.READ_CONTACTS"/>
-	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-	<uses-permission android:name="android.permission.VIBRATE"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	
-
-	<application android:icon="@drawable/icon" 
-				android:label="@string/app_name" 
-				android:debuggable="true"
+	
+	<uses-feature android:name="android.hardware.location.gps"
+				android:required="true" />
+	<uses-feature android:name="android.hardware.telephony"
+				android:required="true" />
+	<uses-feature android:name="android.hardware.wifi"
+				android:required="false" />
+	
+    <application android:icon="@drawable/icon" 
+				android:label="@string/app_name"
+				android:name="SurveyDroid"
 				android:screenOrientation="portrait"
-				android:configChanges="keyboardHidden|orientation">
-				
-		<receiver android:name="BootIntentReceiver" android:label="BootIntentReceiver">
+				android:configChanges="keyboardHidden|orientation"
+				android:theme="@android:style/Theme.NoTitleBar">
+		
+		<!-- Receivers -->
+        <receiver
+            android:label="IncomingSMSTracker"
+            android:name="IncomingSMSTracker"
+            android:enabled="true">
 			<intent-filter>
-				<action android:name="android.intent.action.BOOT_COMPLETED" />
+    			<action android:name="android.provider.Telephony.SMS_RECEIVED" />
 			</intent-filter>
 		</receiver>
-
-		<service android:name=".services.BootService">
+		<receiver
+		    android:label="BootIntentReceiver"
+		    android:name="BootIntentReceiver">
 			<intent-filter>
-				<action android:name=".BootService" />
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<category android:name="android.intent.category.HOME" />
+			</intent-filter>
+		</receiver>
+		<receiver android:name="com.commonsware.cwac.locpoll.LocationPoller" />
+		<receiver android:name="Dispatcher" />
+		<receiver
+		    android:name=".LocationTracker"
+		    android:label="LocationTrackerService" />
+		<receiver android:name=".CallReceiver">
+			<intent-filter>
+		    	<action android:name="android.intent.action.PHONE_STATE" />
+		    </intent-filter>
+		</receiver>
+		
+		<!-- Services -->
+        <service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
+		<service
+		    android:label="SurveyScheduler"
+		    android:name=".survey.SurveyScheduler"
+		    android:exported="false">
+			<intent-filter>
+				<action android:name="org.surveydroid.android.survey.ACTION_ADD_SURVEY" />
+				<action android:name="org.surveydroid.android.survey.ACTION_SCHEDULE_SURVEYS" />
 			</intent-filter>
 		</service>
+		<service
+		    android:name=".survey.SurveyService"
+		    android:label="SurveyService"
+		    android:exported="false">
+			<intent-filter>
+				<action android:name="org.surveydroid.android.survey.ACTION_SURVEY_READY" />
+				<action android:name="org.surveydroid.android.survey.ACTION_SHOW_SURVEY" />
+				<action android:name="org.surveydroid.android.survey.ACTION_NEXT_QUESTION" />
+				<action android:name="org.surveydroid.android.survey.ACTION_PREV_QUESTION" />
+				<action android:name="org.surveydroid.android.survey.ACTION_SUBMIT_ANSWERS" />
+			</intent-filter>
+		</service>
+		<service
+		    android:name=".coms.ComsService"
+		    android:label="ComsService"
+		    android:exported="false">
+			<intent-filter>
+				<action android:name="org.surveydroid.android.coms.ACTION_UPLOAD_DATA" />
+				<action android:name="org.surveydroid.android.coms.ACTION_DOWNLOAD_DATA" />
+			</intent-filter>
+		</service>
+		<service android:name=".CallTracker" android:label="CallTracker"></service>
 		
-		<service android:name=".services.CallLogService">
-            <intent-filter>
-                <action android:name=".CallLogService" />
-            </intent-filter>
-        </service>
-        
-        <service android:name=".services.CoordinatorService">
-        	<intent-filter>
-        		<action android:name=".services.CoordinatorService"/>
-        	</intent-filter>
-        </service>
-        
-        <service android:name=".services.SurveyScheduler">
-        	<intent-filter>
-        		<action android:name=".services.SurveyScheduler"/>
-        	</intent-filter>
-        </service>
-        
-        
-
-		<activity android:name=".activities.Menu" android:label="@string/app_name" android:theme="@style/CustomTheme">
+		<!-- Activities -->
+		<activity
+		    android:label="Survey Droid Survey"
+		    android:name=".survey.SurveyDoneActivity"
+		    android:configChanges="keyboardHidden|orientation" />
+		<activity
+		    android:label="Survey Droid Survey"
+		    android:name=".survey.SingleChoiceActivity"
+		    android:configChanges="keyboardHidden|orientation" />
+		<activity
+		    android:label="Survey Droid Survey"
+		    android:name=".survey.MultiChoiceActivity"
+		    android:configChanges="keyboardHidden|orientation" />
+		<activity
+		    android:label="Survey Droid Survey"
+		    android:name=".survey.TextScaleActivity"
+		    android:configChanges="keyboardHidden|orientation" />
+		<activity
+		    android:label="Survey Droid Survey"
+		    android:name=".survey.ImgScaleActivity"
+		    android:configChanges="keyboardHidden|orientation" />
+		<activity
+		    android:label="Survey Droid Survey"
+		    android:name=".survey.FreeResponseActivity"
+		    android:configChanges="keyboardHidden|orientation"
+			android:windowSoftInputMode="adjustResize" />
+		<activity 
+		    android:label="Survey Droid Survey"
+		    android:name=".survey.ConfirmSubmitActivity"
+		    android:configChanges="keyboardHidden|orientation" />
+		<activity
+		    android:label="@string/app_name"
+		    android:name="UserSurveysActivity" />
+		<activity
+		    android:label="@string/app_name"
+		    android:name="MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		
-		<activity android:name=".Peoples"
-			android:theme="@style/CustomTheme"
-			android:configChanges="keyboardHidden|orientation"
-			android:screenOrientation="portrait"
-			android:windowSoftInputMode="adjustPan">
-		</activity>
-		<activity android:name=".activities.MainActivity" android:label="@string/app_name"
-		android:theme="@android:style/Theme.Dialog"></activity>
-		<activity android:name=".activities.ConfirmSubmissionSurvey" android:theme="@style/CustomTheme"></activity>
-		<activity android:name=".activities.PeoplesSettings" android:theme="@style/CustomTheme"></activity>
-		<activity android:name=".processTest.LocationTestActivity"></activity>
-
-		
-		<service android:name=".services.GPSLocationService" android:label="GPSLocationService">
-			
-			<!-- <intent-filter>
-				<action android:name=".activities.MainActivity" />
-			</intent-filter> -->
-		</service>
-
+		<activity
+		    android:label="Survey Droid Settings"
+		    android:name="SettingsActivity" />
+		<activity
+		    android:label="@string/app_name"
+		    android:name="IDActivity" />
+		<activity
+		    android:name="org.acra.CrashReportDialog"
+	        android:theme="@android:style/Theme.Dialog"
+	        android:launchMode="singleInstance"
+	        android:excludeFromRecents="true"
+	        android:finishOnTaskLaunch="true" />
 	</application>
 </manifest>

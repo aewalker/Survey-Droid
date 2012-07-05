@@ -5,7 +5,6 @@
  * Branches of a question.                                                   *
  *---------------------------------------------------------------------------*/
 echo $this->Session->flash();
-
 //show the results
 echo $table->startTable('Branch',
 	array('class' => array('table' => 'branches')));

@@ -6,8 +6,16 @@
  *---------------------------------------------------------------------------*/
 echo $form->create('Survey', array('url' => "editsurvey/$surveyid"));
 echo $form->input('name', array('value' => $name));
-echo $form->input('question_id', array('value' => $questionid,
-	'label' => 'First Question', 'type' => 'text'));
+echo $form->input('question_id', array('label' => 'First Question', 'type' => 'select',
+    'options' => $questions, 'value' => $questionid));
+echo '<p>You may wish to allow phone users to start this survey whenever they want to. '.
+	'To enable this feature for this survey, check the box below.';
+echo $form->input('subject_init', array
+(
+	'type' => 'checkbox',
+	'checked' => $subject_init,
+	'label' => 'Allow subject initiation'
+));
 echo '<p>To set when this survey should be administered to subjects, enter'.
 	' 4 digit numbers in the fiends below separated by commas.  For exmple, '.
 	'to set a survey to be administered on Mondays at 11:00 AM and 3:45 PM, '.
@@ -20,6 +28,7 @@ echo $form->input('fr', array('value' => $days['fr'], 'label' => 'Friday'));
 echo $form->input('sa', array('value' => $days['sa'], 'label' => 'Saturday'));
 echo $form->input('su', array('value' => $days['su'], 'label' => 'Sunday'));
 echo $form->input('confirm', array('type' => 'hidden', 'value' => true));
+echo $form->input('subject_variables', array('value' => $subject_variables));
 echo $form->end('Edit');
 
 echo $form->create('Survey', array('action' => 'index'));

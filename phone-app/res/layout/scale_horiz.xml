@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2011 Sema Berkiten, Vladimir Costescu, Henry Liu, Diego Vargas,
+Austin Walker, and Tony Xiao
+
+This file is part of Survey Droid.
+
+Survey Droid is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Survey Droid is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>. 
+ -->
+<LinearLayout
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/scale_topLayout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:layout_gravity="center_horizontal|center_vertical">
+    <LinearLayout
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/scale_buttonsLayout">
+        <Button
+        	android:id="@+id/scale_backButton"
+        	android:text="@string/question_backButton"
+        	android:layout_height="wrap_content"
+        	android:layout_width="100dip"
+        	android:layout_weight="1"></Button>
+        <Button
+        	android:id="@+id/scale_nextButton"
+        	android:text="@string/question_nextButton"
+        	android:layout_height="wrap_content"
+        	android:layout_width="100dip"
+        	android:layout_weight="1"></Button>
+    </LinearLayout>
+    <TextView
+	    android:text="@string/question_loading_text"
+	    android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/scale_question"
+	    android:layout_width="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_marginBottom="10dip"></TextView>
+	    
+	<!-- Dummy view -->
+    <FrameLayout
+	    android:layout_weight="1"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"></FrameLayout>
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/scale_textLayout">
+	    <TextView
+	    	android:layout_width="wrap_content"
+	    	android:id="@+id/scale_lowText"
+	    	android:layout_height="wrap_content"></TextView>
+	    <ImageView
+	    	android:layout_width="wrap_content"
+	    	android:id="@+id/scale_lowImg"
+	    	android:layout_height="wrap_content"></ImageView>
+	    <!-- Dummy view -->
+	    <FrameLayout
+		    android:layout_weight="1"
+		    android:layout_height="wrap_content"
+		    android:layout_width="wrap_content"></FrameLayout>
+	    <TextView
+	    	android:layout_width="wrap_content"
+	    	android:id="@+id/scale_highText"
+	    	android:layout_height="wrap_content"></TextView>
+	    <ImageView
+	    	android:layout_width="wrap_content"
+	    	android:id="@+id/scale_highImg"
+	    	android:layout_height="wrap_content"></ImageView>
+	</LinearLayout>
+	<SeekBar
+		android:id="@+id/scale_sliderHoriz"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:progress="50"></SeekBar>
+	<org.surveydroid.android.VerticalSeekBar
+	   		android:layout_width="wrap_content"
+	   		android:layout_height="fill_parent"
+	   		android:layout_margin="25dip"
+			android:visibility="gone"
+    		android:thumb="@drawable/seek_thumb"
+			android:progressDrawable="@drawable/progress_vertical"
+	   		android:id="@+id/scale_sliderVert"></org.surveydroid.android.VerticalSeekBar>
+    <!-- Dummy view -->
+    <FrameLayout
+	    android:layout_weight="1"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"></FrameLayout>
+</LinearLayout>

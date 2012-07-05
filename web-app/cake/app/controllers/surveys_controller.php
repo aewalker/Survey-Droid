@@ -17,8 +17,10 @@
  * 
  * @author Austin Walker
  * @author Sema Berkiten
+ * @author Tony Xiao
  */
-class SurveysController extends AppController
+App::import('Controller', 'Rest');
+class SurveysController extends RestController
 {
 	//for php4
 	var $name = 'Surveys';
@@ -74,7 +76,7 @@ class SurveysController extends AppController
     }
     
     /**
-     * Edit the name, first question, and times of a particular survey.
+     * Edit the name, first question, type, and times of a particular survey.
      * 
      * @param surveyid - id of the survey to edit
      */
@@ -88,30 +90,38 @@ class SurveysController extends AppController
 				$this->Session->setFlash('Survey edited!');
 				$this->redirect('/surveys');
 			}
-			else
-			{
-				
-			}
 		}
 		else
 		{
 			$result = $this->Survey->find('first', array
 			(
-				'conditions' => array('Survey.id' => $surveyid),
-				'fields' => array_merge(array('name', 'question_id'), $this->days)
+				'conditions' => array('Survey.id' => $surveyid)
 			));
 			
 			if (isset($result['Survey']))
 			{
 				$this->set('name', $result['Survey']['name']);
 				$this->set('surveyid', $surveyid);
+
+                $this->set('questions', $this->Survey->Question->find('list', array
+        		(
+        			'conditions' => array('survey_id' => $surveyid),
+        			'fields' => array('q_text'),
+        			'order' => array('id'),
+        			'recursive' => 0
+        		)));
+        		
 				$this->set('questionid', $result['Survey']['question_id']);
+				$this->set('subject_variables', $result['Survey']['subject_variables']);
 				$days_result = array();
 				foreach ($this->days as $day)
 				{
 					$days_result[$day] = $result['Survey'][$day];
 				}
 				$this->set('days', $days_result);
+				if ($result['Survey']['subject_init'] == 1)
+					$this->set('subject_init', true);
+				else $this->set('subject_init', false);
 				$this->set('testing', $result);
 			}
 			else
