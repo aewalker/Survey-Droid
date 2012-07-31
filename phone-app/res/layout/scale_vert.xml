@@ -59,13 +59,13 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 		android:orientation="horizontal"
 		android:layout_weight="1"
 		android:id="@+id/scale_scaleLayout">
-		<org.surveydroid.android.VerticalSeekBar
+		<org.survey_droid.survey_droid.ui.VerticalSeekBar
 	   		android:layout_width="wrap_content"
 	   		android:layout_height="fill_parent"
 	   		android:layout_margin="25dip"
     		android:thumb="@drawable/seek_thumb"
 			android:progressDrawable="@drawable/progress_vertical"
-	   		android:id="@+id/scale_sliderVert"></org.surveydroid.android.VerticalSeekBar>
+	   		android:id="@+id/scale_sliderVert"></org.survey_droid.survey_droid.ui.VerticalSeekBar>
 		<SeekBar
 			android:id="@+id/scale_sliderHoriz"
 			android:layout_height="wrap_content"

@@ -3,6 +3,11 @@ phone-app/.project
 phone-app/.settings
 phone-app/bin/*
 
+phone-app/test/.classpath
+phone-app/test/.project
+phone-app/test/.settings
+phone-app/bin/*
+
 model/.classpath
 model/.project
 model/.settings
@@ -11,8 +16,9 @@ web-app/SOC-web-app.tmproj
 
 *~
 *.*~
-web-app/cake/app/tmp
-web-app/cake/app/webroot/js-app/resources/sass/.sass-cache
+web-app/cake/survey-droid/tmp
+web-app/cake/survey-droid/webroot/js-app/resources/sass/.sass-cache
+web-app/cake/survey-droid/webroot/files/sd-old.apk
 web-app/cake/.idea/workspace.xml
 .DS_Store
 .project

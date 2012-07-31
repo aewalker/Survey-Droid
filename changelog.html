@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Survey Droid Changelog</title>
+</head>
+<body>
+<div id="wrap">
+<h1>Survey Droid Changelog</h1>
+<div class="version">
+<h2><a id="2.0.0-alpha">Version 2.0.0-alpha</a></h2>
+	<ul>
+	<li>
+		<h3>Major system changes</h3>
+		<ul>
+		<li>The survey system has been converted to be more general and more extensible.  Question types are now fully qualified class names, allowing for anyone to write a Question.  Data is passed to questions as a raw byte array, leaving questions free to take any kind of data they wish.  In the future, a jar file will be generated that anyone can use to write an app that creates one or more custom question types.</li>
+		<li>Study level added.  This layer sits over surveys and organizes data collection into units that correspond to research studies.  Each study has a start and end date (or is indefinite), and each survey is part of a single study.  Web users are given authority on a study-by-study basis, allowing for multiple programs to exist on the same server. Properties (such as what type of data is collected) can be controlled at a per-study level.</li>
+		<li>The server from which updates are drawn is now configurable from the app itself.  This lays the groundwork for eventually making this app suitable for inclusion in the Android Market.</li>
+		<li>Conditions are now generalized to compare data at at set point in the answer data in a variety of ways in a variety of different formats.</li>
+		</ul>
+	</li>
+	<li>Some work on organizing code to mark what parts are meant to be part of the public development environment.</li>
+	<li>Converted the changelog to HTML.</li>
+	<li>Fixed a bug that sometimes prevented scale questions from remembering their position when rotated.</li>
+	<li>Fixed a possible memory leak in surveys that failed to build properly.</li>
+	<li>Created a test project; started writing unit tests.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Data access is now mediated by a ContentProvider (a necessary step for allowing custom question types).  The ProviderContract now defines how data is laid out.</li>
+		<li>Added the Exported annotation to mark parts of the system that should be included in the development jar.</li>
+		<li>Renamed packages from org.surveydroid.android to org.survey_droid.survey_droid to better comply with Java convention.</li>
+		<li>Added more packages: annotations, ui, survey.questions.</li>
+		<li>Changed the name of the database package to content.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="1.1.3">Version 1.1.3</a></h2>
+	<ul>
+	<li>Updated locpoll library to fix a Wakelock bug.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Apparently the external libraries have not been committing; so they are included here.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="1.1.2">Version 1.1.2</a></h2>
+	<ul>
+	<li>Fixed bug that could cause random surveys to be missed if the phone was turned off during the day.</li>
+	<li>Fixed some pre-pull stability issues within the app.</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="1.1.1">Version 1.1.1</a></h2>
+	<ul>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="1.1.0">Version 1.1.0</a></h2>
+	<ul>
+	<li>Fixed database race condition</li>
+	<li>Fixed call logging bug</li>
+	<li>Improved startup time</li>
+	<li>Call surveys now influence the thermometer</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="1.0.2">Version 1.0.2</a></h2>
+	<ul>
+	<li>Fixed call logging NullPointer bug</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="1.0.1">Version 1.0.1</a></h2>
+	<ul>
+	<li>Changed icons</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Removed some assertions in survey service when not in debug mode.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="1.0.0">Version 1.0.0</a></h2>
+	<ul>
+	<li>Out of beta!</li>
+	<li>Fixed bug in dispatch canceling</li>
+	<li>Fixed bug in survey service</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.9.1-beta">Version 0.9.1-beta</a></h2>
+	<ul>
+	<li>Fixed bug in location tracking</li>
+	<li>Fixed bug in wakeful service dispatching</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>The dispatcher now acquires a screen dim wakelock with the acquire causes wakeup option</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.9.0-beta">Version 0.9.0-beta</a></h2>
+	<ul>
+	<li>Fixed survey thermometer off-by-1 bug.</li>
+	<li>Major work on power management issues (such as phones sleeping through surveys or using too much energy)</li>
+	<li>Improved error reporting for surveys that fail to build properly.</li>
+	<li>Fixed a bug that caused survey questions to remain open after the survey was over.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul> 
+		<li>Added the CWAC WakefulIntentService library</li>
+		<li>Added the Dispatcher class, which allows for wakeful services and better use of WakefulIntentServices via alarms</li>
+		<li>Added wakelock functionality to the SurveyService</li>
+		<li>Converted the intent services to be wakeful</li>
+		<li>Added the CWAC LocationPoller library to replace the LocationTracker</li>
+		<li>Removed some very old stuff that was once used to try and write a log</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.8.2-beta">Version 0.8.2-beta</a></h2>
+	<ul>
+	<li>Removed the title bar from all activities.</li>
+	<li>Restored original free response layout.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Added ACRA.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+	
+<div class="version">
+<h2><a id="0.8.1-beta">Version 0.8.1-beta</a></h2>
+	<ul>
+	<li>Changed the free response layout so that the on-screen keyboard doesn't obscure the text being entered.</li>
+	<li>Added tracking radius check back into the location service; it was removed during the last overhaul to help with debugging.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Fixed crash that would occur during start up if the location tracker tried to send a location before the location manager gave it one.</li>
+		<li>Further work on database threading issue</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.8.0-beta">Version 0.8.0-beta</a></h2>
+	<ul>
+	<li>The thermometer reading is now sent to the server with each survey completion record</li>
+	<li>Increased the font size on multiple choice questions</li>
+	<li>Fixed an issue where question activities would exit when the phone was turned sideways</li>
+	<li>Surveys launch faster.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Survey completion records that are sent to the server now contain a "rate" field.</li>
+		<li>Fixed more database bugs.</li>
+		<li>Surveys are now build before the notification is shown.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.7.1-beta">Version 0.7.1-beta</a></h2>
+	<ul>
+	<li>Fixed database bug that caused problems when survey data was removed from the database.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>After a pull request, all data in each updated table is removed before the new data is entered.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.7.0-beta">Version 0.7.0-beta</a></h2>
+	<ul>
+	<li>Fixed SurveySurvice</li>
+	<li>Phone numbers are now encrypted with a salt value that is generated on the server and is based on the subject id instead of the device id</li>
+	<li>The thermometer on the main activity now works by counting the number of surveys that are expected per week and the number that have been taken that week.  It resets on Sunday.</li>
+	<li>Set the sample survey to have better questions.</li>
+	<li>Major update to the location tracking service.  Locations are now reported no matter what if the phone is on, but if for some reason the location shouldn't be tracked, a dummy location is sent with a code indicating what is going on.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Converted SurveyService to use Alarms instead of Handlers; this seems to solve all the timing bugs.</li>
+		<li>Simplified TakenDBHandler quite a bit due to the new system for the main page thermometer.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.6.5-beta">Version 0.6.5-beta</a></h2>
+	<ul>
+    <li>
+    	<h3>Technical</h3>
+    	<ul>
+        <li>Fixed race condition during database access.</li>
+        </ul>
+    </li>
+    </ul>
+</div>
+
+<div class="version">
+<h2><a id="0.6.4-beta">Version 0.6.4-beta</a></h2>
+	<ul>
+	<li>Created new mechanism for reporting information about fatal errors. Messages from errors that crashed the app will now be emailed to Austin.</li>
+	<li>More work on the Survey Service</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Added trace.jar, which contains the error reporting code under an MIT license.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.6.3-beta">Version 0.6.3-beta</a></h2>
+	<ul>
+	<li>Badly written surveys should provide a more descriptive error message when they crash.</li>
+	<li>Hopefully fixed SurveyService issues</li>
+	<li>Removed send photo option for now</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Re-enabled log toasts; set most calls to logging functions to pass in null for the context</li>
+		<li>Config.D is now set at startup by inspecting the manifest file's debuggable key</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.6.2-beta">Version 0.6.2-beta</a></h2>
+	<ul>
+	<li>Moved survey next/back buttons to the top of the screen.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Fixed bugs in SurveyService that were causing weird things to happen.</li>
+		<li>Fixed a potential race condition in ConfirmSubmitActivity.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.6.1-beta">Version 0.6.1-beta</a></h2>
+	<ul>
+	<li>Scheduling seems to be working better now.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Switched SurveyScheduler to use id + time as the data uri.  Used 0 for the request code on all alarms.</li>
+		<li>Fixed a bug that caused the SurveyService to ignore timed surveys.</li>
+		<li>The BootIntentReciever does not run the scheduler; instead, it is run after a pull.</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+<div class="version">
+<h2><a id="0.6.0-beta">Version 0.6.0-beta</a></h2>
+	<ul>
+	<li>Started keeping a changelog.</li>
+	<li>
+		<h3>Surveys work much better</h3>
+		<ul>
+	    <li>User-initiated surveys that are dismissed or time out are not reported at all (it's assumed they were started by mistake).</li>
+	    <li>Notifications only show one survey at a time (the one that will time out soonest).</li>
+	    <li>Clearing the notification only cancels one survey.</li>
+	    <li>While a survey is active, the notification changes to reflect this.</li>
+	    <li>Clicking on a notification while a survey is running will return you to the survey if you have left it.</li>
+	    <li>Users are alerted multiple times when a survey is ready (default is every 10 minutes).</li>
+	    <li>After a survey is dismissed or completed, the next survey's alarm will fire.</li>
+	    </ul>
+	</li>
+	<li>Server communication is <strong>much</strong> faster.</li>
+	<li>When a user presses the phone's physical back button in a survey, it will act just like pressing the on-screen back button.</li>
+	<li>
+		<h3>Technical</h3>
+		<ul>
+		<li>Mass database insert is implemented (responsible for communication speed increase).</li>
+		<li>Refresh rate and survey timeout in Config.java work a bit differently now</li>
+		<li>SurveyService almost totally rewritten; doesn't break old code but allows for new things such as timeout speed that is set on a per-survey basis.</li>
+		<li>The survey creation time is no longer shown in notifications while in debugging mode.</li>
+		<li>Added better comments/organization to strings.xml.</li>
+		<li>Deleted some deprecated files (stuff associated with the old notification system and the old end-of-survey sequence).</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+</div>
+</body>
+</html>

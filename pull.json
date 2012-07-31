@@ -9,149 +9,156 @@
  *---------------------------------------------------------------------------*/
 
 {
-    "surveys": [
-        {
-            "id": 1,
-            "name": "",
-            "created": 0, //unix timestamp
-            "question_id": 0,
-            "mo": "",
-            "tu": "", 
-            "we": "",
-            "th": "",
-            "fr": "",
-            "sa": "",
-            "su": "",
-            "subject_variables" : {
-                "name1": "John",
-                "name2": "Jane", 
-                "name3": "Jack",
-                "name4": "Joan",
-                "name5": "Jeff"
-            },
-            //boolean options (0 = false, 1 = true)
-            "subject_init": 0, //allow subjects to start the survey whenever they want
-            "new_calls": 1, //trigger on new phone numbers
-            "old_calls": 0, //trigger on old phone numbers
-            "new_texts": 1, //trigger on new text numbers
-            "old_texts": 0, //trigger on old text numbers
-        }, {
-            ...
-        }, {
-            ...
-        }
-    ],
-    "questions": [
-        {
-            "id": 1,
-            "survey_id": 1,
-            "q_type": 1 //can be 0 (single choice), 1 (multi choice), 2 (text scale), 3 (image scale), or 4 (free response)
-            "q_text": "How are you?",
-            //for an image scale question
-            "q_img_low": "asdv03klaesvqa923jkt23fdf0asef...", //base 64
-            "q_img_high": "aw09loi23j45v98wjergoisjdfa0v..." //base 64
-            //for a text scale question
-            "q_text_low": "low",
-            "q_text_high": "high"
-        }, {
-            ...
-        }, {
-            ...
-        }
-    ],
-    "branches": [
-        {
-            "id": 0,
-            "question_id": 0,
-            "next_q": 0
-        }, {
-            ...
-        }, {
-            ...
-        }
-    ],
-    "conditions": [
-        {
-            "id": 0,
-            "branch_id": 0,
-            "question_id": 0,
-            "choice_id" : 0,
-            "type": 0 // type of condition: 0 for answer given in current survey, 1 for answer given at some time in a previous survey, and 2 for an answer never given in a previous survey.
-        }, {
-            ...
-        }, {
-            ...
-        }
-    ],
-    "choices": [
-        {
-            "id": 0,
-            "choie_type": 0, //can be 0 (text choice), or 1 (image choice)
-            "question_id": 0,
-            //depending on the question type:
-            "choice_text": "Linux"
-            "choice_img": "aw3lkfmawf9aas3avbd34twe5tb5yue45hemwv3..." //base 64
-        }, {
-            ...
-        }, {
-            ...
-        }
-    ],
-    "config": {
-    		"device_enabled": true,
-    		"features_enabled" : {
-    		    	"survey": 1,
-    		    	"calllog": 1,
-    		    	"location": 1 
-    		}, 
-    		"location_tracked": [{
-    		    	"long" : 22.22,
-    		    	"lat": 22.22,
-    		    	"radius" : 22, (kilometers)
-    		}, {
-    		    	"long" : 22.22,
-    		    	"lat": 22.22,
-    		    	"radius" : 22, (kilometers)
-    		}, {
-    		    	"long" : 22.22,
-    		    	"lat": 22.22,
-    		    	"radius" : 22, (kilometers)
-    		}, ],
-    		"time_tracked" : [{
-    		    	"start": 1120,
-    		    	"end": 1130
-    		}, {
-    		    	"start": 1550,
-    		    	"end": 2130
-    		}, {
-    		    	"start": 1120,
-    		    	"end": 1130
-    		}, {
-    		    	"start": 1120,
-    		    	"end": 1130
-    		}],
-    		"https" : 1, //use 1 = true, 0 = false
-    		"scheduler_interval" : 1440, //in minutes
-    		"push_interval" : 1440,
-    		"pull_interval" : 1440,
-    		"server" : "50.19.254.168",
-    		"location_interval" : 15,
-    		"admin_phone_number" : 5555555555,
-    		"admin_name" : "Naomi"
-    		"allow_blank_free_response" : 1,
-    		"allow_no_choices" : 0,
-    		"show_survey_name" : 1,
-    		"voice_format" : "mpeg4", //or 3gp
-		"completion_sample" : 10,
-		"completion_goal" : 75, //the survey completion rate goal (between 0 and 100)
-		"question_timeout" : 5, //timeout (in mins) for the user to answer a question
-		//this is where we put information for questions/choices
-		//this information should be different for each phone, so on the
-		//website, work will have to be done to customize each pull request
-		"user_data": {
-			"name1" : "John",
-			"name2" : "Jane",
-			...
+	"studies": [
+		{
+		    "surveys": [
+		        {
+		            "id": 1,
+		            "name": "",
+		            "created": 0, //unix timestamp
+		            "question_id": 0,
+		            "mo": "",
+		            "tu": "", 
+		            "we": "",
+		            "th": "",
+		            "fr": "",
+		            "sa": "",
+		            "su": "",
+		            "subject_variables" : {
+		                "name1": "John",
+		                "name2": "Jane", 
+		                "name3": "Jack",
+		                "name4": "Joan",
+		                "name5": "Jeff"
+		            },
+		            //boolean options (0 = false, 1 = true)
+		            "subject_init": 0, //allow subjects to start the survey whenever they want
+		            "new_calls": 1, //trigger on new phone numbers
+		            "old_calls": 0, //trigger on old phone numbers
+		            "new_texts": 1, //trigger on new text numbers
+		            "old_texts": 0, //trigger on old text numbers
+		        }, {
+		            ...
+		        }, {
+		            ...
+		        }
+		    ],
+		    "questions": [
+		        {
+		            "id": 1,
+		            "survey_id": 1,
+		            "q_type": 1 //can be 0 (single choice), 1 (multi choice), 2 (text scale), 3 (image scale), or 4 (free response)
+		            "q_text": "How are you?",
+		            //for an image scale question
+		            "q_img_low": "asdv03klaesvqa923jkt23fdf0asef...", //base 64
+		            "q_img_high": "aw09loi23j45v98wjergoisjdfa0v..." //base 64
+		            //for a text scale question
+		            "q_text_low": "low",
+		            "q_text_high": "high"
+		        }, {
+		            ...
+		        }, {
+		            ...
+		        }
+		    ],
+		    "branches": [
+		        {
+		            "id": 0,
+		            "question_id": 0,
+		            "next_q": 0
+		        }, {
+		            ...
+		        }, {
+		            ...
+		        }
+		    ],
+		    "conditions": [
+		        {
+		            "id": 0,
+		            "branch_id": 0,
+		            "question_id": 0,
+		            "choice_id" : 0,
+		            "type": 0 // type of condition: 0 for answer given in current survey, 1 for answer given at some time in a previous survey, and 2 for an answer never given in a previous survey.
+		        }, {
+		            ...
+		        }, {
+		            ...
+		        }
+		    ],
+		    "choices": [
+		        {
+		            "id": 0,
+		            "choie_type": 0, //can be 0 (text choice), or 1 (image choice)
+		            "question_id": 0,
+		            //depending on the question type:
+		            "choice_text": "Linux"
+		            "choice_img": "aw3lkfmawf9aas3avbd34twe5tb5yue45hemwv3..." //base 64
+		        }, {
+		            ...
+		        }, {
+		            ...
+		        }
+		    ],
+		    "config": {
+		    		"device_enabled": true,
+		    		"features_enabled" : {
+		    		    	"survey": 1,
+		    		    	"calllog": 1,
+		    		    	"location": 1 
+		    		}, 
+		    		"location_tracked": [{
+		    		    	"long" : 22.22,
+		    		    	"lat": 22.22,
+		    		    	"radius" : 22, (kilometers)
+		    		}, {
+		    		    	"long" : 22.22,
+		    		    	"lat": 22.22,
+		    		    	"radius" : 22, (kilometers)
+		    		}, {
+		    		    	"long" : 22.22,
+		    		    	"lat": 22.22,
+		    		    	"radius" : 22, (kilometers)
+		    		}, ],
+		    		"time_tracked" : [{
+		    		    	"start": 1120,
+		    		    	"end": 1130
+		    		}, {
+		    		    	"start": 1550,
+		    		    	"end": 2130
+		    		}, {
+		    		    	"start": 1120,
+		    		    	"end": 1130
+		    		}, {
+		    		    	"start": 1120,
+		    		    	"end": 1130
+		    		}],
+		    		"https" : 1, //use 1 = true, 0 = false
+		    		"scheduler_interval" : 1440, //in minutes
+		    		"push_interval" : 1440,
+		    		"pull_interval" : 1440,
+		    		"server" : "50.19.254.168",
+		    		"location_interval" : 15,
+		    		"admin_phone_number" : 5555555555,
+		    		"admin_name" : "Naomi"
+		    		"allow_blank_free_response" : 1,
+		    		"allow_no_choices" : 0,
+		    		"show_survey_name" : 1,
+		    		"voice_format" : "mpeg4", //or 3gp
+				"completion_sample" : 10,
+				"completion_goal" : 75, //the survey completion rate goal (between 0 and 100)
+				"question_timeout" : 5, //timeout (in mins) for the user to answer a question
+				//this is where we put information for questions/choices
+				//this information should be different for each phone, so on the
+				//website, work will have to be done to customize each pull request
+				"user_data": {
+					"name1" : "John",
+					"name2" : "Jane",
+					...
+				}
+		    ]
+		},
+		{
+		...
 		}
-    ]
+	]
 }

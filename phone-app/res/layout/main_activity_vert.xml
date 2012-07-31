@@ -98,11 +98,11 @@ along with Survey Droid.  If not, see <http://www.gnu.org/licenses/>.
 	            		android:layout_width="wrap_content"
 	            		android:layout_height="wrap_content"
 	            		android:layout_weight="1"></FrameLayout>
-		           	<org.surveydroid.android.VerticalProgressBar
+		           	<org.survey_droid.survey_droid.ui.VerticalProgressBar
 		           		android:layout_width="wrap_content"
 		           		android:layout_height="fill_parent"
 	   					android:progressDrawable="@drawable/progress_vertical"
-		           		android:id="@+id/main_progressBar"></org.surveydroid.android.VerticalProgressBar>
+		           		android:id="@+id/main_progressBar"></org.survey_droid.survey_droid.ui.VerticalProgressBar>
 	            	<FrameLayout
 	            		android:layout_width="wrap_content"
 	            		android:layout_height="wrap_content"

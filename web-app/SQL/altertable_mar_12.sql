@@ -1,1 +1,0 @@
-alter table subjects add column `rate` int(10) unsigned;
