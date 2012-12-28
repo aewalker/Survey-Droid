@@ -126,7 +126,8 @@ public final class Util
 		//make sure we're not behind the base time
 		if (returnTime < base)
 		{
-			now.roll(Calendar.DAY_OF_YEAR, 7);
+			//don't use roll, it causes problems during the last week of the year
+			now.add(Calendar.DAY_OF_YEAR, 7);
 			returnTime = now.getTimeInMillis();
 		}
 		Util.d(null, TAG, "Time difference: " + 
