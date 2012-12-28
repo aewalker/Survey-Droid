@@ -69,7 +69,7 @@ public class SurveyDroidContentProvider extends ContentProvider
      * @throws IllegalArgumentException if the path has more than one
      * segment, no segments, or refers to an invalid table or row
      */
-    private String getTable(Uri uri, long[] rowid)
+    public static String getTable(Uri uri, long[] rowid)
     {
     	List<String> segments = uri.getPathSegments();
 		if (segments.size() > 2)
@@ -107,6 +107,17 @@ public class SurveyDroidContentProvider extends ContentProvider
 	
 	@Override
 	public String getType(Uri uri)
+	{
+		return getTypeStatic(uri);
+	}
+	
+	/**
+	 * Hack to allow getType to be used outside this provider
+	 * 
+	 * @param uri
+	 * @return see {@link #getType(Uri)}
+	 */
+	public static String getTypeStatic(Uri uri)
 	{
 		long[] id = { -1 };
 		String table = getTable(uri, id);

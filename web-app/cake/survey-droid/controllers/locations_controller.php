@@ -80,7 +80,7 @@ class LocationsController extends RestController
         fputcsv($csv_file, $headers, ',', '"');
 
         $total = $this->$modelClass->find('count');
-        $increment = 100;
+        $increment = 10000; //changed from 100 (-Austin)
 
         for ($offset = 0; $offset<$total; $offset+=$increment) {
             $models = $this->$modelClass->find('all', array(

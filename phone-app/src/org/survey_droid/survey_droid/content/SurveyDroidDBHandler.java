@@ -61,7 +61,7 @@ public class SurveyDroidDBHandler
 	 * @param table a table name from the provider contract
 	 * @return the Uri for that table
 	 */
-	private Uri uriForTable(String table)
+	public static Uri uriForTable(String table)
 	{
 		Uri.Builder builder = new Uri.Builder();
 		builder.scheme("content");
